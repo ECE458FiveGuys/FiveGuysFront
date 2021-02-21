@@ -1,6 +1,7 @@
 import {Component} from "react";
 import TableColumns from "./Columns";
 import InventoryTable from "./InventoryTable";
+import ModelFields from "../../../utils/enums";
 
 export default class ModelTable extends Component {
 
@@ -10,7 +11,8 @@ export default class ModelTable extends Component {
 
     render() {
         return (
-            <InventoryTable columns={TableColumns.MODEL_COLUMNS}/>
+            <InventoryTable columns={TableColumns.MODEL_COLUMNS}
+                            searchFields={ModelFields.EquipmentModelSearchFields}/>
         );
     }
 }

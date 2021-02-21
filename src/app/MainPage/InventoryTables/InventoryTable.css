@@ -1,0 +1,7 @@
+.search-container {
+    display: flex;
+    alignItems: center;
+    flexDirection: row;
+    justify-content: flex-end;
+    flex : 1
+}

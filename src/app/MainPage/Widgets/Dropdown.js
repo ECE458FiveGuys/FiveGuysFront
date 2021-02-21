@@ -8,19 +8,27 @@ class Dropdown extends Component {
 
     constructor(props) {
         super(props)
+        this.state = {
+            searchField : "All"
+        }
     }
 
-    handleSelect = e => this.props.updateSearchField(e.target)
+    handleSelect = e => {
+        let value = e.target.innerHTML
+        this.setState({searchField : value})
+        this.props.updateSearchField(value)
+    }
 
     render() {
         let DropdownItems = []
-        for (const field in ModelFields.EquipmentModelSearchFields) {
-            DropdownItems.push(<MDBDropdownItem onclick={this.handleSelect}>{field}</MDBDropdownItem>)
-        }
+        Object.keys(ModelFields.EquipmentModelSearchFields).forEach(element => {
+                DropdownItems.push(<MDBDropdownItem onClick={e => this.handleSelect(e)}>{element}</MDBDropdownItem>)
+            }
+        )
         return (
-            <MDBDropdown>
+            <MDBDropdown size={"sm"}>
                 <MDBDropdownToggle caret color="primary">
-                    Search Fields
+                    {this.state.searchField}
                 </MDBDropdownToggle>
                 <MDBDropdownMenu basic>
                     {DropdownItems}

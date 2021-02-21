@@ -42,7 +42,7 @@ export default class TableColumns {
 
     static INSTRUMENT_COLUMNS = [
         {
-            label: 'Model Id',
+            label: 'Instrument Id',
             field: 'pk',
             sort: 'int',
             width: 150
@@ -60,6 +60,12 @@ export default class TableColumns {
             width: 200
         },
         {
+            label: 'Serial Number',
+            field: 'serial_number',
+            sort: 'asc',
+            width: 100
+        },
+        {
             label: 'Description',
             field: 'description',
             sort: 'asc',
@@ -70,12 +76,6 @@ export default class TableColumns {
             field: 'comment',
             sort: 'asc',
             width: 150
-        },
-        {
-            label: 'Calibration Frequency',
-            field: 'calibration_frequency',
-            sort: 'int',
-            width: 100
         }
     ]
 }

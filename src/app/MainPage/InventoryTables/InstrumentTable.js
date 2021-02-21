@@ -1,6 +1,7 @@
 import {Component} from "react";
 import TableColumns from "./Columns";
 import InventoryTable from "./InventoryTable";
+import ModelFields from "../../../utils/enums";
 
 export default class InstrumentTable extends Component {
 
@@ -10,7 +11,8 @@ export default class InstrumentTable extends Component {
 
     render() {
         return (
-            <InventoryTable columns={TableColumns.INSTRUMENT_COLUMNS}/>
+            <InventoryTable columns={TableColumns.INSTRUMENT_COLUMNS}
+                            searchFields={ModelFields.InstrumentSearchFields}/>
         );
     }
 }

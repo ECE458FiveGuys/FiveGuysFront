@@ -10,7 +10,7 @@ class SearchBar extends Component {
     }
 
     render () {
-        let {searchValue, setSearchValue} = this.props
+        let {setSearchValue} = this.props
         return (
             <MDBCol md="6">
                 <form className="form-inline mt-4 mb-4">
@@ -19,8 +19,8 @@ class SearchBar extends Component {
                            type="text"
                            placeholder="Search"
                            aria-label="Search"
-                           onChange={()=>setSearchValue(searchValue)}
-                           value={searchValue}/>
+                           onChange={(e)=>setSearchValue(e.target.value)}
+                    />
                 </form>
             </MDBCol>
         )
@@ -28,8 +28,7 @@ class SearchBar extends Component {
 }
 
 SearchBar.propTypes = {
-    setSearchValue: PropTypes.func.isRequired,
-    searchValue: PropTypes.string.isRequired
+    setSearchValue: PropTypes.func.isRequired
 }
 
 export default SearchBar

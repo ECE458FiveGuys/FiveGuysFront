@@ -3,3 +3,11 @@
     flex-direction: column;
     align-items: center;
 }
+
+.fill-window {
+    height: 100%;
+    position: absolute;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+}

@@ -1,0 +1,6 @@
+.tab-fill-height {
+    height: 100%;
+    position: absolute;
+    left: 0;
+    overflow: hidden;
+}

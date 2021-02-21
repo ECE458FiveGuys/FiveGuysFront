@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import './App.css';
 import MainView from './app/MainPage/MainView';
+import Login from "./auth/Login";
 
 function App() {
   const [token, setToken] = useState();
@@ -14,7 +15,7 @@ function App() {
       <div className="wrapper">
         <BrowserRouter>
           <Switch>
-            <Route path="/main_view">
+            <Route path="/">
               <MainView />
             </Route>
           </Switch>
