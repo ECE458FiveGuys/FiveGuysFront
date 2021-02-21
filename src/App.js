@@ -3,21 +3,25 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import './App.css';
 import MainView from './app/MainPage/MainView';
 import Login from "./auth/Login";
+import NotFound from "./auth/NotFound";
 
 function App() {
-  const [token, setToken] = useState();
+    const [token, setToken] = useState();
 
-    // if(!token) {
-    //     return <Login setToken={setToken} />
-    // }
+    if(!token) {
+        return <Login setToken={setToken} />
+    }
 
     return (
       <div className="wrapper">
         <BrowserRouter>
           <Switch>
             <Route path="/">
-              <MainView />
+              <MainView token={token}/>
             </Route>
+              <Route>
+                <NotFound/>
+              </Route>
           </Switch>
         </BrowserRouter>
       </div>

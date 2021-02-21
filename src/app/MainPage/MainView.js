@@ -19,7 +19,7 @@ class MainView extends Component {
             //     duration={ 3000 }
             //     angle="45deg"
             // >
-            <TabView></TabView>
+            <TabView token={this.props.token}></TabView>
             // </Gradient>
         );
     }
