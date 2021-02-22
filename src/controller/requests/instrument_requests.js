@@ -23,8 +23,7 @@ export default class InstrumentRequests {
     }
 
     static async get_instruments_with_search_params(token, params) {
-        let header = RequestUtils.build_token_header(token)
-        console.log(header)
+        let header = RequestUtils.build_token_header(token) 
         params = RequestUtils.remove_empty_fields(params)
         let instrument_data = await RequestUtils.assisted_fetch(URLS.INSTRUMENTS,
             METHODS.GET,
@@ -35,7 +34,7 @@ export default class InstrumentRequests {
         return instrument_data
     }
 
-    static async retrieve_instrument(host, token, pk) {
+    static async retrieve_instrument(token, pk) {
         let header = RequestUtils.build_token_header(token)
 
         return await RequestUtils.assisted_fetch(URLS.INSTRUMENTS,

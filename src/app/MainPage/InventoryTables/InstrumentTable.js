@@ -12,7 +12,7 @@ export default class InstrumentTable extends Component {
     }
 
     parseSearchResults = (results) => {
-        results.forEach(result => {
+            results.forEach(result => {
             let model = result[ModelFields.InstrumentFields.MODEL]
             delete result[ModelFields.InstrumentFields.MODEL]
             Object.assign(result, model)
