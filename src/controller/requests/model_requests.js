@@ -28,7 +28,7 @@ export default class ModelRequests {
         return model_data
     }
 
-    static async retrieve_model(host, token, pk) {
+    static async retrieve_model(token, pk) {
         let header = RequestUtils.build_token_header(token)
 
         return await RequestUtils.assisted_fetch(URLS.MODELS,
@@ -37,22 +37,22 @@ export default class ModelRequests {
             {"pk": pk})
     }
 
-    static async create_model(host, token, vendor, model_number, description,
+    static async create_model(token, vendor, model_number, description,
                               comment = undefined, calibration_frequency = undefined) {
 
-        return ModelRequests.update_model(token, "post", URLS.MODELS, vendor, model_number, description, comment, calibration_frequency)
+        return await ModelRequests.update_model(token, "post", URLS.MODELS, vendor, model_number, description, comment, calibration_frequency)
     }
 
-    static async edit_model(host, token, model_pk, vendor = undefined, model_number = undefined, description = undefined, comment = undefined,
+    static async edit_model(token, model_pk, vendor = undefined, model_number = undefined, description = undefined, comment = undefined,
                calibration_frequency = undefined) {
 
-        return ModelRequests.update_model(token, "put", URLS.MODELS + RequestUtils.apply_request_param_suffix({"pk" : model_pk}),
+        return await ModelRequests.update_model(token, "put", URLS.MODELS + RequestUtils.apply_request_param_suffix({"pk" : model_pk}),
                 vendor, model_number, description, comment, calibration_frequency)
     }
 
-    static async delete_model(host, token, model_pk) {
+    static async delete_model(token, model_pk) {
         let header = RequestUtils.build_token_header(token)
-        let model_data = RequestUtils.assisted_fetch(URLS.MODELS, "delete", header, {"pk": model_pk})
+        let model_data = await RequestUtils.assisted_fetch(URLS.MODELS, "delete", header, {"pk": model_pk})
         if ("pk" in model_data) {
             return model_data
         } else {
@@ -62,7 +62,7 @@ export default class ModelRequests {
 
     // private helpers
 
-    static update_model(token, method, url, vendor = undefined, model_number = undefined,
+    static async update_model(token, method, url, vendor = undefined, model_number = undefined,
                           description = undefined, comment = undefined, calibration_frequency = undefined) {
         let header = RequestUtils.build_token_header(token)
         let fields = {}
@@ -72,7 +72,7 @@ export default class ModelRequests {
         fields[ModelFields.EquipmentModelFields.COMMENT] = comment
         fields[ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY] = calibration_frequency
         RequestUtils.remove_empty_fields(fields)
-        let model_data = RequestUtils.assisted_fetch(url, method, header, undefined, fields)
+        let model_data = await RequestUtils.assisted_fetch(url, method, header, undefined, fields)
         if ("pk" in model_data) {
             return model_data
         } else {

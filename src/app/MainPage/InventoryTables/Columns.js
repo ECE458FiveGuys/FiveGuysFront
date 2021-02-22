@@ -31,25 +31,37 @@ export default class TableColumns {
     static INSTRUMENT_COLUMNS = [
         {
             label: 'Vendor',
-            field: 'vendor',
+            field: ModelFields.EquipmentModelFields.VENDOR,
             sort: 'asc',
             width: 270
         },
         {
             label: 'Model Number',
-            field: 'model_number',
+            field: ModelFields.EquipmentModelFields.MODEL_NUMBER,
             sort: 'asc',
             width: 200
         },
         {
             label: 'Serial Number',
-            field: 'serial_number',
+            field: ModelFields.InstrumentFields.SERIAL_NUMBER,
             sort: 'asc',
             width: 100
         },
         {
             label: 'Description',
-            field: 'description',
+            field: ModelFields.EquipmentModelFields.DESCRIPTION,
+            sort: 'asc',
+            width: 100
+        },
+        {
+            label: 'Most Recent Calibration Event',
+            field: ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION,
+            sort: 'asc',
+            width: 100
+        },
+        {
+            label: 'Calibration Expiration',
+            field: ModelFields.InstrumentFields.EXPIRATION_DATE,
             sort: 'asc',
             width: 100
         },
