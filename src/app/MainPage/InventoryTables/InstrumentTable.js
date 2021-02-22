@@ -4,6 +4,8 @@ import InventoryTable from "./InventoryTable";
 import ModelFields from "../../../utils/enums";
 import ModelRequests from "../../../controller/requests/model_requests";
 import InstrumentRequests from "../../../controller/requests/instrument_requests";
+import {dateColors, parseDate} from "../../utils";
+import {InstrumentTableLegend} from "../Widgets/Legend";
 
 export default class InstrumentTable extends Component {
 
@@ -11,27 +13,20 @@ export default class InstrumentTable extends Component {
         super(props)
     }
 
-    createCalibrationExpirationElement(result) {
-        let expirationDate = result[ModelFields.InstrumentFields.EXPIRATION_DATE]
-        if (expirationDate == undefined) {
+    createCalibrationExpirationElement(dateString, color) {
+        return (<div style={{flex: 1, flexDirection: "row", display: "inline-block"}}>
+                    <text>{dateString}</text>
+                    <div style={{marginLeft: 20, background: color, width: 20, height: 20, display: "inline-block"}}></div>
+                </div>)
+    }
+
+    calculateCalibrationExpirationElement(result) {
+        let expirationDateString = result[ModelFields.InstrumentFields.EXPIRATION_DATE]
+        if (expirationDateString == undefined) {
             return "Noncalibratable"
         }
-        let dateFields = expirationDate.split("-")
-        let event = new Date()
-        event.setFullYear(dateFields[0])
-        event.setMonth(dateFields[1])
-        event.setDate(dateFields[2])
-        let now = Date.now()
-        var thirtyDaysBeforeExpiration = new Date();
-        thirtyDaysBeforeExpiration.setDate(expirationDate.getDate()-30);
-        if (event < now) {
-            return "Expired"
-        } else if (thirtyDaysBeforeExpiration < now) {
-            return "Expiring Soon"
-        } else {
-            return "Calibration Stable"
-        }
-        return <div style={{width: "100%", height: "100%", background: "palevioletred"}}>{result[ModelFields.InstrumentFields.EXPIRATION_DATE]}</div>
+        let color = parseDate(expirationDateString)
+        return this.createCalibrationExpirationElement(expirationDateString, color)
     }
 
 
@@ -40,7 +35,10 @@ export default class InstrumentTable extends Component {
         results.forEach(result => {
             let model = result[ModelFields.InstrumentFields.MODEL]
             delete result[ModelFields.InstrumentFields.MODEL]
-            result[ModelFields.InstrumentFields.EXPIRATION_DATE] = this.createCalibrationExpirationElement(result)
+            result[ModelFields.InstrumentFields.EXPIRATION_DATE] = this.calculateCalibrationExpirationElement(result)
+            if (!result[ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION]) {
+                result[ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION] = "Noncalibratable"
+            }
             Object.assign(result, model)
         })
         return results
@@ -52,7 +50,10 @@ export default class InstrumentTable extends Component {
                             searchFields={ModelFields.InstrumentSearchFields}
                             token={this.props.token}
                             searchRequestFunction={InstrumentRequests.get_instruments_with_search_params}
-                            parseSearchResultsFunction={this.parseSearchResults}/>
+                            parseSearchResultsFunction={this.parseSearchResults}
+            >
+                <InstrumentTableLegend></InstrumentTableLegend>
+            </InventoryTable>
         );
     }
 }
