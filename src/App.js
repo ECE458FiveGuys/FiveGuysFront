@@ -16,7 +16,7 @@ function App() {
       <div className="wrapper">
         <BrowserRouter>
           <Switch>
-            <Route path="/">
+            <Route exact path="/">
               <MainView token={token}/>
             </Route>
               <Route>

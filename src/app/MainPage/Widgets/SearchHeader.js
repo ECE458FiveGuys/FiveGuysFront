@@ -8,7 +8,7 @@ import {Search} from "semantic-ui-react";
 let SEARCH_FIELD_COLS = 4
 
 export default class SearchHeader extends Component {
-
+    
     constructor(props) {
         super(props)
         this.state = {
