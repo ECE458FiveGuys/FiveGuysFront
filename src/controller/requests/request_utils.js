@@ -12,11 +12,12 @@ export const ParamNames = {
 
 export default class RequestUtils {
 
-    static async assisted_fetch(url, method, header, params=undefined, data=undefined) {
+    static async assisted_fetch(url, method, header, params=undefined, data=undefined, files =undefined) {
         return fetch(url+RequestUtils.apply_request_param_suffix(params), {
             method: method,
             headers: header,
-            data : data
+            data : data,
+            files : files
         })
             .then(data => {
                 data.json()
@@ -28,6 +29,12 @@ export default class RequestUtils {
     static build_token_header(token) {
         return {
             'Authorization': token
+        }
+    }
+
+    static build_files_obj(file) {
+        return {
+            'file': file
         }
     }
 
