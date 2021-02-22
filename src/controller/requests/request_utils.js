@@ -22,7 +22,9 @@ export default class RequestUtils {
         if (data) {
             init.body =  JSON.stringify(data)
         }
+        console.log(url + RequestUtils.apply_request_param_suffix(params, all_search_fields))
         let response = await fetch(url + RequestUtils.apply_request_param_suffix(params, all_search_fields), init)
+        console.log(response)
         if (response.ok) {
             return await response.json()
         } else if (response.status >= 500 && response.status <600) {

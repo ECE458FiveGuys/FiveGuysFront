@@ -38,14 +38,14 @@ class App extends Component {
               <Route exact path="/">
                 <MainView token={this.state.token}/>
               </Route>
-              <Route>
-                <NotFound/>
-              </Route>
               <Route path="/model-details/">
-                <ModelDetailView token={token}/>
+                <ModelDetailView token={this.state.token}/>
               </Route>
               <Route path="/instrument-details/">
-                <InstrumentDetailView token={token}/>
+                <InstrumentDetailView token={this.state.token}/>
+              </Route>
+              <Route>
+                <NotFound/>
               </Route>
             </Switch>
           </BrowserRouter>
