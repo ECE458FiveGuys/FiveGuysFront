@@ -1,6 +1,6 @@
 import ModelFields from "../../utils/enums";
 import {METHODS, URLS} from "../../strings";
-import ServerError from "../exceptions"
+import {ServerError} from "../exceptions"
 
 export const ParamNames = {
     SEARCH : "search",
