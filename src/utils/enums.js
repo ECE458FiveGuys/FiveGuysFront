@@ -19,6 +19,8 @@ export default class ModelFields {
         MODEL: "model",
         SERIAL_NUMBER: "serial_number",
         COMMENT: "comment",
+        MOST_RECENT_CALIBRATION : "most_recent_calibration_date",
+        EXPIRATION_DATE : "calibration_expiration_date"
     }
 
     static InstrumentSearchFields = {

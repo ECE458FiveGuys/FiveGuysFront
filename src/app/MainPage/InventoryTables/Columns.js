@@ -3,12 +3,6 @@ import ModelFields from "../../../utils/enums";
 export default class TableColumns {
     static MODEL_COLUMNS = [
         {
-            label: 'Model Id',
-            field: ModelFields.EquipmentModelFields.PK,
-            sort: 'int',
-            width: 150
-        },
-        {
             label: 'Vendor',
             field: ModelFields.EquipmentModelFields.VENDOR,
             sort: 'asc',
@@ -27,12 +21,6 @@ export default class TableColumns {
             width: 100
         },
         {
-            label: 'Comment',
-            field: ModelFields.EquipmentModelFields.COMMENT,
-            sort: 'asc',
-            width: 150
-        },
-        {
             label: 'Calibration Frequency',
             field: ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY,
             sort: 'int',
@@ -42,40 +30,40 @@ export default class TableColumns {
 
     static INSTRUMENT_COLUMNS = [
         {
-            label: 'Instrument Id',
-            field: 'pk',
-            sort: 'int',
-            width: 150
-        },
-        {
             label: 'Vendor',
-            field: 'vendor',
+            field: ModelFields.EquipmentModelFields.VENDOR,
             sort: 'asc',
             width: 270
         },
         {
             label: 'Model Number',
-            field: 'model_number',
+            field: ModelFields.EquipmentModelFields.MODEL_NUMBER,
             sort: 'asc',
             width: 200
         },
         {
             label: 'Serial Number',
-            field: 'serial_number',
+            field: ModelFields.InstrumentFields.SERIAL_NUMBER,
             sort: 'asc',
             width: 100
         },
         {
             label: 'Description',
-            field: 'description',
+            field: ModelFields.EquipmentModelFields.DESCRIPTION,
             sort: 'asc',
             width: 100
         },
         {
-            label: 'Comment',
-            field: 'comment',
+            label: 'Most Recent Calibration Event',
+            field: ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION,
             sort: 'asc',
-            width: 150
-        }
+            width: 100
+        },
+        {
+            label: 'Calibration Expiration',
+            field: ModelFields.InstrumentFields.EXPIRATION_DATE,
+            sort: 'asc',
+            width: 100
+        },
     ]
 }

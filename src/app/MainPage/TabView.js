@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { MDBContainer, MDBTabPane, MDBTabContent, MDBNav, MDBNavItem, MDBNavLink } from "mdbreact";
-import InventoryTable from "./InventoryTableDep";
 import ModelTable from "./InventoryTables/ModelTable";
 import InstrumentTable from "./InventoryTables/InstrumentTable";
+import PropTypes from "prop-types";
 
 class TabView extends Component {
     state = {
@@ -34,10 +34,10 @@ class TabView extends Component {
                 </MDBNav>
                 <MDBTabContent activeItem={this.state.activeItem} >
                     <MDBTabPane tabId="1" role="tabpanel" >
-                        <ModelTable/>
+                        <ModelTable token={this.props.token}/>
                     </MDBTabPane>
                     <MDBTabPane tabId="2" role="tabpanel">
-                        <InstrumentTable/>
+                        <InstrumentTable token={this.props.token}/>
                     </MDBTabPane>
 
                 </MDBTabContent>
@@ -46,3 +46,7 @@ class TabView extends Component {
     }
 }
 export default TabView;
+
+TabView.propTypes = {
+    token : PropTypes.string
+}
