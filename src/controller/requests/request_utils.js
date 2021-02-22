@@ -28,7 +28,7 @@ export default class RequestUtils {
         if (response.ok) {
             return await response.json()
         } else if (response.status >= 500 && response.status <600) {
-            return new ServerError()
+            alert(new ServerError().message)
         } else {
             let json = await response.json()
             throw new UserError(RequestUtils.parse_error_message(json))

@@ -3,6 +3,7 @@ import TableColumns from "./Columns";
 import InventoryTable from "./InventoryTable";
 import ModelFields from "../../../utils/enums";
 import ModelRequests from "../../../controller/requests/model_requests";
+import {newTab} from "../../utils";
 
 export default class ModelTable extends Component {
 
@@ -10,14 +11,10 @@ export default class ModelTable extends Component {
         super(props)
     }
 
-    handleClick(model_pk) {
-        return () => window.open("/models/" + model_pk);
-    }
-
     parseSearchResults = (results) => {
         results.forEach(result => {
             let model_pk = result[ModelFields.EquipmentModelFields.PK]
-            result.clickEvent = this.handleClick(model_pk)
+            result.clickEvent = newTab("/models/" + model_pk)
         })
         return results
     }

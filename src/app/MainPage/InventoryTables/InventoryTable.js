@@ -3,6 +3,7 @@ import { MDBDataTable } from 'mdbreact';
 import PropTypes from "prop-types";
 import SearchHeader from "../Widgets/SearchHeader";
 import MiscellaneousRequests from "../../../controller/requests/miscellaneous_requests";
+import NavBar from "../NavBar";
 
 class InventoryTable extends Component {
 
@@ -42,12 +43,13 @@ class InventoryTable extends Component {
             rows: this.state.results
         }
         return (
-            <div style={{background: "white", padding: 30}}>
+            <div style={{background: "white"}}>
                 <SearchHeader searchFields= {this.props.searchFields}
                               updateSearchFieldValues={this.updateSearchFieldValues}
                               token={this.props.token}
                               vendors={this.state.vendors}
                                 />
+                {this.props.children}
                 <MDBDataTable
                         autoWidth={false}
                         striped
@@ -65,11 +67,11 @@ InventoryTable.propTypes = {
     searchFields: PropTypes.object.isRequired, // the fields of the datatable that should be searchable
     token: PropTypes.string.isRequired, // the token obtained through login
     searchRequestFunction: PropTypes.func.isRequired,  // the request from the shared library used to populate the table
-    parseSearchResultsFunction: PropTypes.func // the parser used to format the data from the request so it can be added to the table
+    parseSearchResultsFunction: PropTypes.func, // the parser used to format the data from the request so it can be added to the table
 }
 
 InventoryTable.defaultProps = {
-    parseSearchResultsFunction: results => results
+    parseSearchResultsFunction: results => results,
 }
 
 export default InventoryTable;
