@@ -52,12 +52,7 @@ export default class ModelRequests {
 
     static async delete_model(token, model_pk) {
         let header = RequestUtils.build_token_header(token)
-        let model_data = await RequestUtils.assisted_fetch(URLS.MODELS, "delete", header, {"pk": model_pk})
-        if ("pk" in model_data) {
-            return model_data
-        } else {
-            throw UserError(RequestUtils.parse_error_message(model_data))
-        }
+        return await RequestUtils.assisted_fetch(URLS.MODELS, "delete", header, {"pk": model_pk})
     }
 
     // private helpers
@@ -72,11 +67,6 @@ export default class ModelRequests {
         fields[ModelFields.EquipmentModelFields.COMMENT] = comment
         fields[ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY] = calibration_frequency
         RequestUtils.remove_empty_fields(fields)
-        let model_data = await RequestUtils.assisted_fetch(url, method, header, undefined, fields)
-        if ("pk" in model_data) {
-            return model_data
-        } else {
-            throw UserError(RequestUtils.parse_error_message(model_data))
-        }
+        return await RequestUtils.assisted_fetch(url, method, header, undefined, fields)
     }
 }
