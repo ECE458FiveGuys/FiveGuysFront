@@ -12,7 +12,7 @@ export class ServerError extends Error {
     }
 }
 
-export function handleCatchUserError(e, errorMessageHandler) {
+export function handleUserError(e, errorMessageHandler) {
     if (e instanceof RangeError) {
         let errorMessage = e.message
         errorMessageHandler(errorMessage)
