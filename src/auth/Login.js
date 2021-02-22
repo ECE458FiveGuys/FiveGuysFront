@@ -5,16 +5,10 @@ import {URLS, METHODS} from "../strings.js"
 import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn } from 'mdbreact';
 import Image from "../assets/hpt_logo.png"
 import {Gradient} from "react-gradient"
+import RequestUtils from "../controller/requests/request_utils";
 
 async function loginUser(credentials) {
-    return fetch(URLS.LOGIN, {
-        method: METHODS.POST,
-        body: credentials
-    })
-        .then(data => {
-            data.json()
-        })
-        .catch(e => console.log(e))
+        return RequestUtils.assisted_fetch(URLS.LOGIN, METHODS.POST, {}, {}, credentials)
 }
 
 const gradients = [
@@ -28,20 +22,29 @@ export default class Login extends React.Component {
         super(props)
         this.state = {
             username : "",
-            password : ""
+            password : "",
+            error : undefined
         }
     }
 
     _handleSubmit = async (e) => {
         e.preventDefault();
-        const token = await loginUser({
-            username: this.state.username,
-            password: this.state.password
-        });
-        this.props.setToken(token);
+        try {
+            const token = await loginUser({
+                username: this.state.username,
+                password: this.state.password
+            });
+            this.setState({error: undefined})
+            this.props.setToken(token["auth_token"]);
+        } catch (e) {
+            let newState = {error: e.message}
+            this.setState(newState)
+        }
     }
 
    render() {
+       let {error} = this.state
+       let ErrorMessage = !error ? <text></text> : <text className={"text-danger"}>{error}</text>
        return (
            <Gradient
                className={"fill-window"}
@@ -70,6 +73,7 @@ export default class Login extends React.Component {
                                   id="defaultFormLoginPasswordEx"
                                   className="form-control"
                                   onChange={e => this.setState({password : e.target.value})}/>
+                           {ErrorMessage}
                            <div className="text-center mt-4">
                                <MDBBtn color="dark-green"
                                        type="submit"

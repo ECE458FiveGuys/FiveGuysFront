@@ -3,7 +3,8 @@ import {METHODS, URLS} from "../../strings";
 import ModelFields from "../../utils/enums";
 import {UserError} from "../exceptions";
 
-export default class import_export_requests{
+
+export default class ImportExportRequests{
 
     static async importModels(token, file){
         let header = RequestUtils.build_token_header(token)
@@ -25,7 +26,7 @@ export default class import_export_requests{
 
     static async exportModels(token){
         let header = RequestUtils.build_token_header(token)
-        let export_data = await  RequestUtils.assisted_fetch(URLS.EXPORT_MODELS,
+        let export_data = await  RequestUtils.assisted_fetch2(URLS.EXPORT_MODELS,
             METHODS.GET,header)
 
         return export_data

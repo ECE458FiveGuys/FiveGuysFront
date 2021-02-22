@@ -56,5 +56,5 @@ export default class SearchHeader extends Component {
 
 SearchHeader.propTypes = {
     searchFields: PropTypes.object.isRequired,
-    updateSearchField: PropTypes.func.isRequired
+    updateSearchFieldValues: PropTypes.func.isRequired
 }

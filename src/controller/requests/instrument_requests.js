@@ -5,7 +5,7 @@ import {UserError} from "../exceptions";
 
 export default class InstrumentRequests {
 
-    static async get_models(token, page_num = undefined, vendor = undefined, model_number = undefined,
+    static async get_instruments(token, page_num = undefined, vendor = undefined, model_number = undefined,
                             description = undefined, serial_number = undefined, search = undefined, search_field = undefined,
                             ordering = undefined) {
 
@@ -18,7 +18,21 @@ export default class InstrumentRequests {
             METHODS.GET,
             header,
             params)
-        return instrument_data["results"]
+        // return instrument_data["results"]
+        return instrument_data
+    }
+
+    static async get_instruments_with_search_params(token, params) {
+        let header = RequestUtils.build_token_header(token)
+        console.log(header)
+        params = RequestUtils.remove_empty_fields(params)
+        let instrument_data = await RequestUtils.assisted_fetch(URLS.INSTRUMENTS,
+            METHODS.GET,
+            header,
+            params,
+            undefined, true)
+        // return instrument_data["results"]
+        return instrument_data
     }
 
     static async retrieve_instrument(host, token, pk) {
