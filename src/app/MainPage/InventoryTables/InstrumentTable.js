@@ -4,7 +4,7 @@ import InventoryTable from "./InventoryTable";
 import ModelFields from "../../../utils/enums";
 import ModelRequests from "../../../controller/requests/model_requests";
 import InstrumentRequests from "../../../controller/requests/instrument_requests";
-import {dateColors, parseDate} from "../../utils";
+import {dateColors, newTab, parseDate} from "../../utils";
 import {InstrumentTableLegend} from "../Widgets/Legend";
 
 export default class InstrumentTable extends Component {
@@ -39,6 +39,8 @@ export default class InstrumentTable extends Component {
             if (!result[ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION]) {
                 result[ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION] = "Noncalibratable"
             }
+            let instrument_pk = result[ModelFields.InstrumentFields.PK]
+            result.clickEvent = newTab("/instruments/" + instrument_pk)
             Object.assign(result, model)
         })
         return results

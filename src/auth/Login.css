@@ -4,10 +4,8 @@
     align-items: center;
 }
 
-.fill-window {
+.fill-most-window {
     height: 100%;
-    position: absolute;
-    left: 0;
-    width: 100%;
+    width: 90%;
     overflow: hidden;
 }

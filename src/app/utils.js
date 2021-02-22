@@ -21,5 +21,7 @@ export function parseDate(expirationDateString) {
     }
 }
 
-//console.log(parseDate("2021-12-23"))
+export function newTab(url) {
+    return () => window.open(url);
+}
 

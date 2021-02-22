@@ -3,6 +3,7 @@ import { MDBDataTable } from 'mdbreact';
 import PropTypes from "prop-types";
 import SearchHeader from "../Widgets/SearchHeader";
 import MiscellaneousRequests from "../../../controller/requests/miscellaneous_requests";
+import NavBar from "../NavBar";
 
 class InventoryTable extends Component {
 
@@ -42,7 +43,7 @@ class InventoryTable extends Component {
             rows: this.state.results
         }
         return (
-            <div style={{background: "white", padding: 30}}>
+            <div style={{background: "white"}}>
                 <SearchHeader searchFields= {this.props.searchFields}
                               updateSearchFieldValues={this.updateSearchFieldValues}
                               token={this.props.token}

@@ -31,10 +31,9 @@ export default class ModelRequests {
     static async retrieve_model(token, pk) {
         let header = RequestUtils.build_token_header(token)
 
-        return await RequestUtils.assisted_fetch(URLS.MODELS,
+        return await RequestUtils.assisted_fetch(URLS.MODELS+pk,
             METHODS.GET,
-            header,
-            {"pk": pk})
+            header)
     }
 
     static async create_model(token, vendor, model_number, description,

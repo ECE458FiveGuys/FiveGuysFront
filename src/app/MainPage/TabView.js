@@ -19,8 +19,8 @@ class TabView extends Component {
 
     render() {
         return (
-            <MDBContainer className={"tab-fill-height"}>
-                <MDBNav className="nav-tabs mt-5">
+            <MDBContainer fluid={true} className={"fill-most-window"}>
+                <MDBNav className="nav-tabs mt-3">
                     <MDBNavItem>
                         <MDBNavLink link to="#" active={this.state.activeItem === "1"} onClick={this.toggle("1")} role="tab" >
                             Models
@@ -32,7 +32,8 @@ class TabView extends Component {
                         </MDBNavLink>
                     </MDBNavItem>
                 </MDBNav>
-                <MDBTabContent activeItem={this.state.activeItem} >
+                <MDBTabContent
+                    activeItem={this.state.activeItem} >
                     <MDBTabPane tabId="1" role="tabpanel" >
                         <ModelTable token={this.props.token}/>
                     </MDBTabPane>

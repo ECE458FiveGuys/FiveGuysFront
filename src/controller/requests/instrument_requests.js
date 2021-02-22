@@ -37,10 +37,9 @@ export default class InstrumentRequests {
     static async retrieve_instrument(token, pk) {
         let header = RequestUtils.build_token_header(token)
 
-        return await RequestUtils.assisted_fetch(URLS.INSTRUMENTS,
+        return await RequestUtils.assisted_fetch(URLS.INSTRUMENTS+pk,
             METHODS.GET,
-            header,
-            {"pk": pk})
+            header)
     }
 
     static async create_instrument(token, model_pk, serial_number, comment=undefined) {
