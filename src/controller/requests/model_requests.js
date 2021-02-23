@@ -15,8 +15,7 @@ export default class ModelRequests {
 
         let model_data = await RequestUtils.assisted_fetch(URLS.MODELS,
             METHODS.GET, header, params)
-        // return model_data["results"]
-        return model_data
+        return model_data["results"]
     }
 
     static async get_models_with_search_params(token, params) {
@@ -24,8 +23,7 @@ export default class ModelRequests {
         params = RequestUtils.remove_empty_fields(params)
         let model_data = await RequestUtils.assisted_fetch(URLS.MODELS,
             METHODS.GET, header, params, undefined, true)
-        // return model_data["results"]
-        return model_data
+        return model_data["results"]
     }
 
     static async retrieve_model(token, pk) {

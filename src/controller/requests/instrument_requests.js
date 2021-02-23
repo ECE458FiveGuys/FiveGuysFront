@@ -18,8 +18,7 @@ export default class InstrumentRequests {
             METHODS.GET,
             header,
             params)
-        // return instrument_data["results"]
-        return instrument_data
+        return instrument_data["results"]
     }
 
     static async get_instruments_with_search_params(token, params) {
@@ -30,8 +29,7 @@ export default class InstrumentRequests {
             header,
             params,
             undefined, true)
-        // return instrument_data["results"]
-        return instrument_data
+        return instrument_data["results"]
     }
 
     static async retrieve_instrument(token, pk) {
