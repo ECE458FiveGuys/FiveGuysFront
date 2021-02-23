@@ -1,8 +1,11 @@
 import React, {Component} from "react";
 import ImportExportRequests from "../../../controller/requests/import_export_requests";
 import RequestUtils from "../../../controller/requests/request_utils";
-import {CSVLink} from "react-csv"
-import {METHODS, URLS} from "../../../strings.js"
+import {CSVLink} from "react-csv";
+import {METHODS, URLS} from "../../../strings.js";
+import Papa from "papaparse";
+import "react-papaparse";
+import {readString} from "react-papaparse";
 
 class ExportModel extends Component{
 
@@ -13,23 +16,19 @@ class ExportModel extends Component{
             loading: false
         }
         this.csvLinkEl = React.createRef();
-        this.headers = [
-            {label: 'Vendor', key: 'vendor'},
-            {label: 'Model Number', key: 'model_number'},
-            {label: 'Description', key: 'description'},
-            {label: 'Comment', key: 'comment'},
-            {label: 'Calibration Frequency', key: 'calibration_frequency'}
-        ]
-    }
-
-    getModels = () => {
-        return RequestUtils.assisted_fetch('http://group-six-test.colab.duke.edu/models/all', METHODS.GET, {'Authorization': this.props.token})
+        // this.headers = [
+        //     {label: 'Vendor', key: 'Vendor'},
+        //     {label: 'Model Number', key: 'Model-Number'},
+        //     {label: 'Description', key: 'Short-Description'},
+        //     {label: 'Comment', key: 'Comment'},
+        //     {label: 'Calibration Frequency', key: 'Calibration-Frequency'}
+        // ]
     }
 
     downloadModels = async()=> {
         this.setState({loading: true});
-        const data = await ImportExportRequests.exportModels(this.props.token);
-        console.log('data :', data);
+        let data = await ImportExportRequests.exportModels(this.props.token).then(res => res.text());
+        console.log(data);
         this.setState({data: data, loading: false}, () =>{
             setTimeout(() => {
                 this.csvLinkEl.current.link.click();
@@ -48,7 +47,6 @@ class ExportModel extends Component{
                     disabled={loading}
                     />
                     <CSVLink
-                        headers={this.headers}
                         data={data}
                         filename="Export_Models.csv"
                         ref={this.csvLinkEl}
@@ -56,7 +54,6 @@ class ExportModel extends Component{
                 </div>
         )
     }
-
 }
 
 export default ExportModel

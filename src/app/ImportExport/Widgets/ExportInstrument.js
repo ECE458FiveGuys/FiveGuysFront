@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import ImportExportRequests from "../../../controller/requests/import_export_requests";
 import {CSVLink} from "react-csv"
-class exportInstrument extends Component{
+class ExportInstrument extends Component{
 
     constructor(props) {
         super(props);
@@ -10,19 +10,19 @@ class exportInstrument extends Component{
             loading: false
         }
         this.csvLinkEl = React.createRef();
-        this.headers = [
-            {label: 'Vendor', key: 'model.vendor'},
-            {label: 'Model Number', key: 'model.model_number'},
-            {label: 'Serial Number', key: 'serial_number'},
-            {label: 'Description', key: 'model.description'},
-            {label: 'Comment', key: 'comment'},
-            {label: 'Calibration Frequency', key: 'calibration_frequency'}
-        ]
+        // this.headers = [
+        //     {label: 'Vendor', key: 'Vendor'},
+        //     {label: 'Model Number', key: 'Model-Number'},
+        //     {label: 'Description', key: 'Short-Description'},
+        //     {label: 'Comment', key: 'Comment'},
+        //     {label: 'Calibration Frequency', key: 'Calibration-Frequency'}
+        // ]
     }
 
-    downloadModels = async()=> {
-        this.setState({loading: true})
-        const data = ImportExportRequests.exportInstruments(this.props.token);
+    downloadInstruments = async()=> {
+        this.setState({loading: true});
+        let data = await ImportExportRequests.exportInstruments(this.props.token).then(res => res.text());
+        console.log(data);
         this.setState({data: data, loading: false}, () =>{
             setTimeout(() => {
                 this.csvLinkEl.current.link.click();
@@ -32,22 +32,23 @@ class exportInstrument extends Component{
 
     render(){
         const { data, loading } = this.state;
-        return <div>
-            <input
-                type="button"
-                value={loading ? "Downloading..." : "Export Models"}
-                onClick={this.downloadModels}
-                disabled={loading}
-            />
-            <CSVLink
-                headers={this.headers}
-                data={data}
-                filename="Export_Models.csv"
-                ref={this.csvLinkEl}
-            />
-        </div>
+        return (
+            <div>
+                <input
+                    type="button"
+                    value={loading ? "Downloading..." : "Export Instruments"}
+                    onClick={this.downloadInstruments}
+                    disabled={loading}
+                />
+                <CSVLink
+                    data={data}
+                    filename="Export_Instruments.csv"
+                    ref={this.csvLinkEl}
+                />
+            </div>
+        )
     }
 
 }
 
-export default exportModel
+export default ExportInstrument

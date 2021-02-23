@@ -15,6 +15,7 @@ export default class InstrumentTable extends Component {
         results.forEach(result => {
             let model = result[ModelFields.InstrumentFields.MODEL]
             delete result[ModelFields.InstrumentFields.MODEL]
+            result[ModelFields.InstrumentFields.EXPIRATION_DATE] =  <div style={{width: "100%", height: "100%", background: "palevioletred"}}>{result[ModelFields.InstrumentFields.EXPIRATION_DATE]}</div>
             Object.assign(result, model)
         })
         return results

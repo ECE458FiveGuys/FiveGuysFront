@@ -37,7 +37,7 @@ export default class RequestUtils {
             throw new UserError(RequestUtils.parse_error_message(json))
         }
     }
-    static async assisted_fetch2(url, method, header={}, params=undefined, data= undefined, all_search_fields=false, file =undefined){
+    static async assisted_export_fetch(url, method, header={}, params=undefined, data= undefined, all_search_fields=false, file =undefined){
         let init = {
             method: method,
             headers: header,

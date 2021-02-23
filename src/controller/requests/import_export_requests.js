@@ -26,7 +26,7 @@ export default class ImportExportRequests{
 
     static async exportModels(token){
         let header = RequestUtils.build_token_header(token)
-        let export_data = await  RequestUtils.assisted_fetch2(URLS.EXPORT_MODELS,
+        let export_data = await  RequestUtils.assisted_export_fetch(URLS.EXPORT_MODELS,
             METHODS.GET,header)
 
         return export_data
@@ -34,7 +34,7 @@ export default class ImportExportRequests{
 
     static async exportInstruments(token){
         let header = RequestUtils.build_token_header(token)
-        let export_data = await  RequestUtils.assisted_fetch(URLS.EXPORT_INSTRUMENTS,
+        let export_data = await  RequestUtils.assisted_export_fetch(URLS.EXPORT_INSTRUMENTS,
             METHODS.GET,header)
 
         return export_data

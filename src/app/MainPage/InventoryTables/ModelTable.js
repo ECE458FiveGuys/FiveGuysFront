@@ -10,12 +10,25 @@ export default class ModelTable extends Component {
         super(props)
     }
 
+    handleClick(model_pk) {
+        return () => window.open("/models/" + model_pk);
+    }
+
+    parseSearchResults = (results) => {
+        results.forEach(result => {
+            let model_pk = result[ModelFields.EquipmentModelFields.PK]
+            result.clickEvent = this.handleClick(model_pk)
+        })
+        return results
+    }
+
     render() {
         return (
             <InventoryTable columns={TableColumns.MODEL_COLUMNS}
                             searchFields={ModelFields.EquipmentModelSearchFields}
                             token={this.props.token}
-                            searchRequestFunction={ModelRequests.get_models_with_search_params}/>
+                            searchRequestFunction={ModelRequests.get_models_with_search_params}
+                            parseSearchResultsFunction={this.parseSearchResults}/>
         );
     }
 }
