@@ -4,7 +4,8 @@ import ExportInstrument from "./Widgets/ExportInstrument";
 import PropTypes from "prop-types";
 import TabView from "../MainPage/TabView";
 import {Gradient} from "react-gradient";
-import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn } from 'mdbreact';
+import {MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn, MDBDropdown, MDBDropdownToggle, MDBDropdownMenu} from 'mdbreact';
+import CSV_Import from "./Widgets/CSV_Import";
 
 
 const gradients = [
@@ -14,7 +15,6 @@ const gradients = [
 
 
 class ImportExportView extends Component{
-
 
     render(){
         return (
@@ -27,14 +27,13 @@ class ImportExportView extends Component{
             >
                 <MDBContainer>
                     <MDBRow style={{justifyContent: 'center', alignItems: 'center', marginTop: 200, xs: 2}}>
-                                <ExportModel token = {this.props.token}/>
-                                <ExportInstrument token = {this.props.token}/>
-                    </MDBRow>
-                    <MDBRow style={{justifyContent: 'center', alignItems: 'center', marginTop: 200, xs: 2}}>
                         <ExportModel token = {this.props.token}/>
                         <ExportInstrument token = {this.props.token}/>
                     </MDBRow>
-
+                    <CSV_Import token = {this.props.token}/>
+                    <MDBRow style={{justifyContent: 'center', alignItems: 'center', marginTop: 20, xs: 2}}>
+                        To Import: Select File, then Select Import Type From Dropdown
+                    </MDBRow>
                 </MDBContainer>
             </Gradient>
         );
