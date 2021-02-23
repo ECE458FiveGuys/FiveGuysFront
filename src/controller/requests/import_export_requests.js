@@ -6,20 +6,18 @@ import {UserError} from "../exceptions";
 
 export default class ImportExportRequests{
 
-    static async importModels(token, file){
+    static async importModels(token, data){
         let header = RequestUtils.build_token_header(token)
-        let files = RequestUtils.build_files_obj(file)
         let import_data = await RequestUtils.assisted_fetch(URLS.IMPORT_MODELS,
-            METHODS.POST, header, files)
+            METHODS.POST, header, data)
 
         return import_data
     }
 
-    static async importInstruments(token, file){
+    static async importInstruments(token, data){
         let header = RequestUtils.build_token_header(token)
-        let files = RequestUtils.build_files_obj(file)
         let import_data = await RequestUtils.assisted_fetch(URLS.IMPORT_INSTRUMENTS,
-            METHODS.POST, header, files)
+            METHODS.POST, header, data)
 
         return import_data
     }
