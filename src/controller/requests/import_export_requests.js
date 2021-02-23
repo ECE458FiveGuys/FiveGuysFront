@@ -15,7 +15,7 @@ export default class ImportExportRequests{
         return import_data
     }
 
-    static async importInstruments(token){
+    static async importInstruments(token, file){
         let header = RequestUtils.build_token_header(token)
         let files = RequestUtils.build_files_obj(file)
         let import_data = await RequestUtils.assisted_fetch(URLS.IMPORT_INSTRUMENTS,
