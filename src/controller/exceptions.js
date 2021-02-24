@@ -11,3 +11,12 @@ export class ServerError extends Error {
         this.message = "The server has failed to process this request"
     }
 }
+
+export function handleUserError(e, errorMessageHandler) {
+    if (e instanceof RangeError) {
+        let errorMessage = e.message
+        errorMessageHandler(errorMessage)
+    } else {
+        throw e;  // re-throw the error unchanged
+    }
+}

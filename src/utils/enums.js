@@ -16,6 +16,7 @@ export default class ModelFields {
     }
 
     static InstrumentFields = {
+        PK : "pk",
         MODEL: "model",
         SERIAL_NUMBER: "serial_number",
         COMMENT: "comment",

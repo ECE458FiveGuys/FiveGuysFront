@@ -1,6 +1,8 @@
 import React, {useState, Component} from "react";
 import {MDBContainer, MDBDropdown, MDBDropdownMenu, MDBDropdownToggle, MDBRow} from "mdbreact";
 import ImportExportRequests from "../../../controller/requests/import_export_requests";
+import Papa from "papaparse"
+import {CSVReader} from "react-papaparse";
 
 class CSV_Import extends Component{
 
@@ -16,45 +18,53 @@ class CSV_Import extends Component{
         }
     }
 
+    updateData(result) {
+        let data = result.data;
+        console.log(data);
+        return data;
+    }
 
     fileSelected = (event) => {
-        this.setState({fileSelected: true, });
+        this.setState({fileSelected: true});
         this.setState({file: event.target.files[0]});
     }
 
     importTypeSelected = type => e => {
-        this.setState({import_type: type});
-        let res = {};
-        if (this.state.file!==[] && this.state.import_type==='models'){
-            res = this.handleModelSubmission();
-        }
-        else if(this.state.file!==[] && this.state.import_type==='instruments'){
-            res = this.handleInstrumentSubmission();
-        }
-
-        console.log(res)
+        let res = [];
+        this.setState({import_type: type}, ()=> {
+            if (this.state.file !== [] && this.state.import_type === 'models') {
+                res = this.handleModelSubmission();
+            } else if (this.state.file !== [] && this.state.import_type === 'instruments') {
+                res = this.handleInstrumentSubmission();
+            }
+            }
+        );
     }
 
     handleInstrumentSubmission = async() => {
-        const formData = new FormData();
-        formData.append('file', this.state.file);
-        console.log(formData);
-        let result = await ImportExportRequests.importInstruments(this.props.token, formData);
+        // const data = new FormData();
+        let data = Papa.parse(this.state.file, {
+            complete: this.updateData,
+            header: true
+        });
+
+        // data.append('file', this.state.file);
+        let result = await ImportExportRequests.importInstruments(this.props.token, data);
         return result
     }
 
     handleModelSubmission = async() => {
-        const formData = new FormData();
-
-        formData.append('file', this.state.file);
-        console.log("HI")
-
-        let result = await ImportExportRequests.importModels(this.props.token, formData);
-        console.log(result)
+        //const data = new FormData();
+        // let csv_data = Papa.parse(this.state.file, {
+        //     complete: this.updateData,
+        //     header: true
+        // });
+        // console.log(csv_data);
+        let dat = this.state.file
+        let data = {'file': dat};
+        let result = await ImportExportRequests.importModels(this.props.token, data);
         return result
     }
-
-
 
 render(){
         const {fileSelected} = this.state;

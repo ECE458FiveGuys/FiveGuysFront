@@ -1,4 +1,4 @@
-import {Component} from "react";
+import React, {Component} from "react";
 import {MDBBtn, MDBCol, MDBContainer, MDBRow} from "mdbreact";
 import TableColumns from "../InventoryTables/Columns";
 import PropTypes from "prop-types";
@@ -8,6 +8,7 @@ import ModelFields from "../../../utils/enums";
 import {Typeahead} from "react-bootstrap-typeahead"
 import {Form} from "react-bootstrap"
 import MiscellaneousRequests from "../../../controller/requests/miscellaneous_requests";
+import Image from "../../../assets/hpt_logo.png";
 
 let SEARCH_FIELD_COLS = 4
 
@@ -72,8 +73,9 @@ export default class SearchHeader extends Component {
             }
             }
         )
+
         return(
-            <MDBContainer style={{marginLeft: -15}}>
+            <MDBContainer style={{marginLeft: -15, display: "inline"}}>
                 <header className={"h5-responsive"} style={{marginTop: 10, marginBottom: 10}}>
                     Search Your Inventory
                 </header>
