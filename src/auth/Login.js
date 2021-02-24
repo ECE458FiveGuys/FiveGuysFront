@@ -1,14 +1,15 @@
 import React from 'react';
 import './Login.css';
 import PropTypes from "prop-types";
-import {URLS, METHODS} from "../strings.js"
+import {URLS, METHODS} from "../controller/strings.js"
 import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn } from 'mdbreact';
 import Image from "../assets/hpt_logo.png"
 import {Gradient} from "react-gradient"
 import RequestUtils from "../controller/requests/request_utils";
+import UserRequests from "../controller/requests/user_requests";
 
 async function loginUser(credentials) {
-        return RequestUtils.assisted_fetch(URLS.LOGIN, METHODS.POST, {}, {}, credentials)
+    return RequestUtils.assisted_fetch(URLS.LOGIN, METHODS.POST, {}, {}, credentials)
 }
 
 const gradients = [
@@ -35,7 +36,10 @@ export default class Login extends React.Component {
                 password: this.state.password
             });
             this.setState({error: undefined})
-            this.props.setToken(token["auth_token"]);
+            const token_val = token["auth_token"]
+            const user = await UserRequests.retrieve_user(token_val, this.state.username)
+            this.props.setUser(user)
+            this.props.setToken(token_val);
         } catch (e) {
             let newState = {error: e.message}
             this.setState(newState)
@@ -96,5 +100,6 @@ export default class Login extends React.Component {
 }
 
 Login.propTypes = {
-    setToken: PropTypes.func.isRequired
+    setToken: PropTypes.func.isRequired,
+    setUser: PropTypes.func.isRequired
 }

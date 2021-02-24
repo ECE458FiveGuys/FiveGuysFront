@@ -2,7 +2,6 @@ import React, {Component} from "react";
 import ImportExportRequests from "../../../controller/requests/import_export_requests";
 import RequestUtils from "../../../controller/requests/request_utils";
 import {CSVLink} from "react-csv";
-import {METHODS, URLS} from "../../../strings.js";
 import Papa from "papaparse";
 import "react-papaparse";
 import {readString} from "react-papaparse";

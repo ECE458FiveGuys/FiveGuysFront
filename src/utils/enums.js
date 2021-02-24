@@ -1,4 +1,19 @@
+export const StorageKeys = {
+    TOKEN : "token",
+    USER : "user"
+}
+
+
 export default class ModelFields {
+
+    static UserFields = {
+        NAME: "name",
+        EMAIL : "email",
+        ACTIVITY : "is_active",
+        ID : "id",
+        USERNAME : "username",
+        IS_STAFF : "is_staff"
+    }
 
     static EquipmentModelFields = {
         VENDOR: "vendor",

@@ -5,6 +5,8 @@ import MainView from './app/MainPage/MainView';
 import ImportExportView from './app/ImportExport/ImportExportView'
 import Login from "./auth/Login";
 import NotFound from "./auth/NotFound";
+import {StorageKeys} from "./utils/enums";
+import {User} from "./utils/dtos";
 
 class App extends Component {
 
@@ -17,18 +19,29 @@ class App extends Component {
     }
 
     getToken = () => {
-        const tokenString = localStorage.getItem('token');
+        const tokenString = localStorage.getItem(StorageKeys.TOKEN);
         return JSON.parse(tokenString);
     };
 
     saveToken = userToken => {
-        localStorage.setItem('token', JSON.stringify(userToken));
+        localStorage.setItem(StorageKeys.TOKEN, JSON.stringify(userToken));
         this.setState({token: userToken})
     };
 
+    getUser = () => {
+        const userString = localStorage.getItem(StorageKeys.USER);
+        return User.fromJson(JSON.parse(userString));
+    };
+
+    saveUser = user => {
+        localStorage.setItem(StorageKeys.USER, JSON.stringify(user));
+        this.setState({user: user})
+    };
+
     render() {
-        if (!this.state.token) {
-            return <Login setToken={this.saveToken} />
+        if (!this.getToken()) {
+            return <Login setToken={this.saveToken}
+                           setUser={this.saveUser}/>
         }
         return (
           <div className="wrapper">
@@ -40,7 +53,10 @@ class App extends Component {
                   <Route path="/ImportExport">
                       <ImportExportView token={this.state.token}/>
                   </Route>
-
+                <Route exact path="/">
+                  <MainView token={this.getToken()}
+                            user={this.getUser()}/>
+                </Route>
                   <Route>
                     <NotFound/>
                   </Route>

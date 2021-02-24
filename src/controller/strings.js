@@ -14,7 +14,8 @@ export const URLS =
         INSTRUMENTS_ALL : ROOT_URL + "instruments/all",
         MODELS : ROOT_URL + "models/",
         INSTRUMENTS : ROOT_URL + "instruments/",
-        VENDORS : ROOT_URL + "models/vendors/"
+        VENDORS : ROOT_URL + "models/vendors/",
+        USERS : ROOT_URL + "auth/users/"
     }
 
 export const METHODS =
