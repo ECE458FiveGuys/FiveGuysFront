@@ -3,6 +3,7 @@ import { MDBContainer, MDBTabPane, MDBTabContent, MDBNav, MDBNavItem, MDBNavLink
 import ModelTable from "./InventoryTables/ModelTable";
 import InstrumentTable from "./InventoryTables/InstrumentTable";
 import PropTypes from "prop-types";
+import {User} from "../../utils/dtos";
 
 class TabView extends Component {
     state = {
@@ -49,5 +50,6 @@ class TabView extends Component {
 export default TabView;
 
 TabView.propTypes = {
-    token : PropTypes.string
+    token : PropTypes.string.isRequired,
+    user : PropTypes.instanceOf(User).isRequired
 }

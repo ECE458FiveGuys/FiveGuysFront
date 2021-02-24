@@ -2,17 +2,52 @@ import React, { Component } from "react";
 import { MDBNavbar, MDBNavbarBrand, MDBNavbarNav, MDBNavItem, MDBNavLink, MDBNavbarToggler, MDBCollapse, MDBDropdown,
     MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem, MDBIcon } from "mdbreact";
 import { BrowserRouter as Router } from 'react-router-dom';
+import {StorageKeys} from "../../utils/enums";
+import PropTypes from "prop-types";
+import TabView from "./TabView";
+import {User} from "../../utils/dtos";
 
 class NavbarPage extends Component {
-    state = {
-        isOpen: false
-    };
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            isOpen: false
+        };
+        this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+    }
+
+    componentDidMount() {
+        this.updateWindowDimensions();
+        window.addEventListener('resize', this.updateWindowDimensions);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.updateWindowDimensions);
+    }
+
+    updateWindowDimensions() {
+        this.setState({ width: window.innerWidth, height: window.innerHeight });
+    }
 
     toggleCollapse = () => {
         this.setState({ isOpen: !this.state.isOpen });
     }
 
     render() {
+        let {user} = this.props
+        let Buttons = []
+        if (user.is_staff) {
+            Buttons.push(<MDBNavItem>
+                            <MDBNavLink to="/create-model">Create Model</MDBNavLink>
+                        </MDBNavItem>)
+            Buttons.push(<MDBNavItem>
+                            <MDBNavLink to="/create-instrument">Create Instrument</MDBNavLink>
+                         </MDBNavItem>)
+        }
+        Buttons.push(<MDBNavItem>
+                        <MDBNavLink to="/import-export">{user.is_staff ? "Import/Export" : "Export"}</MDBNavLink>
+                    </MDBNavItem>)
         return (
             <Router>
                 <MDBNavbar color={"green"} dark expand="md">
@@ -25,47 +60,20 @@ class NavbarPage extends Component {
                             <MDBNavItem active>
                                 <MDBNavLink to="/">Home</MDBNavLink>
                             </MDBNavItem>
-                            <MDBNavItem>
-                                <MDBNavLink to="#!">Features</MDBNavLink>
-                            </MDBNavItem>
-                            <MDBNavItem>
-                                <MDBNavLink to="#!">Pricing</MDBNavLink>
-                            </MDBNavItem>
-                            <MDBNavItem>
-                                <MDBDropdown>
-                                    <MDBDropdownToggle nav caret>
-                                        <div className="d-none d-md-inline">Dropdown</div>
-                                    </MDBDropdownToggle>
-                                    <MDBDropdownMenu className="dropdown-default">
-                                        <MDBDropdownItem href="#!">Action</MDBDropdownItem>
-                                        <MDBDropdownItem href="#!">Another Action</MDBDropdownItem>
-                                        <MDBDropdownItem href="#!">Something else here</MDBDropdownItem>
-                                        <MDBDropdownItem href="#!">Something else here</MDBDropdownItem>
-                                    </MDBDropdownMenu>
-                                </MDBDropdown>
-                            </MDBNavItem>
+                            {Buttons}
                         </MDBNavbarNav>
+                        <text className={"white-text"} style={{position: "absolute", left: this.state.width / 2}}>
+                        {`Welcome, ${user.name}`}
+                        </text>
                         <MDBNavbarNav right>
-                            <MDBNavItem>
-                                <MDBNavLink className="waves-effect waves-light" to="#!">
-                                    <MDBIcon fab icon="twitter" />
-                                </MDBNavLink>
-                            </MDBNavItem>
-                            <MDBNavItem>
-                                <MDBNavLink className="waves-effect waves-light" to="#!">
-                                    <MDBIcon fab icon="google-plus-g" />
-                                </MDBNavLink>
-                            </MDBNavItem>
                             <MDBNavItem>
                                 <MDBDropdown>
                                     <MDBDropdownToggle nav caret>
                                         <MDBIcon icon="user" />
                                     </MDBDropdownToggle>
-                                    <MDBDropdownMenu className="dropdown-default">
-                                        <MDBDropdownItem href="#!">Action</MDBDropdownItem>
-                                        <MDBDropdownItem href="#!">Another Action</MDBDropdownItem>
-                                        <MDBDropdownItem href="#!">Something else here</MDBDropdownItem>
-                                        <MDBDropdownItem href="#!">Something else here</MDBDropdownItem>
+                                    <MDBDropdownMenu className="dropdown-left">
+                                        <MDBDropdownItem href="/" onClick={()=>localStorage.removeItem(StorageKeys.TOKEN)}>Logout</MDBDropdownItem>
+                                        <MDBDropdownItem href="/settings">User Settings</MDBDropdownItem>
                                     </MDBDropdownMenu>
                                 </MDBDropdown>
                             </MDBNavItem>
@@ -78,3 +86,7 @@ class NavbarPage extends Component {
 }
 
 export default NavbarPage;
+
+NavbarPage.propTypes = {
+    user : PropTypes.instanceOf(User).isRequired
+}

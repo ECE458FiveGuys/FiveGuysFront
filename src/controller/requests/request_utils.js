@@ -1,5 +1,5 @@
 import ModelFields from "../../utils/enums";
-import {METHODS, URLS} from "../../strings";
+import {METHODS, URLS} from "../strings";
 import {ServerError, UserError} from "../exceptions"
 
 export const ParamNames = {

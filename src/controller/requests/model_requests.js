@@ -1,5 +1,5 @@
 import RequestUtils from "./request_utils";
-import {METHODS, URLS} from "../../strings";
+import {METHODS, URLS} from "../strings";
 import ModelFields from "../../utils/enums";
 import {UserError} from "../exceptions";
 
