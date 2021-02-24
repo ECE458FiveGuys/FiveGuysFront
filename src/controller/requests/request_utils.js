@@ -25,8 +25,10 @@ export default class RequestUtils {
         let response = await fetch(url + RequestUtils.apply_request_param_suffix(params, all_search_fields), init)
         if (response.ok) {
             return await response.json()
-        } else if (response.status >= 500 && response.status <600) {
-            alert(new ServerError().message)
+        } else if (response.status >= 500 && response.status < 600) {
+            response.text().then(errorText => {
+                alert(new ServerError(errorText).message)
+            })
         } else {
             let json = await response.json()
             throw new UserError(RequestUtils.parse_error_message(json))

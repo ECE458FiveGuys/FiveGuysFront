@@ -6,9 +6,10 @@ export class UserError extends Error {
 }
 
 export class ServerError extends Error {
-    constructor() {
+    constructor(message=undefined) {
         super();
-        this.message = "The server has failed to process this request"
+        this.message = message ? `The server has failed to process this request: ${message}` :
+            "The server has failed to process this request"
     }
 }
 
