@@ -13,6 +13,6 @@ export default class UserRequests {
             METHODS.GET,
             header,
             params)
-        return User.fromJson(users["results"][0])
+        return User.fromJson(users[0])
     }
 }

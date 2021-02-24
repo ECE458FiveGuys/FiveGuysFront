@@ -4,7 +4,7 @@ import { MDBNavbar, MDBNavbarBrand, MDBNavbarNav, MDBNavItem, MDBNavLink, MDBNav
 import { BrowserRouter as Router } from 'react-router-dom';
 import {StorageKeys} from "../../utils/enums";
 import PropTypes from "prop-types";
-import TabView from "./TabView";
+import TabView from "../MainPage/TabView";
 import {User} from "../../utils/dtos";
 
 class NavbarPage extends Component {
@@ -72,7 +72,13 @@ class NavbarPage extends Component {
                                         <MDBIcon icon="user" />
                                     </MDBDropdownToggle>
                                     <MDBDropdownMenu className="dropdown-left">
-                                        <MDBDropdownItem href="/" onClick={()=>localStorage.removeItem(StorageKeys.TOKEN)}>Logout</MDBDropdownItem>
+                                        <MDBDropdownItem href="/"
+                                                         onClick={()=> {
+                                                             localStorage.removeItem(StorageKeys.TOKEN)
+                                                             localStorage.removeItem(StorageKeys.USER)
+                                                         }}>
+                                            Logout
+                                        </MDBDropdownItem>
                                         <MDBDropdownItem href="/settings">User Settings</MDBDropdownItem>
                                     </MDBDropdownMenu>
                                 </MDBDropdown>

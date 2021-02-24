@@ -3,7 +3,8 @@ import { MDBDataTable } from 'mdbreact';
 import PropTypes from "prop-types";
 import SearchHeader from "../Widgets/SearchHeader";
 import MiscellaneousRequests from "../../../controller/requests/miscellaneous_requests";
-import NavBar from "../NavBar";
+import NavBar from "../../Common/NavBar";
+import Image from "../../../assets/Spinner.gif";
 
 class InventoryTable extends Component {
 
@@ -17,6 +18,20 @@ class InventoryTable extends Component {
             searchFieldValues : searchFieldValues
         }
         this.updateSearchFieldValues = this.updateSearchFieldValues.bind(this)
+        this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+    }
+
+    componentDidMount() {
+        this.updateWindowDimensions();
+        window.addEventListener('resize', this.updateWindowDimensions);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.updateWindowDimensions);
+    }
+
+    updateWindowDimensions() {
+        this.setState({ width: window.innerWidth, height: window.innerHeight });
     }
 
     async componentDidMount() {
@@ -42,6 +57,21 @@ class InventoryTable extends Component {
             columns: this.props.columns,
             rows: this.state.results
         }
+        let Content = !this.state.results ?
+        <div style={{flexDirection: "row", position: "absolute", marginLeft : this.state.width / 2}}>
+            <img alt="loading"
+                 style={{position: "absolute", marginLeft : this.state.width / 2, justifyContent: 'center', justifyItems: 'center', width: 150, margin: 50}}
+                 src={Image}/>
+        </div>
+            :
+        <MDBDataTable
+            autoWidth={false}
+            striped
+            bordered
+            small
+            searching={false}
+            data={data}
+        />
         return (
             <div style={{background: "white"}}>
                 <SearchHeader searchFields= {this.props.searchFields}
@@ -50,14 +80,7 @@ class InventoryTable extends Component {
                               vendors={this.state.vendors}
                                 />
                 {this.props.children}
-                <MDBDataTable
-                        autoWidth={false}
-                        striped
-                        bordered
-                        small
-                        searching={false}
-                        data={data}
-                    />
+                {Content}
             </div>);
     }
 }
