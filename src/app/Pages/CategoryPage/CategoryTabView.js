@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import {User} from "../../../utils/dtos";
 import ModelTable from "./InventoryTables/ModelTable";
 import InstrumentTable from "./InventoryTables/InstrumentTable";
+import CategoryPage from "./CategoryPage";
 
 
 const gradients = [
@@ -24,12 +25,12 @@ class MainView extends Component {
             //     angle="45deg"
             // >
             <div>
-            <NavBar user={this.props.user}/>
-            <TabView token={this.props.token}
-                     user={this.props.user}
-                     modelPage={<ModelTable token={this.props.token}/>}
-                     instrumentPage={<InstrumentTable token={this.props.token}/>}
-            ></TabView>
+                <NavBar user={this.props.user}/>
+                <TabView token={this.props.token}
+                         user={this.props.user}
+                         modelPage={<CategoryPage token={this.props.token}/>}
+                         instrumentPage={<InstrumentTable token={this.props.token}/>}
+                ></TabView>
             </div>
             // </Gradient>
         );

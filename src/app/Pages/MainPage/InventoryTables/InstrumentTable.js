@@ -30,7 +30,7 @@ export default class InstrumentTable extends Component {
         return this.createCalibrationExpirationElement(expirationDateString, color)
     }
 
-    parseSearchResults = (results) => {
+    parseSearchResults = (results, modelCategoriesIDtoName) => {
         results.forEach(result => {
             let model = result[ModelFields.InstrumentFields.MODEL]
             delete result[ModelFields.InstrumentFields.MODEL]
@@ -41,6 +41,8 @@ export default class InstrumentTable extends Component {
             let instrument_pk = result[ModelFields.InstrumentFields.PK]
             result[ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES] =
                 TableUtils.categoriesToString(result[ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES])
+            model[ModelFields.EquipmentModelFields.MODEL_CATEGORIES] =
+                TableUtils.categoriesToString(model[ModelFields.EquipmentModelFields.MODEL_CATEGORIES], modelCategoriesIDtoName)
             result.clickEvent = newTab("/instruments/" + instrument_pk)
             Object.assign(result, model)
         })
