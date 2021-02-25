@@ -6,6 +6,7 @@ import ModelRequests from "../../../controller/requests/model_requests";
 import InstrumentRequests from "../../../controller/requests/instrument_requests";
 import {dateColors, newTab, parseDate} from "../../utils";
 import {InstrumentTableLegend} from "../Widgets/Legend";
+import TableUtils from "./TableUtils";
 
 export default class InstrumentTable extends Component {
 
@@ -29,8 +30,6 @@ export default class InstrumentTable extends Component {
         return this.createCalibrationExpirationElement(expirationDateString, color)
     }
 
-
-
     parseSearchResults = (results) => {
         results.forEach(result => {
             let model = result[ModelFields.InstrumentFields.MODEL]
@@ -40,6 +39,8 @@ export default class InstrumentTable extends Component {
                 result[ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION] = "Noncalibratable"
             }
             let instrument_pk = result[ModelFields.InstrumentFields.PK]
+            result[ModelFields.InstrumentFields.Instrument_CATEGORIES] =
+                TableUtils.categoriesToString(result[ModelFields.InstrumentFields.Instrument_CATEGORIES])
             result.clickEvent = newTab("/instruments/" + instrument_pk)
             Object.assign(result, model)
         })

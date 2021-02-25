@@ -25,7 +25,13 @@ export default class TableColumns {
             field: ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY,
             sort: 'int',
             width: 100
-        }
+        },
+        {
+            label: 'Categories',
+            field: ModelFields.EquipmentModelFields.MODEL_CATEGORIES,
+            sort: 'asc',
+            width: 100
+        },
     ]
 
     static INSTRUMENT_COLUMNS = [
@@ -48,13 +54,25 @@ export default class TableColumns {
             width: 100
         },
         {
+            label: 'Asset Tag Number',
+            field: ModelFields.InstrumentFields.ASSET_TAG,
+            sort: 'int',
+            width: 100
+        },
+        {
             label: 'Description',
             field: ModelFields.EquipmentModelFields.DESCRIPTION,
             sort: 'asc',
             width: 100
         },
         {
-            label: 'Most Recent Calibration Event',
+            label: 'Categories',
+            field: ModelFields.InstrumentFields.Instrument_CATEGORIES,
+            sort: 'asc',
+            width: 100
+        },
+        {
+            label: 'Most Recent Calibration',
             field: ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION,
             sort: 'asc',
             width: 100

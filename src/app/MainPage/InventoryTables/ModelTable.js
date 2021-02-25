@@ -4,6 +4,7 @@ import InventoryTable from "./InventoryTable";
 import ModelFields from "../../../utils/enums";
 import ModelRequests from "../../../controller/requests/model_requests";
 import {newTab} from "../../utils";
+import TableUtils from "./TableUtils";
 
 export default class ModelTable extends Component {
 
@@ -19,6 +20,9 @@ export default class ModelTable extends Component {
                 "Noncalibratable"
                 :
                 result[ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY].split(" ")[0]
+
+            result[ModelFields.EquipmentModelFields.MODEL_CATEGORIES] =
+                TableUtils.categoriesToString(result[ModelFields.EquipmentModelFields.MODEL_CATEGORIES])
             result.clickEvent = newTab("/models/" + model_pk)
         })
         return results

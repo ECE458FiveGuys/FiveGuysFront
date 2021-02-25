@@ -58,6 +58,23 @@ export default class SearchHeader extends Component {
         )
     }
 
+    // renderAutoCompleteMultipleSearchBox(searchFieldName, searchFieldTitle) {
+    //     return(
+    //         <Form.Group>
+    //             <Form.Label className="grey-text">{searchFieldTitle}</Form.Label>
+    //             <Typeahead
+    //                 id="basic-typeahead-multiple"
+    //                 labelKey="name"
+    //                 multiple
+    //                 onChange={setMultiSelections}
+    //                 options={options}
+    //                 placeholder="Choose several states..."
+    //                 selected={multiSelections}
+    //             />
+    //         </Form.Group>
+    //     )
+    // }
+
     render() {
         let Rows = []
         let col = 1

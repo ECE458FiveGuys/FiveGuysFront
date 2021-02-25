@@ -4,7 +4,6 @@ import { MDBNavbar, MDBNavbarBrand, MDBNavbarNav, MDBNavItem, MDBNavLink, MDBNav
 import { BrowserRouter as Router } from 'react-router-dom';
 import {StorageKeys} from "../../utils/enums";
 import PropTypes from "prop-types";
-import TabView from "../MainPage/TabView";
 import {User} from "../../utils/dtos";
 
 class NavbarPage extends Component {
@@ -48,6 +47,9 @@ class NavbarPage extends Component {
         Buttons.push(<MDBNavItem>
                         <MDBNavLink to="/import-export">{user.is_staff ? "Import/Export" : "Export"}</MDBNavLink>
                     </MDBNavItem>)
+        Buttons.push(<MDBNavItem>
+            <MDBNavLink to="/load-bank">{user.is_staff ? "Import/Export" : "Export"}</MDBNavLink>
+        </MDBNavItem>)
         return (
             <Router>
                 <MDBNavbar color={"green"} dark expand="md">
