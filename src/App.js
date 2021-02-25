@@ -29,7 +29,7 @@ class App extends Component {
 
     getUser = () => {
         const userString = localStorage.getItem(StorageKeys.USER);
-        return User.fromJson(JSON.parse(userString));
+        return userString ? User.fromJson(JSON.parse(userString)) : undefined
     };
 
     saveUser = user => {
@@ -38,7 +38,7 @@ class App extends Component {
     };
 
     render() {
-        if (!this.getToken()) {
+        if (!this.getToken() || !this.getUser()) {
             return <Login setToken={this.saveToken}
                            setUser={this.saveUser}/>
         }

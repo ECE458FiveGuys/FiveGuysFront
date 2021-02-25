@@ -63,15 +63,15 @@ class NavbarPage extends Component {
                             {Buttons}
                         </MDBNavbarNav>
                         <text className={"white-text"} style={{position: "absolute", left: this.state.width / 2}}>
-                        {`Welcome, ${user.name}`}
+                            {`Welcome, ${user.name}`}
                         </text>
                         <MDBNavbarNav right>
-                            <MDBNavItem>
+                            <MDBNavItem style={{marginRight: 100}}>
                                 <MDBDropdown>
                                     <MDBDropdownToggle nav caret>
                                         <MDBIcon icon="user" />
                                     </MDBDropdownToggle>
-                                    <MDBDropdownMenu className="dropdown-left">
+                                    <MDBDropdownMenu className="dropdown-menu">
                                         <MDBDropdownItem href="/"
                                                          onClick={()=> {
                                                              localStorage.removeItem(StorageKeys.TOKEN)

@@ -39,11 +39,15 @@ export default class SearchHeader extends Component {
         return(
             <MDBCol size={3}>
             <Form.Group>
-                    <Form.Label className="grey-text">{searchFieldTitle}</Form.Label>
+                <Form.Label className="grey-text">{searchFieldTitle}</Form.Label>
                     <Typeahead
                       id="basic-typeahead-single"
                       labelKey="name"
-                      onChange={event => {this.props.updateSearchFieldValues(searchFieldName, event[0])
+                      onInputChange={event => {
+                          this.props.updateSearchFieldValues(searchFieldName, event)
+                      }}
+                      onChange={event => {
+                          this.props.updateSearchFieldValues(searchFieldName, event[0])
                       }}
                       options={this.props.vendors}
                       placeholder="Search"

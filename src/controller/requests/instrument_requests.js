@@ -5,62 +5,83 @@ import {UserError} from "../exceptions";
 
 export default class InstrumentRequests {
 
-    static async get_instruments(token, page_num = undefined, vendor = undefined, model_number = undefined,
-                            description = undefined, serial_number = undefined, search = undefined, search_field = undefined,
-                            ordering = undefined) {
+    static async getInstruments(token, page_num = undefined, vendor = undefined, model_number = undefined,
+                                description = undefined, serial_number = undefined, search = undefined, search_field = undefined,
+                                ordering = undefined,
+                                callBack = (json) => json,
+                                errorMessageCallBack = (errorMessage) => errorMessage) {
 
-        let params = RequestUtils.build_get_instrument_params(page_num, vendor, model_number,
+        let params = RequestUtils.buildGetInstrumentParams(page_num, vendor, model_number,
             description, serial_number, search, search_field, ordering)
 
-        let header = RequestUtils.build_token_header(token)
+        let header = RequestUtils.buildTokenHeader(token)
 
-        let instrument_data = await RequestUtils.assisted_fetch(URLS.INSTRUMENTS,
+        RequestUtils.assistedFetch(URLS.INSTRUMENTS,
             METHODS.GET,
+            callBack,
+            errorMessageCallBack,
             header,
             params)
-        return instrument_data
     }
 
-    static async get_instruments_with_search_params(token, params) {
-        let header = RequestUtils.build_token_header(token)
-        params = RequestUtils.remove_empty_fields(params)
-        let instrument_data = await RequestUtils.assisted_fetch(URLS.INSTRUMENTS,
+    static async getInstrumentsWithSearchParams(token, params,
+                                                callBack = (json) => json,
+                                                errorMessageCallBack = (errorMessage) => errorMessage) {
+        let header = RequestUtils.buildTokenHeader(token)
+        params = RequestUtils.removeEmptyFields(params)
+        RequestUtils.assistedFetch(URLS.INSTRUMENTS,
             METHODS.GET,
+            callBack,
+            errorMessageCallBack,
             header,
             params,
             undefined, true)
-        return instrument_data
     }
 
-    static async retrieve_instrument(token, pk) {
-        let header = RequestUtils.build_token_header(token)
+    static async retrieveInstrument(token, pk,
+                                    callBack = (json) => json,
+                                    errorMessageCallBack = (errorMessage) => errorMessage) {
+        let header = RequestUtils.buildTokenHeader(token)
 
-        return await RequestUtils.assisted_fetch(URLS.INSTRUMENTS+pk,
+        RequestUtils.assistedFetch(URLS.INSTRUMENTS+pk,
             METHODS.GET,
+            callBack,
+            errorMessageCallBack,
             header)
     }
 
-    static async create_instrument(token, model_pk, serial_number, comment=undefined) {
+    static async createInstrument(token, model_pk, serial_number, comment=undefined,
+                                  callBack = (json) => json,
+                                  errorMessageCallBack = (errorMessage) => errorMessage) {
 
-        return await InstrumentRequests.update_instrument(token, "post", URLS.MODELS, model_pk, serial_number, comment)
+        InstrumentRequests.updateInstrument(token, "post", URLS.MODELS, callBack, errorMessageCallBack, model_pk, serial_number, comment)
     }
 
-    static async edit_model(token, instrument_pk, model_pk=undefined, serial_number=undefined, comment=undefined) {
+    static async editInstrument(token, instrument_pk, model_pk=undefined, serial_number=undefined, comment=undefined,
+                                   callBack = (json) => json,
+                                   errorMessageCallBack = (errorMessage) => errorMessage) {
 
-        return await InstrumentRequests.update_model(token, "put", URLS.MODELS + RequestUtils.apply_request_param_suffix({"pk" : instrument_pk}),
-            model_pk, serial_number, comment)
+        InstrumentRequests.updateInstrument(token, "put", URLS.MODELS + instrument_pk,
+            callBack, errorMessageCallBack, model_pk, serial_number, comment)
     }
 
-    static async delete_model(token, model_pk) {
-        let header = RequestUtils.build_token_header(token)
-        return await RequestUtils.assisted_fetch(URLS.MODELS, "delete", header, {"pk": model_pk})
+    static async deleteInstruments(token, instrument_pk,
+                                     callBack = (json) => json,
+                                     errorMessageCallBack = (errorMessage) => errorMessage) {
+        let header = RequestUtils.buildTokenHeader(token)
+        RequestUtils.assistedFetch(URLS.INSTRUMENTS + instrument_pk, "delete", callBack, errorMessageCallBack, header)
     }
 
     // private helpers
 
-    static async update_instrument(token, method, full_url, model_pk=undefined, serial_number=undefined, comment=undefined) {
-        let header = RequestUtils.build_token_header(token)
-        let fields = RequestUtils.build_create_instrument_data(model_pk, serial_number, comment)
-        return await RequestUtils.assisted_fetch(full_url, method, header, undefined, fields)
+    static async updateInstrument(token, method, full_url,
+                                  callBack = (json) => json,
+                                  errorMessageCallBack = (errorMessage) => errorMessage,
+                                  model_pk=undefined, serial_number=undefined, comment=undefined) {
+        let header = RequestUtils.buildTokenHeader(token)
+        let fields = RequestUtils.buildCreateInstrumentData(model_pk, serial_number, comment)
+        RequestUtils.assistedFetch(full_url, method,
+                                    callBack, errorMessageCallBack,
+                                    header, undefined, fields)
     }
 }

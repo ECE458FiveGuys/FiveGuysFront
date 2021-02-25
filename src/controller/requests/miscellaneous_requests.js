@@ -4,12 +4,14 @@ import ModelFields from "../../utils/enums";
 
 export default class MiscellaneousRequests{
 
-    static async get_vendors(token, vendor_substring=undefined) {
-        let params = {vendor: vendor_substring}
-        RequestUtils.remove_empty_fields(params)
-        let header = RequestUtils.build_token_header(token)
-        let model_data = await RequestUtils.assisted_fetch(URLS.VENDORS,
-            METHODS.GET, header, params)
-        return model_data
+    static async getVendors(token,
+                            vendorSubstring=undefined,
+                            callBack = (json) => json,
+                            errorMessageCallBack = (errorMessage) => errorMessage) {
+        let params = {vendor: vendorSubstring}
+        RequestUtils.removeEmptyFields(params)
+        let header = RequestUtils.buildTokenHeader(token)
+        RequestUtils.assistedFetch(URLS.VENDORS,
+            METHODS.GET, callBack, errorMessageCallBack, header, params)
     }
 }

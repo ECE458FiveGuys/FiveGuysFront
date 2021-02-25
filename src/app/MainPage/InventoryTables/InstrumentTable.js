@@ -51,7 +51,7 @@ export default class InstrumentTable extends Component {
             <InventoryTable columns={TableColumns.INSTRUMENT_COLUMNS}
                             searchFields={ModelFields.InstrumentSearchFields}
                             token={this.props.token}
-                            searchRequestFunction={InstrumentRequests.get_instruments_with_search_params}
+                            searchRequestFunction={InstrumentRequests.getInstrumentsWithSearchParams}
                             parseSearchResultsFunction={this.parseSearchResults}
             >
                 <InstrumentTableLegend></InstrumentTableLegend>

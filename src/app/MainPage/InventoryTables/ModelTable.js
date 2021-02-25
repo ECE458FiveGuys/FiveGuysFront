@@ -14,6 +14,11 @@ export default class ModelTable extends Component {
     parseSearchResults = (results) => {
         results.forEach(result => {
             let model_pk = result[ModelFields.EquipmentModelFields.PK]
+            result[ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY] =
+                result[ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY] === "00:00:00" ?
+                "Noncalibratable"
+                :
+                result[ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY].split(" ")[0]
             result.clickEvent = newTab("/models/" + model_pk)
         })
         return results
@@ -24,7 +29,7 @@ export default class ModelTable extends Component {
             <InventoryTable columns={TableColumns.MODEL_COLUMNS}
                             searchFields={ModelFields.EquipmentModelSearchFields}
                             token={this.props.token}
-                            searchRequestFunction={ModelRequests.get_models_with_search_params}
+                            searchRequestFunction={ModelRequests.getModelsWithSearchParams}
                             parseSearchResultsFunction={this.parseSearchResults}/>
         );
     }
