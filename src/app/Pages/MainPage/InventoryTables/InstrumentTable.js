@@ -1,10 +1,10 @@
 import {Component} from "react";
 import TableColumns from "./Columns";
 import InventoryTable from "./InventoryTable";
-import ModelFields from "../../../utils/enums";
-import ModelRequests from "../../../controller/requests/model_requests";
-import InstrumentRequests from "../../../controller/requests/instrument_requests";
-import {dateColors, newTab, parseDate} from "../../utils";
+import ModelFields from "../../../../utils/enums";
+import ModelRequests from "../../../../controller/requests/model_requests";
+import InstrumentRequests from "../../../../controller/requests/instrument_requests";
+import {dateColors, newTab, parseDate} from "../../../utils";
 import {InstrumentTableLegend} from "../Widgets/Legend";
 import TableUtils from "./TableUtils";
 

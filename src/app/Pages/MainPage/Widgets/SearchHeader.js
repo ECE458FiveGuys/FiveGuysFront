@@ -4,7 +4,7 @@ import TableColumns from "../InventoryTables/Columns";
 import PropTypes from "prop-types";
 import InventoryTable from "../InventoryTables/InventoryTable";
 import {Search} from "semantic-ui-react";
-import ModelFields from "../../../utils/enums";
+import ModelFields from "../../../../utils/enums";
 import {Typeahead} from "react-bootstrap-typeahead"
 import {Form} from "react-bootstrap"
 import 'react-bootstrap-typeahead/css/Typeahead.css';

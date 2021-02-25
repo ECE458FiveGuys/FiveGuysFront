@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import { MDBDropdown, MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem } from "mdbreact";
-import ModelFields from "../../../utils/enums";
-import Login from "../../../auth/Login";
+import ModelFields from "../../../../utils/enums";
+import Login from "../../../../auth/Login";
 import PropTypes from "prop-types";
 
 class Dropdown extends Component {

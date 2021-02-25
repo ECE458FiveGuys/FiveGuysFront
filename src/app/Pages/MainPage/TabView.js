@@ -3,7 +3,7 @@ import { MDBContainer, MDBTabPane, MDBTabContent, MDBNav, MDBNavItem, MDBNavLink
 import ModelTable from "./InventoryTables/ModelTable";
 import InstrumentTable from "./InventoryTables/InstrumentTable";
 import PropTypes from "prop-types";
-import {User} from "../../utils/dtos";
+import {User} from "../../../utils/dtos";
 
 class TabView extends Component {
     state = {

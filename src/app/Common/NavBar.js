@@ -51,7 +51,6 @@ class NavbarPage extends Component {
             <MDBNavLink to="/load-bank">{user.is_staff ? "Import/Export" : "Export"}</MDBNavLink>
         </MDBNavItem>)
         return (
-            <Router>
                 <MDBNavbar color={"green"} dark expand="md">
                     <MDBNavbarBrand>
                         <strong className="white-text">HPT</strong>
@@ -88,7 +87,6 @@ class NavbarPage extends Component {
                         </MDBNavbarNav>
                     </MDBCollapse>
                 </MDBNavbar>
-            </Router>
         );
     }
 }

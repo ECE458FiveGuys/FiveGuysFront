@@ -1,9 +1,9 @@
 import {Component} from "react";
 import TableColumns from "./Columns";
 import InventoryTable from "./InventoryTable";
-import ModelFields from "../../../utils/enums";
-import ModelRequests from "../../../controller/requests/model_requests";
-import {newTab} from "../../utils";
+import ModelFields from "../../../../utils/enums";
+import ModelRequests from "../../../../controller/requests/model_requests";
+import {newTab} from "../../../utils";
 import TableUtils from "./TableUtils";
 
 export default class ModelTable extends Component {

@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import './App.css';
-import MainView from './app/MainPage/MainView';
+import MainView from './app/Pages/MainPage/MainView';
 import Login from "./auth/Login";
 import NotFound from "./auth/NotFound";
 import {StorageKeys} from "./utils/enums";
 import {User} from "./utils/dtos";
+import NavBar from "./app/Common/NavBar";
 
 class App extends Component {
 
