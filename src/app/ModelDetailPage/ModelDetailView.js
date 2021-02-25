@@ -1,68 +1,88 @@
 import React, { Component } from "react";
 import ModelRequests from "../../controller/requests/model_requests";
-import TableColumns from "../MainPage/InventoryTables/Columns";
-import { MDBDataTable } from 'mdbreact';
 import ErrorBoundary from './ErrorBoundary'
+// import InstrumentSerialTable from "./InstrumentSerialTable";
+import {Button, Modal} from "react-bootstrap";
+// import {setModalShow} from "react-bootstrap";
+import EditButton from "./EditButton";
 
 class ModelDetailView extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+            instruments: [],
+            model: [],
+            token: this.props.token,
+            modalShow: false,
+        }
     }
-
-
 
     async componentDidMount() {
-        let instruments = await this.parseModel();
+        // let token = this.props.token;
+        let model = await ModelRequests.retrieve_model(this.state.token, 19);
+        // console.log(model)
+        let instruments = model['instruments']
+        // let fields = [model['vendor'],model['model_number'],model['description'],model['comment'],model['comment']]
         this.setState({instruments: instruments});
+        this.setState({model: model});
     }
 
-    render() {
-        // try {
-        //     let model = this.getModel();
-        //     console.log(model);
-        let data = {
-            columns: TableColumns.INSTRUMENT_COLUMNS,
-            rows: this.state.instruments
-        }
+    setModalShow(boolean) {
+        this.setState({modalShow:boolean})
+    }
 
+
+    render() {
+        if(this.state.model!==[]) {
             return (
                 <div>
+                    <h1>Model Details</h1>
+                    <Button variant="primary" onClick={() => this.setModalShow(true)}>
+                        Edit
+                    </Button>
+                    <EditButton
+                        show={this.state.modalShow}
+                        onHide={() => this.setModalShow(false)}
+                        model={this.state.model}
+                        token = {this.props.token}
+                    />
+                    <Button>
+                        Delete
+                    </Button>
+                    <ul>
+                        <li>
+                            Vendor: {this.state.model.vendor}
+                        </li>
+                        <li>
+                            Model Number: {this.state.model.model_number}
+                        </li>
+                        <li>
+                            Description: {this.state.model.description}
+                        </li>
+                        <li>
+                            Comment: {this.state.model.comment}
+                        </li>
+                        <li>
+                            Calibration Frequency: {this.state.model.calibration_frequency}
+                        </li>
+                    </ul>
                     <ErrorBoundary>
-                        <h1>Debug</h1>
-                        {/*<MDBDataTable*/}
-                        {/*    autoWidth={false}*/}
-                        {/*    striped*/}
-                        {/*    bordered*/}
-                        {/*    small*/}
-                        {/*    searching={false}*/}
-                        {/*    data={data}*/}
-                        {/*/>*/}
+                        {/*<InstrumentSerialTable instruments={this.state.instruments}/>*/}
+                        <ul>{this.state.instruments.map((instrument, index) => (
+                            <li
+                                key={instrument.pk}
+                            >
+                                {instrument.serial_number}
+                            </li>
+                        ))}
+                        </ul>
                     </ErrorBoundary>
                 </div>
             );
-
-        // } catch (err) {
-        //     console.log('error')
-        //     return(<div><h1>Error</h1></div>);
-        // }
+        }
     }
 
-    async parseModel() {
-        let token = this.props.token;
-        let model = await ModelRequests.retrieve_model(token, 19);
-        console.log(model)
-        return model['instruments']
-    }
 
-    // async getModel() {
-    //     // console.log(await ModelRequests.retrieve_model(this.props.token, 2))
-    //     // return;
-    //     // let token = localStorage.getItem('token')
-    //     let token = this.props.token;
-    //     console.log(token)
-    //     return await ModelRequests.retrieve_model(token, 2);
-    // }
 }
 export default ModelDetailView;
