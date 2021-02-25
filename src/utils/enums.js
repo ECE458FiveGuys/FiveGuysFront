@@ -1,4 +1,19 @@
+export const StorageKeys = {
+    TOKEN : "token",
+    USER : "user"
+}
+
+
 export default class ModelFields {
+
+    static UserFields = {
+        NAME: "name",
+        EMAIL : "email",
+        ACTIVITY : "is_active",
+        ID : "id",
+        USERNAME : "username",
+        IS_STAFF : "is_staff"
+    }
 
     static EquipmentModelFields = {
         VENDOR: "vendor",
@@ -6,7 +21,8 @@ export default class ModelFields {
         DESCRIPTION: "description",
         PK: "pk",
         COMMENT: "comment",
-        CALIBRATION_FREQUENCY: "calibration_frequency"
+        CALIBRATION_FREQUENCY: "calibration_frequency",
+        MODEL_CATEGORIES: "model_categories"
     }
 
     static EquipmentModelSearchFields = {
@@ -21,13 +37,16 @@ export default class ModelFields {
         SERIAL_NUMBER: "serial_number",
         COMMENT: "comment",
         MOST_RECENT_CALIBRATION : "most_recent_calibration_date",
-        EXPIRATION_DATE : "calibration_expiration_date"
+        EXPIRATION_DATE : "calibration_expiration_date",
+        ASSET_TAG : "asset_tag_number",
+        Instrument_CATEGORIES : "instrument_categories"
     }
 
     static InstrumentSearchFields = {
         ...ModelFields.EquipmentModelSearchFields,
         ...{
-            "Serial Number": ModelFields.InstrumentFields.SERIAL_NUMBER
+            "Serial Number": ModelFields.InstrumentFields.SERIAL_NUMBER,
+            "Asset Tag" : ModelFields.InstrumentFields.ASSET_TAG
         }
     }
 }

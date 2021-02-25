@@ -3,7 +3,8 @@ import { MDBDataTable } from 'mdbreact';
 import PropTypes from "prop-types";
 import SearchHeader from "../Widgets/SearchHeader";
 import MiscellaneousRequests from "../../../controller/requests/miscellaneous_requests";
-import NavBar from "../NavBar";
+import Image from "../../../assets/Spinner.gif";
+import ModelFields from "../../../utils/enums";
 
 class InventoryTable extends Component {
 
@@ -20,21 +21,41 @@ class InventoryTable extends Component {
     }
 
     async componentDidMount() {
-        let {searchRequestFunction, parseSearchResultsFunction} = this.props
-        let initial_data = parseSearchResultsFunction(await searchRequestFunction(this.props.token, {}))
-        let vendors = await MiscellaneousRequests.get_vendors(this.props.token)
-        this.setState({results: initial_data, vendors: vendors})
+        this.loadTableData()
+        this.loadVendors()
     }
 
-    updateSearchFieldValues = async (searchFieldName, searchFieldValue) => {
+    loadTableData () {
         let {searchRequestFunction, parseSearchResultsFunction} = this.props
+        let getModelsCallBack = (json) => {
+            let data = parseSearchResultsFunction(json)
+            this.setState({
+                results : data
+            })
+        }
+        searchRequestFunction(this.props.token,
+            this.state.searchFieldValues,
+            getModelsCallBack,
+            (errorMessage) => alert(errorMessage))
+    }
+
+    loadVendors () {
+        let getVendorsCallBack = (json) => {
+            this.setState({vendors: json})
+        }
+        MiscellaneousRequests.getVendors(this.props.token, this.state.searchFieldValues[ModelFields.EquipmentModelFields.VENDOR], getVendorsCallBack)
+    }
+
+    /*
+    Once search field values are updated, call this.loadTableData to update the table based on the search fields
+     */
+
+    updateSearchFieldValues = (searchFieldName, searchFieldValue) => {
         this.state.searchFieldValues[searchFieldName] = searchFieldValue
-        let search = await searchRequestFunction(this.props.token, this.state.searchFieldValues)
-        let data = parseSearchResultsFunction(search)
         this.setState({
             searchFieldValues : this.state.searchFieldValues,
-            results : data
-        })
+        },
+            this.loadTableData)
     }
 
     render() {
@@ -42,6 +63,21 @@ class InventoryTable extends Component {
             columns: this.props.columns,
             rows: this.state.results
         }
+        let Content = !this.state.results ?
+        <div style={{display: 'flex', justifyContent: 'center', alignItems : 'center'}}>
+            <img alt="loading"
+                 style={{width: 150, marginTop: 50}}
+                 src={Image}/>
+        </div>
+            :
+        <MDBDataTable
+            autoWidth={false}
+            striped
+            bordered
+            small
+            searching={false}
+            data={data}
+        />
         return (
             <div style={{background: "white"}}>
                 <SearchHeader searchFields= {this.props.searchFields}
@@ -50,14 +86,7 @@ class InventoryTable extends Component {
                               vendors={this.state.vendors}
                                 />
                 {this.props.children}
-                <MDBDataTable
-                        autoWidth={false}
-                        striped
-                        bordered
-                        small
-                        searching={false}
-                        data={data}
-                    />
+                {Content}
             </div>);
     }
 }

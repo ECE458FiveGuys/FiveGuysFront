@@ -1,71 +1,96 @@
 import RequestUtils from "./request_utils";
-import {METHODS, URLS} from "../../strings";
+import {METHODS, URLS} from "../strings";
 import ModelFields from "../../utils/enums";
 import {UserError} from "../exceptions";
 
 export default class ModelRequests {
 
-    static async get_models(token, page_num = undefined, vendor = undefined, model_number = undefined,
+    static async getModels(token, page_num = undefined, vendor = undefined, model_number = undefined,
                             description = undefined, search = undefined, search_field = undefined,
-                            ordering = undefined) {
-        let params = RequestUtils.build_get_model_params(page_num, vendor, model_number,
+                            ordering = undefined,
+                            callBack = (json) => json,
+                            errorMessageCallBack = (errorMessage) => errorMessage) {
+        let params = RequestUtils.buildGetModelParams(page_num, vendor, model_number,
             description, search, search_field, ordering)
 
-        let header = RequestUtils.build_token_header(token)
+        let header = RequestUtils.buildTokenHeader(token)
 
-        let model_data = await RequestUtils.assisted_fetch(URLS.MODELS,
-            METHODS.GET, header, params)
-        // return model_data["results"]
-        return model_data
+        RequestUtils.assistedFetch(URLS.MODELS,
+            METHODS.GET, callBack, errorMessageCallBack, header, params)
     }
 
-    static async get_models_with_search_params(token, params) {
-        let header = RequestUtils.build_token_header(token)
-        params = RequestUtils.remove_empty_fields(params)
-        let model_data = await RequestUtils.assisted_fetch(URLS.MODELS,
-            METHODS.GET, header, params, undefined, true)
-        // return model_data["results"]
-        return model_data
+    static async getModelsWithSearchParams(token, params,
+                                           callBack = (json) => json,
+                                           errorMessageCallBack = (errorMessage) => errorMessage) {
+        let header = RequestUtils.buildTokenHeader(token)
+        params = RequestUtils.removeEmptyFields(params)
+        RequestUtils.assistedFetch(URLS.MODELS,
+            METHODS.GET, callBack, errorMessageCallBack, header, params, undefined, true)
     }
 
-    static async retrieve_model(token, pk) {
-        let header = RequestUtils.build_token_header(token)
+    static async retrieveModel(token,
+                               pk,
+                               callBack = (json) => json,
+                               errorMessageCallBack = (errorMessage) => errorMessage) {
+        let header = RequestUtils.buildTokenHeader(token)
 
-        return await RequestUtils.assisted_fetch(URLS.MODELS+pk,
+        RequestUtils.assistedFetch(URLS.MODELS + pk,
             METHODS.GET,
+            callBack,
+            errorMessageCallBack,
             header)
     }
 
     static async create_model(token, vendor, model_number, description,
-                              comment = undefined, calibration_frequency = undefined) {
+                              comment = undefined, calibration_frequency = undefined,
+                              callBack = (json) => json,
+                              errorMessageCallBack = (errorMessage) => errorMessage
+                                ) {
 
-        return await ModelRequests.update_model(token, "post", URLS.MODELS, vendor, model_number, description, comment, calibration_frequency)
+        ModelRequests.updateModel(token, "post", URLS.MODELS,
+            callBack,
+            errorMessageCallBack,
+            vendor, model_number, description, comment, calibration_frequency)
     }
 
-    static async edit_model(token, model_pk, vendor = undefined, model_number = undefined, description = undefined, comment = undefined,
-               calibration_frequency = undefined) {
+    static async editModel(token, model_pk, vendor = undefined, model_number = undefined, description = undefined, comment = undefined,
+                            calibration_frequency = undefined,
+                           callBack = (json) => json,
+                           errorMessageCallBack = (errorMessage) => errorMessage) {
 
-        return await ModelRequests.update_model(token, "put", URLS.MODELS + RequestUtils.apply_request_param_suffix({"pk" : model_pk}),
-                vendor, model_number, description, comment, calibration_frequency)
+        ModelRequests.updateModel(token, "put", URLS.MODELS + model_pk,
+                                                callBack,
+                                                errorMessageCallBack,
+                                                vendor, model_number, description, comment, calibration_frequency)
     }
 
-    static async delete_model(token, model_pk) {
-        let header = RequestUtils.build_token_header(token)
-        return await RequestUtils.assisted_fetch(URLS.MODELS, "delete", header, {"pk": model_pk})
+    static async deleteModel(token, model_pk,
+                             callBack = (json) => json,
+                             errorMessageCallBack = (errorMessage) => errorMessage) {
+        let header = RequestUtils.buildTokenHeader(token)
+        RequestUtils.assistedFetch(URLS.MODELS + model_pk, "delete",
+                                    callBack,
+                                    errorMessageCallBack,
+                                    header)
     }
 
     // private helpers
 
-    static async update_model(token, method, url, vendor = undefined, model_number = undefined,
-                          description = undefined, comment = undefined, calibration_frequency = undefined) {
-        let header = RequestUtils.build_token_header(token)
+    static async updateModel(token, method, url,
+                             callBack = (json) => json,
+                             errorMessageCallBack = (errorMessage) => errorMessage,
+                             vendor = undefined, model_number = undefined,
+                              description = undefined, comment = undefined, calibration_frequency = undefined) {
+        let header = RequestUtils.buildTokenHeader(token)
         let fields = {}
         fields[ModelFields.EquipmentModelFields.VENDOR] = vendor
         fields[ModelFields.EquipmentModelFields.MODEL_NUMBER] = model_number
         fields[ModelFields.EquipmentModelFields.DESCRIPTION] = description
         fields[ModelFields.EquipmentModelFields.COMMENT] = comment
         fields[ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY] = calibration_frequency
-        RequestUtils.remove_empty_fields(fields)
-        return await RequestUtils.assisted_fetch(url, method, header, undefined, fields)
+        RequestUtils.removeEmptyFields(fields)
+        RequestUtils.assistedFetch(url, method,
+                                    callBack, errorMessageCallBack,
+                                    header, undefined, fields)
     }
 }

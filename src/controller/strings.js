@@ -7,7 +7,8 @@ export const URLS =
         LOGIN : ROOT_URL + "auth/token/login",
         MODELS : ROOT_URL + "models/",
         INSTRUMENTS : ROOT_URL + "instruments/",
-        VENDORS : ROOT_URL + "models/vendors/"
+        VENDORS : ROOT_URL + "models/vendors/",
+        USERS : ROOT_URL + "auth/users/"
     }
 
 export const METHODS =

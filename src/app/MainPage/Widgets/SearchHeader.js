@@ -1,4 +1,4 @@
-import {Component} from "react";
+import React, {Component} from "react";
 import {MDBBtn, MDBCol, MDBContainer, MDBRow} from "mdbreact";
 import TableColumns from "../InventoryTables/Columns";
 import PropTypes from "prop-types";
@@ -8,6 +8,7 @@ import ModelFields from "../../../utils/enums";
 import {Typeahead} from "react-bootstrap-typeahead"
 import {Form} from "react-bootstrap"
 import MiscellaneousRequests from "../../../controller/requests/miscellaneous_requests";
+import Image from "../../../assets/hpt_logo.png";
 
 let SEARCH_FIELD_COLS = 4
 
@@ -38,11 +39,15 @@ export default class SearchHeader extends Component {
         return(
             <MDBCol size={3}>
             <Form.Group>
-                    <Form.Label className="grey-text">{searchFieldTitle}</Form.Label>
+                <Form.Label className="grey-text">{searchFieldTitle}</Form.Label>
                     <Typeahead
                       id="basic-typeahead-single"
                       labelKey="name"
-                      onChange={event => {this.props.updateSearchFieldValues(searchFieldName, event[0])
+                      onInputChange={event => {
+                          this.props.updateSearchFieldValues(searchFieldName, event)
+                      }}
+                      onChange={event => {
+                          this.props.updateSearchFieldValues(searchFieldName, event[0])
                       }}
                       options={this.props.vendors}
                       placeholder="Search"
@@ -52,6 +57,23 @@ export default class SearchHeader extends Component {
             </MDBCol>
         )
     }
+
+    // renderAutoCompleteMultipleSearchBox(searchFieldName, searchFieldTitle) {
+    //     return(
+    //         <Form.Group>
+    //             <Form.Label className="grey-text">{searchFieldTitle}</Form.Label>
+    //             <Typeahead
+    //                 id="basic-typeahead-multiple"
+    //                 labelKey="name"
+    //                 multiple
+    //                 onChange={setMultiSelections}
+    //                 options={options}
+    //                 placeholder="Choose several states..."
+    //                 selected={multiSelections}
+    //             />
+    //         </Form.Group>
+    //     )
+    // }
 
     render() {
         let Rows = []
@@ -72,8 +94,9 @@ export default class SearchHeader extends Component {
             }
             }
         )
+
         return(
-            <MDBContainer style={{marginLeft: -15}}>
+            <MDBContainer style={{marginLeft: -15, display: "inline"}}>
                 <header className={"h5-responsive"} style={{marginTop: 10, marginBottom: 10}}>
                     Search Your Inventory
                 </header>

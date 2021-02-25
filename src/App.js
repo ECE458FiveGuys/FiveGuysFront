@@ -2,8 +2,6 @@ import React, {Component} from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import './App.css';
 import MainView from './app/MainPage/MainView';
-import InstrumentDetailView from './app/InstrumentDetailPage/InstrumentDetailView'
-import ModelDetailView from './app/ModelDetailPage/ModelDetailView'
 import Login from "./auth/Login";
 import NotFound from "./auth/NotFound";
 
@@ -17,15 +15,15 @@ class App extends Component {
     this.saveToken = this.saveToken.bind(this)
   }
 
-  getToken = () => {
-    const tokenString = localStorage.getItem('token');
-    return JSON.parse(tokenString);
-  };
+    getToken = () => {
+        const tokenString = localStorage.getItem(StorageKeys.TOKEN);
+        return JSON.parse(tokenString);
+    };
 
-  saveToken = userToken => {
-    localStorage.setItem('token', JSON.stringify(userToken));
-    this.setState({token: userToken})
-  };
+    saveToken = userToken => {
+        localStorage.setItem(StorageKeys.TOKEN, JSON.stringify(userToken));
+        this.setState({token: userToken})
+    };
 
   render() {
     if (!this.state.token) {
