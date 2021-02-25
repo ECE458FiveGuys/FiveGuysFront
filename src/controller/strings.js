@@ -8,7 +8,9 @@ export const URLS =
         MODELS : ROOT_URL + "models/",
         INSTRUMENTS : ROOT_URL + "instruments/",
         VENDORS : ROOT_URL + "models/vendors/",
-        USERS : ROOT_URL + "auth/users/"
+        USERS : ROOT_URL + "auth/users/",
+        MODEL_CATEGORIES : ROOT_URL + "model-categories/",
+        INSTRUMENT_CATEGORIES: ROOT_URL + "instrument-categories/"
     }
 
 export const METHODS =

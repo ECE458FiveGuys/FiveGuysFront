@@ -2,6 +2,7 @@ import RequestUtils from "./request_utils";
 import {METHODS, URLS} from "../strings";
 import ModelFields from "../../utils/enums";
 import {UserError} from "../exceptions";
+import {EquipmentModel} from "../../utils/ModelEnums";
 
 export default class ModelRequests {
 
@@ -24,8 +25,9 @@ export default class ModelRequests {
                                            errorMessageCallBack = (errorMessage) => errorMessage) {
         let header = RequestUtils.buildTokenHeader(token)
         params = RequestUtils.removeEmptyFields(params)
-        RequestUtils.assistedFetch(URLS.MODELS,
-            METHODS.GET, callBack, errorMessageCallBack, header, params, undefined, true)
+        let url = URLS.MODELS + RequestUtils.applySearchParams(params, EquipmentModel.TYPE)
+        RequestUtils.assistedFetch(url,
+            METHODS.GET, callBack, errorMessageCallBack, header, {}, undefined)
     }
 
     static async retrieveModel(token,

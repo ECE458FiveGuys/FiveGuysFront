@@ -1,6 +1,7 @@
 import ModelFields from "../../utils/enums";
 import {METHODS, URLS} from "../strings";
 import {ServerError, UserError} from "../exceptions"
+import {EquipmentModel, Instrument} from "../../utils/ModelEnums";
 
 export const ParamNames = {
     SEARCH : "search",
@@ -23,8 +24,7 @@ export default class RequestUtils {
                         errorMessageCallBack = (errorMessage) => errorMessage,
                         header={},
                         params=undefined,
-                        data= undefined,
-                        allSearchFields=false) {
+                        data= undefined) {
         header['Content-Type'] = 'application/json';
         header['Accept'] = 'application/json';
         let init = {
@@ -34,7 +34,7 @@ export default class RequestUtils {
         if (data) {
             init.body =  JSON.stringify(data)
         }
-        fetch(url + RequestUtils.applyRequestParamSuffix(params, allSearchFields), init)
+        fetch(url + RequestUtils.applyRequestParamSuffix(params), init)
                         .then(response => {
                             if (response.ok) {
                                 response.json()
@@ -67,21 +67,45 @@ export default class RequestUtils {
     }
 
     // boolean determines whether all the parameters are search fields intended for a partial search
-    static applyRequestParamSuffix(paramObj, allSearchFields = false) {
+    static applyRequestParamSuffix(paramObj) {
         if (!paramObj || paramObj.size == 0) {
             return ""
         }
         let suffix = "?"
         Object.keys(paramObj).forEach(key => {
-            if (allSearchFields) {
+            suffix+=key+"="+paramObj[key]+"&"
+        })
+        return suffix.slice(0, -1) // removes last &
+    }
+
+    static applySearchParams(paramObj, ModelType) {
+        if (!paramObj || paramObj.size == 0) {
+            return ""
+        }
+        let suffix = "?"
+        let addCategoryParameter = (currentSuffix, parameterName, categoryList) => {
+            categoryList.forEach(category => {
+                currentSuffix += parameterName + "=" + category + "&"
+            })
+            return currentSuffix
+        }
+        Object.keys(paramObj).forEach(key => {
+            if (key === EquipmentModel.FIELDS.MODEL_CATEGORIES) {
+                if (ModelType === EquipmentModel.TYPE) {
+                    suffix = addCategoryParameter(suffix, "model_categories__name", paramObj[key])
+                } else if (ModelType === Instrument.TYPE) {
+                    suffix = addCategoryParameter(suffix, "model__model_categories__name", paramObj[key])
+                }
+            } else if (key === Instrument.FIELDS.INSTRUMENT_CATEGORIES) {
+                suffix = addCategoryParameter(suffix, "instrument_categories__name", paramObj[key])
+            } else {
                 suffix+=ParamNames.SEARCH+"="+paramObj[key]+"&"
                 suffix+=ParamNames.SEARCH_FIELD+"="+key+"&"
-            } else {
-                suffix+=key+"="+paramObj[key]+"&"
             }
         })
         return suffix.slice(0, -1) // removes last &
     }
+
 
     static removeEmptyFields(obj) {
         for (var propName in obj) {

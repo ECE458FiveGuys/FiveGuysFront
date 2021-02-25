@@ -66,12 +66,6 @@ export default class TableColumns {
             width: 100
         },
         {
-            label: 'Categories',
-            field: ModelFields.InstrumentFields.Instrument_CATEGORIES,
-            sort: 'asc',
-            width: 100
-        },
-        {
             label: 'Most Recent Calibration',
             field: ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION,
             sort: 'asc',
@@ -80,6 +74,18 @@ export default class TableColumns {
         {
             label: 'Calibration Expiration',
             field: ModelFields.InstrumentFields.EXPIRATION_DATE,
+            sort: 'asc',
+            width: 100
+        },
+        {
+            label: 'Model Categories',
+            field: ModelFields.EquipmentModelFields.MODEL_CATEGORIES,
+            sort: 'asc',
+            width: 100
+        },
+        {
+            label: 'Instrument Categories',
+            field: ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES,
             sort: 'asc',
             width: 100
         },

@@ -23,6 +23,7 @@ class InventoryTable extends Component {
     async componentDidMount() {
         this.loadTableData()
         this.loadVendors()
+        this.loadCategories()
     }
 
     loadTableData () {
@@ -46,16 +47,30 @@ class InventoryTable extends Component {
         MiscellaneousRequests.getVendors(this.props.token, this.state.searchFieldValues[ModelFields.EquipmentModelFields.VENDOR], getVendorsCallBack)
     }
 
+    loadCategories () {
+        let {token, searchFields} = this.props
+        // categoryType = model_categories or instrument_categories
+        let getCategoriesCallBack = (categoryType) => (json) => {
+            let newState = {}
+            let categories = []
+            json.forEach(category => {
+                categories.push(category[ModelFields.CategoryFields.NAME])
+            })
+            newState[categoryType] = categories
+            this.setState(newState)
+        }
+        MiscellaneousRequests.getCategories(token, searchFields, getCategoriesCallBack)
+    }
+
     /*
     Once search field values are updated, call this.loadTableData to update the table based on the search fields
      */
 
-    updateSearchFieldValues = (searchFieldName, searchFieldValue) => {
-        this.state.searchFieldValues[searchFieldName] = searchFieldValue
-        this.setState({
-            searchFieldValues : this.state.searchFieldValues,
-        },
-            this.loadTableData)
+    updateSearchFieldValues = (searchFieldValues) => {
+        this.setState({results : undefined },
+            ()=> this.setState({searchFieldValues : searchFieldValues},
+                this.loadTableData)
+        )
     }
 
     render() {
@@ -66,7 +81,7 @@ class InventoryTable extends Component {
         let Content = !this.state.results ?
         <div style={{display: 'flex', justifyContent: 'center', alignItems : 'center'}}>
             <img alt="loading"
-                 style={{width: 150, marginTop: 50}}
+                 style={{width: 100, marginTop: 50}}
                  src={Image}/>
         </div>
             :
@@ -84,6 +99,8 @@ class InventoryTable extends Component {
                               updateSearchFieldValues={this.updateSearchFieldValues}
                               token={this.props.token}
                               vendors={this.state.vendors}
+                              modelCategories={this.state.model_categories ? this.state.model_categories : []}
+                              instrumentCategories={this.state.instrument_categories ? this.state.instrument_categories : []}
                                 />
                 {this.props.children}
                 {Content}
@@ -96,6 +113,7 @@ InventoryTable.propTypes = {
     searchFields: PropTypes.object.isRequired, // the fields of the datatable that should be searchable
     token: PropTypes.string.isRequired, // the token obtained through login
     searchRequestFunction: PropTypes.func.isRequired,  // the request from the shared library used to populate the table
+    categoriesName: PropTypes.string.isRequired,
     parseSearchResultsFunction: PropTypes.func, // the parser used to format the data from the request so it can be added to the table
 }
 

@@ -2,6 +2,7 @@ import RequestUtils from "./request_utils";
 import {METHODS, URLS} from "../strings";
 import ModelFields from "../../utils/enums";
 import {UserError} from "../exceptions";
+import {EquipmentModel, Instrument} from "../../utils/ModelEnums";
 
 export default class InstrumentRequests {
 
@@ -29,13 +30,14 @@ export default class InstrumentRequests {
                                                 errorMessageCallBack = (errorMessage) => errorMessage) {
         let header = RequestUtils.buildTokenHeader(token)
         params = RequestUtils.removeEmptyFields(params)
-        RequestUtils.assistedFetch(URLS.INSTRUMENTS,
+        let url = URLS.INSTRUMENTS + RequestUtils.applySearchParams(params, Instrument.TYPE)
+        RequestUtils.assistedFetch(url,
             METHODS.GET,
             callBack,
             errorMessageCallBack,
             header,
-            params,
-            undefined, true)
+            {},
+            undefined)
     }
 
     static async retrieveInstrument(token, pk,

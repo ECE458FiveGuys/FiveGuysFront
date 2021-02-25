@@ -39,8 +39,8 @@ export default class InstrumentTable extends Component {
                 result[ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION] = "Noncalibratable"
             }
             let instrument_pk = result[ModelFields.InstrumentFields.PK]
-            result[ModelFields.InstrumentFields.Instrument_CATEGORIES] =
-                TableUtils.categoriesToString(result[ModelFields.InstrumentFields.Instrument_CATEGORIES])
+            result[ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES] =
+                TableUtils.categoriesToString(result[ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES])
             result.clickEvent = newTab("/instruments/" + instrument_pk)
             Object.assign(result, model)
         })
