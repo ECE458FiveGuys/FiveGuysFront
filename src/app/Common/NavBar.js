@@ -4,7 +4,6 @@ import { MDBNavbar, MDBNavbarBrand, MDBNavbarNav, MDBNavItem, MDBNavLink, MDBNav
 import { BrowserRouter as Router } from 'react-router-dom';
 import {StorageKeys} from "../../utils/enums";
 import PropTypes from "prop-types";
-import TabView from "../MainPage/TabView";
 import {User} from "../../utils/dtos";
 
 class NavbarPage extends Component {
@@ -48,8 +47,10 @@ class NavbarPage extends Component {
         Buttons.push(<MDBNavItem>
                         <MDBNavLink to="/import-export">{user.is_staff ? "Import/Export" : "Export"}</MDBNavLink>
                     </MDBNavItem>)
+        Buttons.push(<MDBNavItem>
+            <MDBNavLink to="/load-bank">{user.is_staff ? "Import/Export" : "Export"}</MDBNavLink>
+        </MDBNavItem>)
         return (
-            <Router>
                 <MDBNavbar color={"green"} dark expand="md">
                     <MDBNavbarBrand>
                         <strong className="white-text">HPT</strong>
@@ -63,15 +64,15 @@ class NavbarPage extends Component {
                             {Buttons}
                         </MDBNavbarNav>
                         <text className={"white-text"} style={{position: "absolute", left: this.state.width / 2}}>
-                        {`Welcome, ${user.name}`}
+                            {`Welcome, ${user.name}`}
                         </text>
                         <MDBNavbarNav right>
-                            <MDBNavItem>
+                            <MDBNavItem style={{marginRight: 100}}>
                                 <MDBDropdown>
                                     <MDBDropdownToggle nav caret>
                                         <MDBIcon icon="user" />
                                     </MDBDropdownToggle>
-                                    <MDBDropdownMenu className="dropdown-left">
+                                    <MDBDropdownMenu className="dropdown-menu">
                                         <MDBDropdownItem href="/"
                                                          onClick={()=> {
                                                              localStorage.removeItem(StorageKeys.TOKEN)
@@ -86,7 +87,6 @@ class NavbarPage extends Component {
                         </MDBNavbarNav>
                     </MDBCollapse>
                 </MDBNavbar>
-            </Router>
         );
     }
 }

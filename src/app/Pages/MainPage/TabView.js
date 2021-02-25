@@ -3,7 +3,7 @@ import { MDBContainer, MDBTabPane, MDBTabContent, MDBNav, MDBNavItem, MDBNavLink
 import ModelTable from "./InventoryTables/ModelTable";
 import InstrumentTable from "./InventoryTables/InstrumentTable";
 import PropTypes from "prop-types";
-import {User} from "../../utils/dtos";
+import {User} from "../../../utils/dtos";
 
 class TabView extends Component {
     state = {
@@ -21,7 +21,7 @@ class TabView extends Component {
     render() {
         return (
             <MDBContainer fluid={true} className={"fill-most-window"}>
-                <MDBNav className="nav-tabs mt-3">
+                <MDBNav className="nav-tabs mt-4">
                     <MDBNavItem>
                         <MDBNavLink link to="#" active={this.state.activeItem === "1"} onClick={this.toggle("1")} role="tab" >
                             Models

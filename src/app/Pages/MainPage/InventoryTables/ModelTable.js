@@ -1,9 +1,10 @@
 import {Component} from "react";
 import TableColumns from "./Columns";
 import InventoryTable from "./InventoryTable";
-import ModelFields from "../../../utils/enums";
-import ModelRequests from "../../../controller/requests/model_requests";
-import {newTab} from "../../utils";
+import ModelFields from "../../../../utils/enums";
+import ModelRequests from "../../../../controller/requests/model_requests";
+import {newTab} from "../../../utils";
+import TableUtils from "./TableUtils";
 
 export default class ModelTable extends Component {
 
@@ -14,6 +15,14 @@ export default class ModelTable extends Component {
     parseSearchResults = (results) => {
         results.forEach(result => {
             let model_pk = result[ModelFields.EquipmentModelFields.PK]
+            result[ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY] =
+                result[ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY] === "00:00:00" ?
+                "Noncalibratable"
+                :
+                result[ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY].split(" ")[0]
+
+            result[ModelFields.EquipmentModelFields.MODEL_CATEGORIES] =
+                TableUtils.categoriesToString(result[ModelFields.EquipmentModelFields.MODEL_CATEGORIES])
             result.clickEvent = newTab("/models/" + model_pk)
         })
         return results
@@ -24,7 +33,7 @@ export default class ModelTable extends Component {
             <InventoryTable columns={TableColumns.MODEL_COLUMNS}
                             searchFields={ModelFields.EquipmentModelSearchFields}
                             token={this.props.token}
-                            searchRequestFunction={ModelRequests.get_models_with_search_params}
+                            searchRequestFunction={ModelRequests.getModelsWithSearchParams}
                             parseSearchResultsFunction={this.parseSearchResults}/>
         );
     }

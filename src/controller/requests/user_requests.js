@@ -1,18 +1,20 @@
 import RequestUtils from "./request_utils";
 import {METHODS, URLS} from "../strings";
-import {User} from "../../utils/dtos";
 
 export default class UserRequests {
-    static async retrieve_user(token, username)
+    static async retrieveUser(token,
+                              username,
+                              callBack = (json) => json,
+                              errorMessageCallBack = (errorMessage) => errorMessage)
     {
-
         let params = {"username" : username}
-        let header = RequestUtils.build_token_header(token)
+        let header = RequestUtils.buildTokenHeader(token)
 
-        let users = await RequestUtils.assisted_fetch(URLS.USERS,
+        RequestUtils.assistedFetch(URLS.USERS,
             METHODS.GET,
+            callBack,
+            errorMessageCallBack,
             header,
             params)
-        return User.fromJson(users[0])
     }
 }

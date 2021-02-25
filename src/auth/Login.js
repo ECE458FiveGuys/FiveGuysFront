@@ -7,9 +7,10 @@ import Image from "../assets/hpt_logo.png"
 import {Gradient} from "react-gradient"
 import RequestUtils from "../controller/requests/request_utils";
 import UserRequests from "../controller/requests/user_requests";
+import {User} from "../utils/dtos";
 
-async function loginUser(credentials) {
-    return RequestUtils.assisted_fetch(URLS.LOGIN, METHODS.POST, {}, {}, credentials)
+async function loginUser(credentials, callBack, errorMessageCallBack) {
+    RequestUtils.assistedFetch(URLS.LOGIN, METHODS.POST, callBack, errorMessageCallBack, {}, {}, credentials)
 }
 
 const gradients = [
@@ -28,22 +29,39 @@ export default class Login extends React.Component {
         }
     }
 
+    // log in and get token, then after that, get the corresponding user object representing who just logged in
+    // save both token and user in local storage
+
     _handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            const token = await loginUser({
-                username: this.state.username,
-                password: this.state.password
-            });
-            this.setState({error: undefined})
-            const token_val = token["auth_token"]
-            const user = await UserRequests.retrieve_user(token_val, this.state.username)
-            this.props.setUser(user)
-            this.props.setToken(token_val);
-        } catch (e) {
-            let newState = {error: e.message}
-            this.setState(newState)
-        }
+        this.setState({error: undefined},
+            () => {
+            // setup callbacks
+
+            let getUserCallBack = (json) => {
+                let user = User.fromJson(json[0])
+                this.props.setUser(user)
+            }
+            let loginCallBack = (json) => {
+                const tokenVal = json["auth_token"]
+                UserRequests.retrieveUser(tokenVal, this.state.username, getUserCallBack)
+                this.props.setToken(tokenVal);
+            }
+            let loginErrorCallBack = (errorMessage) => {
+                let newState = {error: errorMessage}
+                this.setState(newState)
+            }
+
+            // run callback chain
+
+            loginUser({
+                    username: this.state.username,
+                    password: this.state.password
+                },
+                loginCallBack,
+                loginErrorCallBack
+            )
+        })
     }
 
    render() {

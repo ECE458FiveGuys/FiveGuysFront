@@ -1,7 +1,7 @@
 import {MDBCol, MDBIcon} from "mdbreact";
 import {Component} from "react";
 import PropTypes from "prop-types";
-import Login from "../../../auth/Login";
+import Login from "../../../../auth/Login";
 
 class SearchBar extends Component {
 

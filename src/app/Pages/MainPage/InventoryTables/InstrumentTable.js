@@ -1,11 +1,12 @@
 import {Component} from "react";
 import TableColumns from "./Columns";
 import InventoryTable from "./InventoryTable";
-import ModelFields from "../../../utils/enums";
-import ModelRequests from "../../../controller/requests/model_requests";
-import InstrumentRequests from "../../../controller/requests/instrument_requests";
-import {dateColors, newTab, parseDate} from "../../utils";
+import ModelFields from "../../../../utils/enums";
+import ModelRequests from "../../../../controller/requests/model_requests";
+import InstrumentRequests from "../../../../controller/requests/instrument_requests";
+import {dateColors, newTab, parseDate} from "../../../utils";
 import {InstrumentTableLegend} from "../Widgets/Legend";
+import TableUtils from "./TableUtils";
 
 export default class InstrumentTable extends Component {
 
@@ -29,8 +30,6 @@ export default class InstrumentTable extends Component {
         return this.createCalibrationExpirationElement(expirationDateString, color)
     }
 
-
-
     parseSearchResults = (results) => {
         results.forEach(result => {
             let model = result[ModelFields.InstrumentFields.MODEL]
@@ -40,6 +39,8 @@ export default class InstrumentTable extends Component {
                 result[ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION] = "Noncalibratable"
             }
             let instrument_pk = result[ModelFields.InstrumentFields.PK]
+            result[ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES] =
+                TableUtils.categoriesToString(result[ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES])
             result.clickEvent = newTab("/instruments/" + instrument_pk)
             Object.assign(result, model)
         })
@@ -51,7 +52,7 @@ export default class InstrumentTable extends Component {
             <InventoryTable columns={TableColumns.INSTRUMENT_COLUMNS}
                             searchFields={ModelFields.InstrumentSearchFields}
                             token={this.props.token}
-                            searchRequestFunction={InstrumentRequests.get_instruments_with_search_params}
+                            searchRequestFunction={InstrumentRequests.getInstrumentsWithSearchParams}
                             parseSearchResultsFunction={this.parseSearchResults}
             >
                 <InstrumentTableLegend></InstrumentTableLegend>
