@@ -6,6 +6,7 @@ import TabView from "../MainPage/TabView";
 import {Gradient} from "react-gradient";
 import {MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn, MDBDropdown, MDBDropdownToggle, MDBDropdownMenu} from 'mdbreact';
 import CSV_Import from "./Widgets/CSV_Import";
+import NavBar from "../Common/NavBar";
 
 
 const gradients = [
@@ -25,6 +26,7 @@ class ImportExportView extends Component{
                 duration={ 3000 }
                 angle="45deg"
             >
+                <NavBar user={this.props.user}/>
                 <MDBContainer>
                     <MDBRow style={{justifyContent: 'center', alignItems: 'center', marginTop: 200, xs: 2}}>
                         <ExportModel token = {this.props.token}/>

@@ -42,26 +42,17 @@ class CSV_Import extends Component{
     }
 
     handleInstrumentSubmission = async() => {
-        // const data = new FormData();
-        let data = Papa.parse(this.state.file, {
-            complete: this.updateData,
-            header: true
-        });
-
-        // data.append('file', this.state.file);
+        const data = new FormData();
+        let dat = this.state.file
+        data.append('file', dat);
         let result = await ImportExportRequests.importInstruments(this.props.token, data);
         return result
     }
 
     handleModelSubmission = async() => {
-        //const data = new FormData();
-        // let csv_data = Papa.parse(this.state.file, {
-        //     complete: this.updateData,
-        //     header: true
-        // });
-        // console.log(csv_data);
+        const data = new FormData();
         let dat = this.state.file
-        let data = {'file': dat};
+        data.append('file', dat);
         let result = await ImportExportRequests.importModels(this.props.token, data);
         return result
     }

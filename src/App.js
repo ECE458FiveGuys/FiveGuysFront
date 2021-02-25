@@ -47,11 +47,9 @@ class App extends Component {
           <div className="wrapper">
             <BrowserRouter>
               <Switch>
-                  <Route exact path="/">
-                    <MainView token={this.state.token}/>
-                  </Route>
                   <Route path="/ImportExport">
-                      <ImportExportView token={this.state.token}/>
+                      <ImportExportView token={this.getToken()}
+                                        user={this.getUser()}/>
                   </Route>
                 <Route exact path="/">
                   <MainView token={this.getToken()}

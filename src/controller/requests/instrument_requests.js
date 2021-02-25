@@ -2,6 +2,7 @@ import RequestUtils from "./request_utils";
 
 import ModelFields from "../../utils/enums";
 import {UserError} from "../exceptions";
+import {METHODS, URLS} from "../strings";
 
 export default class InstrumentRequests {
 

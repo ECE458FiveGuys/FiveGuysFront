@@ -48,13 +48,19 @@ export default class RequestUtils {
         }
 
         if (data) {
-            init.body =  JSON.stringify(data)
+            init.body = data;
         }
         let response = await fetch(url + RequestUtils.apply_request_param_suffix(params, all_search_fields), init)
+            .catch(response=>response.text())
+            .then(responsetext =>{
+                return responsetext
+            })
         if (response.ok) {
-            return response
-        } else if (response.status >= 500 && response.status <600) {
-            return new ServerError()
+            return await response.json()
+        } else if (response.status >= 500 && response.status < 600) {
+            response.text().then(errorText => {
+                alert(new ServerError(errorText).message)
+            })
         } else {
             let json = await response.json()
             throw new UserError(RequestUtils.parse_error_message(json))
