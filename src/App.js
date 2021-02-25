@@ -43,7 +43,8 @@ class App extends Component {
 
   render() {
     if (!this.state.token) {
-      return <Login setToken={this.saveToken}/>
+      return <Login setToken={this.saveToken}
+                    setUser={this.saveUser}/>
     }
     return (
         <div className="wrapper">
@@ -61,7 +62,7 @@ class App extends Component {
                 <InstrumentDetailView token={this.getToken()}
                                       user={this.getUser()}/>
               </Route>
-              <Route path="/ImportExport">
+              <Route path="/import-export">
                   <ImportExportView token={this.getToken()}
                                     user={this.getUser()}/>
               </Route>

@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import ExportModel from "./Widgets/ExportModel";
 import ExportInstrument from "./Widgets/ExportInstrument";
 import PropTypes from "prop-types";
-import TabView from "../MainPage/TabView";
 import {Gradient} from "react-gradient";
 import {MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn, MDBDropdown, MDBDropdownToggle, MDBDropdownMenu} from 'mdbreact';
 import CSV_Import from "./Widgets/CSV_Import";
@@ -43,6 +42,6 @@ class ImportExportView extends Component{
 }
 export default ImportExportView
 
-TabView.propTypes = {
+ImportExportView.propTypes = {
     token: PropTypes.string
 }

@@ -59,20 +59,21 @@ export default class RequestUtils {
                         )
 
     }
-    static async assisted_export_fetch(url, method, header={}, params=undefined, data= undefined, all_search_fields=false){
+
+    static async assisted_import_fetch(url, method, header={}, params=undefined, data= undefined, all_search_fields=false){
         let init = {
             method: method,
             headers: header,
         }
-        
+
         if (data) {
             init.body = data;
         }
-        let response = await fetch(url + RequestUtils.apply_request_param_suffix(params, all_search_fields), init)
-            .catch(response=>response.text())
-            .then(responsetext =>{
-                return responsetext
-            })
+        let response = await fetch(url + RequestUtils.applyRequestParamSuffix(params, all_search_fields), init)
+        // .catch(response=>response.text())
+        // .then(responsetext =>{
+        //     return responsetext
+        // })
         if (response.ok) {
             return await response.json()
         } else if (response.status >= 500 && response.status < 600) {
@@ -81,7 +82,33 @@ export default class RequestUtils {
             })
         } else {
             let json = await response.json()
-            throw new UserError(RequestUtils.parse_error_message(json))
+            throw new UserError(RequestUtils.parseErrorMessage(json))
+        }
+    }
+
+    static async assisted_export_fetch(url, method, header={}, params=undefined, data= undefined, all_search_fields=false){
+        let init = {
+            method: method,
+            headers: header,
+        }
+
+        if (data) {
+            init.body = data;
+        }
+        let response = await fetch(url + RequestUtils.applyRequestParamSuffix(params, all_search_fields), init)
+        // .catch(response=>response.text())
+        // .then(responsetext =>{
+        //     return responsetext
+        // })
+        if (response.ok) {
+            return response
+        } else if (response.status >= 500 && response.status < 600) {
+            response.text().then(errorText => {
+                alert(new ServerError(errorText).message)
+            })
+        } else {
+            let json = await response.text()
+            throw new UserError(RequestUtils.parseErrorMessage(json))
         }
     }
 
