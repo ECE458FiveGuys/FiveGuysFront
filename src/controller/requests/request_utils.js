@@ -132,10 +132,13 @@ export default class RequestUtils {
         }
         let suffix = "?"
         let addCategoryParameter = (currentSuffix, parameterName, categoryList) => {
+            if (categoryList && categoryList.length > 0) {
+                currentSuffix += parameterName + "="
+            }
             categoryList.forEach(category => {
-                currentSuffix += parameterName + "=" + category + "&"
+                currentSuffix += category + ","
             })
-            return currentSuffix
+            return currentSuffix.slice(0, -1) + "&"
         }
         Object.keys(paramObj).forEach(key => {
             if (key === EquipmentModel.FIELDS.MODEL_CATEGORIES) {

@@ -10,6 +10,7 @@ import {User} from "./utils/dtos";
 import NavBar from "./app/Common/NavBar";
 import ModelDetailView from "./app/Pages/ModelDetailPage/ModelDetailView";
 import InstrumentDetailView from "./app/Pages/InstrumentDetailPage/InstrumentDetailView";
+import CategoryTabView from "./app/Pages/CategoryPage/CategoryTabView";
 
 class App extends Component {
 
@@ -66,6 +67,10 @@ class App extends Component {
               <Route path="/import-export">
                   <ImportExportView token={this.getToken()}
                                     user={this.getUser()}/>
+              </Route>
+              <Route path="/categories/">
+                <CategoryTabView token={this.state.token}
+                                      user={this.state.user}/>
               </Route>
               <Route>
                 <NotFound/>
