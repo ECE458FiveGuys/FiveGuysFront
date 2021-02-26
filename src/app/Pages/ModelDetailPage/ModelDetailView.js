@@ -5,6 +5,12 @@ import ErrorBoundary from './ErrorBoundary'
 import {Button, Modal} from "react-bootstrap";
 // import {setModalShow} from "react-bootstrap";
 import EditButton from "./EditButton";
+import {useParams} from "react-router";
+
+function GetPk () {
+    let pk = useParams();
+    return pk;
+}
 
 class ModelDetailView extends Component {
 
@@ -15,16 +21,22 @@ class ModelDetailView extends Component {
             model: [],
             token: this.props.token,
             modalShow: false,
+
         }
     }
 
+
+
     async componentDidMount() {
         // let token = this.props.token;
+        console.log(this.props.modelpk)
         let retrieveModelCallback = (model) => {
             let instruments = model['instruments']
             this.setState({instruments: instruments, model : model});
         }
-        ModelRequests.retrieveModel(this.state.token, 19, retrieveModelCallback);
+        // let thing = GetPk.
+        // console.log(this.props.id)
+        ModelRequests.retrieveModel(this.state.token, this.props.id, retrieveModelCallback);
         // console.log(model)
     }
 
@@ -37,7 +49,7 @@ class ModelDetailView extends Component {
         if(this.state.model!==[]) {
             return (
                 <div>
-                    <h1>Model Details</h1>
+                    <h1>Mode Details</h1>
                     <Button variant="primary" onClick={() => this.setModalShow(true)}>
                         Edit
                     </Button>

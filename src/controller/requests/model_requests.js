@@ -60,7 +60,7 @@ export default class ModelRequests {
                            callBack = (json) => json,
                            errorMessageCallBack = (errorMessage) => errorMessage) {
 
-        ModelRequests.updateModel(token, "put", URLS.MODELS + model_pk,
+        ModelRequests.updateModel(token, "put", URLS.MODELS + model_pk + "/", //TODO
                                                 callBack,
                                                 errorMessageCallBack,
                                                 vendor, model_number, description, comment, calibration_frequency)

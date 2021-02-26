@@ -16,7 +16,7 @@ class EditButton extends Component{
     }
 
      onFormSubmit = async (e) => {
-         console.log("dasfdagsdadsg")
+         // console.log("dasfdagsdadsg")
         // const formData = new FormData(e.target);
         // const formDataObj = Object.fromEntries(formData.entries());
         // console.log(formDataObj)
@@ -30,9 +30,9 @@ class EditButton extends Component{
     }
 
     async submitToDb() {
-        let msg = await ModelRequests.edit_model(this.props.token,this.props.model.pk,this.state.vendor,this.state.model_number,
+        ModelRequests.editModel(this.props.token,this.props.model.pk,this.state.vendor,this.state.model_number,
             this.state.description,this.state.comment,this.state.calibration_frequency)
-        console.log(msg)
+        console.log('msg')
     }
 
     render() {
@@ -83,7 +83,8 @@ class EditButton extends Component{
                             <Form.Group controlId="formIsCalabratable">
                                 <Form.Check name="calabratable" label="Calabratable" />
                             </Form.Group>
-                            <Button variant="primary" onClick={this.onFormSubmit}>
+                            <Button variant="primary"
+                                    onSubmit={this.onFormSubmit}>
                                 Submit
                             </Button>
                         </Form>
