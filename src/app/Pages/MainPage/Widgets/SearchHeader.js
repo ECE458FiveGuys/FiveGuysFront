@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import ModelFields from "../../../../utils/enums";
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import AutoCompleteInput from "../../../Common/Inputs/AutoCompleteInput";
+import Input from "../../../Common/Inputs/Input";
 
 let SEARCH_FIELD_COLS = 8
 
@@ -21,20 +22,6 @@ export default class SearchHeader extends Component {
     updateSearchFields = (searchFieldName) => (value) => {
         this.state.searchFieldValues[searchFieldName] = value
         this.setState({searchFieldValues : this.state.searchFieldValues})
-    }
-
-    renderSearchBox(searchFieldName, searchFieldTitle) {
-        return(
-            <MDBCol size={2}>
-                <label htmlFor="defaultFormLoginEmailEx" className="grey-text">
-                    {searchFieldTitle}
-                </label>
-                <input type="text"
-                       placeholder={"Search"}
-                       className="form-control"
-                       onChange={event => this.updateSearchFields(searchFieldName)(event.target.value)}/>
-                <br/>
-            </MDBCol>)
     }
 
     renderAutoCompleteMultipleSearchBox(searchFieldName, searchFieldTitle) {
@@ -67,7 +54,9 @@ export default class SearchHeader extends Component {
                 searchFieldName == ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES) {
                 Rows.push(this.renderAutoCompleteMultipleSearchBox(searchFieldName, key))
             } else {
-                Rows.push(this.renderSearchBox(searchFieldName, key))
+                Rows.push(<Input label={key}
+                                 onChange={this.updateSearchFields(searchFieldName)}
+                                 placeholder={"Search"}/>)
             }
             if (col == SEARCH_FIELD_COLS) {
                 Rows.push(<div className="w-100"/>)
