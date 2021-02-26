@@ -6,8 +6,8 @@ import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn } from 'mdbreact';
 import Image from "../assets/hpt_logo.png"
 import {Gradient} from "react-gradient"
 import RequestUtils from "../controller/requests/request_utils";
-import UserRequests from "../controller/requests/user_requests";
 import {User} from "../utils/dtos";
+import UserRequests from "../controller/requests/user_requests";
 
 async function loginUser(credentials, callBack, errorMessageCallBack) {
     RequestUtils.assistedFetch(URLS.LOGIN, METHODS.POST, callBack, errorMessageCallBack, {}, {}, credentials)

@@ -41,6 +41,8 @@ export default class InstrumentTable extends Component {
             let instrument_pk = result[ModelFields.InstrumentFields.PK]
             result[ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES] =
                 TableUtils.categoriesToString(result[ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES])
+            model[ModelFields.EquipmentModelFields.MODEL_CATEGORIES] =
+                TableUtils.categoriesToString(model[ModelFields.EquipmentModelFields.MODEL_CATEGORIES])
             result.clickEvent = newTab("/instruments/" + instrument_pk)
             Object.assign(result, model)
         })

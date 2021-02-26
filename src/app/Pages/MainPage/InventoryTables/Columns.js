@@ -90,4 +90,13 @@ export default class TableColumns {
             width: 100
         },
     ]
+
+    static CATEGORY_COLUMNS = [
+        {
+            label: 'Category Name',
+            field: ModelFields.CategoryFields.NAME,
+            sort: 'asc',
+            width: 270
+        }
+        ]
 }

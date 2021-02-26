@@ -5,12 +5,6 @@ export const StorageKeys = {
 
 export default class ModelFields {
 
-    static ModelTypes = {
-        EQUIPMENT_MODEL : "EquipmentModel",
-        INSTRUMENT : "Instrument",
-        USER : "User"
-    }
-
     static UserFields = {
         NAME: "name",
         EMAIL : "email",
@@ -62,4 +56,11 @@ export default class ModelFields {
         PK : "pk",
         NAME : "name"
     }
+
+    static ModelTypes = {
+        EQUIPMENT_MODEL : "EquipmentModel",
+        INSTRUMENT : "Instrument",
+        USER : "User"
+    }
+
 }

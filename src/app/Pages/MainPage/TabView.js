@@ -36,10 +36,10 @@ class TabView extends Component {
                 <MDBTabContent
                     activeItem={this.state.activeItem} >
                     <MDBTabPane tabId="1" role="tabpanel" >
-                        <ModelTable token={this.props.token}/>
+                        {this.props.modelPage}
                     </MDBTabPane>
                     <MDBTabPane tabId="2" role="tabpanel">
-                        <InstrumentTable token={this.props.token}/>
+                        {this.props.instrumentPage}
                     </MDBTabPane>
 
                 </MDBTabContent>
@@ -51,5 +51,7 @@ export default TabView;
 
 TabView.propTypes = {
     token : PropTypes.string.isRequired,
-    user : PropTypes.instanceOf(User).isRequired
+    user : PropTypes.instanceOf(User).isRequired,
+    modelPage : PropTypes.element,
+    instrumentPage : PropTypes.element
 }

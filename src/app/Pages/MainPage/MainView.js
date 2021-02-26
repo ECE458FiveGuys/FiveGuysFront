@@ -4,6 +4,8 @@ import {Gradient} from "react-gradient";
 import NavBar from "../../Common/NavBar";
 import PropTypes from "prop-types";
 import {User} from "../../../utils/dtos";
+import ModelTable from "./InventoryTables/ModelTable";
+import InstrumentTable from "./InventoryTables/InstrumentTable";
 
 
 const gradients = [
@@ -24,7 +26,10 @@ class MainView extends Component {
             <div>
             <NavBar user={this.props.user}/>
             <TabView token={this.props.token}
-                     user={this.props.user}></TabView>
+                     user={this.props.user}
+                     modelPage={<ModelTable token={this.props.token}/>}
+                     instrumentPage={<InstrumentTable token={this.props.token}/>}
+            ></TabView>
             </div>
             // </Gradient>
         );

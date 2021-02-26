@@ -1,7 +1,8 @@
 import RequestUtils from "./request_utils";
-import {METHODS, URLS} from "../strings";
+
 import ModelFields from "../../utils/enums";
 import {UserError} from "../exceptions";
+import {METHODS, URLS} from "../strings";
 import {EquipmentModel, Instrument} from "../../utils/ModelEnums";
 
 export default class InstrumentRequests {

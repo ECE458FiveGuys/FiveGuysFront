@@ -5,6 +5,8 @@ import SearchHeader from "../Widgets/SearchHeader";
 import MiscellaneousRequests from "../../../../controller/requests/miscellaneous_requests";
 import Image from "../../../../assets/Spinner.gif";
 import ModelFields from "../../../../utils/enums";
+import {EquipmentModel, Instrument} from "../../../../utils/ModelEnums";
+import DataTable from "../../../Common/Tables/DataTable";
 
 class InventoryTable extends Component {
 
@@ -18,6 +20,7 @@ class InventoryTable extends Component {
             searchFieldValues : searchFieldValues
         }
         this.updateSearchFieldValues = this.updateSearchFieldValues.bind(this)
+        this.loadTableData = this.loadTableData.bind(this)
     }
 
     async componentDidMount() {
@@ -26,15 +29,13 @@ class InventoryTable extends Component {
         this.loadCategories()
     }
 
-    loadTableData () {
-        let {searchRequestFunction, parseSearchResultsFunction} = this.props
-        let getModelsCallBack = (json) => {
-            let data = parseSearchResultsFunction(json)
-            this.setState({
-                results : data
-            })
+    loadTableData = () => {
+        let {searchRequestFunction, parseSearchResultsFunction, token} = this.props
+        let getModelsCallBack = async (json) => {
+            let parsedResults = parseSearchResultsFunction(json)
+            this.setState({results: parsedResults})
         }
-        searchRequestFunction(this.props.token,
+        searchRequestFunction(token,
             this.state.searchFieldValues,
             getModelsCallBack,
             (errorMessage) => alert(errorMessage))
@@ -59,7 +60,9 @@ class InventoryTable extends Component {
             newState[categoryType] = categories
             this.setState(newState)
         }
-        MiscellaneousRequests.getCategories(token, searchFields, getCategoriesCallBack)
+        MiscellaneousRequests.getCategories(token,
+            searchFields == EquipmentModel.SEARCH_FIELDS ? EquipmentModel.TYPE : Instrument.TYPE,
+            getCategoriesCallBack)
     }
 
     /*
@@ -74,25 +77,6 @@ class InventoryTable extends Component {
     }
 
     render() {
-        let data = {
-            columns: this.props.columns,
-            rows: this.state.results
-        }
-        let Content = !this.state.results ?
-        <div style={{display: 'flex', justifyContent: 'center', alignItems : 'center'}}>
-            <img alt="loading"
-                 style={{width: 100, marginTop: 50}}
-                 src={Image}/>
-        </div>
-            :
-        <MDBDataTable
-            autoWidth={false}
-            striped
-            bordered
-            small
-            searching={false}
-            data={data}
-        />
         return (
             <div style={{background: "white"}}>
                 <SearchHeader searchFields= {this.props.searchFields}
@@ -103,7 +87,9 @@ class InventoryTable extends Component {
                               instrumentCategories={this.state.instrument_categories ? this.state.instrument_categories : []}
                                 />
                 {this.props.children}
-                {Content}
+                <DataTable columns = {this.props.columns}
+                           rows = {this.state.results}
+                />
             </div>);
     }
 }
