@@ -15,7 +15,8 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      token: this.getToken()
+      token: this.getToken(),
+      user: this.getUser()
     }
     this.saveToken = this.saveToken.bind(this)
   }
@@ -41,27 +42,29 @@ class App extends Component {
     };
 
   render() {
-    if (!this.state.token) {
-      return <Login setToken={this.saveToken}/>
+    if (!this.state.token || !this.state.user) {
+      return <Login setToken={this.saveToken}
+                    setUser={this.saveUser}/>
     }
     return (
         <div className="wrapper">
           <BrowserRouter>
             <Switch>
               <Route exact path="/">
-                <MainView token={this.getToken()}
-                          user={this.getUser()}/>
+                <MainView token={this.state.token}
+                          user={this.state.user}/>
               </Route>
               <Route path="/models/:id"
                      render={(props) => (<ModelDetailView id={props.match.params.id}
-                                                          token={this.getToken()}
-                                                          user={this.getUser()}/>)} >
+                                                          token={this.state.token}
+                                                          user={this.state.user}/>)} >
                 {/*<ModelDetailView */}
                 {/*                />*/}
               </Route>
-              <Route path="/instruments/:instrumentpk">
-                <InstrumentDetailView token={this.getToken()}
-                                      user={this.getUser()}/>
+              <Route  path="/instruments/:id"
+                      render={(props) => (<ModelDetailView id={props.match.params.id}
+                                                           token={this.state.token}
+                                                           user={this.state.user}/>)} >
               </Route>
               <Route>
                 <NotFound/>
