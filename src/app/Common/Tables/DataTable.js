@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { MDBDataTable } from 'mdbreact';
 import PropTypes from "prop-types";
-import Image from "../../assets/Spinner.gif";
+import Image from "../../../assets/Spinner.gif";
+import Loading from "../Images/Loading";
 
 export default class DataTable extends Component {
 
@@ -15,18 +16,15 @@ export default class DataTable extends Component {
             rows: this.props.rows
         }
         return !this.props.rows ?
-            (<div style={{display: 'flex', justifyContent: 'center', alignItems : 'center'}}>
-                <img alt="loading"
-                     style={{width: 100, marginTop: 50}}
-                     src={Image}/>
-            </div>)
+            (<Loading/>)
             :
             (<MDBDataTable
                 autoWidth={false}
+                hover
                 striped
                 bordered
                 small
-                searching={false}
+                searching={this.props.searching}
                 data={data}
             />)
     }
@@ -34,6 +32,6 @@ export default class DataTable extends Component {
 
 DataTable.propTypes = {
     columns: PropTypes.array.isRequired, // the columns of the datatable
-    token: PropTypes.string.isRequired, // the token obtained through login
-    rows : PropTypes.array.isRequired
+    rows : PropTypes.array.isRequired,
+    searching : PropTypes.bool
 }

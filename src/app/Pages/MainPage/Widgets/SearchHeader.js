@@ -1,13 +1,9 @@
 import React, {Component} from "react";
 import {MDBBtn, MDBCol, MDBContainer, MDBRow} from "mdbreact";
-import TableColumns from "../InventoryTables/Columns";
 import PropTypes from "prop-types";
-import InventoryTable from "../InventoryTables/InventoryTable";
-import {Search} from "semantic-ui-react";
 import ModelFields from "../../../../utils/enums";
-import {Typeahead} from "react-bootstrap-typeahead"
-import {Form} from "react-bootstrap"
 import 'react-bootstrap-typeahead/css/Typeahead.css';
+import AutoCompleteInput from "../../../Common/Inputs/AutoCompleteInput";
 
 let SEARCH_FIELD_COLS = 8
 
@@ -19,6 +15,12 @@ export default class SearchHeader extends Component {
             searchField: "All",
             searchFieldValues: {}
         }
+        this.updateSearchFields = this.updateSearchFields.bind(this)
+    }
+
+    updateSearchFields = (searchFieldName) => (value) => {
+        this.state.searchFieldValues[searchFieldName] = value
+        this.setState({searchFieldValues : this.state.searchFieldValues})
     }
 
     renderSearchBox(searchFieldName, searchFieldTitle) {
@@ -30,32 +32,9 @@ export default class SearchHeader extends Component {
                 <input type="text"
                        placeholder={"Search"}
                        className="form-control"
-                       onChange={event =>  this.state.searchFieldValues[searchFieldName] = event.target.value}/>
+                       onChange={event => this.updateSearchFields(searchFieldName)(event.target.value)}/>
                 <br/>
             </MDBCol>)
-    }
-
-    renderAutoCompleteSearchBox(searchFieldName, searchFieldTitle) {
-        return(
-            <MDBCol size={2}>
-            <Form.Group>
-                <Form.Label className="grey-text">{searchFieldTitle}</Form.Label>
-                    <Typeahead
-                      id="basic-typeahead-single"
-                      labelKey="name"
-                      onInputChange={event => {
-                          this.state.searchFieldValues[searchFieldName] = event
-                      }}
-                      onChange={event => {
-                          this.state.searchFieldValues[searchFieldName] = event[0]
-                      }}
-                      options={this.props.vendors}
-                      placeholder="Search"
-                      selected={""}
-                    />
-                  </Form.Group>
-            </MDBCol>
-        )
     }
 
     renderAutoCompleteMultipleSearchBox(searchFieldName, searchFieldTitle) {
@@ -65,25 +44,13 @@ export default class SearchHeader extends Component {
         } else if (searchFieldName == ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES) {
             options = this.props.instrumentCategories
         }
-        return(
-            <MDBCol size={3}>
-            <Form.Group>
-                <Form.Label className="grey-text">{searchFieldTitle}</Form.Label>
-                <Typeahead
-                    id="basic-typeahead-multiple"
-                    labelKey="name"
-                    multiple
-                    onChange={event => {
-                        this.state.searchFieldValues[searchFieldName] = event
-                    }}
-                    options={options}
-                    placeholder="Search"
-                    selected={""}
-                />
-            </Form.Group>
-                </MDBCol>
-        )
-    }
+        return (<AutoCompleteInput placeholder={"Search"}
+                                   options={options}
+                                   onChange={this.updateSearchFields(searchFieldName)}
+                                   label={searchFieldTitle}
+                                   multiple={true}
+                                   size={3}/>)
+        }
 
     render() {
         let Rows = []
@@ -92,7 +59,10 @@ export default class SearchHeader extends Component {
         Object.keys(searchFields).forEach(key => {
             let searchFieldName = searchFields[key]
             if (searchFieldName == ModelFields.EquipmentModelFields.VENDOR) {
-                Rows.push(this.renderAutoCompleteSearchBox(searchFieldName, key))
+                Rows.push(<AutoCompleteInput placeholder={"Search"}
+                                           options={this.props.vendors}
+                                           onChange={this.updateSearchFields(searchFieldName)}
+                                           label={key}/>)
             } else if (searchFieldName == ModelFields.EquipmentModelFields.MODEL_CATEGORIES ||
                 searchFieldName == ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES) {
                 Rows.push(this.renderAutoCompleteMultipleSearchBox(searchFieldName, key))

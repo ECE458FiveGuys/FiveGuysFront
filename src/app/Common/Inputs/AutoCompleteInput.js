@@ -1,0 +1,54 @@
+import {MDBCol} from "mdbreact";
+import {Form} from "react-bootstrap";
+import {Typeahead} from "react-bootstrap-typeahead";
+import React, {Component} from "react";
+import PropTypes from "prop-types";
+
+
+export default class AutoCompleteInput extends Component {
+
+    constructor(props) {
+        super(props)
+    }
+
+    render() {
+        let {options, onChange, label, placeholder, size, multiple}= this.props
+        return(
+        <MDBCol size={size}>
+            <Form.Group>
+                <Form.Label className="grey-text">{label}</Form.Label>
+                    <Typeahead
+                        id="basic-typeahead-single"
+                        labelKey="name"
+                        multiple={multiple}
+                        onInputChange={event => {
+                            if (!multiple) onChange(event)
+                        }}
+                        onChange={event => {
+                            multiple ? onChange(event) : onChange(event[0])
+                        }}
+                        options={options}
+                        placeholder={placeholder}
+                        selected={""}
+                    />
+            </Form.Group>
+        </MDBCol>
+        )
+    }
+}
+
+AutoCompleteInput.propTypes = {
+    options : PropTypes.array.isRequired,
+    onChange : PropTypes.func.isRequired,
+    label : PropTypes.string.isRequired,
+    placeholder : PropTypes.string.isRequired,
+    size : PropTypes.number,
+    multiple : PropTypes.bool
+}
+
+AutoCompleteInput.defaultProps = {
+    size : 2,
+    multiple : false
+}
+
+
