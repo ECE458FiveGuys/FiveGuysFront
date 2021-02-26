@@ -3,8 +3,8 @@ import {MDBBtn, MDBCol, MDBContainer, MDBRow} from "mdbreact";
 import PropTypes from "prop-types";
 import ModelFields from "../../../../utils/enums";
 import 'react-bootstrap-typeahead/css/Typeahead.css';
-import AutoCompleteInput from "../../../Common/Inputs/AutoCompleteInput";
-import Input from "../../../Common/Inputs/Input";
+import HTPAutoCompleteInput from "../../../Common/Inputs/HTPAutoCompleteInput";
+import HTPInput from "../../../Common/Inputs/HTPInput";
 
 let SEARCH_FIELD_COLS = 8
 
@@ -31,12 +31,12 @@ export default class SearchHeader extends Component {
         } else if (searchFieldName == ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES) {
             options = this.props.instrumentCategories
         }
-        return (<AutoCompleteInput placeholder={"Search"}
-                                   options={options}
-                                   onChange={this.updateSearchFields(searchFieldName)}
-                                   label={searchFieldTitle}
-                                   multiple={true}
-                                   size={3}/>)
+        return (<HTPAutoCompleteInput placeholder={"Search"}
+                                      options={options}
+                                      onChange={this.updateSearchFields(searchFieldName)}
+                                      label={searchFieldTitle}
+                                      multiple={true}
+                                      size={3}/>)
         }
 
     render() {
@@ -46,17 +46,17 @@ export default class SearchHeader extends Component {
         Object.keys(searchFields).forEach(key => {
             let searchFieldName = searchFields[key]
             if (searchFieldName == ModelFields.EquipmentModelFields.VENDOR) {
-                Rows.push(<AutoCompleteInput placeholder={"Search"}
-                                           options={this.props.vendors}
-                                           onChange={this.updateSearchFields(searchFieldName)}
-                                           label={key}/>)
+                Rows.push(<HTPAutoCompleteInput placeholder={"Search"}
+                                                options={this.props.vendors}
+                                                onChange={this.updateSearchFields(searchFieldName)}
+                                                label={key}/>)
             } else if (searchFieldName == ModelFields.EquipmentModelFields.MODEL_CATEGORIES ||
                 searchFieldName == ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES) {
                 Rows.push(this.renderAutoCompleteMultipleSearchBox(searchFieldName, key))
             } else {
-                Rows.push(<Input label={key}
-                                 onChange={this.updateSearchFields(searchFieldName)}
-                                 placeholder={"Search"}/>)
+                Rows.push(<HTPInput label={key}
+                                    onChange={this.updateSearchFields(searchFieldName)}
+                                    placeholder={"Search"}/>)
             }
             if (col == SEARCH_FIELD_COLS) {
                 Rows.push(<div className="w-100"/>)

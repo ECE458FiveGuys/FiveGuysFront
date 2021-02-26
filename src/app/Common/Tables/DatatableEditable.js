@@ -4,6 +4,8 @@ import PropTypes from "prop-types";
 import Loading from "../Images/Loading";
 import DataTable from "./DataTable";
 import Checkbox from "./TableWidgets/Checkbox";
+import HTPInput from "../Inputs/HTPInput";
+import HTPButton from "../Inputs/HTPButton";
 
 const SELECT = "Select"
 const DELETE = "Delete"
@@ -41,14 +43,16 @@ export default class DatatableEditable extends Component {
     }
 
     render() {
-        let {columns, rows} = this.state
+        let {columns, rows, selectedPK} = this.state
         let {editableColumns} = this.props
+        let EditableFields = []
         editableColumns.forEach(field => {
-
+            EditableFields.push(<HTPInput label={field} onChange={()=>{}} placeholder={""}/>)
         })
         return(<div>
-                    <div>
-
+                    <div style={{flexDirection : 'row'}}>
+                        {EditableFields}
+                        <HTPButton onSubmit={()=>{}} label={selectedPK ? "Edit" : "Create"}/>
                     </div>
                     <DataTable columns={columns}
                                rows={rows}/>

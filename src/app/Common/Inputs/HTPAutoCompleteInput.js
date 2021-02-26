@@ -5,14 +5,14 @@ import React, {Component} from "react";
 import PropTypes from "prop-types";
 
 
-export default class AutoCompleteInput extends Component {
+export default class HTPAutoCompleteInput extends Component {
 
     constructor(props) {
         super(props)
     }
 
     render() {
-        let {options, onChange, label, placeholder, size, multiple}= this.props
+        let {options, onChange, label, placeholder, size, multiple, value, selected}= this.props
         return(
         <MDBCol size={size}>
             <Form.Group>
@@ -29,7 +29,8 @@ export default class AutoCompleteInput extends Component {
                         }}
                         options={options}
                         placeholder={placeholder}
-                        selected={""}
+                        value={value}
+                        selected={selected}
                     />
             </Form.Group>
         </MDBCol>
@@ -37,18 +38,20 @@ export default class AutoCompleteInput extends Component {
     }
 }
 
-AutoCompleteInput.propTypes = {
+HTPAutoCompleteInput.propTypes = {
     options : PropTypes.array.isRequired,
     onChange : PropTypes.func.isRequired,
     label : PropTypes.string.isRequired,
     placeholder : PropTypes.string.isRequired,
     size : PropTypes.number,
-    multiple : PropTypes.bool
+    multiple : PropTypes.bool,
+    value : PropTypes.string,
+    selected : PropTypes.array
 }
 
-AutoCompleteInput.defaultProps = {
+HTPAutoCompleteInput.defaultProps = {
     size : 2,
-    multiple : false
+    multiple : false,
 }
 
 
