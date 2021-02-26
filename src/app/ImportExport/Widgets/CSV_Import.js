@@ -1,8 +1,9 @@
 import React, {useState, Component} from "react";
-import {MDBContainer, MDBDropdown, MDBDropdownMenu, MDBDropdownToggle, MDBRow} from "mdbreact";
+import {MDBContainer, MDBDropdown, MDBDropdownMenu, MDBDropdownToggle, MDBRow, MDBTable} from "mdbreact";
 import ImportExportRequests from "../../../controller/requests/import_export_requests";
 import Papa from "papaparse"
 import {CSVReader} from "react-papaparse";
+import {getIsOnlyResult} from "react-bootstrap-typeahead/lib/utils";
 
 class CSV_Import extends Component{
 
@@ -15,6 +16,7 @@ class CSV_Import extends Component{
             modelSelected: false,
             instrumentSelected: false,
             data: [],
+            results: [],
         }
     }
 
@@ -46,6 +48,9 @@ class CSV_Import extends Component{
         let dat = this.state.file
         data.append('file', dat);
         let result = await ImportExportRequests.importInstruments(this.props.token, data);
+        this.setState({results: result})
+        this.setState({modelSelected: false})
+        this.setState({instrumentSelected: true})
         return result
     }
 
@@ -54,11 +59,14 @@ class CSV_Import extends Component{
         let dat = this.state.file
         data.append('file', dat);
         let result = await ImportExportRequests.importModels(this.props.token, data);
+        this.setState({results: result})
+        this.setState({modelSelected: true})
+        this.setState({instrumentSelected: false})
         return result
     }
 
 render(){
-        const {fileSelected} = this.state;
+        const {results} = this.state;
 
         return(
             <MDBRow style={{justifyContent: 'center', alignItems: 'center', marginTop: 50, xs: 2}}>
@@ -71,7 +79,11 @@ render(){
                         <li><a className="dropdown-item" onClick={this.importTypeSelected('instruments')}>Instruments</a></li>
                     </MDBDropdownMenu>
                 </MDBDropdown>
+                <MDBTable>
+
+                </MDBTable>
             </MDBRow>
+
         );
     }
 }

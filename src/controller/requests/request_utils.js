@@ -82,7 +82,7 @@ export default class RequestUtils {
             })
         } else {
             let json = await response.json()
-            throw new UserError(RequestUtils.parseErrorMessage(json))
+            alert(new UserError(RequestUtils.parseErrorMessage(json)))
         }
     }
 
@@ -96,10 +96,6 @@ export default class RequestUtils {
             init.body = data;
         }
         let response = await fetch(url + RequestUtils.applyRequestParamSuffix(params, all_search_fields), init)
-        // .catch(response=>response.text())
-        // .then(responsetext =>{
-        //     return responsetext
-        // })
         if (response.ok) {
             return response
         } else if (response.status >= 500 && response.status < 600) {

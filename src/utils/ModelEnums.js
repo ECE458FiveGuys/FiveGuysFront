@@ -12,4 +12,8 @@ export const Instrument = {
     SEARCH_FIELDS : ModelFields.InstrumentSearchFields
 }
 
+export const Models = {
+    EQUIPMENT_MODEL : EquipmentModel,
+    INSTRUMENT : Instrument
+}
 
