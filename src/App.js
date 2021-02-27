@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import './App.css';
+import ImportExportView from './app/ImportExport/ImportExportView'
 import MainView from './app/Pages/MainPage/MainView';
 import Login from "./auth/Login";
 import NotFound from "./auth/NotFound";
@@ -62,6 +63,10 @@ class App extends Component {
               <Route path="/instruments/">
                 <InstrumentDetailView token={this.state.token}
                                       user={this.state.user}/>
+              </Route>
+              <Route path="/import-export">
+                  <ImportExportView token={this.getToken()}
+                                    user={this.getUser()}/>
               </Route>
               <Route path="/categories/">
                 <CategoryTabView token={this.state.token}
