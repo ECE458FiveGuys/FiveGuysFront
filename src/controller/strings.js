@@ -16,5 +16,7 @@ export const URLS =
 export const METHODS =
     {
         POST : 'POST',
-        GET : 'GET'
+        GET : 'GET',
+        PUT : 'PUT',
+        DELETE : "DELETE"
     }

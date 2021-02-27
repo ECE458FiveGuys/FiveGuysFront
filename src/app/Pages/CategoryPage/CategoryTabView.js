@@ -29,7 +29,7 @@ class MainView extends Component {
                          user={this.props.user}
                          modelPage={<CategoryPage token={this.props.token}
                                                   columns={TableColumns.CATEGORY_COLUMNS}
-                                                  categoryType = {ModelFields.EquipmentModelFields.MODEL_CATEGORIES}
+                                                 categoryType = {ModelFields.EquipmentModelFields.MODEL_CATEGORIES}
                                                   modelType={ModelFields.ModelTypes.EQUIPMENT_MODEL}/>}
                          instrumentPage={<CategoryPage token={this.props.token}
                                                        categoryType = {ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES}

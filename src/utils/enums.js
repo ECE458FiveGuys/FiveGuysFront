@@ -58,9 +58,9 @@ export default class ModelFields {
     }
 
     static ModelTypes = {
-        EQUIPMENT_MODEL : "EquipmentModel",
-        INSTRUMENT : "Instrument",
-        USER : "User"
+        EQUIPMENT_MODEL : "model",
+        INSTRUMENT : "instrument",
+        USER : "user"
     }
 
 }
