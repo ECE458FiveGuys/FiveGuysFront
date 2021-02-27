@@ -3,7 +3,7 @@ import {Button} from "react-bootstrap";
 import EditModal from "../ModelDetailPage/EditModal";
 import ErrorBoundary from "../ModelDetailPage/ErrorBoundary";
 import InstrumentRequests from "../../../controller/requests/instrument_requests";
-import DataTable from "../../Common/DataTable";
+import DataTable from "../../Common/Tables/DataTable";
 import TableColumns from "../MainPage/InventoryTables/Columns";
 import ModelFields from "../../../utils/enums";
 import DeleteModal from "../ModelDetailPage/DeleteModal";
