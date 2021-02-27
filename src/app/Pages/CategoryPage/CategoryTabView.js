@@ -1,12 +1,11 @@
 import React, { Component } from "react";
-import TabView from "./TabView";
-import {Gradient} from "react-gradient";
 import NavBar from "../../Common/NavBar";
 import PropTypes from "prop-types";
-import {User} from "../../../utils/dtos";
-import ModelTable from "./InventoryTables/ModelTable";
-import InstrumentTable from "./InventoryTables/InstrumentTable";
 import CategoryPage from "./CategoryPage";
+import ModelFields from "../../../utils/enums";
+import TabView from "../MainPage/TabView";
+import {User} from "../../../utils/dtos";
+import TableColumns from "../MainPage/InventoryTables/Columns";
 
 
 const gradients = [
@@ -28,8 +27,14 @@ class MainView extends Component {
                 <NavBar user={this.props.user}/>
                 <TabView token={this.props.token}
                          user={this.props.user}
-                         modelPage={<CategoryPage token={this.props.token}/>}
-                         instrumentPage={<InstrumentTable token={this.props.token}/>}
+                         modelPage={<CategoryPage token={this.props.token}
+                                                  columns={TableColumns.CATEGORY_COLUMNS}
+                                                  categoryType = {ModelFields.EquipmentModelFields.MODEL_CATEGORIES}
+                                                  modelType={ModelFields.ModelTypes.EQUIPMENT_MODEL}/>}
+                         instrumentPage={<CategoryPage token={this.props.token}
+                                                       categoryType = {ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES}
+                                                       columns={TableColumns.CATEGORY_COLUMNS}
+                                                       modelType={ModelFields.ModelTypes.INSTRUMENT}/>}
                 ></TabView>
             </div>
             // </Gradient>

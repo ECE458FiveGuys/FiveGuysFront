@@ -6,7 +6,7 @@ import MiscellaneousRequests from "../../../../controller/requests/miscellaneous
 import Image from "../../../../assets/Spinner.gif";
 import ModelFields from "../../../../utils/enums";
 import {EquipmentModel, Instrument} from "../../../../utils/ModelEnums";
-import DataTable from "../../../Common/DataTable";
+import DataTable from "../../../Common/Tables/DataTable";
 
 class InventoryTable extends Component {
 
@@ -24,14 +24,15 @@ class InventoryTable extends Component {
     }
 
     async componentDidMount() {
+        this.loadTableData()
         this.loadVendors()
-        this.loadCategories(() => this.loadTableData())
+        this.loadCategories()
     }
 
     loadTableData = () => {
         let {searchRequestFunction, parseSearchResultsFunction, token} = this.props
         let getModelsCallBack = async (json) => {
-            let parsedResults = parseSearchResultsFunction(json, this.state.modelCategoryIDtoName)
+            let parsedResults = parseSearchResultsFunction(json)
             this.setState({results: parsedResults})
         }
         searchRequestFunction(token,
@@ -47,37 +48,18 @@ class InventoryTable extends Component {
         MiscellaneousRequests.getVendors(this.props.token, this.state.searchFieldValues[ModelFields.EquipmentModelFields.VENDOR], getVendorsCallBack)
     }
 
-    loadCategories (loadTableFunction) {
+    loadCategories () {
         let {token, searchFields} = this.props
         // categoryType = model_categories or instrument_categories
         let getCategoriesCallBack = (categoryType) => (json) => {
             let newState = {}
             let categories = []
-            // turn category object list to a list of category names
             json.forEach(category => {
                 categories.push(category[ModelFields.CategoryFields.NAME])
             })
             newState[categoryType] = categories
-            /*
-            if the categories are model categories:
-                1) turn them to a map for optimization purposes
-                2) save both the categories list and map to the state
-                3) instantiate the table load
-            else:
-                1) just save categories list to state
-             */
-            if (categoryType == EquipmentModel.FIELDS.MODEL_CATEGORIES) {
-                let modelCategoryIDtoName = new Map()
-                json.forEach(category => {
-                    modelCategoryIDtoName.set(category[ModelFields.CategoryFields.PK], category[ModelFields.CategoryFields.NAME])
-                })
-                newState.modelCategoryIDtoName = modelCategoryIDtoName
-                this.setState(newState,  () => loadTableFunction())
-            } else {
-                this.setState(newState)
-            }
+            this.setState(newState)
         }
-
         MiscellaneousRequests.getCategories(token,
             searchFields == EquipmentModel.SEARCH_FIELDS ? EquipmentModel.TYPE : Instrument.TYPE,
             getCategoriesCallBack)
