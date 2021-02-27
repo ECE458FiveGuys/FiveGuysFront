@@ -1,7 +1,5 @@
 import React, { Component } from "react";
-import {MDBDataTable} from 'mdbreact';
 import PropTypes from "prop-types";
-import Loading from "../Images/Loading";
 import DataTable from "./DataTable";
 import Checkbox from "./TableWidgets/Checkbox";
 import HTPInput from "../Inputs/HTPInput";
