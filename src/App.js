@@ -60,11 +60,9 @@ class App extends Component {
                      render={(props) => (<ModelDetailView id={props.match.params.id}
                                                           token={this.state.token}
                                                           user={this.state.user}/>)} >
-                {/*<ModelDetailView */}
-                {/*                />*/}
               </Route>
               <Route  path="/instruments/:id"
-                      render={(props) => (<ModelDetailView id={props.match.params.id}
+                      render={(props) => (<InstrumentDetailView id={props.match.params.id}
                                                            token={this.state.token}
                                                            user={this.state.user}/>)} >
               </Route>
