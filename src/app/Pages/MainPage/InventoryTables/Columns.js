@@ -89,6 +89,7 @@ export default class TableColumns {
             sort: 'asc',
             width: 100
         },
+
     ]
 
     static CATEGORY_COLUMNS = [
@@ -99,4 +100,19 @@ export default class TableColumns {
             width: 270
         }
         ]
+
+    static CALIBRATION_COLUMNS = [
+        {
+            label: 'Date',
+            field: 'date',
+            sort: 'asc',
+            width: 270
+        },
+        {
+            label: 'Comment',
+            field: 'comment',
+            sort: 'asc',
+            width: 270
+        }
+    ]
 }

@@ -56,13 +56,15 @@ class App extends Component {
                 <MainView token={this.state.token}
                           user={this.state.user}/>
               </Route>
-              <Route path="/models/">
-                <ModelDetailView token={this.state.token}
-                                 user={this.state.user}/>
+              <Route path="/models/:id"
+                     render={(props) => (<ModelDetailView id={props.match.params.id}
+                                                          token={this.state.token}
+                                                          user={this.state.user}/>)} >
               </Route>
-              <Route path="/instruments/">
-                <InstrumentDetailView token={this.state.token}
-                                      user={this.state.user}/>
+              <Route  path="/instruments/:id"
+                      render={(props) => (<InstrumentDetailView id={props.match.params.id}
+                                                           token={this.state.token}
+                                                           user={this.state.user}/>)} >
               </Route>
               <Route path="/import-export">
                   <ImportExportView token={this.getToken()}
