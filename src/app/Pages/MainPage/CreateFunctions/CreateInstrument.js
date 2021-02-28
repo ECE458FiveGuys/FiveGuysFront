@@ -5,6 +5,7 @@ import { MDBContainer, MDBRow, MDBCol, MDBBtn, MDBIcon} from 'mdbreact';
 import ModelFields from "../../../../utils/enums";
 import {User} from "../../../../utils/dtos";
 import NavBar from "../../../Common/NavBar";
+import ErrorParser from "./ErrorParser";
 
 
 class CreateModel extends Component {
@@ -57,7 +58,7 @@ class CreateModel extends Component {
                 event.preventDefault()
                 alert(` 
                   Error when creating the model:\n 
-                  Vendor and Model Number must match a model
+                  Vendor and Model Number do not match a model
                   
                 `)
                 console.error('Error:', error);
@@ -91,10 +92,11 @@ class CreateModel extends Component {
                     `)
                     }
                     else {
+                        let results = ErrorParser.parse(json)
                         event.preventDefault()
                         alert(` 
                       Error while creating the model:\n 
-                      ${json} 
+                      ${results} 
                     `)
                     }
 

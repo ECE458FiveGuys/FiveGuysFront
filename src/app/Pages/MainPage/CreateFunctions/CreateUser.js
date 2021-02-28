@@ -5,6 +5,7 @@ import { MDBContainer, MDBRow, MDBCol, MDBBtn, MDBIcon} from 'mdbreact';
 import ModelFields from "../../../../utils/enums";
 import {User} from "../../../../utils/dtos";
 import NavBar from "../../../Common/NavBar";
+import ErrorParser from "./ErrorParser";
 
 
 class CreateModel extends Component {
@@ -36,13 +37,23 @@ class CreateModel extends Component {
             .then(response => {
                 return response.text()})
             .then(json => { //success
-                            event.preventDefault()
-                            alert(` 
+                if (json.includes('"id"')) {
+                    event.preventDefault()
+                    alert(` 
                   Successful added a new User:\n 
                   Username : ${username} 
                   Name : ${name} 
                   Email : ${email} 
                 `)
+                }
+                else {
+                    let results = ErrorParser.parse(json)
+                    event.preventDefault()
+                    alert(` 
+                      Error while creating the model:\n 
+                      ${results} 
+                    `)
+                }
 
                 console.log(json)
             })
