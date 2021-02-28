@@ -5,6 +5,7 @@ import { MDBContainer, MDBRow, MDBCol, MDBBtn, MDBIcon} from 'mdbreact';
 import ModelFields from "../../../../utils/enums";
 import {User} from "../../../../utils/dtos";
 import NavBar from "../../../Common/NavBar";
+import ErrorParser from "./ErrorParser";
 
 
 class CreateModel extends Component {
@@ -26,12 +27,25 @@ class CreateModel extends Component {
     async handleSubmit(event){
         let token = 'Token ' + this.props.token
         const { vendor, model_number, description, comment, calibration_frequency } = this.state
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization':token, 'Accept':'application/json'},
-            body: JSON.stringify({vendor: vendor, model_number: model_number, description: description, 
-                                        comment: comment, calibration_frequency: calibration_frequency, model_categories: []})
-        };
+        let requestOptions = {}
+        if (calibration_frequency==''){ //nothing inputed
+            requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization':token, 'Accept':'application/json'},
+                body: JSON.stringify({vendor: vendor, model_number: model_number, description: description,
+                    comment: comment, model_categories: []})
+            };
+        }
+        else {
+            requestOptions = {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json', 'Authorization': token, 'Accept': 'application/json'},
+                body: JSON.stringify({
+                    vendor: vendor, model_number: model_number, description: description,
+                    comment: comment, calibration_frequency: calibration_frequency, model_categories: []
+                })
+            };
+        }
 
         const response = await fetch('http://group-six-test.colab.duke.edu/models/', requestOptions)
             .then(response => {
@@ -50,23 +64,13 @@ class CreateModel extends Component {
                     `)
                 }
                 else {
+                    let results = ErrorParser.parse(json)
                     event.preventDefault()
                     alert(` 
                       Error while creating the model:\n 
-                      ${json} 
+                      ${results} 
                     `)
                 }
-
-                //const jsonJSON = JSON.parse(JSON.stringify(json));
-                //console.log(jsonJSON)
-                //console.log("here")
-                //console.log(jsonJSON.parse('vendor'))
-
-                //let name = json[0].pk;
-                //name = JSON.parse(name);
-                //name.data.forEach(value => {
-                    //console.log(value.name, value.id);
-                //});
                 console.log(json)
             })
             .catch((error) => { //failure
@@ -145,7 +149,7 @@ class CreateModel extends Component {
                             </label>
                             <input
                                 name='comment'
-                                placeholder='optional (integer)'
+                                placeholder='optional'
                                 value = {this.state.comment}
                                 onChange={this.handleChange}
                             />
