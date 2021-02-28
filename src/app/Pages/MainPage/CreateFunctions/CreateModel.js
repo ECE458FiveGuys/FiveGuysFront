@@ -29,22 +29,34 @@ class CreateModel extends Component {
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization':token, 'Accept':'application/json'},
-            body: JSON.stringify({vendor: vendor, model_number: model_number, description: description, model_categories: []})
+            body: JSON.stringify({vendor: vendor, model_number: model_number, description: description, 
+                                        comment: comment, calibration_frequency: calibration_frequency, model_categories: []})
         };
 
         const response = await fetch('http://group-six-test.colab.duke.edu/models/', requestOptions)
             .then(response => {
                 return response.text()})
-            .then(json => { //success
-                            event.preventDefault()
-                            alert(` 
-                  Successful added a new Model:\n 
-                  Vendor : ${vendor} 
-                  Model Number : ${model_number} 
-                  Description : ${description} 
-                  Comment : ${comment} 
-                  Calibration Frequency : ${calibration_frequency} 
-                `)
+            .then(json => {
+                json.toString()
+                if (json.includes('pk')) {
+                    event.preventDefault()
+                    alert(` 
+                      Successful added a new Model:\n 
+                      Vendor : ${vendor} 
+                      Model Number : ${model_number} 
+                      Description : ${description} 
+                      Comment : ${comment} 
+                      Calibration Frequency : ${calibration_frequency} 
+                    `)
+                }
+                else {
+                    event.preventDefault()
+                    alert(` 
+                      Error while creating the model:\n 
+                      ${json} 
+                    `)
+                }
+
                 //const jsonJSON = JSON.parse(JSON.stringify(json));
                 //console.log(jsonJSON)
                 //console.log("here")
@@ -121,7 +133,7 @@ class CreateModel extends Component {
                             </label>
                             <input
                                 name='description'
-                                placeholder='optional'
+                                placeholder='required'
                                 value = {this.state.description}
                                 onChange={this.handleChange}
                             />
@@ -145,7 +157,7 @@ class CreateModel extends Component {
                             </label>
                             <input
                                 name='calibration_frequency'
-                                placeholder='calibration frequency'
+                                placeholder='optional (integer)'
                                 value = {this.state.calibration_frequency}
                                 onChange={this.handleChange}
                             />

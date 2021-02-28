@@ -11,7 +11,7 @@ class CreateModel extends Component {
 
     constructor(props) {
         super(props)
-        this.state = { vendor:'', model_number:'', serial_number:'', comment:''}
+        this.state = { vendor:'', model_number:'', description:'', comment:'',calibration_frequency:''}
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
     }
@@ -25,96 +25,37 @@ class CreateModel extends Component {
 
     async handleSubmit(event){
         let token = 'Token ' + this.props.token
-        const { vendor, model_number, comment, serial_number} = this.state
+        const { username, name, email, password } = this.state
         const requestOptions = {
-            method: 'GET',
-            headers: {'Authorization':token},
-            //params: JSON.stringify({vendor: vendor, model_number: vendor})
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization':token, 'Accept':'application/json'},
+            body: JSON.stringify({username: username, name: name, email: email, password: password, is_active: true})
         };
-        let pk = ''
-        const url = 'http://group-six-test.colab.duke.edu/models/' + '?' + 'vendor=' + vendor + '&model=' + model_number
-        const response = await fetch(url, requestOptions)
+
+        const response = await fetch('http://group-six-test.colab.duke.edu/auth/users/', requestOptions)
             .then(response => {
                 return response.text()})
             .then(json => { //success
-                json.toString()
-                if (json.includes('pk')) {
-                    const start = json.indexOf('pk')
-                    let restOfJSON = json.substring(start+4)
-                    let end = restOfJSON.indexOf('"')
-                    pk = restOfJSON.substring(0, end-1)
-                }
-                else {
-                    event.preventDefault()
-                    alert(` 
-                      Error while creating the instrument:\n 
-                      Vendor and Model Number do not match a Model
-                    `)
-                }
+                            event.preventDefault()
+                            alert(` 
+                  Successful added a new User:\n 
+                  Username : ${username} 
+                  Name : ${name} 
+                  Email : ${email} 
+                `)
+
                 console.log(json)
             })
             .catch((error) => { //failure
                 event.preventDefault()
                 alert(` 
                   Error when creating the model:\n 
-                  Vendor and Model Number must match a model
-                  
-                `)
-                console.error('Error:', error);
-            });
-
-
-
-
-
-        if (pk!='') {//successful got the pk
-            //start of insertion
-
-            const requestOptions = {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Authorization':token, 'Accept':'application/json'},
-                body: JSON.stringify({model: pk, serial_number: serial_number, comment: comment, instrument_categories: []})
-            };
-
-            const response = await fetch('http://group-six-test.colab.duke.edu/instruments/', requestOptions)
-                .then(response => {
-                    return response.text()})
-                .then(json => {
-                    json.toString()
-                    if (json.includes('pk')) {
-                        event.preventDefault()
-                        alert(` 
-                      Successful added a new Instrument:\n 
-                      Model : ${pk} 
-                      Serial Number : ${serial_number} 
-                      Comment : ${comment} 
-                    `)
-                    }
-                    else {
-                        event.preventDefault()
-                        alert(` 
-                      Error while creating the model:\n 
-                      ${json} 
-                    `)
-                    }
-
-                    console.log(json)
-                })
-                .catch((error) => { //failure
-                    event.preventDefault()
-                    alert(` 
-                  Error when creating the model:\n 
                   ${error} 
                   
                 `)
-                    console.log("here")
-                    console.error('Error:', error);
-                });
-
-            //end of insertion
-        }
-
-
+                console.log("here")
+                console.error('Error:', error);
+            });
     }
 
     // Method causes to store all the values of the
@@ -136,51 +77,54 @@ class CreateModel extends Component {
         return(
             <MDBContainer>
                 <NavBar user={this.props.user}/>
-                <h4 className="modal-title w-100 font-weight-bold">Create Instrument</h4>
+                <h4 className="modal-title w-100 font-weight-bold">Create User</h4>
                 <br />
                 <MDBRow>
                     <MDBCol md="10">
                         <form onSubmit={this.handleSubmit}>
                             <label htmlFor="defaultFormLoginEmailEx" className="grey-text">
-                                Vendor
+                                name
                             </label>
                             <input
-                                name='vendor'
+                                name='name'
                                 placeholder='required'
-                                value = {this.state.vendor}
+                                value = {this.state.name}
                                 onChange={this.handleChange}
                             />
                             <br />
 
                             <label htmlFor="defaultFormLoginEmailEx" className="grey-text">
-                                Model Number
+                                Username
                             </label>
                             <input
-                                name='model_number'
+                                name='username'
                                 placeholder='required'
-                                value = {this.state.model_number}
+                                value = {this.state.username}
                                 onChange={this.handleChange}
                             />
                             <br />
 
+
                             <label htmlFor="defaultFormLoginEmailEx" className="grey-text">
-                                Serial Number
+                                Email
                             </label>
                             <input
-                                name='serial_number'
+                                name='email'
                                 placeholder='required'
-                                value = {this.state.serial_number}
+                                value = {this.state.email}
                                 onChange={this.handleChange}
                             />
                             <br />
 
+
                             <label htmlFor="defaultFormLoginEmailEx" className="grey-text">
-                                Comment
+                                Password
                             </label>
                             <input
-                                name='comment'
-                                placeholder='optional'
-                                value = {this.state.comment}
+                                name='password'
+                                placeholder='required'
+                                input type="password"
+                                value = {this.state.password}
                                 onChange={this.handleChange}
                             />
 
