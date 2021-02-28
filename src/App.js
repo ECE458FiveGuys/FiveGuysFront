@@ -75,18 +75,6 @@ class App extends Component {
                 <CategoryTabView token={this.state.token}
                                  user={this.state.user}/>
               </Route>
-              <Route path="/create-model">
-                <CreateModel token={this.state.token}
-                                 user={this.state.user}/>
-              </Route>
-              <Route path="/create-instrument">
-                <CreateInstrument token={this.state.token}
-                             user={this.state.user}/>
-              </Route>
-              <Route path="/create-user">
-                <CreateUser token={this.state.token}
-                                  user={this.state.user}/>
-              </Route>
               <Route>
                 <NotFound/>
               </Route>
