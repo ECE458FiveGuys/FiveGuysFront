@@ -1,9 +1,6 @@
 import React, {useState, Component} from "react";
 import {MDBContainer, MDBDropdown, MDBDropdownMenu, MDBDropdownToggle, MDBRow, MDBTable} from "mdbreact";
 import ImportExportRequests from "../../../controller/requests/import_export_requests";
-import Papa from "papaparse"
-import {CSVReader} from "react-papaparse";
-import {getIsOnlyResult} from "react-bootstrap-typeahead/lib/utils";
 
 class CSV_Import extends Component{
 
