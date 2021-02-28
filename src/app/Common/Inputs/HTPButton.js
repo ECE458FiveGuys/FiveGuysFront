@@ -13,6 +13,7 @@ export default class HTPButton extends React.Component {
         return (
                 <MDBBtn color={this.props.color}
                         type="submit"
+                        disabled={this.props.disabled}
                         onClick={this.props.onSubmit}>
                     {this.props.label}
                 </MDBBtn>
@@ -23,10 +24,12 @@ export default class HTPButton extends React.Component {
 HTPButton.propTypes = {
     onSubmit : PropTypes.func.isRequired,
     label : PropTypes.func.isRequired,
-    color : PropTypes.string
+    color : PropTypes.string,
+    disabled : PropTypes.bool
 }
 
 HTPButton.defaultProps = {
     size : 2,
-    color : "green"
+    color : "green",
+    disabled : false
 }

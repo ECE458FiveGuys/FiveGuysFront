@@ -60,7 +60,9 @@ export default class DatatableEditable extends Component {
         editableColumns.forEach(column => {
             let fieldRef = React.createRef()
             let Input = (<HTPInput label={column.label}
-                                   onChange={(value)=>{this.state.fieldMap[column.field] = value}}
+                                   onChange={(value)=>{this.state.fieldMap[column.field] = value
+                                                       this.setState({fieldMap: this.state.fieldMap})
+                                   }}
                                    ref={fieldRef}
                                    placeholder={column.label}/>)
             EditableFields.push(Input)
@@ -77,7 +79,7 @@ export default class DatatableEditable extends Component {
                 let currentField = this.state.selectedRow[columnField]
                 inputRef.current.setValue(currentField)
             }
-            this.state.fieldMap[columnField] = inputRef
+            this.state.fieldMap[columnField] = inputRef.current.getValue()
             callBack()
         })
     }
@@ -148,12 +150,25 @@ export default class DatatableEditable extends Component {
             )
     }
 
+    unChanged = () => {
+        let unChanged = true;
+        Object.keys(this.state.fieldMap).forEach(fieldName => {
+            let currentValue = this.state.fieldMap[fieldName]
+            let savedValue = this.state.selectedRow[fieldName]
+            if (currentValue != savedValue) {
+                unChanged = false
+            }
+        })
+        return unChanged
+    }
+
     render() {
         let {columns, rows, selectedRow, EditableFields, errorMessage, successMessage} = this.state
         return(<div style={{marginTop : 30}}>
                     <div style={{flexDirection : 'row', display: "flex", alignItems : "center"}}>
                         {EditableFields}
                         <HTPButton onSubmit={this.onSubmit}
+                                   disabled={selectedRow ? this.unChanged() : false}
                                    label={selectedRow ? "Edit" : "Create"}/>
                         {selectedRow ? <HTPButton onSubmit={this.onDelete}
                                                   color={"red"}
