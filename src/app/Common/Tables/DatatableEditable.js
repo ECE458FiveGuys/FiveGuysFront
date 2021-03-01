@@ -105,7 +105,11 @@ export default class DatatableEditable extends Component {
                 }
             })
         }
-        this.setState({selectedRow: updatedSelectedRow, successMessage: undefined, errorMessage: undefined},
+        this.setState({selectedRow: updatedSelectedRow,
+                successMessage: undefined,
+                errorMessage: undefined,
+                warningMessage: undefined,
+                    warningFunction : undefined},
             () => this.updateFields(() => callBack()))
     }
 
@@ -140,25 +144,47 @@ export default class DatatableEditable extends Component {
     }
 
     onDelete = () => {
+        let {validateDeleteFunction} = this.props
+        validateDeleteFunction ? this.validateDelete() : this.delete()
+    }
+
+    validateDelete = () => {
+        let {validateDeleteFunction, token} = this.props
+        let {selectedRow} = this.state
+        validateDeleteFunction(token,
+                                selectedRow,
+                                (json) => {
+                                    this.delete()
+                                },
+                                (warnMessage) => {
+                                    this.setState({warningMessage : warnMessage, warningFunction : this.delete})
+                                    this.toggleModal()
+                                })
+        }
+
+    delete = () => {
         let {token, deleteFunction} = this.props
         let {selectedRow, rows} = this.state
         deleteFunction(token,
-                        selectedRow.pk,
-                        (json) => {
-                            let indexToRemove = 0
-                            for (let i = 0; i < rows.length; i++) {
-                                let row = rows[i]
-                                if (row.pk == selectedRow.pk) {
-                                    indexToRemove = i
-                                    break
-                                }
-                            }
-                            rows.splice(indexToRemove, 1);
-                            this.updateSelectedRow(undefined,
-                                () => this.setState({successMessage : "Successfully Deleted"}))
-                        },
-                        (errorMessage) => this.setState({errorMessage : errorMessage})
-            )
+            selectedRow.pk,
+            (json) => {
+                let indexToRemove = 0
+                for (let i = 0; i < rows.length; i++) {
+                    let row = rows[i]
+                    if (row.pk == selectedRow.pk) {
+                        indexToRemove = i
+                        break
+                    }
+                }
+                rows.splice(indexToRemove, 1);
+                this.updateSelectedRow(undefined,
+                    () => {
+                        this.setState({successMessage : "Successfully deleted"})
+                        this.toggleModal()
+                    })
+            },
+            (errorMessage) => this.setState({errorMessage : errorMessage})
+        )
     }
 
     unChanged = () => {
@@ -180,7 +206,7 @@ export default class DatatableEditable extends Component {
     }
 
     render() {
-        let {columns, rows, selectedRow, EditableFields, successMessage, errorMessage} = this.state
+        let {columns, rows, selectedRow, EditableFields, successMessage, warningMessage, warningFunction, errorMessage} = this.state
         return(<div style={{marginTop : 30}}>
                     <div style={{flexDirection : 'row', display: "flex", alignItems : "center"}}>
                         {EditableFields}
@@ -192,20 +218,20 @@ export default class DatatableEditable extends Component {
                                                   label="Delete"/> : <div/>}
                         <MDBModal isOpen={this.state.modal} toggle={this.toggleModal}>
                             <MDBModalHeader toggle={this.toggleModal} className={successMessage ? "text-success" : "text-danger"}>
-                                {successMessage ? "Success!" : "Error!"}
+                                {successMessage ? "Success!" : warningMessage? "Warning!" : "Error!"}
                             </MDBModalHeader>
                             <ModalBody>
-                                {successMessage ? successMessage : errorMessage}
+                                {successMessage ? successMessage : warningMessage? warningMessage : errorMessage}
                             </ModalBody>
                             <MDBModalFooter>
-                                <MDBBtn color="secondary" onClick={this.toggleModal}>Close</MDBBtn>
+                                <MDBBtn color="green" onClick={this.toggleModal}>Close</MDBBtn>
+                                {warningFunction? <MDBBtn color="red" onClick={this.state.warningFunction}>Proceed</MDBBtn> : <div/>}
                             </MDBModalFooter>
                         </MDBModal>
                     </div>
                     <DataTable columns={columns}
                                rows={rows}/>
-                </div>
-                )
+                </div>)
     }
 }
 
@@ -217,4 +243,5 @@ DatatableEditable.propTypes = {
     editFunction : PropTypes.func.isRequired, // a shared library API function to be called when the edit button is selected
     createFunction : PropTypes.func.isRequired, // a shared library API function to be called when the create button is selected
     deleteFunction : PropTypes.func.isRequired, // a shared library API function to be called when the delete button is selected
+    validateDeleteFunction: PropTypes.func // optional function to confirm whether warning should be displayed on delete
 }
