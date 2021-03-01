@@ -70,8 +70,8 @@ class App extends Component {
                                                            user={this.state.user}/>)} >
               </Route>
               <Route path="/import-export">
-                <ImportExportView token={this.getToken()}
-                                  user={this.getUser()}/>
+                <ImportExportView token={this.state.token}
+                                  user={this.state.user}/>
               </Route>
               <Route path="/categories/">
                 <CategoryTabView token={this.state.token}

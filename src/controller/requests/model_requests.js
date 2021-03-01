@@ -20,6 +20,25 @@ export default class ModelRequests {
             METHODS.GET, callBack, errorMessageCallBack, header, params)
     }
 
+    static async getModelsByCategory(token, categoryObj,
+                                       callBack,
+                                       errorMessageCallBack) {
+        let params = {}
+        params[ModelFields.EquipmentModelFields.MODEL_CATEGORIES + "__name"] = categoryObj.name
+
+        let fullCallBack = (json) => {
+            if (json.length > 0) {
+                throw new UserError("Instances using this category exist")
+            } else {
+                callBack()
+            }
+        }
+
+        let header = RequestUtils.buildTokenHeader(token)
+        RequestUtils.assistedFetch(URLS.MODELS,
+            METHODS.GET, fullCallBack, errorMessageCallBack, header, params)
+    }
+
     static async getModelsWithSearchParams(token, params,
                                            callBack = (json) => json,
                                            errorMessageCallBack = (errorMessage) => errorMessage) {

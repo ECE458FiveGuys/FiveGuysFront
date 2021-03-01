@@ -44,6 +44,9 @@ export default class RequestUtils {
                                         .then(json => {
                                             callBack(json) // callback is called on the returned json
                                         })
+                                        .catch(error=> {
+                                            errorMessageCallBack(error.message)
+                                        })
                                 }
                             } else if (response.status >= 500 && response.status < 600) {
                                 response.text()

@@ -26,6 +26,25 @@ export default class InstrumentRequests {
             params)
     }
 
+    static async getInstrumentsByCategory(token, categoryObj,
+                                     callBack,
+                                     errorMessageCallBack) {
+        let params = {}
+        params[ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES + "__name"] = categoryObj.name
+
+        let fullCallBack = (json) => {
+            if (json.length > 0) {
+                throw new UserError("Instances using this category exist")
+            } else {
+                callBack()
+            }
+        }
+
+        let header = RequestUtils.buildTokenHeader(token)
+        RequestUtils.assistedFetch(URLS.INSTRUMENTS,
+            METHODS.GET, fullCallBack, errorMessageCallBack, header, params)
+    }
+
     static async getInstrumentsWithSearchParams(token, params,
                                                 callBack = (json) => json,
                                                 errorMessageCallBack = (errorMessage) => errorMessage) {

@@ -4,6 +4,8 @@ import DataTable from "./DataTable";
 import Checkbox from "./TableWidgets/Checkbox";
 import HTPInput from "../Inputs/HTPInput";
 import HTPButton from "../Inputs/HTPButton";
+import {MDBBtn, MDBModal, MDBModalBody, MDBModalFooter, MDBModalHeader} from "mdbreact";
+import {ModalBody} from "react-bootstrap";
 
 const SELECT = "Select"
 const DELETE = "Delete"
@@ -16,7 +18,8 @@ export default class DatatableEditable extends Component {
         this.updateSelectedRow = this.updateSelectedRow.bind(this)
         this.state = {
             pkToRow: new Map(),
-            fieldMap: {}  // object of column fields to current input values
+            fieldMap: {},  // object of column fields to current input values
+            modal: false
         }
 
         Object.assign(this.state, {
@@ -102,8 +105,17 @@ export default class DatatableEditable extends Component {
                 }
             })
         }
-        this.setState({selectedRow: updatedSelectedRow, successMessage: undefined, errorMessage: undefined},
+        this.setState({selectedRow: updatedSelectedRow,
+                successMessage: undefined,
+                errorMessage: undefined,
+                warningMessage: undefined,
+                    warningFunction : undefined},
             () => this.updateFields(() => callBack()))
+    }
+
+    handleErrorMessage = (errorMessage) => {
+        this.setState({errorMessage : errorMessage})
+        this.toggleModal()
     }
 
     onSubmit = () => {
@@ -114,40 +126,65 @@ export default class DatatableEditable extends Component {
             selectedRow.pk,
             (json) => {Object.keys(json).forEach(key =>
                 selectedRow[key] = json[key])
-                this.setState({selectedRow : selectedRow, successMessage : "Successfully Edited"})
+                this.setState({selectedRow : selectedRow, successMessage : "Successfully edited"})
+                this.toggleModal()
             },
-            (errorMessage) => this.setState({errorMessage : errorMessage}),
+            (errorMessage) => this.handleErrorMessage(errorMessage),
             fieldMap)
         :
         createFunction(token,
             (json) => {
                 rows.push(json)
-                this.setState({rows: this.addEditFunctions(rows, this.state.pkToRow), successMessage : "Successfully Created"})
+                this.setState({rows: this.addEditFunctions(rows, this.state.pkToRow)})
+                this.setState({selectedRow : selectedRow, successMessage : "Successfully created"})
+                this.toggleModal()
             },
-            (errorMessage) => this.setState({errorMessage : errorMessage}),
+            (errorMessage) => this.handleErrorMessage(errorMessage),
             fieldMap)
     }
 
     onDelete = () => {
+        let {validateDeleteFunction} = this.props
+        validateDeleteFunction ? this.validateDelete() : this.delete()
+    }
+
+    validateDelete = () => {
+        let {validateDeleteFunction, token} = this.props
+        let {selectedRow} = this.state
+        validateDeleteFunction(token,
+                                selectedRow,
+                                (json) => {
+                                    this.delete()
+                                },
+                                (warnMessage) => {
+                                    this.setState({warningMessage : warnMessage, warningFunction : this.delete})
+                                    this.toggleModal()
+                                })
+        }
+
+    delete = () => {
         let {token, deleteFunction} = this.props
         let {selectedRow, rows} = this.state
         deleteFunction(token,
-                        selectedRow.pk,
-                        (json) => {
-                            let indexToRemove = 0
-                            for (let i = 0; i < rows.length; i++) {
-                                let row = rows[i]
-                                if (row.pk == selectedRow.pk) {
-                                    indexToRemove = i
-                                    break
-                                }
-                            }
-                            rows.splice(indexToRemove, 1);
-                            this.updateSelectedRow(undefined,
-                                () => this.setState({successMessage : "Successfully Deleted"}))
-                        },
-                        (errorMessage) => this.setState({errorMessage : errorMessage})
-            )
+            selectedRow.pk,
+            (json) => {
+                let indexToRemove = 0
+                for (let i = 0; i < rows.length; i++) {
+                    let row = rows[i]
+                    if (row.pk == selectedRow.pk) {
+                        indexToRemove = i
+                        break
+                    }
+                }
+                rows.splice(indexToRemove, 1);
+                this.updateSelectedRow(undefined,
+                    () => {
+                        this.setState({successMessage : "Successfully deleted"})
+                        this.toggleModal()
+                    })
+            },
+            (errorMessage) => this.setState({errorMessage : errorMessage})
+        )
     }
 
     unChanged = () => {
@@ -162,8 +199,14 @@ export default class DatatableEditable extends Component {
         return unChanged
     }
 
+    toggleModal = () => {
+        this.setState({
+            modal: !this.state.modal
+        });
+    }
+
     render() {
-        let {columns, rows, selectedRow, EditableFields, errorMessage, successMessage} = this.state
+        let {columns, rows, selectedRow, EditableFields, successMessage, warningMessage, warningFunction, errorMessage} = this.state
         return(<div style={{marginTop : 30}}>
                     <div style={{flexDirection : 'row', display: "flex", alignItems : "center"}}>
                         {EditableFields}
@@ -173,13 +216,22 @@ export default class DatatableEditable extends Component {
                         {selectedRow ? <HTPButton onSubmit={this.onDelete}
                                                   color={"red"}
                                                   label="Delete"/> : <div/>}
-                        {errorMessage ? <text style={{marginLeft: 20}} className={"text-danger"}>{errorMessage}</text> :
-                            successMessage ? <text style={{marginLeft: 20}} className={"text-success"}>{successMessage}</text> : <div/>}
+                        <MDBModal isOpen={this.state.modal} toggle={this.toggleModal}>
+                            <MDBModalHeader toggle={this.toggleModal} className={successMessage ? "text-success" : "text-danger"}>
+                                {successMessage ? "Success!" : warningMessage? "Warning!" : "Error!"}
+                            </MDBModalHeader>
+                            <ModalBody>
+                                {successMessage ? successMessage : warningMessage? warningMessage : errorMessage}
+                            </ModalBody>
+                            <MDBModalFooter>
+                                <MDBBtn color="green" onClick={this.toggleModal}>Close</MDBBtn>
+                                {warningFunction? <MDBBtn color="red" onClick={this.state.warningFunction}>Proceed</MDBBtn> : <div/>}
+                            </MDBModalFooter>
+                        </MDBModal>
                     </div>
                     <DataTable columns={columns}
                                rows={rows}/>
-                </div>
-                )
+                </div>)
     }
 }
 
@@ -191,4 +243,5 @@ DatatableEditable.propTypes = {
     editFunction : PropTypes.func.isRequired, // a shared library API function to be called when the edit button is selected
     createFunction : PropTypes.func.isRequired, // a shared library API function to be called when the create button is selected
     deleteFunction : PropTypes.func.isRequired, // a shared library API function to be called when the delete button is selected
+    validateDeleteFunction: PropTypes.func // optional function to confirm whether warning should be displayed on delete
 }
