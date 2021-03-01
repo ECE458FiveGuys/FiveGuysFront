@@ -6,6 +6,7 @@ import ModelFields from "../../../utils/enums";
 import Loading from "../../Common/Images/Loading";
 import CategoryRequests from "../../../controller/requests/category_requests";
 import ModelRequests from "../../../controller/requests/model_requests";
+import InstrumentRequests from "../../../controller/requests/instrument_requests";
 
 export default class CategoryPage extends Component {
 
@@ -55,7 +56,7 @@ export default class CategoryPage extends Component {
                                     createFunction={isModel ? CategoryRequests.createModelCategory : CategoryRequests.createInstrumentCategory}
                                     editFunction={isModel ? CategoryRequests.editModelCategory : CategoryRequests.editInstrumentCategory}
                                     deleteFunction={isModel ? CategoryRequests.deleteModelCategory : CategoryRequests.deleteInstrumentCategory}
-                                    validateDeleteFunction={ModelRequests.getModelsByCategory}
+                                    validateDeleteFunction={isModel ? ModelRequests.getModelsByCategory : InstrumentRequests.getInstrumentsByCategory}
                                     />
             </div>
     }
