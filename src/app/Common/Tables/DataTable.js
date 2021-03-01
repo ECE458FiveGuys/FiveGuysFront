@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { MDBDataTable } from 'mdbreact';
 import PropTypes from "prop-types";
-import Image from "../../../assets/Spinner.gif";
 import Loading from "../Images/Loading";
 
 export default class DataTable extends Component {

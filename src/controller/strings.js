@@ -1,4 +1,9 @@
-let ROOT_URL = "http://group-six-test.colab.duke.edu/"
+import {UserError} from "./exceptions";
+
+let ROOT_URL =
+    (window.location.host === "group-six-react.colab.duke.edu" || window.location.host === "localhost:3000") ?
+        "http://group-six-test.colab.duke.edu/" : window.location.host === "group-six-react-prod.colab.duke.edu" ?
+        "https://group-six-prod.colab.duke.edu/" : undefined
 
 
 export const URLS =

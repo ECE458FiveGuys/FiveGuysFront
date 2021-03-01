@@ -7,11 +7,11 @@ import {EquipmentModel, Instrument} from "../../utils/ModelEnums";
 
 export default class InstrumentRequests {
 
-    static async getInstruments(token, page_num = undefined, vendor = undefined, model_number = undefined,
+    static async getInstruments(token, callBack = (json) => json,
+                                errorMessageCallBack = (errorMessage) => errorMessage,
+                                page_num = undefined, asset_tag=undefined, vendor = undefined, model_number = undefined,
                                 description = undefined, serial_number = undefined, search = undefined, search_field = undefined,
-                                ordering = undefined,
-                                callBack = (json) => json,
-                                errorMessageCallBack = (errorMessage) => errorMessage) {
+                                ordering = undefined) {
 
         let params = RequestUtils.buildGetInstrumentParams(page_num, vendor, model_number,
             description, serial_number, search, search_field, ordering)

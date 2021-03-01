@@ -7,13 +7,10 @@ import Login from "./auth/Login";
 import NotFound from "./auth/NotFound";
 import {StorageKeys} from "./utils/enums";
 import {User} from "./utils/dtos";
-import NavBar from "./app/Common/NavBar";
 import ModelDetailView from "./app/Pages/ModelDetailPage/ModelDetailView";
 import InstrumentDetailView from "./app/Pages/InstrumentDetailPage/InstrumentDetailView";
 import CategoryTabView from "./app/Pages/CategoryPage/CategoryTabView";
-import CreateModel from "./app/Pages/MainPage/CreateFunctions/CreateModel";
-import CreateInstrument from "./app/Pages/MainPage/CreateFunctions/CreateInstrument";
-import CreateUser from "./app/Pages/MainPage/CreateFunctions/CreateUser";
+import LoadBankMain from "./app/Pages/LoadBankPage/LoadBankMain";
 
 class App extends Component {
 
@@ -76,6 +73,11 @@ class App extends Component {
               <Route path="/categories/">
                 <CategoryTabView token={this.state.token}
                                  user={this.state.user}/>
+              </Route>
+              <Route path="/load-bank/:id"
+                     render = {(props) => (<LoadBankMain token={this.state.token}
+                              instrumentId={props.match.params.id}
+                              user={this.state.user}/>)}>
               </Route>
               <Route>
                 <NotFound/>

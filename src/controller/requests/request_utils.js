@@ -61,8 +61,14 @@ export default class RequestUtils {
                                     })
                             }
                         })
-                        .catch(error => error.text()
-                            .then(errorText => alert(new ServerError(errorText).message))
+                        .catch(error => {
+                            try {
+                                error.text()
+                                    .then(errorText => alert(new ServerError(errorText).message))
+                            } catch (e) {
+                                alert(new ServerError(error).message)
+                            }
+                            }
                         )
 
     }

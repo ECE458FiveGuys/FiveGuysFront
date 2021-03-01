@@ -22,7 +22,7 @@ export default class HTPInput extends Component {
     render() {
         let {onChange, label, placeholder, size, value}= this.props
         return(
-            <MDBCol size={size}>
+            <div>
                 <label htmlFor="defaultFormLoginEmailEx" className="grey-text">
                     {label}
                 </label>
@@ -34,7 +34,7 @@ export default class HTPInput extends Component {
                        contentEditable={true}
                        onChange={event => onChange(event.target.value)}/>
                 <br/>
-            </MDBCol>
+            </div>
         )
     }
 }

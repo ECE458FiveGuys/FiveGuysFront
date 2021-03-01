@@ -4,8 +4,9 @@ import DataTable from "./DataTable";
 import Checkbox from "./TableWidgets/Checkbox";
 import HTPInput from "../Inputs/HTPInput";
 import HTPButton from "../Inputs/HTPButton";
-import {MDBBtn, MDBModal, MDBModalBody, MDBModalFooter, MDBModalHeader} from "mdbreact";
+import {MDBBtn, MDBCol, MDBModal, MDBModalBody, MDBModalFooter, MDBModalHeader} from "mdbreact";
 import {ModalBody} from "react-bootstrap";
+import HTPPopup from "../HTPPopup";
 
 const SELECT = "Select"
 const DELETE = "Delete"
@@ -62,12 +63,14 @@ export default class DatatableEditable extends Component {
         let editableFieldRefs = new Map()
         editableColumns.forEach(column => {
             let fieldRef = React.createRef()
-            let Input = (<HTPInput label={column.label}
+            let Input = (<MDBCol size={2}>
+                            <HTPInput label={column.label}
                                    onChange={(value)=>{this.state.fieldMap[column.field] = value
                                                        this.setState({fieldMap: this.state.fieldMap})
                                    }}
                                    ref={fieldRef}
-                                   placeholder={column.label}/>)
+                                   placeholder={column.label}/>
+                        </MDBCol>)
             EditableFields.push(Input)
             editableFieldRefs.set(column.field, fieldRef)
         })
@@ -216,18 +219,12 @@ export default class DatatableEditable extends Component {
                         {selectedRow ? <HTPButton onSubmit={this.onDelete}
                                                   color={"red"}
                                                   label="Delete"/> : <div/>}
-                        <MDBModal isOpen={this.state.modal} toggle={this.toggleModal}>
-                            <MDBModalHeader toggle={this.toggleModal} className={successMessage ? "text-success" : "text-danger"}>
-                                {successMessage ? "Success!" : warningMessage? "Warning!" : "Error!"}
-                            </MDBModalHeader>
-                            <ModalBody>
-                                {successMessage ? successMessage : warningMessage? warningMessage : errorMessage}
-                            </ModalBody>
-                            <MDBModalFooter>
-                                <MDBBtn color="green" onClick={this.toggleModal}>Close</MDBBtn>
-                                {warningFunction? <MDBBtn color="red" onClick={this.state.warningFunction}>Proceed</MDBBtn> : <div/>}
-                            </MDBModalFooter>
-                        </MDBModal>
+                        <HTPPopup isOpen={this.state.modal}
+                                  toggleModal={this.toggleModal}
+                                  className={successMessage ? "text-success" : "text-danger"}
+                                  title={successMessage ? "Success!" : warningMessage? "Warning!" : "Error!"}
+                                  message={successMessage ? successMessage : warningMessage? warningMessage : errorMessage}
+                                  additionalButtons={warningFunction? <MDBBtn color="red" onClick={warningFunction}>Proceed</MDBBtn> : <div/>}/>
                     </div>
                     <DataTable columns={columns}
                                rows={rows}/>
