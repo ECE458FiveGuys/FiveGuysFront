@@ -11,6 +11,9 @@ import NavBar from "./app/Common/NavBar";
 import ModelDetailView from "./app/Pages/ModelDetailPage/ModelDetailView";
 import InstrumentDetailView from "./app/Pages/InstrumentDetailPage/InstrumentDetailView";
 import CategoryTabView from "./app/Pages/CategoryPage/CategoryTabView";
+import CreateModel from "./app/Pages/MainPage/CreateFunctions/CreateModel";
+import CreateInstrument from "./app/Pages/MainPage/CreateFunctions/CreateInstrument";
+import CreateUser from "./app/Pages/MainPage/CreateFunctions/CreateUser";
 
 class App extends Component {
 
@@ -23,25 +26,25 @@ class App extends Component {
     this.saveToken = this.saveToken.bind(this)
   }
 
-    getToken = () => {
-        const tokenString = localStorage.getItem(StorageKeys.TOKEN);
-        return JSON.parse(tokenString);
-    };
+  getToken = () => {
+    const tokenString = localStorage.getItem(StorageKeys.TOKEN);
+    return JSON.parse(tokenString);
+  };
 
-    saveToken = userToken => {
-        localStorage.setItem(StorageKeys.TOKEN, JSON.stringify(userToken));
-        this.setState({token: userToken})
-    };
+  saveToken = userToken => {
+    localStorage.setItem(StorageKeys.TOKEN, JSON.stringify(userToken));
+    this.setState({token: userToken})
+  };
 
-    getUser = () => {
-      const userString = localStorage.getItem(StorageKeys.USER);
-      return userString ? User.fromJson(JSON.parse(userString)) : undefined
-    };
+  getUser = () => {
+    const userString = localStorage.getItem(StorageKeys.USER);
+    return userString ? User.fromJson(JSON.parse(userString)) : undefined
+  };
 
-    saveUser = user => {
-      localStorage.setItem(StorageKeys.USER, JSON.stringify(user));
-      this.setState({user: user})
-    };
+  saveUser = user => {
+    localStorage.setItem(StorageKeys.USER, JSON.stringify(user));
+    this.setState({user: user})
+  };
 
   render() {
     if (!this.state.token || !this.state.user) {
@@ -67,12 +70,12 @@ class App extends Component {
                                                            user={this.state.user}/>)} >
               </Route>
               <Route path="/import-export">
-                  <ImportExportView token={this.getToken()}
-                                    user={this.getUser()}/>
+                <ImportExportView token={this.getToken()}
+                                  user={this.getUser()}/>
               </Route>
               <Route path="/categories/">
                 <CategoryTabView token={this.state.token}
-                                      user={this.state.user}/>
+                                 user={this.state.user}/>
               </Route>
               <Route>
                 <NotFound/>
