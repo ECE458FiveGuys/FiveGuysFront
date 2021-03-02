@@ -45,8 +45,15 @@ class App extends Component {
 
   render() {
     if (!this.state.token || !this.state.user) {
-      return <Login setToken={this.saveToken}
-                    setUser={this.saveUser}/>
+      return <BrowserRouter>
+                <Route path = "/">
+                  <Login setToken={this.saveToken}
+                        setUser={this.saveUser}/>
+                </Route>
+                <Route path = "/oauth/consume/:code"
+                       render={(props) => (<div></div>)}>
+                </Route>
+              </BrowserRouter>
     }
     return (
         <div className="wrapper">

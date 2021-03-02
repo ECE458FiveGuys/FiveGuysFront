@@ -107,13 +107,12 @@ export default class Login extends React.Component {
                        </form>
                    </MDBCol>
                    <Divider style={{marginLeft : 40, marginRight : 40}} orientation = 'vertical' flexItem={true}/>
-                   <div className="text-center mt-4">
+                   <a href={URLS.OAUTH_URL}>
                        <MDBBtn color="dark-green"
-                               type="submit"
-                               onClick={this._handleSubmit}>
+                               type="submit">
                            Oauth Login
                        </MDBBtn>
-                   </div>
+                   </a>
                    <div style={{justifyContent: 'center', alignItems: 'center', marginLeft: 50}}>
                        <img alt="logo"
                             style={{textAlign: 'center', width: 300}}

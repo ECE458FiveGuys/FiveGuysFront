@@ -2,14 +2,16 @@ import {UserError} from "./exceptions";
 
 let ROOT_URL =
     (window.location.host === "group-six-react.colab.duke.edu" || window.location.host === "localhost:3000") ?
-        "http://group-six-test.colab.duke.edu/api/" : window.location.host === "group-six-react-prod.colab.duke.edu" ?
+        "https://group-six-test.colab.duke.edu/api/" : window.location.host === "group-six-react-prod.colab.duke.edu" ?
         "https://group-six-prod.colab.duke.edu/api/" : undefined
 
 let ROOT_URL_AUTH =
     (window.location.host === "group-six-react.colab.duke.edu" || window.location.host === "localhost:3000") ?
-        "http://group-six-test.colab.duke.edu/" : window.location.host === "group-six-react-prod.colab.duke.edu" ?
+        "https://group-six-test.colab.duke.edu/" : window.location.host === "group-six-react-prod.colab.duke.edu" ?
         "https://group-six-prod.colab.duke.edu/" : undefined
 
+
+let OAUTH_URL = `https://oauth.oit.duke.edu/oidc/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=code`
 
 export const URLS =
     {
@@ -27,8 +29,11 @@ export const URLS =
         INSTRUMENTS : ROOT_URL + "instruments/",
         VENDORS : ROOT_URL + "models/vendors/",
         MODEL_CATEGORIES : ROOT_URL + "model-categories/",
-        INSTRUMENT_CATEGORIES: ROOT_URL + "instrument-categories/"
+        INSTRUMENT_CATEGORIES: ROOT_URL + "instrument-categories/",
+        OAUTH_URL : OAUTH_URL
     }
+
+
 
 export const METHODS =
     {
