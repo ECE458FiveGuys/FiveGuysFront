@@ -2,6 +2,11 @@ import {UserError} from "./exceptions";
 
 let ROOT_URL =
     (window.location.host === "group-six-react.colab.duke.edu" || window.location.host === "localhost:3000") ?
+        "http://group-six-test.colab.duke.edu/api/" : window.location.host === "group-six-react-prod.colab.duke.edu" ?
+        "https://group-six-prod.colab.duke.edu/api/" : undefined
+
+let ROOT_URL_AUTH =
+    (window.location.host === "group-six-react.colab.duke.edu" || window.location.host === "localhost:3000") ?
         "http://group-six-test.colab.duke.edu/" : window.location.host === "group-six-react-prod.colab.duke.edu" ?
         "https://group-six-prod.colab.duke.edu/" : undefined
 
@@ -9,7 +14,8 @@ let ROOT_URL =
 export const URLS =
     {
         ROOT : ROOT_URL,
-        LOGIN : ROOT_URL + "auth/token/login",
+        USERS : ROOT_URL_AUTH + "auth/users/",
+        LOGIN : ROOT_URL_AUTH + "auth/token/login",
         EXPORT_MODELS : ROOT_URL + "export-models/",
         EXPORT_INSTRUMENTS : ROOT_URL + "export-instruments/",
         EXPORT_ALL : ROOT_URL + "export/",
@@ -20,7 +26,6 @@ export const URLS =
         MODELS : ROOT_URL + "models/",
         INSTRUMENTS : ROOT_URL + "instruments/",
         VENDORS : ROOT_URL + "models/vendors/",
-        USERS : ROOT_URL + "auth/users/",
         MODEL_CATEGORIES : ROOT_URL + "model-categories/",
         INSTRUMENT_CATEGORIES: ROOT_URL + "instrument-categories/"
     }

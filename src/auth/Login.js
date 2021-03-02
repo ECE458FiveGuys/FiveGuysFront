@@ -8,6 +8,7 @@ import {Gradient} from "react-gradient"
 import RequestUtils from "../controller/requests/request_utils";
 import {User} from "../utils/dtos";
 import UserRequests from "../controller/requests/user_requests";
+import {Divider} from "@material-ui/core";
 
 async function loginUser(credentials, callBack, errorMessageCallBack) {
     RequestUtils.assistedFetch(URLS.LOGIN, METHODS.POST, callBack, errorMessageCallBack, {}, {}, credentials)
@@ -105,6 +106,14 @@ export default class Login extends React.Component {
                            </div>
                        </form>
                    </MDBCol>
+                   <Divider style={{marginLeft : 40, marginRight : 40}} orientation = 'vertical' flexItem={true}/>
+                   <div className="text-center mt-4">
+                       <MDBBtn color="dark-green"
+                               type="submit"
+                               onClick={this._handleSubmit}>
+                           Oauth Login
+                       </MDBBtn>
+                   </div>
                    <div style={{justifyContent: 'center', alignItems: 'center', marginLeft: 50}}>
                        <img alt="logo"
                             style={{textAlign: 'center', width: 300}}
