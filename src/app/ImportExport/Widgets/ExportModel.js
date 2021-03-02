@@ -5,6 +5,7 @@ import {CSVLink} from "react-csv";
 import Papa from "papaparse";
 import "react-papaparse";
 import {readString} from "react-papaparse";
+import HTPButton from "../../Common/Inputs/HTPButton";
 
 class ExportModel extends Component{
 
@@ -39,12 +40,12 @@ class ExportModel extends Component{
         const { data, loading } = this.state;
         return (
                 <div>
-                    <input
-                    type="button"
-                    value={loading ? "Downloading..." : "Export Models"}
-                    onClick={this.downloadModels}
-                    disabled={loading}
-                    />
+                    <HTPButton
+                        onSubmit={this.downloadModels}
+                        label={loading ? "Downloading..." : "Export Models"}
+                        disabled={loading}
+                    >
+                    </HTPButton>
                     <CSVLink
                         data={data}
                         filename="Export_Models.csv"

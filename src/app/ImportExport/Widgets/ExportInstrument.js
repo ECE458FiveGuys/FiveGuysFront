@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import ImportExportRequests from "../../../controller/requests/import_export_requests";
 import {CSVLink} from "react-csv"
+import HTPButton from "../../Common/Inputs/HTPButton";
 class ExportInstrument extends Component{
 
     constructor(props) {
@@ -34,12 +35,12 @@ class ExportInstrument extends Component{
         const { data, loading } = this.state;
         return (
             <div>
-                <input
-                    type="button"
-                    value={loading ? "Downloading..." : "Export Instruments"}
-                    onClick={this.downloadInstruments}
+                <HTPButton
+                    onSubmit={this.downloadInstruments}
+                    label={loading ? "Downloading..." : "Export Instruments"}
                     disabled={loading}
-                />
+                >
+                </HTPButton>
                 <CSVLink
                     data={data}
                     filename="Export_Instruments.csv"

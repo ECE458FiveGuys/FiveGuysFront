@@ -6,6 +6,7 @@ import {Gradient} from "react-gradient";
 import {MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn, MDBDropdown, MDBDropdownToggle, MDBDropdownMenu} from 'mdbreact';
 import CSV_Import from "./Widgets/CSV_Import";
 import NavBar from "../Common/NavBar";
+import HTPButton from "../Common/Inputs/HTPButton";
 
 
 const gradients = [
@@ -14,9 +15,11 @@ const gradients = [
 ];
 
 
+
 class ImportExportView extends Component{
 
-    render(){
+
+render(){
         return (
             <Gradient
                 className={"fill-window"}
@@ -33,7 +36,7 @@ class ImportExportView extends Component{
                     </MDBRow>
                     <CSV_Import token = {this.props.token}/>
                     <MDBRow style={{justifyContent: 'center', alignItems: 'center', marginTop: 20, xs: 2}}>
-                        To Import: Select File, then Select Import Type From Dropdown
+                        To Import: Select File, then Select Import Type
                     </MDBRow>
                 </MDBContainer>
             </Gradient>
