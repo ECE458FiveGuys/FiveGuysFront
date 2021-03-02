@@ -80,11 +80,7 @@ export default class LoadBankStepper extends React.Component {
 
     handleComplete = () => {
         let {completed, activeStep, stepperState} = this.state
-        const newCompleted = completed
-        newCompleted[activeStep] = true
-        this.props.onStepSubmit[activeStep](stepperState, this.errorMessageCallBack)
-        this.setState({completed : completed, readyToSubmit : false})
-        this.handleNext();
+        this.props.onStepSubmit[activeStep](stepperState, this.submitSuccessCallBack, this.submitErrorCallBack)
     };
 
     handleReset = () => {
@@ -92,8 +88,15 @@ export default class LoadBankStepper extends React.Component {
         this.setState({completed : {}});
     };
 
-    errorMessageCallBack = (errorMessage) => {
-        this.setState({errorMessage : errorMessage}, this.toggleModal)
+    submitSuccessCallBack = () => {
+        const newCompleted = this.state.completed
+        newCompleted[this.state.activeStep] = true
+        this.setState({completed : this.state.completed, readyToSubmit : false})
+        this.handleNext();
+    }
+
+    submitErrorCallBack = (errorMessage) => {
+        this.setState({errorMessage : errorMessage, modal : true})
     }
 
     // misc :
@@ -109,13 +112,8 @@ export default class LoadBankStepper extends React.Component {
         let {activeStep, completed} = this.state
         return (
             <div>
-                <NavBar user={this.props.user}/>
-                <Header className={"h1-responsive"}
-                        style={{display: 'flex', justifyContent : 'center', marginTop: 50, marginBottom: 10}}>
-                    Load Bank
-                </Header>
                     <div style={{marginLeft : 200, marginRight : 200}}>
-                    <Stepper nonLinear activeStep={activeStep}>
+                    <Stepper nonLinear activeStep={activeStep} orientation={this.props.orientation}>
                         {stepNames.map((label, index) => (
                             <Step key={label}>
                                 <StepButton
@@ -153,7 +151,7 @@ export default class LoadBankStepper extends React.Component {
                                     {this.state.errorMessage ?
                                         <HTPPopup toggleModal={this.toggleModal}
                                                   message={this.state.errorMessage}
-                                                  className={"warning-color"}
+                                                  className={"text-danger"}
                                                   title={"Error!"}
                                                   isOpen={this.state.modal}/>
                                         :
@@ -174,4 +172,9 @@ LoadBankStepper.propTypes = {
     stepNames : PropTypes.array.isRequired,
     stepContent : PropTypes.array.isRequired,
     onStepSubmit : PropTypes.array.isRequired,
+    orientation : PropTypes.string
+}
+
+LoadBankStepper.defaultProps = {
+    orientation : 'horizontal'
 }

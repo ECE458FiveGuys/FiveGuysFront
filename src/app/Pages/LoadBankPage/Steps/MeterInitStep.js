@@ -3,7 +3,6 @@ import {Checkbox, Divider, StepContent} from "@material-ui/core";
 import PropTypes from "prop-types";
 import HTPInput from "../../../Common/Inputs/HTPInput";
 import InstrumentRequests from "../../../../controller/requests/instrument_requests";
-import {User} from "../../../../utils/dtos";
 import ModelFields from "../../../../utils/enums";
 import {dateColors, parseDate} from "../../../utils";
 import {UserError} from "../../../../controller/exceptions";
@@ -17,11 +16,17 @@ export default class MeterInitStep extends React.Component {
         }
     }
 
-    static getInstrument = (token, assetTag, modelNumber, meterType, errorCallBack) => {
+    static getInstrument = (token, assetTag, modelNumber, meterType, successCallBack, errorCallBack) => {
         InstrumentRequests.getInstruments(token,
-            (json) => { let mostRecentCalibration = json[0][ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION]
+            (json) => {
+                if (!json[0]) {
+                    throw new UserError(`No such ${meterType} exists.`)
+                }
+                let mostRecentCalibration = json[0][ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION]
                 if (parseDate(mostRecentCalibration) != dateColors.RED) {
                     throw new UserError(`The calibration for this ${meterType} has expired.`)
+                } else {
+                    successCallBack()
                 }
             },
             (errorMessage) => errorCallBack(errorMessage),
@@ -31,9 +36,9 @@ export default class MeterInitStep extends React.Component {
             modelNumber)
     }
 
-    static onSubmit = (stepperState, token, errorCallBack) => {
-        this.getInstrument(token, stepperState.voltmeterAssetTag, stepperState.voltmeterModelNum, "voltmeter", errorCallBack)
-        this.getInstrument(token, stepperState.shuntMeterAssetTag, stepperState.shuntMeterModelNum, "shunt meter", errorCallBack)
+    static onSubmit = (stepperState, token, successCallBack, errorCallBack) => {
+        this.getInstrument(token, stepperState.voltmeterAssetTag, stepperState.voltmeterModelNum, "voltmeter", successCallBack, errorCallBack)
+        this.getInstrument(token, stepperState.shuntMeterAssetTag, stepperState.shuntMeterModelNum, "shunt meter", successCallBack, errorCallBack)
     }
 
     shouldEnableSubmit = () => {

@@ -14,7 +14,7 @@ export default class InstrumentRequests {
                                 ordering = undefined) {
 
         let params = RequestUtils.buildGetInstrumentParams(page_num, vendor, model_number,
-            description, serial_number, search, search_field, ordering)
+            description, serial_number, search, search_field, ordering, asset_tag)
 
         let header = RequestUtils.buildTokenHeader(token)
 
