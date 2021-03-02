@@ -1,4 +1,3 @@
-import {UserError} from "./exceptions";
 
 let ROOT_URL =
     (window.location.host === "group-six-react.colab.duke.edu" || window.location.host === "localhost:3000") ?
@@ -16,8 +15,6 @@ let OAUTH_URL = `https://oauth.oit.duke.edu/oidc/authorize?client_id=${process.e
 export const URLS =
     {
         ROOT : ROOT_URL,
-        USERS : ROOT_URL_AUTH + "auth/users/",
-        LOGIN : ROOT_URL_AUTH + "auth/token/login",
         EXPORT_MODELS : ROOT_URL + "export-models/",
         EXPORT_INSTRUMENTS : ROOT_URL + "export-instruments/",
         EXPORT_ALL : ROOT_URL + "export/",
@@ -33,10 +30,12 @@ export const URLS =
         OAUTH_URL : OAUTH_URL
     }
 
-export const OAUTH_URLS =
+export const AUTH_URLS =
     {
-            GET_CODE : OAUTH_URL,
-            GET_TOKEN : ROOT_URL_AUTH + "auth/oauth/"
+        USERS : ROOT_URL_AUTH + "auth/users/",
+        LOGIN : ROOT_URL_AUTH + "auth/token/login",
+        GET_OAUTH_CODE : OAUTH_URL,
+        GET_OAUTH_TOKEN : ROOT_URL_AUTH + "auth/oauth/login/"
     }
 
 
