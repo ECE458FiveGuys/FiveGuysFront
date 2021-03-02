@@ -11,6 +11,7 @@ import ModelDetailView from "./app/Pages/ModelDetailPage/ModelDetailView";
 import InstrumentDetailView from "./app/Pages/InstrumentDetailPage/InstrumentDetailView";
 import CategoryTabView from "./app/Pages/CategoryPage/CategoryTabView";
 import LoadBankMain from "./app/Pages/LoadBankPage/LoadBankMain";
+import OAuthRedirect from "./auth/OAuthRedirect";
 
 class App extends Component {
 
@@ -46,13 +47,15 @@ class App extends Component {
   render() {
     if (!this.state.token || !this.state.user) {
       return <BrowserRouter>
-                <Route path = "/">
+                <Switch>
+                <Route exact path = "/oauth/consume"
+                       render={(props) => <OAuthRedirect code={new URLSearchParams(props.location.search).get("code")}/>}>
+                </Route>
+                <Route>
                   <Login setToken={this.saveToken}
                         setUser={this.saveUser}/>
                 </Route>
-                <Route path = "/oauth/consume/:code"
-                       render={(props) => (<div></div>)}>
-                </Route>
+                </Switch>
               </BrowserRouter>
     }
     return (

@@ -2,12 +2,12 @@ import {UserError} from "./exceptions";
 
 let ROOT_URL =
     (window.location.host === "group-six-react.colab.duke.edu" || window.location.host === "localhost:3000") ?
-        "https://group-six-test.colab.duke.edu/api/" : window.location.host === "group-six-react-prod.colab.duke.edu" ?
+        "http://group-six-test.colab.duke.edu/api/" : window.location.host === "group-six-react-prod.colab.duke.edu" ?
         "https://group-six-prod.colab.duke.edu/api/" : undefined
 
 let ROOT_URL_AUTH =
     (window.location.host === "group-six-react.colab.duke.edu" || window.location.host === "localhost:3000") ?
-        "https://group-six-test.colab.duke.edu/" : window.location.host === "group-six-react-prod.colab.duke.edu" ?
+        "http://group-six-test.colab.duke.edu/" : window.location.host === "group-six-react-prod.colab.duke.edu" ?
         "https://group-six-prod.colab.duke.edu/" : undefined
 
 
@@ -31,6 +31,12 @@ export const URLS =
         MODEL_CATEGORIES : ROOT_URL + "model-categories/",
         INSTRUMENT_CATEGORIES: ROOT_URL + "instrument-categories/",
         OAUTH_URL : OAUTH_URL
+    }
+
+export const OAUTH_URLS =
+    {
+            GET_CODE : OAUTH_URL,
+            GET_TOKEN : ROOT_URL_AUTH + "auth/oauth/"
     }
 
 
