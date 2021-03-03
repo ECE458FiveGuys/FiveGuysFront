@@ -35,7 +35,7 @@ export default class ModelFields {
         "Vendor": ModelFields.EquipmentModelFields.VENDOR,
         "Model Number": ModelFields.EquipmentModelFields.MODEL_NUMBER,
         "Description": ModelFields.EquipmentModelFields.DESCRIPTION,
-        "Comment": ModelFields.EquipmentModelFields.MODEL_CATEGORIES,
+        "Comment": ModelFields.EquipmentModelFields.COMMENT,
         "Categories": ModelFields.EquipmentModelFields.MODEL_CATEGORIES,
         "Calibration Frequency": ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY,
     }
@@ -62,9 +62,10 @@ export default class ModelFields {
     }
 
     static InstrumentEditFields = {
-        "Model": ModelFields.EquipmentModelFields.MODEL,
+        "Model": ModelFields.InstrumentFields.MODEL,
         "Serial Number": ModelFields.InstrumentFields.SERIAL_NUMBER,
         "Comment": ModelFields.InstrumentFields.COMMENT,
+
     }
 
     static CategoryFields = {

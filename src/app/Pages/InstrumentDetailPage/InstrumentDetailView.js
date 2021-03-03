@@ -74,6 +74,7 @@ class InstrumentDetailView extends Component {
 
     render() {
         if(this.state.instrument) {
+
             return (
                 <div>
                     <h1>Instrument Details</h1>
@@ -109,7 +110,12 @@ class InstrumentDetailView extends Component {
                     </Button>
                     <ul>
                         <li>
-                            Model: {this.state.instrument.model.model_number}
+                            Model:
+                            <a
+                                href={"/models/"+this.state.instrument.model.pk}
+                            >
+                                {this.state.instrument.model.model_number}
+                            </a>
                         </li>
                         <li>
                             Serial Number: {this.state.instrument.serial_number}
@@ -118,10 +124,10 @@ class InstrumentDetailView extends Component {
                             Comment: {this.state.instrument.comment}
                         </li>
                     </ul>
-                    <ErrorBoundary>
+                    {/*<ErrorBoundary>*/}
                         <DataTable columns={TableColumns.CALIBRATION_COLUMNS} token={this.props.token}
                                    rows={this.state.calibrations}/>
-                    </ErrorBoundary>
+                    {/*</ErrorBoundary>*/}
                 </div>
 
 
