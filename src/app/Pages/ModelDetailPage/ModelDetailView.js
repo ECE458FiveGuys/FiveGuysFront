@@ -7,6 +7,7 @@ import DeleteModal from "./DeleteModal";
 import ModelFields from "../../../utils/enums";
 import TableColumns from "../MainPage/InventoryTables/Columns";
 import DataTable from "../../Common/Tables/DataTable";
+import {EquipmentModel} from "../../../utils/ModelEnums";
 
 
 
@@ -32,6 +33,7 @@ class ModelDetailView extends Component {
     componentDidMount() {
         let retrieveModelCallback = (model) => {
             console.log(model)
+            this.state.model = model
             let instruments = model['instruments']
             let calibration_frequency = model['calibration_frequency'].split(" ")[0]
             model['calibration_frequency'] = calibration_frequency
@@ -55,9 +57,14 @@ class ModelDetailView extends Component {
     }
 
     handleSubmit = (e) =>{
+        this.setEditModalShow(false)
         let {vendor,model_number,description,comment,calibration_frequency,model_categories} = this.state
         let editCallback = (response) => {
-            // this.render()
+            var temp_model = {...this.state.model}
+            for (var field in ModelFields.EquipmentModelEditFields) {
+                temp_model[ModelFields.EquipmentModelEditFields[field]] = this.state[ModelFields.EquipmentModelEditFields[field]]
+            }
+            this.setState({model: temp_model})
         }
         let editError = (e) => {
             alert("EDIT: "+e)
@@ -86,8 +93,7 @@ class ModelDetailView extends Component {
 
 
     render() {
-        if(this.state.model) {
-
+        if(this.state.model_number) {
             let instrument_columns = [{
                 label: 'Serial Number',
                 field: ModelFields.InstrumentFields.SERIAL_NUMBER,
@@ -135,20 +141,6 @@ class ModelDetailView extends Component {
                         </li>
                         ))}
                     </ul>
-                    {/*<ErrorBoundary>*/}
-                    {/*    <ul>{this.state.instruments.map((instrument, index) => (*/}
-                    {/*        <li*/}
-                    {/*            key={instrument.pk}*/}
-
-                    {/*        >*/}
-                    {/*            <a*/}
-                    {/*                href={"/instruments/"+instrument.pk}*/}
-                    {/*            >{instrument.serial_number}</a>*/}
-
-                    {/*        </li>*/}
-                    {/*    ))}*/}
-                    {/*    </ul>*/}
-                    {/*</ErrorBoundary>*/}
                     <DataTable columns={instrument_columns} token={this.props.token}
                                rows={this.state.instruments}/>
                 </div>
