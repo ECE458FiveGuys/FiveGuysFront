@@ -6,6 +6,8 @@ import ModelFields from "../../../../utils/enums";
 import {User} from "../../../../utils/dtos";
 import NavBar from "../../../Common/NavBar";
 import ErrorParser from "./ErrorParser";
+import HTPInput from "../../../Common/Inputs/HTPInput";
+import HTPAutoCompleteInput from "../../../Common/Inputs/HTPAutoCompleteInput";
 
 
 class CreateModel extends Component {
@@ -123,12 +125,10 @@ class CreateModel extends Component {
     // input field in react state single method handle
     // input changes of all the input field using ES6
     // javascript feature computed property names
-    handleChange(event){
-        this.setState({
-            // Computed property names
-            // keys of the objects are computed dynamically
-            [event.target.name] : event.target.value
-        })
+    handleChange=(name)=>(value)=>{
+        let newState = {}
+        newState[name] = value
+        this.setState(newState)
     }
 
     // Return a controlled form i.e. values of the
@@ -136,23 +136,25 @@ class CreateModel extends Component {
     // in react component itself as state
     render(){
         return(
-            <MDBContainer>
+            <div>
                 <NavBar user={this.props.user}/>
-                <h4 className="modal-title w-100 font-weight-bold">Create Instrument</h4>
+            <MDBContainer>
                 <br />
                 <MDBRow>
                     <MDBCol md="10">
                         <form onSubmit={this.handleSubmit}>
-                            <label htmlFor="defaultFormLoginEmailEx" className="grey-text">
-                                Vendor
-                            </label>
-                            <input
-                                name='vendor'
-                                placeholder='required'
-                                value = {this.state.vendor}
-                                onChange={this.handleChange}
-                            />
-                            <br />
+                            {/*<label htmlFor="defaultFormLoginEmailEx" className="grey-text">*/}
+                            {/*    Vendor*/}
+                            {/*</label>*/}
+                            {/*<input*/}
+                            {/*    name='vendor'*/}
+                            {/*    placeholder='required'*/}
+                            {/*    value = {this.state.vendor}*/}
+                            {/*    onChange={this.handleChange}*/}
+                            {/*/>*/}
+                            {/*<br />*/}
+                            <HTPAutoCompleteInput options = {['1', '5', '7']} label={'Vendor'} name = 'vendor' onChange={this.handleChange('vendor')} placeholder={'required'}></HTPAutoCompleteInput>
+
 
                             <label htmlFor="defaultFormLoginEmailEx" className="grey-text">
                                 Model Number
@@ -190,13 +192,14 @@ class CreateModel extends Component {
                             <br />
 
                             <MDBBtn color="warning" outline type="button" onClick={this.handleSubmit}>
-                                Send
+                                Create Instrument
                                 <MDBIcon far icon="paper-plane" className="ml-2" />
                             </MDBBtn>
                         </form>
                     </MDBCol>
                 </MDBRow>
             </MDBContainer>
+                </div>
         )
     }
 }

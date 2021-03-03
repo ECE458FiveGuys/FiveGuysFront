@@ -1,9 +1,7 @@
 import React, { Component } from "react";
-import { MDBDataTable } from 'mdbreact';
 import PropTypes from "prop-types";
 import SearchHeader from "../Widgets/SearchHeader";
 import MiscellaneousRequests from "../../../../controller/requests/miscellaneous_requests";
-import Image from "../../../../assets/Spinner.gif";
 import ModelFields from "../../../../utils/enums";
 import {EquipmentModel, Instrument} from "../../../../utils/ModelEnums";
 import DataTable from "../../../Common/Tables/DataTable";
@@ -38,7 +36,9 @@ class InventoryTable extends Component {
         searchRequestFunction(token,
             this.state.searchFieldValues,
             getModelsCallBack,
-            (errorMessage) => alert(errorMessage))
+            (errorMessage) => {
+                alert(errorMessage)
+            })
     }
 
     loadVendors () {

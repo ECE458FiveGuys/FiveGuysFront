@@ -1,0 +1,42 @@
+# This workflow will deploy to the dev server by pulling from master, building project, and running tests.
+
+name: CI
+on: [push]
+jobs:
+  deploy:
+    name: "Deploy to dev server"
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/staging.key
+          chmod 600 ~/.ssh/staging.key
+          cat >>~/.ssh/config <<END
+          Host dev_server
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/staging.key
+            StrictHostKeyChecking no
+          END
+        env:
+          SSH_USER: ${{ secrets.DEV_USER }}
+          SSH_KEY: ${{ secrets.DEV_KEY }}
+          SSH_HOST: ${{ secrets.DEV_HOST }}
+
+      - name: Stop the server
+        run: ssh dev_server 'sudo systemctl stop nginx'
+
+      - name: Check out the source
+        run: ssh dev_server 'cd group-six-react.colab.duke.edu && git pull'
+
+      - name: Install dependencies
+        run: ssh dev_server 'cd group-six-react.colab.duke.edu && npm install && npm update'
+
+      - name: Build App
+        run: ssh dev_server 'cd group-six-react.colab.duke.edu && npm run build'
+
+      - name: Start the server
+        if: ${{ always() }}
+        run: ssh dev_server 'sudo systemctl restart nginx'

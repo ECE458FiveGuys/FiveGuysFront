@@ -61,8 +61,16 @@ export default class RequestUtils {
                                     })
                             }
                         })
-                        .catch(error => error.text()
-                            .then(errorText => alert(new ServerError(errorText).message))
+                        .catch(error => {
+                            try {
+                                error.text()
+                                    .then(errorText => {
+                                        alert(new ServerError(errorText).message)
+                                    })
+                            } catch (e) {
+                                // alert(new ServerError(error).message)
+                            }
+                            }
                         )
 
     }
@@ -174,17 +182,18 @@ export default class RequestUtils {
         return obj
     }
 
-    static buildGetModelParams(page_num = undefined, vendor = undefined, model_number = undefined,
+    static buildGetModelParams(forInstrument, page_num = undefined, vendor = undefined, model_number = undefined,
                                   description = undefined, search = undefined, search_field = undefined,
                                   ordering = undefined) {
-        let params = []
+        let prefix = forInstrument ? "model__" : ""
+        let params = {}
         params[ParamNames.PAGE_NUMBER] = page_num
         params[ParamNames.ORDERING] = ordering
         params[ParamNames.SEARCH] = search
-        params[ParamNames.SEARCH_FIELD] = search_field
-        params[ModelFields.EquipmentModelSearchFields.Vendor] = vendor
-        params[ModelFields.EquipmentModelSearchFields.Description] = description
-        params[ModelFields.EquipmentModelSearchFields["Model Number"]] = model_number
+        params[prefix + ParamNames.SEARCH_FIELD] = search_field
+        params[prefix + ModelFields.EquipmentModelSearchFields.Vendor] = vendor
+        params[prefix + ModelFields.EquipmentModelSearchFields.Description] = description
+        params[prefix + ModelFields.EquipmentModelSearchFields["Model Number"]] = model_number
         params = RequestUtils.removeEmptyFields(params)
         return params
     }
@@ -192,11 +201,13 @@ export default class RequestUtils {
     static buildGetInstrumentParams(page_num = undefined, vendor = undefined,
                                        model_number = undefined, description = undefined,
                                        serial_number = undefined, search = undefined,
-                                       search_field = undefined, ordering = undefined) {
-        let params = RequestUtils.buildGetModelParams(page_num = page_num, vendor = vendor,
+                                       search_field = undefined, ordering = undefined, asset_tag = undefined) {
+        let params = RequestUtils.buildGetModelParams(true, page_num = page_num, vendor = vendor,
             model_number = model_number, description = description, search = search,
             search_field = search_field, ordering = ordering)
         params[ModelFields.InstrumentSearchFields["Serial Number"]] = serial_number
+        params[ModelFields.InstrumentSearchFields["Asset Tag"]] = asset_tag
+        params = RequestUtils.removeEmptyFields(params)
         return params
     }
 

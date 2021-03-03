@@ -48,6 +48,8 @@
   "author": "Daniel Kingsbury <dpk14@duke.edu>",
   "license": "MIT",
   "devDependencies": {
+    "@material-ui/core": "^4.11.3",
+    "bs-stepper": "^1.7.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "papa": "0.0.0",

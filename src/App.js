@@ -7,13 +7,11 @@ import Login from "./auth/Login";
 import NotFound from "./auth/NotFound";
 import {StorageKeys} from "./utils/enums";
 import {User} from "./utils/dtos";
-import NavBar from "./app/Common/NavBar";
 import ModelDetailView from "./app/Pages/ModelDetailPage/ModelDetailView";
 import InstrumentDetailView from "./app/Pages/InstrumentDetailPage/InstrumentDetailView";
 import CategoryTabView from "./app/Pages/CategoryPage/CategoryTabView";
-import CreateModel from "./app/Pages/MainPage/CreateFunctions/CreateModel";
-import CreateInstrument from "./app/Pages/MainPage/CreateFunctions/CreateInstrument";
-import CreateUser from "./app/Pages/MainPage/CreateFunctions/CreateUser";
+import LoadBankMain from "./app/Pages/LoadBankPage/LoadBankMain";
+import OAuthRedirect from "./auth/OAuthRedirect";
 
 class App extends Component {
 
@@ -48,16 +46,31 @@ class App extends Component {
 
   render() {
     if (!this.state.token || !this.state.user) {
-      return <Login setToken={this.saveToken}
-                    setUser={this.saveUser}/>
+      return <BrowserRouter>
+                <Switch>
+                <Route exact path = "/oauth/consume"
+                       render={(props) => <OAuthRedirect
+                                              history = {props.history}
+                                              code={new URLSearchParams(props.location.search).get("code")}
+                                              setToken={this.saveToken}
+                                              setUser={this.saveUser}
+                                            />}>
+                </Route>
+                <Route>
+                  <Login setToken={this.saveToken}
+                        setUser={this.saveUser}/>
+                </Route>
+                </Switch>
+              </BrowserRouter>
     }
     return (
         <div className="wrapper">
           <BrowserRouter>
             <Switch>
-              <Route exact path="/">
-                <MainView token={this.state.token}
-                          user={this.state.user}/>
+              <Route exact path="/"
+                    render={(props) => <MainView history = {props.history}
+                                                 token={this.state.token}
+                                                 user={this.state.user}/>}>
               </Route>
               <Route path="/models/:id"
                      render={(props) => (<ModelDetailView id={props.match.params.id}
@@ -77,17 +90,11 @@ class App extends Component {
                 <CategoryTabView token={this.state.token}
                                  user={this.state.user}/>
               </Route>
-              <Route path="/create-model/">
-                <CreateModel token={this.state.token}
-                                 user={this.state.user}/>
-              </Route>
-              <Route path="/create-instrument/">
-                <CreateInstrument token={this.state.token}
-                             user={this.state.user}/>
-              </Route>
-              <Route path="/create-user/">
-                <CreateUser token={this.state.token}
-                                  user={this.state.user}/>
+
+              <Route path="/load-bank/:id"
+                     render = {(props) => (<LoadBankMain token={this.state.token}
+                              instrumentId={props.match.params.id}
+                              user={this.state.user}/>)}>
               </Route>
               <Route>
                 <NotFound/>

@@ -1,5 +1,5 @@
 import RequestUtils from "./request_utils";
-import {METHODS, URLS} from "../strings";
+import {AUTH_URLS, METHODS, URLS} from "../strings";
 
 export default class UserRequests {
     static async retrieveUser(token,
@@ -10,7 +10,7 @@ export default class UserRequests {
         let params = {"username" : username}
         let header = RequestUtils.buildTokenHeader(token)
 
-        RequestUtils.assistedFetch(URLS.USERS,
+        RequestUtils.assistedFetch(AUTH_URLS.USERS,
             METHODS.GET,
             callBack,
             errorMessageCallBack,
