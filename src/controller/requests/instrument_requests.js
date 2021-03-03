@@ -83,7 +83,7 @@ export default class InstrumentRequests {
                                    callBack = (json) => json,
                                    errorMessageCallBack = (errorMessage) => errorMessage) {
 
-        InstrumentRequests.updateInstrument(token, "put", URLS.MODELS + instrument_pk,
+        InstrumentRequests.updateInstrument(token, "put", URLS.INSTRUMENTS + instrument_pk + "/",
             callBack, errorMessageCallBack, model_pk, serial_number, comment)
     }
 

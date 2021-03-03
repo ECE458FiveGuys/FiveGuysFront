@@ -39,4 +39,15 @@ export default class MiscellaneousRequests{
                 METHODS.GET, callBack(ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES), errorMessageCallBack, header)
         }
     }
+
+    // static async getModelNumbers(token,
+    //                         vendorSubstring=undefined,
+    //                         callBack = (json) => json,
+    //                         errorMessageCallBack = (errorMessage) => errorMessage) {
+    //     let params = {vendor: vendorSubstring}
+    //     RequestUtils.removeEmptyFields(params)
+    //     let header = RequestUtils.buildTokenHeader(token)
+    //     RequestUtils.assistedFetch(URLS.MODEL_NUMBERS,
+    //         METHODS.GET, callBack, errorMessageCallBack, header, params)
+    // }
 }

@@ -30,16 +30,27 @@ class ModelDetailView extends Component {
 
     }
 
+    convertDateToInt(cf) {
+        let split = cf.split(" ")
+        return (split.length < 2) ? 0 : split[0]
+    }
+
     componentDidMount() {
         let retrieveModelCallback = (model) => {
             console.log(model)
-            this.state.model = model
+            this.setState({model: model})
             let instruments = model['instruments']
-            let calibration_frequency = model['calibration_frequency'].split(" ")[0]
-            model['calibration_frequency'] = calibration_frequency
-            this.setState({instruments: instruments, model : model,
+            // let cf = model['calibration_frequency'].split(" ")[0]
+            // model['calibration_frequency'] = cf
+            var temp_model = {...this.state.model}
+            // let cf = model['calibration_frequency'].split(" ")[0]
+            // let split = model['calibration_frequency'].split(" ")
+            temp_model['calibration_frequency'] = this.convertDateToInt(model['calibration_frequency'])
+            this.setState({model: temp_model})
+            this.setState({instruments: instruments,
                 vendor: model['vendor'],model_number: model['model_number'],description: model['description'],
-                comment: model['comment'],calibration_frequency: model['calibration_frequency'],});
+                comment: model['comment'],calibration_frequency: this.state.model['calibration_frequency']});
+
         }
         let retrieveModelError = (e) => {
 

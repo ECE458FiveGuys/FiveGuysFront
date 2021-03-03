@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import SelectInput from "./SelectInput";
-// import {Select} from "react-select";
+import Select from "react-select";
+import ModelRequests from "../../../controller/requests/model_requests";
 
 class FormEntry extends Component {
 
@@ -11,7 +12,7 @@ class FormEntry extends Component {
 
     render() {
 
-
+        // let models = ModelRequests.getModels()
         let formFields = this.props.fields
         // let test = this.props.subject[formFields["model"]]
         return(
@@ -20,10 +21,10 @@ class FormEntry extends Component {
                     fieldName === "Model" ? (
                         <div>
                             <label>{fieldName}</label>
-                            {/*<Select*/}
-                            {/*    defaultValue = {"hey"}*/}
-                            {/*    options = {["1","2"]}*/}
-                            {/*/>*/}
+                            <Select
+                                defaultValue = {{value: "",label: "5"}}
+                                options = {[{value: "",label: "2"}]}
+                            />
                         </div>): (
                     <div>
                     <label>{fieldName}</label>

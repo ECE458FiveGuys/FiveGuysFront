@@ -8,6 +8,7 @@ import TableColumns from "../MainPage/InventoryTables/Columns";
 import ModelFields from "../../../utils/enums";
 import DeleteModal from "../ModelDetailPage/DeleteModal";
 import ModelRequests from "../../../controller/requests/model_requests";
+import MiscellaneousRequests from "../../../controller/requests/miscellaneous_requests";
 
 class InstrumentDetailView extends Component {
 
@@ -23,16 +24,34 @@ class InstrumentDetailView extends Component {
         }
     }
 
+    // getModelNumbers(models){
+    //     let model_numbers = []
+    //     for(var model in models) {
+    //         model_numbers.concat(model.model_number)
+    //     }
+    //     return model_numbers
+    // }
+
      componentDidMount() {
         let retrieveInstrumentCallback = (instrument) => {
             let calibrations = instrument['calibration_history']
-            this.setState({calibrations : calibrations, instrument : instrument});
+            this.setState({calibrations : calibrations, instrument : instrument,
+                serial_number : instrument["serial_number"], comment : instrument["comment"]});
         }
         let retrieveInstrumentError = (e) => {
             alert(e)
         }
+        // let all_models = ModelRequests.getModels()
+        // var all_model_numbers = this.getModelNumbers(all_models)
         InstrumentRequests.retrieveInstrument(this.props.token, this.props.id, retrieveInstrumentCallback,retrieveInstrumentError);//
     }
+
+    // loadModelNumbers () {
+    //     let getNumbersCallBack = (json) => {
+    //         this.setState({vendors: json})
+    //     }
+    //     MiscellaneousRequests.getModelNumbers(this.props.token, this.state.model[ModelFields.EquipmentModelFields.VENDOR], getNumbersCallBack)
+    // }
 
     setDeleteModalShow(boolean) {
         this.setState({deleteModalShow:boolean})
@@ -43,10 +62,16 @@ class InstrumentDetailView extends Component {
     }
 
     handleSubmit = (e) =>{
+        this.setEditModalShow(false)
         let {serial_number,comment} = this.state
         let instrument = this.state.instrument
         let editCallback = (response) => {
-            console.log(response)
+            // console.log(response)
+            var temp_instrument = {...this.state.instrument}
+            for (var field in ModelFields.InstrumentEditFields) {
+                temp_instrument[ModelFields.InstrumentEditFields[field]] = this.state[ModelFields.InstrumentEditFields[field]]
+            }
+            this.setState({instrument: temp_instrument})
         }
         let editError = (e) => {
             alert(e)
@@ -74,7 +99,6 @@ class InstrumentDetailView extends Component {
 
     render() {
         if(this.state.instrument) {
-
             return (
                 <div>
                     <h1>Instrument Details</h1>
