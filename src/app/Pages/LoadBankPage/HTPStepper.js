@@ -1,14 +1,12 @@
 
 import React from "react";
-import NavBar from "../../Common/NavBar";
-import {Header} from "semantic-ui-react";
 import {Button, Step, StepButton, StepContent, StepIcon, StepLabel, Stepper} from "@material-ui/core";
 import HTPButton from "../../Common/Inputs/HTPButton";
 import PropTypes from "prop-types";
 import {User} from "../../../utils/dtos";
 import HTPPopup from "../../Common/HTPPopup";
 
-export default class LoadBankStepper extends React.Component {
+export default class HTPStepper extends React.Component {
 
     constructor(props) {
         super(props);
@@ -36,7 +34,7 @@ export default class LoadBankStepper extends React.Component {
     getStepContent(step) {
         let {stepperState} = this.state
         let {stepContent} = this.props
-        return stepContent[step](stepperState, this.updateStepperState, this.markReadyToSubmit)
+        return stepContent[step](stepperState, this.updateStepperState, this.markReadyToSubmit, step)
     }
 
     totalSteps = () => {
@@ -80,7 +78,7 @@ export default class LoadBankStepper extends React.Component {
 
     handleComplete = () => {
         let {completed, activeStep, stepperState} = this.state
-        this.props.onStepSubmit[activeStep](stepperState, this.submitSuccessCallBack, this.submitErrorCallBack)
+        this.props.onStepSubmit[activeStep](stepperState, this.submitSuccessCallBack, this.submitErrorCallBack, activeStep)
     };
 
     handleReset = () => {
@@ -166,7 +164,7 @@ export default class LoadBankStepper extends React.Component {
     }
 }
 
-LoadBankStepper.propTypes = {
+HTPStepper.propTypes = {
     token : PropTypes.string.isRequired,
     user : PropTypes.instanceOf(User).isRequired,
     stepNames : PropTypes.array.isRequired,
@@ -175,6 +173,6 @@ LoadBankStepper.propTypes = {
     orientation : PropTypes.string
 }
 
-LoadBankStepper.defaultProps = {
+HTPStepper.defaultProps = {
     orientation : 'horizontal'
 }

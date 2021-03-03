@@ -87,5 +87,6 @@ export default class MeterInitStep extends React.Component {
 
 MeterInitStep.propTypes = {
     instrument : PropTypes.object.isRequired,
-    markReadyToSubmit : PropTypes.func.isRequired
+    markReadyToSubmit : PropTypes.func.isRequired,
+    updateStepperState : PropTypes.func.isRequired
 }
