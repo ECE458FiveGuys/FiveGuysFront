@@ -1,14 +1,12 @@
-
 let ROOT_URL =
     (window.location.host === "group-six-react.colab.duke.edu" || window.location.host === "localhost:3000") ?
-        "http://group-six-test.colab.duke.edu/api/" : window.location.host === "group-six-react-prod.colab.duke.edu" ?
+        "https://group-six-test.colab.duke.edu/api/" : window.location.host === "group-six-react-prod.colab.duke.edu" ?
         "https://group-six-prod.colab.duke.edu/api/" : undefined
 
 let ROOT_URL_AUTH =
     (window.location.host === "group-six-react.colab.duke.edu" || window.location.host === "localhost:3000") ?
-        "http://group-six-test.colab.duke.edu/" : window.location.host === "group-six-react-prod.colab.duke.edu" ?
+        "https://group-six-test.colab.duke.edu/" : window.location.host === "group-six-react-prod.colab.duke.edu" ?
         "https://group-six-prod.colab.duke.edu/" : undefined
-
 
 let OAUTH_URL = `https://oauth.oit.duke.edu/oidc/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=code`
 
@@ -37,8 +35,6 @@ export const AUTH_URLS =
         GET_OAUTH_CODE : OAUTH_URL,
         GET_OAUTH_TOKEN : ROOT_URL_AUTH + "auth/oauth/login/"
     }
-
-
 
 export const METHODS =
     {
