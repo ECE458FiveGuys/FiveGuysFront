@@ -67,9 +67,10 @@ class App extends Component {
         <div className="wrapper">
           <BrowserRouter>
             <Switch>
-              <Route exact path="/">
-                <MainView token={this.state.token}
-                          user={this.state.user}/>
+              <Route exact path="/"
+                    render={(props) => <MainView history = {props.history}
+                                                 token={this.state.token}
+                                                 user={this.state.user}/>}>
               </Route>
               <Route path="/models/:id"
                      render={(props) => (<ModelDetailView id={props.match.params.id}

@@ -23,7 +23,7 @@ export default class ModelTable extends Component {
 
             result[ModelFields.EquipmentModelFields.MODEL_CATEGORIES] =
                 TableUtils.categoriesToString(result[ModelFields.EquipmentModelFields.MODEL_CATEGORIES])
-            result.clickEvent = newTab("/models/" + model_pk   )
+            result.clickEvent = () => this.props.history.push("/models/" + model_pk)
         })
         return results
     }

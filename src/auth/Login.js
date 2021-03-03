@@ -6,8 +6,6 @@ import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn } from 'mdbreact';
 import Image from "../assets/hpt_logo.png"
 import {Gradient} from "react-gradient"
 import RequestUtils from "../controller/requests/request_utils";
-import {User} from "../utils/dtos";
-import UserRequests from "../controller/requests/user_requests";
 import {Divider} from "@material-ui/core";
 import {loginCallBack, loginErrorCallBack} from "./utils";
 

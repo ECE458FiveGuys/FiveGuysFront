@@ -3,7 +3,7 @@ import UserRequests from "../controller/requests/user_requests";
 
 export let getUserCallBack = (context) => (json) => {
     let user = User.fromJson(json[0])
-    context.props.history.push("/")
+    if (context.props.history) context.props.history.push("/")
     context.props.setUser(user)
 }
 
