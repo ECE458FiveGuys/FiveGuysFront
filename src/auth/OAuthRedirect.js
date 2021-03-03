@@ -1,23 +1,36 @@
 import React from "react";
 import PropTypes from "prop-types";
 import LoginRequests from "../controller/requests/login_requests";
+import Loading from "../app/Common/Images/Loading";
+import {loginCallBack} from "./utils";
+import {gradients} from "../utils/styling";
+import {Gradient} from "react-gradient";
 
 export default class OAuthRedirect extends React.Component {
 
     constructor(props) {
         super(props)
+        this.state = {}
     }
 
     componentDidMount() {
         LoginRequests.retrieveOAuthToken(this.props.code,
-            (json) => {
-            this.setState({result : json})
-            },
-            (errorMessage) => alert(errorMessage))
+            loginCallBack(this),
+            (errorMessage) => {
+                alert(errorMessage)
+            })
     }
 
     render() {
-        return <div>{this.props.code}</div>
+        return <Gradient
+                    className={"fill-window"}
+                    gradients={ gradients } // required
+                    property="background"
+                    duration={ 3000 }
+                    angle="45deg"
+                    style={{display : "flex", justifyContent : 'center', alignItems : 'center'}}>
+            <Loading/>
+        </Gradient>
     }
 
 }

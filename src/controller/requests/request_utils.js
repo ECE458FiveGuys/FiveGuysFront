@@ -64,9 +64,11 @@ export default class RequestUtils {
                         .catch(error => {
                             try {
                                 error.text()
-                                    .then(errorText => alert(new ServerError(errorText).message))
+                                    .then(errorText => {
+                                        alert(new ServerError(errorText).message)
+                                    })
                             } catch (e) {
-                                alert(new ServerError(error).message)
+                                // alert(new ServerError(error).message)
                             }
                             }
                         )

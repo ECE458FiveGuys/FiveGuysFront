@@ -7,7 +7,7 @@ export default class LoginRequests {
                                   errorMessageCallBack = (errorMessage) => errorMessage)
     {
         let data = {
-            oauth_token : code
+            oauth_code : code
         }
 
         RequestUtils.assistedFetch(AUTH_URLS.GET_OAUTH_TOKEN,

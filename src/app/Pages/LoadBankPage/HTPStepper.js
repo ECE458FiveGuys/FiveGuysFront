@@ -105,12 +105,52 @@ export default class HTPStepper extends React.Component {
         });
     }
 
+    renderStepContent = () => {
+        let {stepNames, stepContent} = this.props
+        let {activeStep, completed} = this.state
+        return(<div style={{flex : 1}}>
+            {this.allStepsCompleted() ? (
+                <div>
+                    All steps completed - you&apos;re finished
+                    <Button onClick={this.handleReset}>Reset</Button>
+                </div>
+            ) : (
+                <div style={{display : "flex",
+                    flexDirection : "column",
+                    alignItems: 'center'}}>
+                    {this.getStepContent(activeStep)}
+                    <div style={{display : 'flex', background : 'white'}}>
+                        <HTPButton disabled={activeStep === 0}
+                                   label={"Back"}
+                                   color={"primary"}
+                                   onSubmit={this.handleBack}/>
+                        <HTPButton
+                            disabled={!this.state.readyToSubmit}
+                            onSubmit={this.handleComplete}
+                            label={activeStep === this.totalSteps() - 1
+                                ? "Finish"
+                                : "Complete Step"}
+                        />
+                        {this.state.errorMessage ?
+                            <HTPPopup toggleModal={this.toggleModal}
+                                      message={this.state.errorMessage}
+                                      className={"text-danger"}
+                                      title={"Error!"}
+                                      isOpen={this.state.modal}/>
+                            :
+                            <div/>}
+                    </div>
+                </div>
+            )}
+        </div>)
+    }
+
     render() {
         let {stepNames, stepContent} = this.props
         let {activeStep, completed} = this.state
         return (
             <div>
-                    <div style={{marginLeft : 200, marginRight : 200}}>
+                    <div style={{marginLeft : 200, justifyContent : "center", alignItems : 'center', marginRight : 200}}>
                     <Stepper nonLinear activeStep={activeStep} orientation={this.props.orientation}>
                         {stepNames.map((label, index) => (
                             <Step key={label}>
@@ -120,44 +160,14 @@ export default class HTPStepper extends React.Component {
                                 >
                                     <text style={{alignItems : 'center', justifyContent: 'center'}}>{label}</text>
                                 </StepButton>
+                                {this.props.orientation === 'vertical' ?
+                                    (<StepContent>
+                                        {this.renderStepContent()}
+                                    </StepContent>) : <div/>}
                             </Step>
                         ))}
                     </Stepper>
-                    <div>
-                        {this.allStepsCompleted() ? (
-                            <div>
-                                All steps completed - you&apos;re finished
-                                <Button onClick={this.handleReset}>Reset</Button>
-                            </div>
-                        ) : (
-                            <div style={{display : "flex",
-                                        flexDirection : "column",
-                                        alignItems: 'center'}}>
-                                {this.getStepContent(activeStep)}
-                                <div style={{display : 'flex', background : 'white'}}>
-                                    <HTPButton disabled={activeStep === 0}
-                                               label={"Back"}
-                                               color={"primary"}
-                                               onSubmit={this.handleBack}/>
-                                    <HTPButton
-                                        disabled={!this.state.readyToSubmit}
-                                        onSubmit={this.handleComplete}
-                                        label={activeStep === this.totalSteps() - 1
-                                            ? "Finish"
-                                            : "Complete Step"}
-                                    />
-                                    {this.state.errorMessage ?
-                                        <HTPPopup toggleModal={this.toggleModal}
-                                                  message={this.state.errorMessage}
-                                                  className={"text-danger"}
-                                                  title={"Error!"}
-                                                  isOpen={this.state.modal}/>
-                                        :
-                                        <div/>}
-                                </div>
-                            </div>
-                        )}
-                    </div>
+                        {this.props.orientation === 'horizontal' ? this.renderStepContent() : <div/>}
                     </div>
             </div>
         );
