@@ -6,22 +6,16 @@ import ModelFields from "../../../../utils/enums";
 import {User} from "../../../../utils/dtos";
 import NavBar from "../../../Common/NavBar";
 import ErrorParser from "./ErrorParser";
+import HTPInput from "../../../Common/Inputs/HTPInput";
 
 
 class CreateModel extends Component {
 
     constructor(props) {
         super(props)
-        this.state = { vendor:'', model_number:'', description:'', comment:'',calibration_frequency:''}
+        this.state = {vendor:'', model_number:'', description:'', comment:'',calibration_frequency:''}
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
-    }
-    
-    
-    handleChange(event) {
-        this.setState({
-            [event.target.name] : event.target.value
-        })
     }
 
     async handleSubmit(event){
@@ -89,12 +83,17 @@ class CreateModel extends Component {
     // input field in react state single method handle
     // input changes of all the input field using ES6
     // javascript feature computed property names
-    handleChange(event){
-        this.setState({
+    handleChange=(name)=>(value)=>{
+        let newState = {}
+        newState[name] = value
+        this.setState(newState)
+
+        //this.setState({
             // Computed property names
             // keys of the objects are computed dynamically
-            [event.target.name] : event.target.value
-        })
+            //[event.target.name] : event.target.value
+
+        //})
     }
 
     // Return a controlled form i.e. values of the
@@ -102,22 +101,25 @@ class CreateModel extends Component {
     // in react component itself as state
     render(){
         return(
-            <MDBContainer>
+            <div>
                 <NavBar user={this.props.user}/>
-                <h4 className="modal-title w-100 font-weight-bold">Create Model</h4>
+            <MDBContainer>
                 <br />
                 <MDBRow>
                     <MDBCol md="10">
                         <form onSubmit={this.handleSubmit}>
-                            <label htmlFor="defaultFormLoginEmailEx" className="grey-text">
-                                Vendor
-                            </label>
-                            <input
-                                name='vendor'
-                                placeholder='required'
-                                value = {this.state.vendor}
-                                onChange={this.handleChange}
-                            />
+                            {/*<label htmlFor="defaultFormLoginEmailEx" className="grey-text">*/}
+                            {/*    Vendor*/}
+                            {/*</label>*/}
+                            {/*<input*/}
+                            {/*    type = 'text'*/}
+                            {/*    classname = {'form-control'}*/}
+                            {/*    name='vendor'*/}
+                            {/*    placeholder='required'*/}
+                            {/*    value = {this.state.vendor}*/}
+                            {/*    onChange={this.handleChange}*/}
+                            {/*/>*/}
+                            <HTPInput label={'Vendor'} name = 'vendor' onChange={this.handleChange('vendor')} placeholder={'required'}></HTPInput>
                             <br />
 
                             <label htmlFor="defaultFormLoginEmailEx" className="grey-text">
@@ -169,13 +171,14 @@ class CreateModel extends Component {
                             <br />
 
                             <MDBBtn color="warning" outline type="button" onClick={this.handleSubmit}>
-                                Send
+                                Create Model
                                 <MDBIcon far icon="paper-plane" className="ml-2" />
                             </MDBBtn>
                         </form>
                     </MDBCol>
                 </MDBRow>
             </MDBContainer>
+                </div>
         )
     }
 }

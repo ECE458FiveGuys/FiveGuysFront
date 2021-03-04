@@ -90,6 +90,7 @@ class App extends Component {
                 <CategoryTabView token={this.state.token}
                                  user={this.state.user}/>
               </Route>
+
               <Route path="/load-bank/:id"
                      render = {(props) => (<LoadBankMain token={this.state.token}
                               instrumentId={props.match.params.id}
