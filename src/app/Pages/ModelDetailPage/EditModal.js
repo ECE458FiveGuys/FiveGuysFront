@@ -41,6 +41,8 @@ class EditModal extends Component{
                                     <FormEntry fields = {this.props.fields}
                                                subject = {this.props.subject}
                                                handleFormChange = {this.props.handleFormChange}
+                                               isEdit = {this.props.isEdit}
+                                               handleDayClick = {this.props.handleDayClick}
                                     />
                                     <div className="text-center mt-4">
                                         <MDBBtn color="dark-green"

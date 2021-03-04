@@ -5,6 +5,9 @@ import {Button, Modal} from "react-bootstrap";
 import EditModal from "./EditModal";
 import DeleteModal from "./DeleteModal";
 import ModelFields from "../../../utils/enums";
+import TableColumns from "../MainPage/InventoryTables/Columns";
+import DataTable from "../../Common/Tables/DataTable";
+import {EquipmentModel} from "../../../utils/ModelEnums";
 
 
 
@@ -27,13 +30,27 @@ class ModelDetailView extends Component {
 
     }
 
+    convertDateToInt(cf) {
+        let split = cf.split(" ")
+        return (split.length < 2) ? 0 : split[0]
+    }
+
     componentDidMount() {
         let retrieveModelCallback = (model) => {
             console.log(model)
+            this.setState({model: model})
             let instruments = model['instruments']
-            this.setState({instruments: instruments, model : model,
+            // let cf = model['calibration_frequency'].split(" ")[0]
+            // model['calibration_frequency'] = cf
+            var temp_model = {...this.state.model}
+            // let cf = model['calibration_frequency'].split(" ")[0]
+            // let split = model['calibration_frequency'].split(" ")
+            temp_model['calibration_frequency'] = this.convertDateToInt(model['calibration_frequency'])
+            this.setState({model: temp_model})
+            this.setState({instruments: instruments,
                 vendor: model['vendor'],model_number: model['model_number'],description: model['description'],
-                comment: model['comment'],calibration_frequency: model['calibration_frequency'],});
+                comment: model['comment'],calibration_frequency: this.state.model['calibration_frequency']});
+
         }
         let retrieveModelError = (e) => {
 
@@ -51,15 +68,21 @@ class ModelDetailView extends Component {
     }
 
     handleSubmit = (e) =>{
+        this.setEditModalShow(false)
         let {vendor,model_number,description,comment,calibration_frequency,model_categories} = this.state
         let editCallback = (response) => {
-            console.log(response)
+            var temp_model = {...this.state.model}
+            for (var field in ModelFields.EquipmentModelEditFields) {
+                temp_model[ModelFields.EquipmentModelEditFields[field]] = this.state[ModelFields.EquipmentModelEditFields[field]]
+            }
+            this.setState({model: temp_model})
         }
         let editError = (e) => {
             alert("EDIT: "+e)
         }
         ModelRequests.editModel(this.props.token,this.state.model['pk'],vendor,model_number,
             description,comment,calibration_frequency,editCallback,editError)
+
     }
 
     handleFormChange = (e) => {
@@ -69,7 +92,7 @@ class ModelDetailView extends Component {
         this.setState({[name]: value})
     }
 
-    deleteModel() {
+    deleteModel = () => {
         let deleteModelCallback = (model) => {
             alert("DELETE SUCCESS")
         }
@@ -81,7 +104,20 @@ class ModelDetailView extends Component {
 
 
     render() {
-        if(this.state.model) {
+        if(this.state.model_number) {
+            let instrument_columns = [{
+                label: 'Serial Number',
+                field: ModelFields.InstrumentFields.SERIAL_NUMBER,
+                sort: 'asc',
+                width: 100
+            },
+                {
+                    label: 'Asset Tag Number',
+                    field: ModelFields.InstrumentFields.ASSET_TAG,
+                    sort: 'int',
+                    width: 100
+                }]
+
             return (
                 <div>
                     <h1>Model Details</h1>
@@ -97,6 +133,7 @@ class ModelDetailView extends Component {
                         fields = {ModelFields.EquipmentModelEditFields}
                         title = {"Edit Model " + this.state.model.model_number}
                         handleFormChange = {this.handleFormChange}
+                        isEdit = {true}
 
                     />
                     <Button variant="primary" onClick={() => this.setDeleteModalShow(true)}>
@@ -116,16 +153,8 @@ class ModelDetailView extends Component {
                         </li>
                         ))}
                     </ul>
-                    <ErrorBoundary>
-                        <ul>{this.state.instruments.map((instrument, index) => (
-                            <li
-                                key={instrument.pk}
-                            >
-                                {instrument.serial_number}
-                            </li>
-                        ))}
-                        </ul>
-                    </ErrorBoundary>
+                    <DataTable columns={instrument_columns} token={this.props.token}
+                               rows={this.state.instruments}/>
                 </div>
 
             );

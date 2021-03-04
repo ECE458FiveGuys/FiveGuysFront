@@ -109,7 +109,7 @@ export default class ModelRequests {
         fields[ModelFields.EquipmentModelFields.DESCRIPTION] = description
         fields[ModelFields.EquipmentModelFields.COMMENT] = comment
         fields[ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY] = calibration_frequency
-        RequestUtils.removeEmptyFields(fields)
+        // RequestUtils.removeEmptyFields(fields)
         RequestUtils.assistedFetch(url, method,
                                     callBack, errorMessageCallBack,
                                     header, undefined, fields)

@@ -1,14 +1,12 @@
+export const HOSTS = {
+    DEV : "group-six-react.colab.duke.edu",
+    PROD : "group-six-react-prod.colab.duke.edu",
+    LOCAL : "localhost:3000"
+}
 
-let ROOT_URL =
-    (window.location.host === "group-six-react.colab.duke.edu" || window.location.host === "localhost:3000") ?
-        "http://group-six-test.colab.duke.edu/api/" : window.location.host === "group-six-react-prod.colab.duke.edu" ?
-        "https://group-six-prod.colab.duke.edu/api/" : undefined
+let ROOT_URL = window.location.host === HOSTS.PROD ? "https://group-six-prod.colab.duke.edu/api/" : "https://group-six-test.colab.duke.edu/api/"
 
-let ROOT_URL_AUTH =
-    (window.location.host === "group-six-react.colab.duke.edu" || window.location.host === "localhost:3000") ?
-        "http://group-six-test.colab.duke.edu/" : window.location.host === "group-six-react-prod.colab.duke.edu" ?
-        "https://group-six-prod.colab.duke.edu/" : undefined
-
+let ROOT_URL_AUTH = window.location.host === HOSTS.PROD ? "https://group-six-prod.colab.duke.edu/" : "https://group-six-test.colab.duke.edu/"
 
 let OAUTH_URL = `https://oauth.oit.duke.edu/oidc/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=code`
 
@@ -27,7 +25,9 @@ export const URLS =
         VENDORS : ROOT_URL + "models/vendors/",
         MODEL_CATEGORIES : ROOT_URL + "model-categories/",
         INSTRUMENT_CATEGORIES: ROOT_URL + "instrument-categories/",
-        OAUTH_URL : OAUTH_URL
+        OAUTH_URL : OAUTH_URL,
+        MODEL_NUMBERS : ROOT_URL + "model/model_numbers/",
+        CALIBRATIONS : ROOT_URL + "calibration-events/"
     }
 
 export const AUTH_URLS =
@@ -37,8 +37,6 @@ export const AUTH_URLS =
         GET_OAUTH_CODE : OAUTH_URL,
         GET_OAUTH_TOKEN : ROOT_URL_AUTH + "auth/oauth/login/"
     }
-
-
 
 export const METHODS =
     {

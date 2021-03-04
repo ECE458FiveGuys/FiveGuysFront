@@ -79,6 +79,7 @@ class CreateModel extends Component {
             // keys of the objects are computed dynamically
             [event.target.name] : event.target.value
         })
+        //<h4 className="modal-title w-100 font-weight-bold">Create User</h4>
     }
 
     // Return a controlled form i.e. values of the
@@ -86,9 +87,9 @@ class CreateModel extends Component {
     // in react component itself as state
     render(){
         return(
-            <MDBContainer>
+            <div>
                 <NavBar user={this.props.user}/>
-                <h4 className="modal-title w-100 font-weight-bold">Create User</h4>
+            <MDBContainer>
                 <br />
                 <MDBRow>
                     <MDBCol md="10">
@@ -143,13 +144,14 @@ class CreateModel extends Component {
                             <br />
 
                             <MDBBtn color="warning" outline type="button" onClick={this.handleSubmit}>
-                                Send
+                                Create User
                                 <MDBIcon far icon="paper-plane" className="ml-2" />
                             </MDBBtn>
                         </form>
                     </MDBCol>
                 </MDBRow>
             </MDBContainer>
+                </div>
         )
     }
 }

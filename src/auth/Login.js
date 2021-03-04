@@ -6,9 +6,8 @@ import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn } from 'mdbreact';
 import Image from "../assets/hpt_logo.png"
 import {Gradient} from "react-gradient"
 import RequestUtils from "../controller/requests/request_utils";
-import {User} from "../utils/dtos";
-import UserRequests from "../controller/requests/user_requests";
 import {Divider} from "@material-ui/core";
+import {loginCallBack, loginErrorCallBack} from "./utils";
 
 async function loginUser(credentials, callBack, errorMessageCallBack) {
     RequestUtils.assistedFetch(AUTH_URLS.LOGIN, METHODS.POST, callBack, errorMessageCallBack, {}, {}, credentials)
@@ -37,30 +36,14 @@ export default class Login extends React.Component {
         e.preventDefault();
         this.setState({error: undefined},
             () => {
-            // setup callbacks
-
-            let getUserCallBack = (json) => {
-                let user = User.fromJson(json[0])
-                this.props.setUser(user)
-            }
-            let loginCallBack = (json) => {
-                const tokenVal = json["auth_token"]
-                UserRequests.retrieveUser(tokenVal, this.state.username, getUserCallBack)
-                this.props.setToken(tokenVal);
-            }
-            let loginErrorCallBack = (errorMessage) => {
-                let newState = {error: errorMessage}
-                this.setState(newState)
-            }
-
             // run callback chain
 
             loginUser({
                     username: this.state.username,
                     password: this.state.password
                 },
-                loginCallBack,
-                loginErrorCallBack
+                loginCallBack(this),
+                loginErrorCallBack(this)
             )
         })
     }
