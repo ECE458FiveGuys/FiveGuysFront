@@ -79,4 +79,18 @@ export default class ModelFields {
         USER : "user"
     }
 
+    static CalibrationFields = {
+        "User": "user",
+        "Instrument": "instrument",
+        "Date" : "date",
+        "Comment" : "comment",
+        "File" : "file"
+    }
+
+    static CalibrationFormFields = {
+        "Date" : "date",
+        "Comment" : "comment",
+        "File" : "file"
+    }
+
 }

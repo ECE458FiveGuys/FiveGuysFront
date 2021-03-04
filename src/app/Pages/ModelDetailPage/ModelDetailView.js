@@ -133,6 +133,7 @@ class ModelDetailView extends Component {
                         fields = {ModelFields.EquipmentModelEditFields}
                         title = {"Edit Model " + this.state.model.model_number}
                         handleFormChange = {this.handleFormChange}
+                        isEdit = {true}
 
                     />
                     <Button variant="primary" onClick={() => this.setDeleteModalShow(true)}>

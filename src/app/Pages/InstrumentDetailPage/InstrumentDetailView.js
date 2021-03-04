@@ -9,18 +9,19 @@ import ModelFields from "../../../utils/enums";
 import DeleteModal from "../ModelDetailPage/DeleteModal";
 import ModelRequests from "../../../controller/requests/model_requests";
 import MiscellaneousRequests from "../../../controller/requests/miscellaneous_requests";
+import RecordCalibration from "../ModelDetailPage/RecordCalibration";
 
 class InstrumentDetailView extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            instrument: undefined,
-            calibrations: [],
-            serial_number: undefined,
-            comment: undefined,
-            deleteModalShow: false,
-            editModelShow: false
+            // instrument: undefined,
+            // calibrations: [],
+            // serial_number: undefined,
+            // comment: undefined,
+            // deleteModalShow: false,
+            // editModelShow: false
         }
     }
 
@@ -33,13 +34,14 @@ class InstrumentDetailView extends Component {
     // }
 
      componentDidMount() {
+        let thing = this.state
         let retrieveInstrumentCallback = (instrument) => {
             let calibrations = instrument['calibration_history']
-            this.setState({calibrations : calibrations, instrument : instrument,
+            this.setState({calibrations : calibrations, instrument : instrument, model: instrument.model,
                 serial_number : instrument["serial_number"], comment : instrument["comment"]});
         }
         let retrieveInstrumentError = (e) => {
-            alert(e)
+            alert("RETRIEVE"+e)
         }
         // let all_models = ModelRequests.getModels()
         // var all_model_numbers = this.getModelNumbers(all_models)
@@ -61,6 +63,10 @@ class InstrumentDetailView extends Component {
         this.setState({editModalShow:boolean})
     }
 
+    setCalibrationModalShow(boolean) {
+        this.setState({calibrationModalShow:boolean})
+    }
+
     handleSubmit = (e) =>{
         this.setEditModalShow(false)
         let {serial_number,comment} = this.state
@@ -74,7 +80,7 @@ class InstrumentDetailView extends Component {
             this.setState({instrument: temp_instrument})
         }
         let editError = (e) => {
-            alert(e)
+            alert("edit"+e)
         }
         InstrumentRequests.editInstrument(this.props.token,instrument.pk, instrument.model['pk'],
                                             serial_number,comment,editCallback,editError)
@@ -87,14 +93,15 @@ class InstrumentDetailView extends Component {
         this.setState({[name]: value})
     }
 
-    deleteInstrument() {
+    deleteInstrument = () => {
         let deleteInstrumentCallback = (model) => {
             alert("DELETE SUCCESS")
+            // close tab
         }
         let deleteInstrumentError = (e) => {
             alert("DELETE: "+e)
         }
-        ModelRequests.deleteInstrument(this.props.token, this.props.id, deleteInstrumentCallback,deleteInstrumentError);
+        InstrumentRequests.deleteInstruments(this.props.token, this.props.id, deleteInstrumentCallback,deleteInstrumentError);
     }
 
     render() {
@@ -114,6 +121,7 @@ class InstrumentDetailView extends Component {
                         fields={ModelFields.InstrumentEditFields}
                         title={"Edit Instrument " + this.state.instrument.serial_number}
                         handleFormChange={this.handleFormChange}
+                        isEdit = {true}
                     />
                     <Button variant="primary" onClick={() => this.setDeleteModalShow(true)}>
                         Delete
@@ -126,12 +134,20 @@ class InstrumentDetailView extends Component {
                         message={"Are you sure you wat to remove instrument "+this.state.instrument.serial_number+"?"}
 
                     />
-                    <Button>
+                    <Button onClick={() => this.setCalibrationModalShow(true)}>
                         Record Calibration
                     </Button>
                     <Button>
                         Download Calibration Certificate
                     </Button>
+                    <RecordCalibration
+                        show={this.state.calibrationModalShow}
+                        onHide={()=>this.setCalibrationModalShow(false)}
+                        token={this.props.token}
+                        subject={this.state.instrument}
+                        closeModal={()=>this.setCalibrationModalShow(false)}
+                        // message={"Are you sure you wat to remove instrument "+this.state.instrument.serial_number+"?"}
+                    />
                     <ul>
                         <li>
                             Model:
