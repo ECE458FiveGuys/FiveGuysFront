@@ -5,6 +5,7 @@ import HTPButton from "../../Common/Inputs/HTPButton";
 import PropTypes from "prop-types";
 import {User} from "../../../utils/dtos";
 import HTPPopup from "../../Common/HTPPopup";
+import {StepNames} from "./Steps/step_enums";
 
 export default class HTPStepper extends React.Component {
 
@@ -61,6 +62,11 @@ export default class HTPStepper extends React.Component {
     // handlers
 
     handleNext = () => {
+        //if the steps were just completed update the master state with the cumulative state of the stepper
+        if (this.allStepsCompleted()) {
+            this.props.updateMasterState(this.state.stepperState)
+            this.props.onAllStepsComplete()
+        }
         const newActiveStep =
             this.isLastStep() && !this.allStepsCompleted()
                 ? this.props.stepNames.findIndex((step, i) => !(i in this.state.completed))
@@ -83,7 +89,7 @@ export default class HTPStepper extends React.Component {
 
     handleReset = () => {
         this.setActiveStep(0);
-        this.setState({completed : {}});
+        this.setState({completed : {}, stepperState: {}, readyToSubmit : false});
     };
 
     submitSuccessCallBack = () => {
@@ -93,8 +99,9 @@ export default class HTPStepper extends React.Component {
         this.handleNext();
     }
 
-    submitErrorCallBack = (errorMessage) => {
+    submitErrorCallBack = (errorMessage, resetSteps= false) => {
         this.setState({errorMessage : errorMessage, modal : true})
+        if (resetSteps) this.handleReset()
     }
 
     // misc :
@@ -106,7 +113,6 @@ export default class HTPStepper extends React.Component {
     }
 
     renderStepContent = () => {
-        let {stepNames, stepContent} = this.props
         let {activeStep, completed} = this.state
         return(<div style={{flex : 1}}>
             {this.allStepsCompleted() ? (
@@ -148,10 +154,13 @@ export default class HTPStepper extends React.Component {
     render() {
         let {stepNames, stepContent} = this.props
         let {activeStep, completed} = this.state
+        let style = {justifyContent : "center", alignItems: 'center'}
+        if (stepNames[activeStep] === StepNames.LOAD_STEPS || this.props.orientation === 'vertical') style["display"] = "flex"
         return (
-            <div>
-                    <div style={{marginLeft : 200, justifyContent : "center", alignItems : 'center', marginRight : 200}}>
-                    <Stepper nonLinear activeStep={activeStep} orientation={this.props.orientation}>
+            <div style={style}>
+                    <div style={{marginLeft : 200, marginRight : 200}}>
+                    <Stepper activeStep={activeStep}
+                             orientation={this.props.orientation}>
                         {stepNames.map((label, index) => (
                             <Step key={label}>
                                 <StepButton
@@ -178,9 +187,11 @@ HTPStepper.propTypes = {
     token : PropTypes.string.isRequired,
     user : PropTypes.instanceOf(User).isRequired,
     stepNames : PropTypes.array.isRequired,
-    stepContent : PropTypes.array.isRequired,
-    onStepSubmit : PropTypes.array.isRequired,
-    orientation : PropTypes.string
+    stepContent : PropTypes.array.isRequired,  // an array of all the content of each step
+    onStepSubmit : PropTypes.array.isRequired, // an array of functions to be called on the submission of each step
+    orientation : PropTypes.string, // vertical or horizontal
+    updateMasterState : PropTypes.func, // a method to be called to update the parent state
+    onAllStepsComplete : PropTypes.func.isRequired
 }
 
 HTPStepper.defaultProps = {

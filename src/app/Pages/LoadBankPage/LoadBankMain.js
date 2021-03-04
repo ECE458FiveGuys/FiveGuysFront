@@ -4,7 +4,7 @@ import {StepNames} from "./Steps/step_enums";
 import PropTypes from "prop-types";
 import {User} from "../../../utils/dtos";
 import MeterInitStep from "./Steps/MeterInitStep";
-import LoadStepsStep from "./Steps/LoadStepsStep";
+import LoadBankStepsStep from "./Steps/LoadBankStepsStep";
 import NavBar from "../../Common/NavBar";
 import {Header} from "semantic-ui-react";
 import VisualCheckStep from "./Steps/VisualCheckStep";
@@ -29,16 +29,16 @@ export default class LoadBankMain extends React.Component {
                             //                                                                         stepperState={stepperState}
                             //                                                                         updateStepperState={updateStepperState}
                             //                                                                         markReadyToSubmit={markReadyToSubmit}/>,
-                            (stepperState, updateStepperState, markReadyToSubmit) => <LoadStepsStep user={user}
-                                                                                                    token={token}
-                                                                                                    stepperState={stepperState}
-                                                                                                    updateStepperState={updateStepperState}
-                                                                                                    markReadyToSubmit={markReadyToSubmit}/>,
-                            (stepperState, updateStepperState, markReadyToSubmit) => <LoadStepsStep user={user}
-                                                                                                    token={token}
-                                                                                                    stepperState={stepperState}
-                                                                                                    updateStepperState={updateStepperState}
-                                                                                                    markReadyToSubmit={markReadyToSubmit}/>]
+                            (stepperState, updateStepperState, markReadyToSubmit) => <LoadBankStepsStep user={user}
+                                                                                                        token={token}
+                                                                                                        stepperState={stepperState}
+                                                                                                        updateStepperState={updateStepperState}
+                                                                                                        markReadyToSubmit={markReadyToSubmit}/>,
+                            (stepperState, updateStepperState, markReadyToSubmit) => <LoadBankStepsStep user={user}
+                                                                                                        token={token}
+                                                                                                        stepperState={stepperState}
+                                                                                                        updateStepperState={updateStepperState}
+                                                                                                        markReadyToSubmit={markReadyToSubmit}/>]
 
         let onStepSubmitFunctions = [
                             // (stepperState, successCallBack) => {successCallBack()},   // first step cannot fail, so successCallback called by default
@@ -60,7 +60,8 @@ export default class LoadBankMain extends React.Component {
                         user={this.props.user}
                         stepNames={Object.values(StepNames)}
                         stepContent={StepContentBuilders}
-                        onStepSubmit={onStepSubmitFunctions}/>
+                        onStepSubmit={onStepSubmitFunctions}
+            />
             </div>
         )
     }

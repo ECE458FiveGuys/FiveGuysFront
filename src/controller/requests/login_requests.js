@@ -1,5 +1,5 @@
 import RequestUtils from "./request_utils";
-import {AUTH_URLS, HOSTS, METHODS, URLS} from "../strings";
+import {AUTH_URLS, HOSTS, METHODS} from "../strings";
 
 export default class LoginRequests {
     static async retrieveOAuthToken(code,

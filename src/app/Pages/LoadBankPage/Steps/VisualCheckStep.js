@@ -59,7 +59,7 @@ export default class VisualCheckStep extends React.Component {
                                                         instrument[ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION],
                                                     ])}
                     <p style={{marginTop : 20, marginBottom: 30, justifyContent: "center", alignItems: 'center'}}>
-                        Inspect the load bank. Is everything looking right? Any visual damage?
+                        Inspect the load bank, including each resistor. Is everything looking right? Any visual damage?
                     </p>
                     Inspection ok:
                     <Checkbox onClick={this.props.markReadyToSubmit}/>
