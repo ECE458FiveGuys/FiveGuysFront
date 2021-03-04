@@ -1,12 +1,6 @@
-let ROOT_URL =
-    (window.location.host === "group-six-react.colab.duke.edu" || window.location.host === "localhost:3000") ?
-        "https://group-six-test.colab.duke.edu/api/" : window.location.host === "group-six-react-prod.colab.duke.edu" ?
-        "https://group-six-prod.colab.duke.edu/api/" : undefined
+let ROOT_URL = "https://group-six-test.colab.duke.edu/api/"
 
-let ROOT_URL_AUTH =
-    (window.location.host === "group-six-react.colab.duke.edu" || window.location.host === "localhost:3000") ?
-        "https://group-six-test.colab.duke.edu/" : window.location.host === "group-six-react-prod.colab.duke.edu" ?
-        "https://group-six-prod.colab.duke.edu/" : undefined
+let ROOT_URL_AUTH = "https://group-six-test.colab.duke.edu/"
 
 let OAUTH_URL = `https://oauth.oit.duke.edu/oidc/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=code`
 
@@ -45,3 +39,9 @@ export const METHODS =
         PUT : 'PUT',
         DELETE : "DELETE"
     }
+
+export const HOSTS = {
+     DEV : "group-six-react.colab.duke.edu",
+     PROD : "group-six-react-prod.colab.duke.edu",
+     LOCAL : "localhost:3000"
+}

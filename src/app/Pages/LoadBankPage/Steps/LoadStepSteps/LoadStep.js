@@ -68,16 +68,12 @@ export default class LoadStep extends React.Component {
         return(<div>
                     {`Ideal current: ${IdealCurrents[this.props.stepName]}`}
                 <div style={{display : "flex", flexDirection : "row"}}>
-                    <MDBCol size={2}>
                         <HTPInput label={"Current Displayed on Load Bank (CR)" }
                                   onChange={value => this.onChange(value, "CR")}
                                   placeholder={"Current"}/>
-                    </MDBCol>
-                    <MDBCol size={2}>
                         <HTPInput label={"Actual Current from Shunt Meter (CA)"}
                                   onChange={value => this.onChange(value, "CA")}
                                   placeholder={"Current"}/>
-                    </MDBCol>
                 </div>
         </div>)
     }

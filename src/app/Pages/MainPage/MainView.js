@@ -27,8 +27,10 @@ class MainView extends Component {
             <NavBar user={this.props.user}/>
             <TabView token={this.props.token}
                      user={this.props.user}
-                     modelPage={<ModelTable token={this.props.token}/>}
-                     instrumentPage={<InstrumentTable token={this.props.token}/>}
+                     modelPage={<ModelTable history={this.props.history}
+                                            token={this.props.token}/>}
+                     instrumentPage={<InstrumentTable token={this.props.token}
+                                                      history={this.props.history}/>}
             ></TabView>
             </div>
             // </Gradient>

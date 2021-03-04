@@ -49,7 +49,12 @@ class App extends Component {
       return <BrowserRouter>
                 <Switch>
                 <Route exact path = "/oauth/consume"
-                       render={(props) => <OAuthRedirect code={new URLSearchParams(props.location.search).get("code")}/>}>
+                       render={(props) => <OAuthRedirect
+                                              history = {props.history}
+                                              code={new URLSearchParams(props.location.search).get("code")}
+                                              setToken={this.saveToken}
+                                              setUser={this.saveUser}
+                                            />}>
                 </Route>
                 <Route>
                   <Login setToken={this.saveToken}
@@ -62,9 +67,10 @@ class App extends Component {
         <div className="wrapper">
           <BrowserRouter>
             <Switch>
-              <Route exact path="/">
-                <MainView token={this.state.token}
-                          user={this.state.user}/>
+              <Route exact path="/"
+                    render={(props) => <MainView history = {props.history}
+                                                 token={this.state.token}
+                                                 user={this.state.user}/>}>
               </Route>
               <Route path="/models/:id"
                      render={(props) => (<ModelDetailView id={props.match.params.id}
