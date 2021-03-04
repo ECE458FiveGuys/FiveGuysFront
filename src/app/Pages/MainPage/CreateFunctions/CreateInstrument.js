@@ -4,7 +4,7 @@ import SearchHeader from "../Widgets/SearchHeader";
 import { MDBContainer, MDBRow, MDBCol, MDBBtn, MDBIcon} from 'mdbreact';
 import ModelFields from "../../../../utils/enums";
 import {User} from "../../../../utils/dtos";
-import NavBar from "../../../Common/NavBar";
+import NavBar from "../../../Common/HTPNavBar";
 import ErrorParser from "./ErrorParser";
 import HTPInput from "../../../Common/Inputs/HTPInput";
 import HTPAutoCompleteInput from "../../../Common/Inputs/HTPAutoCompleteInput";

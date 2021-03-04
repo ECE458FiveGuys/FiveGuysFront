@@ -1,13 +1,14 @@
 import React from "react";
-import HTPStepper from "./HTPStepper";
-import {StepNames} from "./Steps/step_enums";
+import HTPStepper from "../../Common/HTPStepper";
+import {StepNameList, StepNames} from "./Steps/step_enums";
 import PropTypes from "prop-types";
 import {User} from "../../../utils/dtos";
 import MeterInitStep from "./Steps/MeterInitStep";
 import LoadBankStepsStep from "./Steps/LoadBankStepsStep";
-import NavBar from "../../Common/NavBar";
+import NavBar from "../../Common/HTPNavBar";
 import {Header} from "semantic-ui-react";
 import VisualCheckStep from "./Steps/VisualCheckStep";
+import FunctionalChecksStep from "./Steps/FunctionalChecksStep";
 
 export default class LoadBankMain extends React.Component {
 
@@ -18,36 +19,35 @@ export default class LoadBankMain extends React.Component {
     render() {
         let {user, token, instrumentId} = this.props
         let StepContentBuilders = [
-                            // (stepperState, updateStepperState, markReadyToSubmit) => <VisualCheckStep user={user}
-                            //                                                                   token={token}
-                            //                                                                   instrumentId={instrumentId}
-                            //                                                                     stepperState={stepperState}
-                            //                                                                     updateStepperState={updateStepperState}
-                            //                                                                     markReadyToSubmit={markReadyToSubmit}/>,
-                            // (stepperState, updateStepperState, markReadyToSubmit) => <MeterInitStep user={user}
-                            //                                                                         token={token}
-                            //                                                                         stepperState={stepperState}
-                            //                                                                         updateStepperState={updateStepperState}
-                            //                                                                         markReadyToSubmit={markReadyToSubmit}/>,
+                            (stepperState, updateStepperState, markReadyToSubmit) => <VisualCheckStep user={user}
+                                                                                              token={token}
+                                                                                              instrumentId={instrumentId}
+                                                                                                stepperState={stepperState}
+                                                                                                updateStepperState={updateStepperState}
+                                                                                                markReadyToSubmit={markReadyToSubmit}/>,
+                            (stepperState, updateStepperState, markReadyToSubmit) => <MeterInitStep user={user}
+                                                                                                    token={token}
+                                                                                                    stepperState={stepperState}
+                                                                                                    updateStepperState={updateStepperState}
+                                                                                                    markReadyToSubmit={markReadyToSubmit}/>,
                             (stepperState, updateStepperState, markReadyToSubmit) => <LoadBankStepsStep user={user}
                                                                                                         token={token}
                                                                                                         stepperState={stepperState}
                                                                                                         updateStepperState={updateStepperState}
                                                                                                         markReadyToSubmit={markReadyToSubmit}/>,
-                            (stepperState, updateStepperState, markReadyToSubmit) => <LoadBankStepsStep user={user}
-                                                                                                        token={token}
-                                                                                                        stepperState={stepperState}
-                                                                                                        updateStepperState={updateStepperState}
-                                                                                                        markReadyToSubmit={markReadyToSubmit}/>]
+                            (stepperState, updateStepperState, markReadyToSubmit) => <FunctionalChecksStep user={user}
+                                                                                                            token={token}
+                                                                                                            stepperState={stepperState}
+                                                                                                            updateStepperState={updateStepperState}
+                                                                                                            markReadyToSubmit={markReadyToSubmit}/>]
 
         let onStepSubmitFunctions = [
-                            // (stepperState, successCallBack) => {successCallBack()},   // first step cannot fail, so successCallback called by default
-                            // (stepperState, successCallBack, errorMessageCallBack) =>
-                            //     {MeterInitStep.onSubmit(stepperState, token, successCallBack, errorMessageCallBack)},
+                            (stepperState, successCallBack) => {successCallBack()},   // first step cannot fail, so successCallback called by default
                             (stepperState, successCallBack, errorMessageCallBack) =>
                                 {MeterInitStep.onSubmit(stepperState, token, successCallBack, errorMessageCallBack)},
+                            (stepperState, successCallBack) => {successCallBack()},
                             (stepperState, successCallBack, errorMessageCallBack) =>
-                                {MeterInitStep.onSubmit(stepperState, token, successCallBack, errorMessageCallBack)}
+                                {FunctionalChecksStep.onSubmit(stepperState, token, successCallBack, errorMessageCallBack)}
                             ]
         return (
             <div>
@@ -58,7 +58,7 @@ export default class LoadBankMain extends React.Component {
                 </Header>
             <HTPStepper token={this.props.token}
                         user={this.props.user}
-                        stepNames={Object.values(StepNames)}
+                        stepNames={StepNameList}
                         stepContent={StepContentBuilders}
                         onStepSubmit={onStepSubmitFunctions}
             />

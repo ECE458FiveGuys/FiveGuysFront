@@ -26,10 +26,8 @@ export default class MeterInitStep extends React.Component {
                 if (mostRecentCalibration === "Noncalibratable") {
                     throw new UserError(`This ${meterType} is marked as noncalibratable.`)
                 }
-                if (parseDate(mostRecentCalibration) != dateColors.RED) {
+                if (parseDate(mostRecentCalibration) == dateColors.RED) {
                     throw new UserError(`The calibration for this ${meterType} has expired.`)
-                } else {
-                    successCallBack()
                 }
             },
             (errorMessage) => errorCallBack(errorMessage),
@@ -40,8 +38,13 @@ export default class MeterInitStep extends React.Component {
     }
 
     static onSubmit = (stepperState, token, successCallBack, errorCallBack) => {
-        this.getInstrument(token, stepperState.voltmeterAssetTag, stepperState.voltmeterModelNum, "voltmeter", successCallBack, errorCallBack)
-        this.getInstrument(token, stepperState.shuntMeterAssetTag, stepperState.shuntMeterModelNum, "shunt meter", successCallBack, errorCallBack)
+        try {
+            this.getInstrument(token, stepperState.voltmeterAssetTag, stepperState.voltmeterModelNum, "voltmeter", successCallBack, errorCallBack)
+            this.getInstrument(token, stepperState.shuntMeterAssetTag, stepperState.shuntMeterModelNum, "shunt meter", successCallBack, errorCallBack)
+            successCallBack()
+        } catch (e) {
+            errorCallBack(e.message)
+        }
     }
 
     shouldEnableSubmit = () => {

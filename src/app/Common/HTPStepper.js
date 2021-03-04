@@ -1,11 +1,11 @@
 
 import React from "react";
 import {Button, Step, StepButton, StepContent, StepIcon, StepLabel, Stepper} from "@material-ui/core";
-import HTPButton from "../../Common/Inputs/HTPButton";
+import HTPButton from "./HTPButton";
 import PropTypes from "prop-types";
-import {User} from "../../../utils/dtos";
-import HTPPopup from "../../Common/HTPPopup";
-import {StepNames} from "./Steps/step_enums";
+import {User} from "../../utils/dtos";
+import HTPPopup from "./HTPPopup";
+import {StepNames} from "../Pages/LoadBankPage/Steps/step_enums";
 
 export default class HTPStepper extends React.Component {
 
@@ -117,8 +117,7 @@ export default class HTPStepper extends React.Component {
         return(<div style={{flex : 1}}>
             {this.allStepsCompleted() ? (
                 <div>
-                    All steps completed - you&apos;re finished
-                    <Button onClick={this.handleReset}>Reset</Button>
+                    All steps completed!
                 </div>
             ) : (
                 <div style={{display : "flex",
@@ -126,10 +125,10 @@ export default class HTPStepper extends React.Component {
                     alignItems: 'center'}}>
                     {this.getStepContent(activeStep)}
                     <div style={{display : 'flex', background : 'white'}}>
-                        <HTPButton disabled={activeStep === 0}
-                                   label={"Back"}
-                                   color={"primary"}
-                                   onSubmit={this.handleBack}/>
+                        {/*<HTPButton disabled={activeStep === 0}*/}
+                        {/*           label={"Back"}*/}
+                        {/*           color={"primary"}*/}
+                        {/*           onSubmit={this.handleBack}/>*/}
                         <HTPButton
                             disabled={!this.state.readyToSubmit}
                             onSubmit={this.handleComplete}
@@ -164,7 +163,7 @@ export default class HTPStepper extends React.Component {
                         {stepNames.map((label, index) => (
                             <Step key={label}>
                                 <StepButton
-                                    onClick={this.handleStep(index)}
+                                    disabled={true}
                                     completed={completed[index]}
                                 >
                                     <text style={{alignItems : 'center', justifyContent: 'center'}}>{label}</text>

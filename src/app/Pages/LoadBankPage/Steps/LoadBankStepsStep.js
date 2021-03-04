@@ -1,11 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
-import HTPStepper from "../HTPStepper";
+import HTPStepper from "../../../Common/HTPStepper";
 import {User} from "../../../../utils/dtos";
 import {CurrentStepNames, IdealCurrents, StepNames} from "./LoadBankStepSteps/step_utils";
 import LoadBankCurrentStep from "./LoadBankStepSteps/LoadBankCurrentStep";
 import HTPPopup from "../../../Common/HTPPopup";
-import HTPButton from "../../../Common/Inputs/HTPButton";
+import HTPButton from "../../../Common/HTPButton";
 import LoadBankVoltageStep from "./LoadBankStepSteps/LoadBankVoltageStep";
 
 /*
@@ -103,6 +103,7 @@ export default class LoadBankStepsStep extends React.Component {
         let stepNames = Object.values(CurrentStepNames)
         stepNames.push(LoadBankVoltageStep.StepName)
         return (<div style={{display: "flex", flex: 1, flexDirection: "column", width : "100%", alignItems: "center", justifyContent: 'center', marginBottom : 30}}>
+            <h1 className={"h2-responsive"}>{`Now the fun part, ${user.username}!`}</h1>
             <div>
                 <ol>
                     <li>Connect to a DC source</li>

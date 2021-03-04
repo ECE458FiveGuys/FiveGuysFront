@@ -89,6 +89,7 @@ class InventoryTable extends Component {
                 {this.props.children}
                 <DataTable columns = {this.props.columns}
                            rows = {this.state.results}
+                           searching={false}
                 />
             </div>);
     }

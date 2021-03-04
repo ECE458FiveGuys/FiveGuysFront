@@ -34,6 +34,7 @@ export default class RequestUtils {
         if (data) {
             init.body =  JSON.stringify(data)
         }
+
         fetch(url + RequestUtils.applyRequestParamSuffix(params), init)
                         .then(response => {
                             if (response.ok) {
