@@ -25,7 +25,9 @@ export const URLS =
         VENDORS : ROOT_URL + "models/vendors/",
         MODEL_CATEGORIES : ROOT_URL + "model-categories/",
         INSTRUMENT_CATEGORIES: ROOT_URL + "instrument-categories/",
-        OAUTH_URL : OAUTH_URL
+        OAUTH_URL : OAUTH_URL,
+        MODEL_NUMBERS : ROOT_URL + "model/model_numbers/",
+        CALIBRATIONS : ROOT_URL + "calibration-events/"
     }
 
 export const AUTH_URLS =

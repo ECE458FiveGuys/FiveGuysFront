@@ -8,31 +8,52 @@ import TableColumns from "../MainPage/InventoryTables/Columns";
 import ModelFields from "../../../utils/enums";
 import DeleteModal from "../ModelDetailPage/DeleteModal";
 import ModelRequests from "../../../controller/requests/model_requests";
+import MiscellaneousRequests from "../../../controller/requests/miscellaneous_requests";
+import RecordCalibration from "../ModelDetailPage/RecordCalibration";
 
 class InstrumentDetailView extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            instrument: undefined,
-            calibrations: [],
-            serial_number: undefined,
-            comment: undefined,
-            deleteModalShow: false,
-            editModelShow: false
+            // instrument: undefined,
+            // calibrations: [],
+            // serial_number: undefined,
+            // comment: undefined,
+            // deleteModalShow: false,
+            // editModelShow: false
         }
     }
 
+    // getModelNumbers(models){
+    //     let model_numbers = []
+    //     for(var model in models) {
+    //         model_numbers.concat(model.model_number)
+    //     }
+    //     return model_numbers
+    // }
+
      componentDidMount() {
+        let thing = this.state
         let retrieveInstrumentCallback = (instrument) => {
             let calibrations = instrument['calibration_history']
-            this.setState({calibrations : calibrations, instrument : instrument});
+            this.setState({calibrations : calibrations, instrument : instrument, model: instrument.model,
+                serial_number : instrument["serial_number"], comment : instrument["comment"]});
         }
         let retrieveInstrumentError = (e) => {
-            alert(e)
+            alert("RETRIEVE"+e)
         }
+        // let all_models = ModelRequests.getModels()
+        // var all_model_numbers = this.getModelNumbers(all_models)
         InstrumentRequests.retrieveInstrument(this.props.token, this.props.id, retrieveInstrumentCallback,retrieveInstrumentError);//
     }
+
+    // loadModelNumbers () {
+    //     let getNumbersCallBack = (json) => {
+    //         this.setState({vendors: json})
+    //     }
+    //     MiscellaneousRequests.getModelNumbers(this.props.token, this.state.model[ModelFields.EquipmentModelFields.VENDOR], getNumbersCallBack)
+    // }
 
     setDeleteModalShow(boolean) {
         this.setState({deleteModalShow:boolean})
@@ -42,14 +63,24 @@ class InstrumentDetailView extends Component {
         this.setState({editModalShow:boolean})
     }
 
+    setCalibrationModalShow(boolean) {
+        this.setState({calibrationModalShow:boolean})
+    }
+
     handleSubmit = (e) =>{
+        this.setEditModalShow(false)
         let {serial_number,comment} = this.state
         let instrument = this.state.instrument
         let editCallback = (response) => {
-            console.log(response)
+            // console.log(response)
+            var temp_instrument = {...this.state.instrument}
+            for (var field in ModelFields.InstrumentEditFields) {
+                temp_instrument[ModelFields.InstrumentEditFields[field]] = this.state[ModelFields.InstrumentEditFields[field]]
+            }
+            this.setState({instrument: temp_instrument})
         }
         let editError = (e) => {
-            alert(e)
+            alert("edit"+e)
         }
         InstrumentRequests.editInstrument(this.props.token,instrument.pk, instrument.model['pk'],
                                             serial_number,comment,editCallback,editError)
@@ -62,14 +93,15 @@ class InstrumentDetailView extends Component {
         this.setState({[name]: value})
     }
 
-    deleteInstrument() {
+    deleteInstrument = () => {
         let deleteInstrumentCallback = (model) => {
             alert("DELETE SUCCESS")
+            // close tab
         }
         let deleteInstrumentError = (e) => {
             alert("DELETE: "+e)
         }
-        ModelRequests.deleteInstrument(this.props.token, this.props.id, deleteInstrumentCallback,deleteInstrumentError);
+        InstrumentRequests.deleteInstruments(this.props.token, this.props.id, deleteInstrumentCallback,deleteInstrumentError);
     }
 
     render() {
@@ -89,6 +121,7 @@ class InstrumentDetailView extends Component {
                         fields={ModelFields.InstrumentEditFields}
                         title={"Edit Instrument " + this.state.instrument.serial_number}
                         handleFormChange={this.handleFormChange}
+                        isEdit = {true}
                     />
                     <Button variant="primary" onClick={() => this.setDeleteModalShow(true)}>
                         Delete
@@ -101,15 +134,28 @@ class InstrumentDetailView extends Component {
                         message={"Are you sure you wat to remove instrument "+this.state.instrument.serial_number+"?"}
 
                     />
-                    <Button>
+                    <Button onClick={() => this.setCalibrationModalShow(true)}>
                         Record Calibration
                     </Button>
                     <Button>
                         Download Calibration Certificate
                     </Button>
+                    <RecordCalibration
+                        show={this.state.calibrationModalShow}
+                        onHide={()=>this.setCalibrationModalShow(false)}
+                        token={this.props.token}
+                        subject={this.state.instrument}
+                        closeModal={()=>this.setCalibrationModalShow(false)}
+                        // message={"Are you sure you wat to remove instrument "+this.state.instrument.serial_number+"?"}
+                    />
                     <ul>
                         <li>
-                            Model: {this.state.instrument.model.model_number}
+                            Model:
+                            <a
+                                href={"/models/"+this.state.instrument.model.pk}
+                            >
+                                {this.state.instrument.model.model_number}
+                            </a>
                         </li>
                         <li>
                             Serial Number: {this.state.instrument.serial_number}
@@ -118,10 +164,10 @@ class InstrumentDetailView extends Component {
                             Comment: {this.state.instrument.comment}
                         </li>
                     </ul>
-                    <ErrorBoundary>
+                    {/*<ErrorBoundary>*/}
                         <DataTable columns={TableColumns.CALIBRATION_COLUMNS} token={this.props.token}
                                    rows={this.state.calibrations}/>
-                    </ErrorBoundary>
+                    {/*</ErrorBoundary>*/}
                 </div>
 
 
