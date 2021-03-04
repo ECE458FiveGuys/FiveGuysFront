@@ -1,4 +1,4 @@
-import {MDBBtn} from "mdbreact";
+import {MDBBtn, MDBCol} from "mdbreact";
 import React from "react";
 import PropTypes from "prop-types";
 import HTPInput from "./HTPInput";
@@ -11,20 +11,25 @@ export default class HTPButton extends React.Component {
 
     render() {
         return (
-        <MDBBtn color="dark-green"
-                type="submit"
-                onClick={this.props.onSubmit}>
-            {this.props.label}
-        </MDBBtn>
+                <MDBBtn color={this.props.color}
+                        type="submit"
+                        disabled={this.props.disabled}
+                        onClick={this.props.onSubmit}>
+                    {this.props.label}
+                </MDBBtn>
         )
     }
 }
 
 HTPButton.propTypes = {
     onSubmit : PropTypes.func.isRequired,
-    label : PropTypes.func.isRequired
+    label : PropTypes.func.isRequired,
+    color : PropTypes.string,
+    disabled : PropTypes.bool
 }
 
-HTPInput.defaultProps = {
-    size : 2
+HTPButton.defaultProps = {
+    size : 2,
+    color : "green",
+    disabled : false
 }

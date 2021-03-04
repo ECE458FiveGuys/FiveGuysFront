@@ -7,10 +7,12 @@ import Login from "./auth/Login";
 import NotFound from "./auth/NotFound";
 import {StorageKeys} from "./utils/enums";
 import {User} from "./utils/dtos";
-import NavBar from "./app/Common/NavBar";
 import ModelDetailView from "./app/Pages/ModelDetailPage/ModelDetailView";
 import InstrumentDetailView from "./app/Pages/InstrumentDetailPage/InstrumentDetailView";
 import CategoryTabView from "./app/Pages/CategoryPage/CategoryTabView";
+import LoadBankMain from "./app/Pages/LoadBankPage/LoadBankMain";
+import OAuthRedirect from "./auth/OAuthRedirect";
+import ImportDocumentation from "./app/ImportExport/Widgets/ImportDocumentation";
 
 class App extends Component {
 
@@ -23,30 +25,39 @@ class App extends Component {
     this.saveToken = this.saveToken.bind(this)
   }
 
-    getToken = () => {
-        const tokenString = localStorage.getItem(StorageKeys.TOKEN);
-        return JSON.parse(tokenString);
-    };
+  getToken = () => {
+    const tokenString = localStorage.getItem(StorageKeys.TOKEN);
+    return JSON.parse(tokenString);
+  };
 
-    saveToken = userToken => {
-        localStorage.setItem(StorageKeys.TOKEN, JSON.stringify(userToken));
-        this.setState({token: userToken})
-    };
+  saveToken = userToken => {
+    localStorage.setItem(StorageKeys.TOKEN, JSON.stringify(userToken));
+    this.setState({token: userToken})
+  };
 
-    getUser = () => {
-      const userString = localStorage.getItem(StorageKeys.USER);
-      return userString ? User.fromJson(JSON.parse(userString)) : undefined
-    };
+  getUser = () => {
+    const userString = localStorage.getItem(StorageKeys.USER);
+    return userString ? User.fromJson(JSON.parse(userString)) : undefined
+  };
 
-    saveUser = user => {
-      localStorage.setItem(StorageKeys.USER, JSON.stringify(user));
-      this.setState({user: user})
-    };
+  saveUser = user => {
+    localStorage.setItem(StorageKeys.USER, JSON.stringify(user));
+    this.setState({user: user})
+  };
 
   render() {
     if (!this.state.token || !this.state.user) {
-      return <Login setToken={this.saveToken}
-                    setUser={this.saveUser}/>
+      return <BrowserRouter>
+                <Switch>
+                <Route exact path = "/oauth/consume"
+                       render={(props) => <OAuthRedirect code={new URLSearchParams(props.location.search).get("code")}/>}>
+                </Route>
+                <Route>
+                  <Login setToken={this.saveToken}
+                        setUser={this.saveUser}/>
+                </Route>
+                </Switch>
+              </BrowserRouter>
     }
     return (
         <div className="wrapper">
@@ -56,22 +67,34 @@ class App extends Component {
                 <MainView token={this.state.token}
                           user={this.state.user}/>
               </Route>
-              <Route path="/models/">
-                <ModelDetailView token={this.state.token}
-                                 user={this.state.user}/>
+              <Route path="/models/:id"
+                     render={(props) => (<ModelDetailView id={props.match.params.id}
+                                                          token={this.state.token}
+                                                          user={this.state.user}/>)} >
               </Route>
-              <Route path="/instruments/">
-                <InstrumentDetailView token={this.state.token}
-                                      user={this.state.user}/>
+              <Route  path="/instruments/:id"
+                      render={(props) => (<InstrumentDetailView id={props.match.params.id}
+                                                           token={this.state.token}
+                                                           user={this.state.user}/>)} >
               </Route>
               <Route path="/import-export">
-                  <ImportExportView token={this.getToken()}
-                                    user={this.getUser()}/>
+                <ImportExportView token={this.state.token}
+                                  user={this.state.user}/>
               </Route>
               <Route path="/categories/">
                 <CategoryTabView token={this.state.token}
-                                      user={this.state.user}/>
+                                 user={this.state.user}/>
               </Route>
+              <Route path="/load-bank/:id"
+                     render = {(props) => (<LoadBankMain token={this.state.token}
+                              instrumentId={props.match.params.id}
+                              user={this.state.user}/>)}>
+              </Route>
+              <Route path="/documentation">
+                <ImportDocumentation token={this.state.token}
+                                  user={this.state.user}/>
+              </Route>
+
               <Route>
                 <NotFound/>
               </Route>

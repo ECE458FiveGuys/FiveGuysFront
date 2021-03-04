@@ -1,7 +1,7 @@
 import RequestUtils from "./request_utils";
 import {METHODS, URLS} from "../strings";
 import ModelFields from "../../utils/enums";
-import {Instrument} from "../../utils/ModelEnums";
+import {EquipmentModel, Instrument} from "../../utils/ModelEnums";
 
 export default class MiscellaneousRequests{
 
@@ -27,10 +27,13 @@ export default class MiscellaneousRequests{
     static async getCategories(token,
                             modelType,
                             callBack = (json) => json,
-                            errorMessageCallBack = (errorMessage) => errorMessage) {
+                            errorMessageCallBack = (errorMessage) => errorMessage,
+                            onlyOneType=false) {
         let header = RequestUtils.buildTokenHeader(token)
-        RequestUtils.assistedFetch(URLS.MODEL_CATEGORIES,
-            METHODS.GET, callBack(ModelFields.EquipmentModelFields.MODEL_CATEGORIES), errorMessageCallBack, header)
+        if (!onlyOneType || modelType === EquipmentModel.TYPE) {
+            RequestUtils.assistedFetch(URLS.MODEL_CATEGORIES,
+                METHODS.GET, callBack(ModelFields.EquipmentModelFields.MODEL_CATEGORIES), errorMessageCallBack, header)
+        }
         if (modelType === Instrument.TYPE) {
             RequestUtils.assistedFetch(URLS.INSTRUMENT_CATEGORIES,
                 METHODS.GET, callBack(ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES), errorMessageCallBack, header)

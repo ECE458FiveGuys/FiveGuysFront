@@ -10,16 +10,15 @@ import {
     MDBTable
 } from "mdbreact";
 import ImportExportRequests from "../../../controller/requests/import_export_requests";
-import Papa from "papaparse"
-import {CSVReader} from "react-papaparse";
-import {getIsOnlyResult} from "react-bootstrap-typeahead/lib/utils";
 import DataTable_NoGIF from "../../Common/Tables/DataTable_NoGIF";
 import TableColumns from "../../Pages/MainPage/InventoryTables/Columns";
-import ModelTable from "../../Pages/MainPage/InventoryTables/ModelTable";
 import ModelFields from "../../../utils/enums";
 import TableUtils from "../../Pages/MainPage/InventoryTables/TableUtils";
 import {newTab} from "../../utils";
 import HTPButton from "../../Common/Inputs/HTPButton";
+
+let fileSize = 32000000
+let sizeError = "File Size Exceeds 32 MB"
 
 class CSV_Import extends Component{
 
@@ -42,9 +41,14 @@ class CSV_Import extends Component{
         return data;
     }
 
+    //TODO: Add Size validation
     fileSelected = (event) => {
-        this.setState({fileSelected: true});
-        this.setState({file: event.target.files[0]});
+        if(event.target.files[0].size <= fileSize){
+            this.setState({fileSelected: true, file: event.target.files[0]});
+        }
+        else{
+            alert(sizeError)
+        }
     }
 
     importTypeSelected = type => e => {
@@ -131,7 +135,7 @@ class CSV_Import extends Component{
                         onSubmit={this.importTypeSelected('instruments')}
                         label={"Import Instruments"}>
                     </HTPButton>
-                    <a href="/Document">
+                    <a href="/documentation">
                         <HTPButton
                             label="Import Documentation">
                         </HTPButton>
@@ -145,8 +149,6 @@ class CSV_Import extends Component{
                             />
                 </MDBRow>
             </MDBContainer>
-
-
     );
     }
 }

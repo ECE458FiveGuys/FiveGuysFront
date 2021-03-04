@@ -51,7 +51,7 @@ class NavbarPage extends Component {
                         <MDBNavLink to="/import-export">{user.is_staff ? "Import/Export" : "Export"}</MDBNavLink>
                     </MDBNavItem>)
         Buttons.push(<MDBNavItem>
-            <MDBNavLink to="/load-bank">{user.is_staff ? "Import/Export" : "Export"}</MDBNavLink>
+            <MDBNavLink to="/load-bank">Load Bank</MDBNavLink>
         </MDBNavItem>)
         return (
                 <MDBNavbar color={"green"} dark expand="md">

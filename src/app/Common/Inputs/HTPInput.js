@@ -7,22 +7,34 @@ export default class HTPInput extends Component {
 
     constructor(props) {
         super(props)
+        // inputRef : React.createRef()
     }
+
+    setValue(value) {
+        this.inputRef.value = value
+    }
+
+    getValue() {
+        return this.inputRef.value
+    }
+
 
     render() {
         let {onChange, label, placeholder, size, value}= this.props
         return(
-            <MDBCol size={size}>
+            <div>
                 <label htmlFor="defaultFormLoginEmailEx" className="grey-text">
                     {label}
                 </label>
                 <input type="text"
                        placeholder={placeholder}
                        className="form-control"
-                       value={value}
+                       defaultValue={value}
+                       ref={el => this.inputRef = el}
+                       contentEditable={true}
                        onChange={event => onChange(event.target.value)}/>
                 <br/>
-            </MDBCol>
+            </div>
         )
     }
 }

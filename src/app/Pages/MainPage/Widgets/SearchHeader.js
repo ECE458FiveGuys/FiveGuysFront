@@ -54,9 +54,11 @@ export default class SearchHeader extends Component {
                 searchFieldName == ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES) {
                 Rows.push(this.renderAutoCompleteMultipleSearchBox(searchFieldName, key))
             } else {
-                Rows.push(<HTPInput label={key}
+                Rows.push(<MDBCol size={2}>
+                            <HTPInput label={key}
                                     onChange={this.updateSearchFields(searchFieldName)}
-                                    placeholder={"Search"}/>)
+                                    placeholder={"Search"}/>
+                            </MDBCol>)
             }
             if (col == SEARCH_FIELD_COLS) {
                 Rows.push(<div className="w-100"/>)

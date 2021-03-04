@@ -1,68 +1,244 @@
 import React, { Component } from "react";
-import {MDBDataTable} from 'mdbreact';
 import PropTypes from "prop-types";
-import Loading from "../Images/Loading";
 import DataTable from "./DataTable";
 import Checkbox from "./TableWidgets/Checkbox";
 import HTPInput from "../Inputs/HTPInput";
 import HTPButton from "../Inputs/HTPButton";
+import {MDBBtn, MDBCol, MDBModal, MDBModalBody, MDBModalFooter, MDBModalHeader} from "mdbreact";
+import {ModalBody} from "react-bootstrap";
+import HTPPopup from "../HTPPopup";
 
 const SELECT = "Select"
 const DELETE = "Delete"
+const CHECK_BOX_REF = "CheckboxRef"
 
 export default class DatatableEditable extends Component {
 
-    static SELECT = "Select"
-    static DELETE = "Delete"
-
     constructor(props) {
         super(props)
+        this.updateSelectedRow = this.updateSelectedRow.bind(this)
         this.state = {
-            columns : this.appendEditableFeatures(this.props.columns),
-            rows : this.addEditFunctions(this.props.rows),
-            selectedPK : undefined
+            pkToRow: new Map(),
+            fieldMap: {},  // object of column fields to current input values
+            modal: false
         }
-        this.updateSelectedPK = this.updateSelectedPK.bind(this)
+
+        Object.assign(this.state, {
+            columns: this.appendEditableFeatures(this.props.columns),
+            rows: this.addEditFunctions(this.props.rows, this.state.pkToRow),
+            selectedRow: undefined
+        })
+
+        Object.assign(this.state, this.createEditableFields())
     }
 
-    updateSelectedPK(pk) {
-        this.setState({selectedPK : pk})
+    addEditFunctions(propRows, pkToRow) {
+        let rows = []
+        propRows.forEach(propRow => {
+            let row = {}
+            Object.assign(row, propRow)
+            let checkBoxRef = React.createRef()
+            row[SELECT] = <Checkbox correspondingPK={row.pk ? row.pk : row.id}
+                                    updateSelectedRow={this.updateSelectedRow}
+                                    ref={checkBoxRef}
+            />
+            row[CHECK_BOX_REF] = checkBoxRef
+            pkToRow.set(row.pk ? row.pk : row.id, row)
+            row.clickEvent = () => {checkBoxRef.current.check()} // if you click anywhere in row, will check the box
+            rows.push(row)
+        })
+        return rows
     }
 
-    addEditFunctions(rows) {
-        rows.forEach(row => {
-            row[SELECT] = <Checkbox correspondingPK={row.pk ? row.id : row.pk}
-                                    updateSelectedPK={this.updateSelectedPK}
-                            />
+    appendEditableFeatures(propColumns) {
+        let columns = [...propColumns]
+        columns.unshift({label : SELECT, field : SELECT})
+        return columns
+    }
+
+
+    createEditableFields() {
+        let {editableColumns} = this.props
+        let EditableFields = []
+        let editableFieldRefs = new Map()
+        editableColumns.forEach(column => {
+            let fieldRef = React.createRef()
+            let Input = (<MDBCol size={2}>
+                            <HTPInput label={column.label}
+                                   onChange={(value)=>{this.state.fieldMap[column.field] = value
+                                                       this.setState({fieldMap: this.state.fieldMap})
+                                   }}
+                                   ref={fieldRef}
+                                   placeholder={column.label}/>
+                        </MDBCol>)
+            EditableFields.push(Input)
+            editableFieldRefs.set(column.field, fieldRef)
+        })
+        return {EditableFields : EditableFields, editableFieldRefs : editableFieldRefs}
+    }
+
+    updateFields(callBack=()=>{}) {
+        this.state.editableFieldRefs.forEach((inputRef, columnField)=> {
+            if (!this.state.selectedRow) {
+                inputRef.current.setValue("")  // if no row is selected, clear inputs
+            } else {
+                let currentField = this.state.selectedRow[columnField]
+                inputRef.current.setValue(currentField)
+            }
+            this.state.fieldMap[columnField] = inputRef.current.getValue()
+            callBack()
         })
     }
 
-    appendEditableFeatures(columns) {
-        columns.unshift({label : SELECT})
-        columns.push({label : DELETE})
+    updateSelectedRow(pk, callBack= () => {}) {
+        // if row already selected, remove that check, then update the one selected
+        let selectedRow = this.state.selectedRow
+        if (selectedRow && selectedRow.pk && selectedRow.pk != pk) {
+            this.state.pkToRow.get(selectedRow.pk)[CHECK_BOX_REF].current.forceUncheck()
+        }
+        let updatedSelectedRow = undefined
+        if (pk) {
+            this.state.rows.every(row => {
+                if (row.pk == pk) {
+                    updatedSelectedRow = row
+                    return false
+                }
+                else {
+                    return true
+                }
+            })
+        }
+        this.setState({selectedRow: updatedSelectedRow,
+                successMessage: undefined,
+                errorMessage: undefined,
+                warningMessage: undefined,
+                    warningFunction : undefined},
+            () => this.updateFields(() => callBack()))
+    }
+
+    handleErrorMessage = (errorMessage) => {
+        this.setState({errorMessage : errorMessage})
+        this.toggleModal()
+    }
+
+    onSubmit = () => {
+        let {rows, selectedRow, fieldMap} = this.state
+        let {token, editFunction, createFunction} = this.props
+        selectedRow ?
+        editFunction(token,
+            selectedRow.pk,
+            (json) => {Object.keys(json).forEach(key =>
+                selectedRow[key] = json[key])
+                this.setState({selectedRow : selectedRow, successMessage : "Successfully edited"})
+                this.toggleModal()
+            },
+            (errorMessage) => this.handleErrorMessage(errorMessage),
+            fieldMap)
+        :
+        createFunction(token,
+            (json) => {
+                rows.push(json)
+                this.setState({rows: this.addEditFunctions(rows, this.state.pkToRow)})
+                this.setState({selectedRow : selectedRow, successMessage : "Successfully created"})
+                this.toggleModal()
+            },
+            (errorMessage) => this.handleErrorMessage(errorMessage),
+            fieldMap)
+    }
+
+    onDelete = () => {
+        let {validateDeleteFunction} = this.props
+        validateDeleteFunction ? this.validateDelete() : this.delete()
+    }
+
+    validateDelete = () => {
+        let {validateDeleteFunction, token} = this.props
+        let {selectedRow} = this.state
+        validateDeleteFunction(token,
+                                selectedRow,
+                                (json) => {
+                                    this.delete()
+                                },
+                                (warnMessage) => {
+                                    this.setState({warningMessage : warnMessage, warningFunction : this.delete})
+                                    this.toggleModal()
+                                })
+        }
+
+    delete = () => {
+        let {token, deleteFunction} = this.props
+        let {selectedRow, rows} = this.state
+        deleteFunction(token,
+            selectedRow.pk,
+            (json) => {
+                let indexToRemove = 0
+                for (let i = 0; i < rows.length; i++) {
+                    let row = rows[i]
+                    if (row.pk == selectedRow.pk) {
+                        indexToRemove = i
+                        break
+                    }
+                }
+                rows.splice(indexToRemove, 1);
+                this.updateSelectedRow(undefined,
+                    () => {
+                        this.setState({successMessage : "Successfully deleted"})
+                        this.toggleModal()
+                    })
+            },
+            (errorMessage) => this.setState({errorMessage : errorMessage})
+        )
+    }
+
+    unChanged = () => {
+        let unChanged = true;
+        Object.keys(this.state.fieldMap).forEach(fieldName => {
+            let currentValue = this.state.fieldMap[fieldName]
+            let savedValue = this.state.selectedRow[fieldName]
+            if (currentValue != savedValue) {
+                unChanged = false
+            }
+        })
+        return unChanged
+    }
+
+    toggleModal = () => {
+        this.setState({
+            modal: !this.state.modal
+        });
     }
 
     render() {
-        let {columns, rows, selectedPK} = this.state
-        let {editableColumns} = this.props
-        let EditableFields = []
-        editableColumns.forEach(field => {
-            EditableFields.push(<HTPInput label={field} onChange={()=>{}} placeholder={""}/>)
-        })
-        return(<div>
-                    <div style={{flexDirection : 'row'}}>
+        let {columns, rows, selectedRow, EditableFields, successMessage, warningMessage, warningFunction, errorMessage} = this.state
+        return(<div style={{marginTop : 30}}>
+                    <div style={{flexDirection : 'row', display: "flex", alignItems : "center"}}>
                         {EditableFields}
-                        <HTPButton onSubmit={()=>{}} label={selectedPK ? "Edit" : "Create"}/>
+                        <HTPButton onSubmit={this.onSubmit}
+                                   disabled={selectedRow ? this.unChanged() : false}
+                                   label={selectedRow ? "Edit" : "Create"}/>
+                        {selectedRow ? <HTPButton onSubmit={this.onDelete}
+                                                  color={"red"}
+                                                  label="Delete"/> : <div/>}
+                        <HTPPopup isOpen={this.state.modal}
+                                  toggleModal={this.toggleModal}
+                                  className={successMessage ? "text-success" : "text-danger"}
+                                  title={successMessage ? "Success!" : warningMessage? "Warning!" : "Error!"}
+                                  message={successMessage ? successMessage : warningMessage? warningMessage : errorMessage}
+                                  additionalButtons={warningFunction? <MDBBtn color="red" onClick={warningFunction}>Proceed</MDBBtn> : <div/>}/>
                     </div>
                     <DataTable columns={columns}
                                rows={rows}/>
-                </div>
-                )
+                </div>)
     }
 }
 
 DatatableEditable.propTypes = {
+    token : PropTypes.string.isRequired,
     columns: PropTypes.array.isRequired, // the columns of the datatable
     rows : PropTypes.array.isRequired,
-    editableColumns : PropTypes.array.isRequired
+    editableColumns : PropTypes.array.isRequired, // a subset of columns whose fields you want to have inputs for
+    editFunction : PropTypes.func.isRequired, // a shared library API function to be called when the edit button is selected
+    createFunction : PropTypes.func.isRequired, // a shared library API function to be called when the create button is selected
+    deleteFunction : PropTypes.func.isRequired, // a shared library API function to be called when the delete button is selected
+    validateDeleteFunction: PropTypes.func // optional function to confirm whether warning should be displayed on delete
 }

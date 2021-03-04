@@ -37,10 +37,17 @@ export default class RequestUtils {
         fetch(url + RequestUtils.applyRequestParamSuffix(params), init)
                         .then(response => {
                             if (response.ok) {
-                                response.json()
-                                    .then(json => {
-                                        callBack(json) // callback is called on the returned json
-                                    })
+                                if (response.status == 204)  // if no content response
+                                    callBack()
+                                else {
+                                    response.json()
+                                        .then(json => {
+                                            callBack(json) // callback is called on the returned json
+                                        })
+                                        .catch(error=> {
+                                            errorMessageCallBack(error.message)
+                                        })
+                                }
                             } else if (response.status >= 500 && response.status < 600) {
                                 response.text()
                                     .then(errorText => {
@@ -54,8 +61,14 @@ export default class RequestUtils {
                                     })
                             }
                         })
-                        .catch(error => error.text()
-                            .then(errorText => alert(new ServerError(errorText).message))
+                        .catch(error => {
+                            try {
+                                error.text()
+                                    .then(errorText => alert(new ServerError(errorText).message))
+                            } catch (e) {
+                                alert(new ServerError(error).message)
+                            }
+                            }
                         )
 
     }

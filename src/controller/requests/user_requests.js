@@ -1,7 +1,8 @@
 import RequestUtils from "./request_utils";
-import {METHODS, URLS} from "../strings";
+import {AUTH_URLS, METHODS, URLS} from "../strings";
 
 export default class UserRequests {
+    static params;
     static async retrieveUser(token,
                               username,
                               callBack = (json) => json,
@@ -10,11 +11,38 @@ export default class UserRequests {
         let params = {"username" : username}
         let header = RequestUtils.buildTokenHeader(token)
 
-        RequestUtils.assistedFetch(URLS.USERS,
+        RequestUtils.assistedFetch(AUTH_URLS.USERS,
             METHODS.GET,
             callBack,
             errorMessageCallBack,
             header,
             params)
+    }
+
+    static async getAllUsers(token,
+                             user_pk,
+                             callBack = (json) => json,
+                             errorMessageCallBack = (errorMessage) => errorMessage)
+    {
+        let header = RequestUtils.buildTokenHeader(token)
+        let params = {}
+        RequestUtils.assistedFetch(AUTH_URLS.USERS,
+            METHODS.GET,
+            callBack,
+            errorMessageCallBack,
+            header)
+    }
+
+    static async deactivateUser(token,
+                             callBack = (json) => json,
+                             errorMessageCallBack = (errorMessage) => errorMessage)
+    {
+        let header = RequestUtils.buildTokenHeader(token)
+        // let params = {}
+        RequestUtils.assistedFetch(AUTH_URLS.USERS,
+            METHODS.GET,
+            callBack,
+            errorMessageCallBack,
+            header)
     }
 }

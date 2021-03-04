@@ -1,16 +1,17 @@
 import React from 'react';
 import './Login.css';
 import PropTypes from "prop-types";
-import {URLS, METHODS} from "../controller/strings.js"
+import {URLS, METHODS, AUTH_URLS} from "../controller/strings.js"
 import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn } from 'mdbreact';
 import Image from "../assets/hpt_logo.png"
 import {Gradient} from "react-gradient"
 import RequestUtils from "../controller/requests/request_utils";
 import {User} from "../utils/dtos";
 import UserRequests from "../controller/requests/user_requests";
+import {Divider} from "@material-ui/core";
 
 async function loginUser(credentials, callBack, errorMessageCallBack) {
-    RequestUtils.assistedFetch(URLS.LOGIN, METHODS.POST, callBack, errorMessageCallBack, {}, {}, credentials)
+    RequestUtils.assistedFetch(AUTH_URLS.LOGIN, METHODS.POST, callBack, errorMessageCallBack, {}, {}, credentials)
 }
 
 const gradients = [
@@ -105,6 +106,13 @@ export default class Login extends React.Component {
                            </div>
                        </form>
                    </MDBCol>
+                   <Divider style={{marginLeft : 40, marginRight : 40}} orientation = 'vertical' flexItem={true}/>
+                   <a href={URLS.OAUTH_URL}>
+                       <MDBBtn color="dark-green"
+                               type="submit">
+                           Oauth Login
+                       </MDBBtn>
+                   </a>
                    <div style={{justifyContent: 'center', alignItems: 'center', marginLeft: 50}}>
                        <img alt="logo"
                             style={{textAlign: 'center', width: 300}}
