@@ -5,7 +5,10 @@ import MiscellaneousRequests from "../../../../controller/requests/miscellaneous
 import ModelFields from "../../../../utils/enums";
 import {EquipmentModel, Instrument} from "../../../../utils/ModelEnums";
 import DataTable from "../../../Common/Tables/DataTable";
-
+import jsPDF from 'jspdf'
+import 'jspdf-autotable'
+import HTPButton from "../../../Common/HTPButton";
+import Image from "../../../../assets/hpt_logo.png"
 class InventoryTable extends Component {
 
     constructor(props) {
@@ -75,6 +78,29 @@ class InventoryTable extends Component {
                 this.loadTableData)
         )
     }
+
+    // table () {
+    //     const doc = new jsPDF()
+    //     doc.autoTable({
+    //         header: 'Calibration Info',
+    //         head: [['fields', '']],
+    //         body: [
+    //             ['Sweden', 'Japan', 'Canada'],
+    //             ['Norway', 'China', 'USA'],
+    //             ['Denmark', 'China', 'Mexico'],
+    //         ],
+    //     })
+    //     doc.autoTable({
+    //         header: 'Calibration Info',
+    //         head: [['fields', 'values']],
+    //         body: [
+    //             ['Sweden', 'Japan', 'Canada'],
+    //             ['Norway', 'China', 'USA'],
+    //             ['Denmark', 'China', 'Mexico'],
+    //         ],
+    //     })
+    //     doc.save('table.pdf')
+    // }
 
     render() {
         return (

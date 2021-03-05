@@ -29,10 +29,6 @@ export default class FunctionalChecksStep extends React.Component {
         return StepSubmitFunctions
     }
 
-    static onSubmit = (stepperState, token, successCallBack, errorCallBack) => {
-
-    }
-
     render() {
         let {user, token} = this.props
         return (<div style={{flex: 1, display: "flex", flexDirection: "column", alignItems: "center", marginBottom : 30}}>

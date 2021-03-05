@@ -9,6 +9,7 @@ import NavBar from "../../Common/HTPNavBar";
 import {Header} from "semantic-ui-react";
 import VisualCheckStep from "./Steps/VisualCheckStep";
 import FunctionalChecksStep from "./Steps/FunctionalChecksStep";
+import {onCalibrationSuccess, writeLoadBankTableData} from "./LoadBankDataWriter";
 
 export default class LoadBankMain extends React.Component {
 
@@ -46,9 +47,18 @@ export default class LoadBankMain extends React.Component {
                             (stepperState, successCallBack, errorMessageCallBack) =>
                                 {MeterInitStep.onSubmit(stepperState, token, successCallBack, errorMessageCallBack)},
                             (stepperState, successCallBack) => {successCallBack()},
-                            (stepperState, successCallBack, errorMessageCallBack) =>
-                                {FunctionalChecksStep.onSubmit(stepperState, token, successCallBack, errorMessageCallBack)}
-                            ]
+                             (stepperState, successCallBack, errorMessageCallBack) =>
+                             {let loadBankTableData = writeLoadBankTableData(stepperState.instrument,
+                                                   stepperState.meters[MeterInitStep.VOLTMETER],
+                                                    stepperState.meters[MeterInitStep.SHUNT_METER],
+                                                    this.props.user,
+                                                    stepperState.recordedCurrents,
+                                                    stepperState.recordedVoltage,
+                                                    )
+                             onCalibrationSuccess(loadBankTableData)
+                             }
+                             ]
+
         return (
             <div>
                 <NavBar user={this.props.user}/>
