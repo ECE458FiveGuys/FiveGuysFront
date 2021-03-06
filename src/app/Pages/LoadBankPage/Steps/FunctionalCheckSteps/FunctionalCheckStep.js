@@ -6,6 +6,7 @@ export default class FunctionalCheckStep extends React.Component {
 
     constructor(props) {
         super(props);
+        props.markReadyToSubmit()
     }
 
     static onSubmit = (stepperState, token, successCallBack, errorCallBack, stepName) => {
@@ -15,7 +16,6 @@ export default class FunctionalCheckStep extends React.Component {
     render() {
         return (<div style={{flex: 1, display: "flex", flexDirection: "column", alignItems: "center", marginBottom : 30}}>
                 {this.props.functionDescription}
-                <Checkbox onClick={this.props.markReadyToSubmit}/>
             </div>)
     }
 
@@ -24,7 +24,4 @@ export default class FunctionalCheckStep extends React.Component {
 FunctionalCheckStep.propTypes = {
     functionDescription : PropTypes.func.isRequired,
     markReadyToSubmit : PropTypes.func.isRequired
-    // stepperState: PropTypes.object.isRequired,
-    // updateStepperState : PropTypes.func.isRequired,
-    // functionDescription : PropTypes.string.isRequired
 }

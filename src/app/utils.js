@@ -2,8 +2,14 @@ import moment from 'moment'
 
 export const dateColors = {
     RED : "red",
-    YELLOW : "yellow",
+    ORANGE : "orange",
     GREEN : "green"
+}
+
+export const dateIcons = {
+    [dateColors.RED] : "exclamation-triangle",
+    [dateColors.ORANGE] : "exclamation-circle",
+    [dateColors.GREEN] : "calendar-check"
 }
 
 export function parseDate(expirationDateString) {
@@ -15,7 +21,7 @@ export function parseDate(expirationDateString) {
     if (diff < 0) {
         return dateColors.RED
     } else if (diff < 30) {
-        return dateColors.YELLOW
+        return dateColors.ORANGE
     } else {
         return dateColors.GREEN
     }
@@ -26,6 +32,13 @@ export function getCurrentDate() {
     const ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d);
     const mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d);
     const da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d);
-    return `${mo}-${da}-${ye}`
+    return `${ye}-${mo}-${da}`
 }
 
+export let handleNavClick = (url, history) => {
+    if (window.event.ctrlKey) {
+        window.open(url)
+    } else {
+        history.push(url)
+    }
+}

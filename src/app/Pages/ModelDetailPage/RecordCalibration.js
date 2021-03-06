@@ -45,6 +45,11 @@ class RecordCalibration extends Component {
         this.setState({date: this.parseDate(day)})
     }
 
+    handleFileSelect = (e) => {
+        let file = document.getElementById('additionalEvidence').files[0];
+        this.setState({file : file})
+    }
+
     render() {
         return (
             <EditModal
@@ -58,6 +63,7 @@ class RecordCalibration extends Component {
                 isEdit = {false}
                 // selectedDay = {this.state.selectedDay}
                 handleDayClick = {this.handleDayClick}
+                handleFileSelect = {this.handleFileSelect}
             />
         );
     }

@@ -113,7 +113,8 @@ export default class HTPStepper extends React.Component {
     }
 
     renderStepContent = () => {
-        let {activeStep, completed} = this.state
+        let {completeButtonLabel, finishButtonLabel} = this.props
+        let {activeStep} = this.state
         return(<div style={{flex : 1}}>
             {this.allStepsCompleted() ? (
                 <div>
@@ -133,8 +134,8 @@ export default class HTPStepper extends React.Component {
                             disabled={!this.state.readyToSubmit}
                             onSubmit={this.handleComplete}
                             label={activeStep === this.totalSteps() - 1
-                                ? "Finish"
-                                : "Complete Step"}
+                                ? finishButtonLabel
+                                : completeButtonLabel}
                         />
                         {this.state.errorMessage ?
                             <HTPPopup toggleModal={this.toggleModal}
@@ -151,7 +152,7 @@ export default class HTPStepper extends React.Component {
     }
 
     render() {
-        let {stepNames, stepContent} = this.props
+        let {stepNames} = this.props
         let {activeStep, completed} = this.state
         let style = {justifyContent : "center", alignItems: 'center'}
         if (stepNames[activeStep] === StepNames.LOAD_STEPS || this.props.orientation === 'vertical') style["display"] = "flex"
@@ -190,9 +191,13 @@ HTPStepper.propTypes = {
     onStepSubmit : PropTypes.array.isRequired, // an array of functions to be called on the submission of each step
     orientation : PropTypes.string, // vertical or horizontal
     updateMasterState : PropTypes.func, // a method to be called to update the parent state
-    onAllStepsComplete : PropTypes.func.isRequired
+    onAllStepsComplete : PropTypes.func.isRequired,
+    completeButtonLabel : PropTypes.string,
+    finishButtonLabel : PropTypes.string
 }
 
 HTPStepper.defaultProps = {
-    orientation : 'horizontal'
+    orientation : 'horizontal',
+    completeButtonLabel : "Complete Step",
+    finishButtonLabel : "Finish"
 }

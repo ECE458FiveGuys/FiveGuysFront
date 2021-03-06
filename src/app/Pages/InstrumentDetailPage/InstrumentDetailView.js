@@ -7,53 +7,46 @@ import DataTable from "../../Common/Tables/DataTable";
 import TableColumns from "../MainPage/InventoryTables/Columns";
 import ModelFields from "../../../utils/enums";
 import DeleteModal from "../ModelDetailPage/DeleteModal";
-import ModelRequests from "../../../controller/requests/model_requests";
-import MiscellaneousRequests from "../../../controller/requests/miscellaneous_requests";
 import RecordCalibration from "../ModelDetailPage/RecordCalibration";
+import {EquipmentModel, Instrument} from "../../../utils/ModelEnums";
+import {handleNavClick} from "../../utils";
+import {MDBBadge, MDBIcon} from "mdbreact";
+import HTPNavBar from "../../Common/HTPNavBar";
+import ModelDisplay from "../../Common/HTPModelDisplay";
+import HTPButton from "../../Common/HTPButton";
+import {Divider} from "@material-ui/core";
 
 class InstrumentDetailView extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            // instrument: undefined,
-            // calibrations: [],
-            // serial_number: undefined,
-            // comment: undefined,
-            // deleteModalShow: false,
-            // editModelShow: false
-        }
-    }
-
-    // getModelNumbers(models){
-    //     let model_numbers = []
-    //     for(var model in models) {
-    //         model_numbers.concat(model.model_number)
-    //     }
-    //     return model_numbers
-    // }
+        this.state = {}
+    }s
 
      componentDidMount() {
-        let thing = this.state
         let retrieveInstrumentCallback = (instrument) => {
-            let calibrations = instrument['calibration_history']
+            let calibrations = this.enhanceCalibrationData(instrument['calibration_history'])
             this.setState({calibrations : calibrations, instrument : instrument, model: instrument.model,
                 serial_number : instrument["serial_number"], comment : instrument["comment"]});
         }
         let retrieveInstrumentError = (e) => {
             alert("RETRIEVE"+e)
         }
-        // let all_models = ModelRequests.getModels()
-        // var all_model_numbers = this.getModelNumbers(all_models)
         InstrumentRequests.retrieveInstrument(this.props.token, this.props.id, retrieveInstrumentCallback,retrieveInstrumentError);//
     }
 
-    // loadModelNumbers () {
-    //     let getNumbersCallBack = (json) => {
-    //         this.setState({vendors: json})
-    //     }
-    //     MiscellaneousRequests.getModelNumbers(this.props.token, this.state.model[ModelFields.EquipmentModelFields.VENDOR], getNumbersCallBack)
-    // }
+    enhanceCalibrationData = (calibrations) => {
+        return calibrations.map(calibration => {
+            calibration[ModelFields.CalibrationFields.AdditionalFile] = (
+                calibration[ModelFields.CalibrationFields.AdditionalFile] ?
+                <a target="_blank" href={calibration[ModelFields.CalibrationFields.AdditionalFile]}>
+                    <MDBIcon size={"2x"}
+                             icon="file-alt" />
+                </a> : calibration[ModelFields.CalibrationFields.LoadBankFile] ? "Calibrated using the load bank wizard" : false
+                )
+            return calibration
+        })
+    }
 
     setDeleteModalShow(boolean) {
         this.setState({deleteModalShow:boolean})
@@ -72,7 +65,6 @@ class InstrumentDetailView extends Component {
         let {serial_number,comment} = this.state
         let instrument = this.state.instrument
         let editCallback = (response) => {
-            // console.log(response)
             var temp_instrument = {...this.state.instrument}
             for (var field in ModelFields.InstrumentEditFields) {
                 temp_instrument[ModelFields.InstrumentEditFields[field]] = this.state[ModelFields.InstrumentEditFields[field]]
@@ -89,7 +81,6 @@ class InstrumentDetailView extends Component {
     handleFormChange = (e) => {
         let name = e.target.name;
         let value = e.target.value;
-        console.log({[name]: value})
         this.setState({[name]: value})
     }
 
@@ -104,70 +95,197 @@ class InstrumentDetailView extends Component {
         InstrumentRequests.deleteInstruments(this.props.token, this.props.id, deleteInstrumentCallback,deleteInstrumentError);
     }
 
+    instrumentCalibratable = () => {
+        return this.state.instrument.model[EquipmentModel.FIELDS.CALIBRATION_MODE] != ModelFields.CalibrationModes.NOT_CALIBRATABLE
+    }
+
+    renderCalibrationButtons = () => {
+        let {instrument} = this.state
+        let model = instrument.model
+        return (
+            [this.instrumentCalibratable() && model[EquipmentModel.FIELDS.CALIBRATION_MODE] == ModelFields.CalibrationModes.LOAD_BANK ?
+            <HTPButton
+                label={"Calibrate with Load Bank Wizard"}
+                onSubmit={() => {
+                    handleNavClick("/load-bank/" + instrument.pk, this.props.history)
+                }}/> : <div/>,
+            this.instrumentCalibratable() ?
+                <HTPButton
+                    label={"Record Simple Calibration"}
+                    onSubmit={() => {
+                        this.setCalibrationModalShow(true)
+                    }}/> : <div/>])
+    }
+
+    renderCalibrationCertificateButton = () => {
+        let {instrument} = this.state
+        let model = instrument.model
+        return (this.instrumentCalibratable()) ?
+            <Button onClick={() => {
+                if (model[EquipmentModel.FIELDS.CALIBRATION_MODE] == ModelFields.CalibrationModes.LOAD_BANK) {
+                    handleNavClick("/load-bank/" + instrument.pk, this.props.history)
+                } else {
+                    this.setCalibrationModalShow(true)
+                }
+            }}>
+                Download Calibration Certificate
+            </Button> : <div></div>
+    }
+
+
     render() {
-        if(this.state.instrument) {
+        let {instrument} = this.state
+        if (instrument) {
             return (
                 <div>
-                    <h1>Instrument Details</h1>
-                    <Button variant="primary" onClick={() => this.setEditModalShow(true)}>
-                        Edit
-                    </Button>
-                    <EditModal
-                        show={this.state.editModalShow}
-                        onHide={() => this.setEditModalShow(false)}
-                        token={this.props.token}
-                        submitMethod={this.handleSubmit}
-                        subject={this.state.instrument}
-                        fields={ModelFields.InstrumentEditFields}
-                        title={"Edit Instrument " + this.state.instrument.serial_number}
-                        handleFormChange={this.handleFormChange}
-                        isEdit = {true}
-                    />
-                    <Button variant="primary" onClick={() => this.setDeleteModalShow(true)}>
-                        Delete
-                    </Button>
-                    <DeleteModal
-                        show={this.state.deleteModalShow}
-                        onHide={() => this.setDeleteModalShow(false)}
-                        token = {this.props.token}
-                        deleteMethod = {this.deleteInstrument}
-                        message={"Are you sure you wat to remove instrument "+this.state.instrument.serial_number+"?"}
+                    <HTPNavBar user={this.props.user}></HTPNavBar>
+                <div style={{flex : 1, display : "flex", flexDirection : "column", justifyContent : 'space-evenly', alignItems : 'center', marginLeft : 100, marginRight : 100}}>
+                    <h1 style={{marginTop : 20}}
+                        className={"h1-responsive"}>
+                        Instrument Details
+                    </h1>
+                    <Divider orientation={'horizontal'} flexItem={true}/>
+                    <div style={{flex : 1, display : "flex", flexDirection : "row", justifyContent : 'space-between'}}>
+                        <div style={{flex : 1, display : "flex", flexDirection : "column"}}>
+                            <h1 style={{marginTop : 20, marginBottom : 20}}
+                                className={"h5-responsive"}>
+                                {`You are looking at the instrument with the following properties:`}
+                            </h1>
+                            {ModelDisplay(
+                                ["Serial Number", "Asset Tag", "Most Recent Calibration"],
+                                [
+                                    instrument[ModelFields.InstrumentFields.SERIAL_NUMBER],
+                                    instrument[ModelFields.InstrumentFields.ASSET_TAG],
+                                    instrument[ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION],
+                                ])}
+                            <h1 style={{marginTop : 20}}
+                                className={"h5-responsive"}>
+                                Categories:
+                            </h1>
+                            <div>
+                                {instrument[ModelFields.InstrumentFields.MODEL][EquipmentModel.FIELDS.MODEL_CATEGORIES].map(category => {
+                                    return <MDBBadge color="green"
+                                                     pill>
+                                                {category.name}
+                                            </MDBBadge>
+                                })}
+                            </div>
+                            <h1 style={{marginTop : 20}}
+                                className={"h5-responsive"}>
+                                Model Description:
+                            </h1>
+                            <text>{instrument.model[EquipmentModel.FIELDS.DESCRIPTION]}</text>
+                        </div>
+                        <Divider style={{marginRight : 30, marginLeft : 30}}
+                                    orientation={"vertical"}
+                                    flexItem={true}/>
+                        <div style={{flex : 1, display : "flex", flexDirection : "column"}}>
+                            <div style={{flex : 1, display : "flex", flexDirection : "column"}}>
+                                <h1 style={{marginTop : 20, marginBottom : 20}}
+                                    className={"h5-responsive"}>
+                                    {`This instrument is an instance of the model with the following properties:`}
+                                </h1>
+                                <div style={{flex : 1, display : "flex", flexDirection : "row", alignItems : 'center', justifyContent : 'space-between'}}>
+                                    {ModelDisplay(
+                                        ["Model Number", "Vendor"],
+                                        [
+                                            instrument[ModelFields.InstrumentFields.MODEL][ModelFields.EquipmentModelFields.MODEL_NUMBER],
+                                            instrument[ModelFields.InstrumentFields.MODEL][ModelFields.EquipmentModelFields.VENDOR],
+                                        ])}
+                                        <div style={{flex : 1, display : "flex", justifyContent : "center", alignItems : 'center'}}>
+                                            <HTPButton onSubmit={() => this.props.history.push('/models/' + instrument.model.pk)}
+                                                       label={"Go to Model"}/>
+                                        </div>
+                                </div>
+                                <h1 style={{marginTop : 20}}
+                                    className={"h5-responsive"}>
+                                    Categories:
+                                </h1>
+                                <div>
+                                    {instrument[ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES].map(category => {
+                                        return <MDBBadge color="green"
+                                                         pill>
+                                            {category.name}
+                                        </MDBBadge>
+                                    })}
+                                </div>
+                                <h1 style={{marginTop : 20}}
+                                    className={"h5-responsive"}>
+                                    Comment:
+                                </h1>
+                                <text>{instrument[EquipmentModel.FIELDS.COMMENT]}</text>
+                            </div>
 
-                    />
-                    <Button onClick={() => this.setCalibrationModalShow(true)}>
-                        Record Calibration
-                    </Button>
-                    <Button>
-                        Download Calibration Certificate
-                    </Button>
-                    <RecordCalibration
-                        show={this.state.calibrationModalShow}
-                        onHide={()=>this.setCalibrationModalShow(false)}
-                        token={this.props.token}
-                        subject={this.state.instrument}
-                        closeModal={()=>this.setCalibrationModalShow(false)}
-                        // message={"Are you sure you wat to remove instrument "+this.state.instrument.serial_number+"?"}
-                    />
-                    <ul>
-                        <li>
-                            Model:
-                            <a
-                                href={"/models/"+this.state.instrument.model.pk}
-                            >
-                                {this.state.instrument.model.model_number}
-                            </a>
-                        </li>
-                        <li>
-                            Serial Number: {this.state.instrument.serial_number}
-                        </li>
-                        <li>
-                            Comment: {this.state.instrument.comment}
-                        </li>
-                    </ul>
-                    {/*<ErrorBoundary>*/}
-                        <DataTable columns={TableColumns.CALIBRATION_COLUMNS} token={this.props.token}
+                        </div>
+                        <Divider style={{marginRight : 30, marginLeft : 30}}
+                                 orientation={"vertical"}
+                                 flexItem={true}/>
+                        <div style={{flex : .6, display : "flex", flexDirection : "column", justifyContent : 'center', alignItems : 'center'}}>
+                            <h1 style={{marginTop : 20}}
+                                className={"h3-responsive"}>
+                                Actions
+                            </h1>
+                            <h1 style={{marginTop : 20, marginBottom : 20, textAlign : 'center'}}
+                                className={"h5-responsive"}>
+                                {`As an admin, you may do the following:`}
+                            </h1>
+                            <div>
+                                <Button variant="green" onClick={() => this.setEditModalShow(true)}>
+                                    Edit
+                                </Button>
+                                <Button variant="red" onClick={() => this.setDeleteModalShow(true)}>
+                                    Delete
+                                </Button>
+                            </div>
+                            <EditModal
+                                show={this.state.editModalShow}
+                                onHide={() => this.setEditModalShow(false)}
+                                token={this.props.token}
+                                submitMethod={this.handleSubmit}
+                                subject={this.state.instrument}
+                                fields={ModelFields.InstrumentEditFields}
+                                title={"Edit Instrument " + this.state.instrument.serial_number}
+                                handleFormChange={this.handleFormChange}
+                                isEdit = {true}
+                            />
+                            <DeleteModal
+                                show={this.state.deleteModalShow}
+                                onHide={() => this.setDeleteModalShow(false)}
+                                token = {this.props.token}
+                                deleteMethod = {this.deleteInstrument}
+                                message={"Are you sure you wat to remove instrument "+this.state.instrument.serial_number+"?"}
+                            />
+                        </div>
+                    </div>
+                </div>
+                    <div style={{marginLeft : 100, marginRight : 100, marginTop : 20}}>
+                        <Divider style={{marginTop : 30, marginBottom : 30}}
+                                 orientation={"horizontal"}/>
+                        <h1 style={{alignSelf : 'center', justifySelf : 'center', textAlign : "center"}}
+                            className={"h2-responsive"}>
+                            Calibration
+                        </h1>
+                        <h1 style={{alignSelf : 'center', justifySelf : 'center', textAlign : "center"}}
+                            className={"h5-responsive"}>
+                            You must calibrate this instrument frequently!
+                        </h1>
+                        <div style={{display : 'flex', justifyContent : 'space-between'}}>
+                            <div>
+                                {this.renderCalibrationButtons()}
+                            </div>
+                            {this.renderCalibrationCertificateButton()}
+                        </div>
+                        <RecordCalibration
+                            show={this.state.calibrationModalShow}
+                            onHide={()=>this.setCalibrationModalShow(false)}
+                            token={this.props.token}
+                            subject={this.state.instrument}
+                            closeModal={()=>this.setCalibrationModalShow(false)}
+                            // message={"Are you sure you wat to remove instrument "+this.state.instrument.serial_number+"?"}
+                        />
+                        <DataTable columns={TableColumns.CALIBRATION_COLUMNS}
                                    rows={this.state.calibrations}/>
-                    {/*</ErrorBoundary>*/}
+                    </div>
                 </div>
 
 

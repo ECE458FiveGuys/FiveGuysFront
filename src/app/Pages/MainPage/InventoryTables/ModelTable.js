@@ -3,7 +3,7 @@ import TableColumns from "./Columns";
 import InventoryTable from "./InventoryTable";
 import ModelFields from "../../../../utils/enums";
 import ModelRequests from "../../../../controller/requests/model_requests";
-import {newTab} from "../../../utils";
+import {handleNavClick, newTab} from "../../../utils";
 import TableUtils from "./TableUtils";
 
 export default class ModelTable extends Component {
@@ -23,7 +23,7 @@ export default class ModelTable extends Component {
 
             result[ModelFields.EquipmentModelFields.MODEL_CATEGORIES] =
                 TableUtils.categoriesToString(result[ModelFields.EquipmentModelFields.MODEL_CATEGORIES])
-            result.clickEvent = () => this.props.history.push("/models/" + model_pk)
+            result.clickEvent = () => {handleNavClick("/models/" + model_pk, this.props.history)}
         })
         return results
     }
