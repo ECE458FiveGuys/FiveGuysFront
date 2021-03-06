@@ -41,7 +41,6 @@ class CreateModel extends Component {
                 return response.text()})
             .then(json => {
                 let results = ErrorParser.parseCategories(json)
-                console.log(results)
                 this.setState({'categories':results})
             })
             .catch((error) => {
@@ -50,11 +49,6 @@ class CreateModel extends Component {
             });
     }
 
-    toggleModal = () => {
-        this.setState({
-            modal: !this.state.modal
-        });
-    }
 
     loadVendors() {
         let getVendorsCallBack = (json) => {
@@ -141,9 +135,14 @@ class CreateModel extends Component {
         this.setState(newState)
     }
 
+    toggleModal = () => {
+        this.setState({
+            modal: !this.state.modal
+        });
+    }
+
     getDisplayMessage = () => {
         let displayMessage = this.state.displayMessage
-        console.log(displayMessage)
         return (<div>
             <ol>
                 {displayMessage.map(function(name, index){
