@@ -5,6 +5,7 @@ import {MDBBadge, MDBContainer, MDBListGroup, MDBListGroupItem} from "mdbreact";
 import ModelFields from "../../../../utils/enums";
 import InstrumentRequests from "../../../../controller/requests/instrument_requests";
 import Loading from "../../../Common/Images/Loading";
+import ModelDisplay from "../../../Common/HTPModelDisplay";
 
 export default class VisualCheckStep extends React.Component {
 
@@ -22,26 +23,6 @@ export default class VisualCheckStep extends React.Component {
         )
     }
 
-    renderInstrumentDisplay(listOfFieldNames, listOfFieldValues) {
-        let InstrumentDisplay = []
-        for (let i = 0; i < listOfFieldNames.length; i++) {
-            if (listOfFieldValues[i]) {
-                InstrumentDisplay.push(
-                    <MDBListGroupItem className="d-flex justify-content-between align-items-center">
-                        {listOfFieldNames[i]}
-                        <MDBBadge color="primary"
-                                  pill>
-                            {listOfFieldValues[i]}
-                        </MDBBadge>
-                    </MDBListGroupItem>
-                )
-            }
-        }
-        return (<MDBListGroup style={{ width: "22rem" }}>
-                    {InstrumentDisplay}
-                </MDBListGroup>)
-    }
-
     render() {
         let {user} = this.props
         let instrument = this.props.stepperState.instrument
@@ -51,7 +32,7 @@ export default class VisualCheckStep extends React.Component {
                     <p style={{marginTop : 20, marginBottom: 30, justifyContent: "center", alignItems: 'center'}}>
                         To get started, retrieve the load bank with the following properties:
                     </p>
-                    {this.renderInstrumentDisplay(["Model Number", "Serial Number", "Asset Tag", "Most Recent Calibration"],
+                    {ModelDisplay(["Model Number", "Serial Number", "Asset Tag", "Most Recent Calibration"],
                                                     [
                                                         instrument[ModelFields.InstrumentFields.MODEL][ModelFields.EquipmentModelFields.MODEL_NUMBER],
                                                         instrument[ModelFields.InstrumentFields.SERIAL_NUMBER],

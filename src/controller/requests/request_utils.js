@@ -25,14 +25,18 @@ export default class RequestUtils {
                         header={},
                         params=undefined,
                         data= undefined) {
-        header['Content-Type'] = 'application/json';
-        header['Accept'] = 'application/json';
+        if (data && !(data instanceof FormData)) {
+            header['Content-Type'] = 'application/json';
+            header['Accept'] = 'application/json';
+        }
         let init = {
             method: method,
             headers: header,
         }
         if (data) {
-            init.body =  JSON.stringify(data)
+            init.body =  data instanceof FormData?
+                data :
+                JSON.stringify(data)
         }
 
         fetch(url + RequestUtils.applyRequestParamSuffix(params), init)

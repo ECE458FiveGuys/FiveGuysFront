@@ -113,6 +113,12 @@ export default class TableColumns {
             field: 'comment',
             sort: 'asc',
             width: 270
+        },
+        {
+            label: 'Additonal Evidence',
+            field: 'additional_evidence',
+            sort: 'asc',
+            width: 270
         }
     ]
 }

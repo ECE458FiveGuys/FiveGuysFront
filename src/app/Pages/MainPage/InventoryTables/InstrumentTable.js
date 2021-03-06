@@ -1,12 +1,13 @@
-import {Component} from "react";
+import React, {Component} from "react";
 import TableColumns from "./Columns";
 import InventoryTable from "./InventoryTable";
 import ModelFields from "../../../../utils/enums";
 import ModelRequests from "../../../../controller/requests/model_requests";
 import InstrumentRequests from "../../../../controller/requests/instrument_requests";
-import {dateColors, newTab, parseDate} from "../../../utils";
+import {dateColors, dateIcons, handleNavClick, parseDate} from "../../../utils";
 import {InstrumentTableLegend} from "../Widgets/Legend";
 import TableUtils from "./TableUtils";
+import {MDBIcon} from "mdbreact";
 
 export default class InstrumentTable extends Component {
 
@@ -17,7 +18,9 @@ export default class InstrumentTable extends Component {
     createCalibrationExpirationElement(dateString, color) {
         return (<div style={{flex: 1, flexDirection: "row", display: "inline-block"}}>
                     <text>{dateString}</text>
-                    <div style={{marginLeft: 20, background: color, width: 20, height: 20, display: "inline-block"}}></div>
+                    <MDBIcon style={{marginLeft: 20, color: color}}
+                             size={"2x"}
+                             icon={dateIcons[color]}/>
                 </div>)
     }
 
@@ -43,7 +46,7 @@ export default class InstrumentTable extends Component {
                 TableUtils.categoriesToString(result[ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES])
             model[ModelFields.EquipmentModelFields.MODEL_CATEGORIES] =
                 TableUtils.categoriesToString(model[ModelFields.EquipmentModelFields.MODEL_CATEGORIES])
-            result.clickEvent = () => this.props.history.push("/instruments/" + instrument_pk)
+            result.clickEvent = () => handleNavClick("/instruments/" + instrument_pk, this.props.history)
             Object.assign(result, model)
         })
         return results

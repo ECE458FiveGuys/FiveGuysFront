@@ -5,6 +5,13 @@ export const FunctionCheckStepNames = {
     PRINTER_FUNCTIONAL : "Printer"
 }
 
+export const AllFunctionCheckStepNames = {
+    ...FunctionCheckStepNames,
+    ...{
+        COMMENT : "Comment"
+    }
+}
+
 export const FunctionCheckDescriptions = {
     [FunctionCheckStepNames.LOW_VOLTAGE_SHUTDOWN] : "Lower dc source voltage to check if the load bank automatically shuts down on low voltage",
     [FunctionCheckStepNames.LEAD_BUZZER] : "Lift the cell voltage lead to check if audible buzzer activates",

@@ -10,11 +10,38 @@ import {Header} from "semantic-ui-react";
 import VisualCheckStep from "./Steps/VisualCheckStep";
 import FunctionalChecksStep from "./Steps/FunctionalChecksStep";
 import {onCalibrationSuccess, writeLoadBankTableData} from "./LoadBankDataWriter";
+import CalibrationRequests from "../../../controller/requests/calibration_requests";
+import {getCurrentDate} from "../../utils";
 
 export default class LoadBankMain extends React.Component {
 
     constructor(props) {
         super(props);
+    }
+
+    onCalibrationSuccess = (stepperState, errorCallBack) => {
+            let {user, token, instrumentId} = this.props
+            let loadBankTableData = writeLoadBankTableData(stepperState.instrument,
+                stepperState.meters[MeterInitStep.VOLTMETER],
+                stepperState.meters[MeterInitStep.SHUNT_METER],
+                user,
+                stepperState.recordedCurrents,
+                stepperState.recordedVoltage,
+            )
+            let successCallback = () => {
+                this.props.history.push("/instruments/" + instrumentId)
+            }
+            // onCalibrationSuccess(loadBankTableData)
+            CalibrationRequests.recordCalibration(token,
+                                                  stepperState.instrument.pk,
+                                                    getCurrentDate(),
+                                                    user.id,
+                                                    stepperState.comment,
+                                                    undefined,
+                                                    loadBankTableData,
+                                                    successCallback,
+                                                    errorCallBack
+                                                    )
     }
 
     render() {
@@ -47,18 +74,10 @@ export default class LoadBankMain extends React.Component {
                             (stepperState, successCallBack, errorMessageCallBack) =>
                                 {MeterInitStep.onSubmit(stepperState, token, successCallBack, errorMessageCallBack)},
                             (stepperState, successCallBack) => {successCallBack()},
-                             (stepperState, successCallBack, errorMessageCallBack) =>
-                             {let loadBankTableData = writeLoadBankTableData(stepperState.instrument,
-                                                   stepperState.meters[MeterInitStep.VOLTMETER],
-                                                    stepperState.meters[MeterInitStep.SHUNT_METER],
-                                                    this.props.user,
-                                                    stepperState.recordedCurrents,
-                                                    stepperState.recordedVoltage,
-                                                    )
-                             onCalibrationSuccess(loadBankTableData)
+                             (stepperState, successCallBack, errorCallBack) => {
+                                this.onCalibrationSuccess(stepperState, errorCallBack)
                              }
                              ]
-
         return (
             <div>
                 <NavBar user={this.props.user}/>
@@ -71,6 +90,7 @@ export default class LoadBankMain extends React.Component {
                         stepNames={StepNameList}
                         stepContent={StepContentBuilders}
                         onStepSubmit={onStepSubmitFunctions}
+                        finishButtonLabel={"Save Calibration Record"}
             />
             </div>
         )

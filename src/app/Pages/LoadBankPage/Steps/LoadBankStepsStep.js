@@ -126,6 +126,8 @@ export default class LoadBankStepsStep extends React.Component {
                         updateMasterState={(stepperState) => {
                                 this.props.updateStepperState(stepperState)  // when all currents have been recorded in this step, add them all to the outer stepper state
                             }}
+                        completeButtonLabel={"Record"}
+                        finishButtonLabel={"Finish Recordings"}
             />
             <HTPPopup isOpen={this.state.modal}
                       toggleModal={this.toggleModal}

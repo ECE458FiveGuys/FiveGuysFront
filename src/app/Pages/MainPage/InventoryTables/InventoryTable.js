@@ -55,13 +55,10 @@ class InventoryTable extends Component {
         let {token, searchFields} = this.props
         // categoryType = model_categories or instrument_categories
         let getCategoriesCallBack = (categoryType) => (json) => {
-            let newState = {}
-            let categories = []
-            json.forEach(category => {
-                categories.push(category[ModelFields.CategoryFields.NAME])
+            let categories = json.map(category => {
+                return category[ModelFields.CategoryFields.NAME]
             })
-            newState[categoryType] = categories
-            this.setState(newState)
+            this.setState({[categoryType] : categories})
         }
         MiscellaneousRequests.getCategories(token,
             searchFields == EquipmentModel.SEARCH_FIELDS ? EquipmentModel.TYPE : Instrument.TYPE,

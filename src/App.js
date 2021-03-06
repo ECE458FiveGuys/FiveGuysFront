@@ -71,7 +71,7 @@ class App extends Component {
           <BrowserRouter>
             <Switch>
               <Route exact path="/"
-                    render={(props) => <MainView history = {props.history}
+                    render={(props) => <MainView history={props.history}
                                                  token={this.state.token}
                                                  user={this.state.user}/>}>
               </Route>
@@ -82,6 +82,7 @@ class App extends Component {
               </Route>
               <Route  path="/instruments/:id"
                       render={(props) => (<InstrumentDetailView id={props.match.params.id}
+                                                                history={props.history}
                                                            token={this.state.token}
                                                            user={this.state.user}/>)} >
               </Route>
@@ -95,9 +96,10 @@ class App extends Component {
               </Route>
 
               <Route path="/load-bank/:id"
-                     render = {(props) => (<LoadBankMain token={this.state.token}
-                              instrumentId={props.match.params.id}
-                              user={this.state.user}/>)}>
+                     render = {(props) => (<LoadBankMain  instrumentId={props.match.params.id}
+                                                          history={props.history}
+                                                          user={this.state.user}
+                                                          token={this.state.token}/>)}>
               </Route>
               <Route path="/create-model/">
                 <CreateModel token={this.state.token}
