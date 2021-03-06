@@ -9,7 +9,6 @@ import NavBar from "../../Common/HTPNavBar";
 import {Header} from "semantic-ui-react";
 import VisualCheckStep from "./Steps/VisualCheckStep";
 import FunctionalChecksStep from "./Steps/FunctionalChecksStep";
-import {writeLoadBankTableData} from "./LoadBankDataWriter";
 import CalibrationRequests from "../../../controller/requests/calibration_requests";
 import {getCurrentDate} from "../../utils";
 
@@ -21,13 +20,10 @@ export default class LoadBankMain extends React.Component {
 
     onCalibrationSuccess = (stepperState, errorCallBack) => {
             let {user, token, instrumentId} = this.props
-            let loadBankTableData = writeLoadBankTableData(stepperState.instrument,
-                stepperState.meters[MeterInitStep.VOLTMETER],
-                stepperState.meters[MeterInitStep.SHUNT_METER],
-                user,
-                stepperState.recordedCurrents,
-                stepperState.recordedVoltage,
-            )
+            let loadBankTableData = {
+                ...stepperState.meters,
+                ...(({ recordedCurrents, recordedVoltage }) => ({ recordedCurrents, recordedVoltage }))(stepperState)
+            }
             let successCallback = () => {
                 this.props.history.push("/instruments/" + instrumentId)
             }

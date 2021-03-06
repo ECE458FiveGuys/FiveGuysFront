@@ -1,6 +1,4 @@
-import jsPDF from "jspdf";
-import ModelFields from "../../../utils/enums";
-import {getCurrentDate} from "../../utils";
+
 import {IdealCurrents} from "./Steps/LoadBankStepSteps/step_utils";
 import 'jspdf-autotable'
 import {EquipmentModel, Instrument} from "../../../utils/ModelEnums";

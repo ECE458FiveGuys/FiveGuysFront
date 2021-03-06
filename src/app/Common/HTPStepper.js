@@ -89,7 +89,8 @@ export default class HTPStepper extends React.Component {
 
     handleReset = () => {
         this.setActiveStep(0);
-        this.setState({completed : {}, stepperState: {}, readyToSubmit : false});
+        this.setState({completed : {}, stepperState: {reset : true}, readyToSubmit : false},
+            () => this.setState({stepperState : {...this.state.stepperState, ...{reset : false}}}))
     };
 
     submitSuccessCallBack = () => {
