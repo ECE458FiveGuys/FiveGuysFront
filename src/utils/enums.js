@@ -11,7 +11,8 @@ export default class ModelFields {
         ACTIVITY : "is_active",
         ID : "id",
         USERNAME : "username",
-        IS_STAFF : "is_staff"
+        IS_STAFF : "is_staff",
+        USER_CATEGORIES: "user_categories"
     }
 
     static EquipmentModelFields = {

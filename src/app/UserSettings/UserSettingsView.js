@@ -1,6 +1,7 @@
-import {Component} from "react";
+import React, {Component} from "react";
 import {MDBContainer} from "mdbreact";
 import UserSettingsPage from "./Widgets/UserSettingsPage";
+import NavBar from "../Common/NavBar";
 
 class UserSettingsView extends Component{
 
@@ -8,9 +9,15 @@ class UserSettingsView extends Component{
 
     render() {
         return(
-            <MDBContainer>
-                <UserSettingsPage token={this.props.token}/>
-            </MDBContainer>
+            <div>
+                <NavBar user={this.props.user}/>
+                <MDBContainer>
+                    <UserSettingsPage
+                        user={this.props.user}
+                        token={this.props.token}
+                    />
+                </MDBContainer>
+            </div>
         )
     }
 }

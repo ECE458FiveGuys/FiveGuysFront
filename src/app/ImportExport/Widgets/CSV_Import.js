@@ -137,7 +137,7 @@ class CSV_Import extends Component{
                     </HTPButton>
                     <a href="/documentation">
                         <HTPButton
-                            label="Import Documentation">
+                            label="?">
                         </HTPButton>
                     </a>
                 </MDBRow>

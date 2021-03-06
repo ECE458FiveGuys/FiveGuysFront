@@ -13,6 +13,7 @@ import CategoryTabView from "./app/Pages/CategoryPage/CategoryTabView";
 import LoadBankMain from "./app/Pages/LoadBankPage/LoadBankMain";
 import OAuthRedirect from "./auth/OAuthRedirect";
 import ImportDocumentation from "./app/ImportExport/Widgets/ImportDocumentation";
+import UserSettingsView from "./app/UserSettings/UserSettingsView";
 
 class App extends Component {
 
@@ -100,6 +101,12 @@ class App extends Component {
               <Route path="/documentation">
                 <ImportDocumentation token={this.state.token}
                                   user={this.state.user}/>
+              </Route>
+              <Route path="/user-settings">
+                <UserSettingsView
+                  token={this.state.token}
+                  user={this.state.user}
+                />
               </Route>
 
               <Route>
