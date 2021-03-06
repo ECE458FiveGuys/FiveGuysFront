@@ -17,7 +17,7 @@ export default class ErrorParser {
             }
             else if (json.substring(i, i+1)==',') {
                 if (json.substring(i+1, i+2)==' '){
-                    resultingArray.push(resultingString + json.substring(i))
+                    resultingArray.push(resultingString + json.substring(i, json.length-3))
                     resultingString = ''
                 }
                 else {
