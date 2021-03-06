@@ -26,6 +26,21 @@ export default class ErrorParser {
         }
         return resultingString
     }
-}
 
-//{"vendor":["This field may not be blank."],"model_number":["This field may not be blank."],"description":["This field may not be blank."],"calibration_frequency":["A valid integer is required."]}
+    static parseCategories(json){
+        let resultingArray = []
+
+        let indexOfName = 0
+        let indexOfEnd = 0
+        for (let i=0; i<10; i++){
+            while (json.indexOf("name")!=-1){
+                indexOfName = json.indexOf('"name"')
+                json = json.substring(indexOfName+6)
+                indexOfEnd = json.indexOf("}")
+                resultingArray.push(json.substring(2,indexOfEnd-1))
+                json = json.substring(indexOfEnd)
+            }
+        }
+        return resultingArray
+    }
+}

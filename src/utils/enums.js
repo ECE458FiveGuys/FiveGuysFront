@@ -22,7 +22,8 @@ export default class ModelFields {
         PK: "pk",
         COMMENT: "comment",
         CALIBRATION_FREQUENCY: "calibration_frequency",
-        MODEL_CATEGORIES: "model_categories"
+        MODEL_CATEGORIES: "model_categories",
+        CALIBRATION_MODE: "calibration_mode"
     }
 
     static EquipmentModelSearchFields = {
@@ -85,7 +86,8 @@ export default class ModelFields {
         "Instrument": "instrument",
         "Date" : "date",
         "Comment" : "comment",
-        "File" : "file"
+        "LoadBankFile" : "load_bank_data",
+        "AdditionalFile" : "additional_evidence"
     }
 
     static CalibrationFormFields = {
@@ -94,4 +96,9 @@ export default class ModelFields {
         "File" : "file"
     }
 
+    static CalibrationModes = {
+        NOT_CALIBRATABLE : "NOT_CALIBRATABLE",
+        DEFAULT : "DEFAULT",
+        LOAD_BANK : "LOAD_BANK"
+    }
 }

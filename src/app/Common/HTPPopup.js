@@ -29,12 +29,13 @@ export default class HTPPopup extends Component {
 HTPPopup.propTypes = {
     isOpen : PropTypes.bool.isRequired,
     toggleModal : PropTypes.func.isRequired,
-    className : PropTypes.string.isRequired,
+    className : PropTypes.string,
     title : PropTypes.string.isRequired,
     message : PropTypes.string.isRequired,
     additionalButtons : PropTypes.element
 }
 
 HTPPopup.defaultProps = {
-    additionalButtons : <div/>
+    additionalButtons : <div/>,
+    className : "text-info"
 }

@@ -1,7 +1,8 @@
 import React from "react";
 import HTPInput from "../../../../Common/Inputs/HTPInput";
 import PropTypes from "prop-types";
-import {IdealCurrents, isNumeric, percentErrorGreaterThan} from "./step_utils";
+import {IdealCurrents, percentErrorGreaterThan} from "./step_utils";
+import {isNumeric} from "../../utils";
 
 export default class LoadBankCurrentStep extends React.Component {
 

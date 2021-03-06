@@ -5,6 +5,7 @@ import ModelFields from "../../../../utils/enums";
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import HTPAutoCompleteInput from "../../../Common/Inputs/HTPAutoCompleteInput";
 import HTPInput from "../../../Common/Inputs/HTPInput";
+import {EquipmentModel, Instrument, Models} from "../../../../utils/ModelEnums";
 
 let SEARCH_FIELD_COLS = 8
 
@@ -17,6 +18,10 @@ export default class SearchHeader extends Component {
             searchFieldValues: {}
         }
         this.updateSearchFields = this.updateSearchFields.bind(this)
+    }
+
+    getTableType = () => {
+        return this.props.searchFields == EquipmentModel.SEARCH_FIELDS ? EquipmentModel.TYPE : Instrument.TYPE
     }
 
     updateSearchFields = (searchFieldName) => (value) => {
@@ -78,10 +83,12 @@ export default class SearchHeader extends Component {
                 </MDBCol>
         )
 
+        let type = this.getTableType() == ModelFields.ModelTypes.EQUIPMENT_MODEL ? "Models" : "Instruments"
+
         return(
             <MDBContainer style={{marginLeft: -15, display: "inline"}}>
                 <header className={"h5-responsive"} style={{marginTop: 10, marginBottom: 10}}>
-                    Search Your Inventory
+                    {`Search Your ${type}`}
                 </header>
                 <MDBRow>
                     {Rows}

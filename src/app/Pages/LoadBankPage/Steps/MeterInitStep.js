@@ -6,8 +6,14 @@ import InstrumentRequests from "../../../../controller/requests/instrument_reque
 import ModelFields from "../../../../utils/enums";
 import {dateColors, parseDate} from "../../../utils";
 import {UserError} from "../../../../controller/exceptions";
+import {EquipmentModel, Instrument} from "../../../../utils/ModelEnums";
+import {isNumeric} from "../utils";
+
 
 export default class MeterInitStep extends React.Component {
+
+    static VOLTMETER = "voltmeter"
+    static SHUNT_METER = "shuntMeter"
 
     constructor(props) {
         super(props);
@@ -16,36 +22,68 @@ export default class MeterInitStep extends React.Component {
         }
     }
 
-    static getInstrument = (token, assetTag, modelNumber, meterType, successCallBack, errorCallBack) => {
+    static getInstrument = (token, modelNumber, assetTag, meterType, successCallBack, errorCallBack) => {
+        if (!isNumeric(assetTag)) {
+            errorCallBack(`${meterType} asset tag number must be numeric.`)
+            return
+        }
         InstrumentRequests.getInstruments(token,
             (json) => {
                 if (!json[0]) {
                     throw new UserError(`No such ${meterType} exists.`)
                 }
-                let mostRecentCalibration = json[0][ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION]
+                let mostRecentCalibration = json[0][ModelFields.InstrumentFields.EXPIRATION_DATE]
                 if (mostRecentCalibration === "Noncalibratable") {
                     throw new UserError(`This ${meterType} is marked as noncalibratable.`)
                 }
-                if (parseDate(mostRecentCalibration) != dateColors.RED) {
+                if (parseDate(mostRecentCalibration) == dateColors.RED) {
                     throw new UserError(`The calibration for this ${meterType} has expired.`)
-                } else {
-                    successCallBack()
                 }
+                successCallBack(json[0])
             },
             (errorMessage) => errorCallBack(errorMessage),
             undefined,
-            assetTag,
+            parseInt(assetTag),
             undefined,
             modelNumber)
     }
 
     static onSubmit = (stepperState, token, successCallBack, errorCallBack) => {
-        this.getInstrument(token, stepperState.voltmeterAssetTag, stepperState.voltmeterModelNum, "voltmeter", successCallBack, errorCallBack)
-        this.getInstrument(token, stepperState.shuntMeterAssetTag, stepperState.shuntMeterModelNum, "shunt meter", successCallBack, errorCallBack)
+        let errorMessages = []
+        let multiErrorCallBack = (errorMessage) => {
+            errorMessages.push(<li>{errorMessage}</li>)
+            callBackLogic()
+        }
+        let instruments = []
+        let multiSuccessCallBack = (instrument) => {
+            instruments.push(instrument)
+            callBackLogic()
+        }
+
+        let callBackLogic = () => {
+            if (instruments.length + errorMessages.length >= 2) {
+                if (errorMessages.length > 0) {
+                    errorCallBack(errorMessages)
+                } else {
+                    successCallBack()
+                }
+            }
+        }
+
+        this.getInstrument(token, stepperState.meters[MeterInitStep.VOLTMETER][EquipmentModel.FIELDS.MODEL_NUMBER],
+            stepperState.meters[MeterInitStep.VOLTMETER][Instrument.FIELDS.ASSET_TAG],
+            "voltmeter", multiSuccessCallBack, multiErrorCallBack)
+        this.getInstrument(token, stepperState.meters[MeterInitStep.SHUNT_METER][EquipmentModel.FIELDS.MODEL_NUMBER],
+            stepperState.meters[MeterInitStep.SHUNT_METER][Instrument.FIELDS.ASSET_TAG],
+            "shunt meter", multiSuccessCallBack, multiErrorCallBack)
     }
 
     shouldEnableSubmit = () => {
-        let {voltmeterModelNum, voltmeterAssetTag, shuntMeterModelNum, shuntMeterAssetTag} = this.props.stepperState
+        let {voltmeter, shuntMeter} = this.props.stepperState.meters
+        let voltmeterModelNum = voltmeter ? voltmeter[EquipmentModel.FIELDS.MODEL_NUMBER] : undefined
+        let shuntMeterModelNum = shuntMeter ? shuntMeter[EquipmentModel.FIELDS.MODEL_NUMBER] : undefined
+        let voltmeterAssetTag = voltmeter ? voltmeter[Instrument.FIELDS.ASSET_TAG] : undefined
+        let shuntMeterAssetTag = shuntMeter ? shuntMeter[Instrument.FIELDS.ASSET_TAG] : undefined
         let {ready} = this.state
         if (voltmeterModelNum && voltmeterAssetTag && shuntMeterModelNum && shuntMeterAssetTag && !ready) {
             this.setState({ready : true}, this.props.markReadyToSubmit)
@@ -54,8 +92,15 @@ export default class MeterInitStep extends React.Component {
         }
     }
 
+    handleChange = (meterType, fieldType, value) => {
+        let {stepperState, updateStepperState} = this.props
+        if (!stepperState.meters) stepperState.meters = {}
+        if (!stepperState.meters[meterType]) stepperState.meters[meterType] = {}
+        stepperState.meters[meterType][fieldType] = value
+        updateStepperState({meters : stepperState.meters}, this.shouldEnableSubmit)
+    }
+
     render() {
-        let {updateStepperState} = this.props
         return (<div style={{flex: 1, display: "flex", flexDirection: "row", width : "100%", alignItems: "center", justifyContent: 'space-between', marginBottom : 30}}>
                     <div style={{display: "inline-flex", flex: 1, width: "100%", flexDirection: "column", alignItems: "center", marginBottom : 30}}>
                         <p  className={"h3-responsive"}
@@ -64,10 +109,10 @@ export default class MeterInitStep extends React.Component {
                         </p>
                         <HTPInput
                                   label={"Voltmeter Model Number"}
-                                  onChange={(value) => updateStepperState({voltmeterModelNum : value}, this.shouldEnableSubmit)}
+                                  onChange={(value) => this.handleChange(MeterInitStep.VOLTMETER, ModelFields.EquipmentModelFields.MODEL_NUMBER, value)}
                                   placeholder={"Model Number"}/>
                         <HTPInput label={"Voltmeter Asset Tag"}
-                                  onChange={(value) => updateStepperState({voltmeterAssetTag : value}, this.shouldEnableSubmit)}
+                                  onChange={(value) => this.handleChange(MeterInitStep.VOLTMETER, ModelFields.InstrumentFields.ASSET_TAG, value)}
                                   placeholder={"Asset Tag"}/>
                     </div>
                     <Divider flexItem={true} orientation={"vertical"}/>
@@ -77,10 +122,10 @@ export default class MeterInitStep extends React.Component {
                             Locate a valid shunt meter:
                         </p>
                         <HTPInput label={"Shunt Meter Model Number"}
-                                  onChange={(value) => updateStepperState({shuntMeterModelNum : value}, this.shouldEnableSubmit)}
+                                  onChange={(value) => this.handleChange(MeterInitStep.SHUNT_METER, ModelFields.EquipmentModelFields.MODEL_NUMBER, value)}
                                   placeholder={"Model Number"}/>
                         <HTPInput label={"Shunt Meter Asset Tag"}
-                                  onChange={(value) => updateStepperState({shuntMeterAssetTag : value}, this.shouldEnableSubmit)}
+                                  onChange={(value) => this.handleChange(MeterInitStep.SHUNT_METER, ModelFields.InstrumentFields.ASSET_TAG, value)}
                                   placeholder={"Asset Tag"}/>
                     </div>
         </div>)

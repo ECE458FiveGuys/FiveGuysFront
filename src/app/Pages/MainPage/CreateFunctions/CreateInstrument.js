@@ -2,24 +2,60 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import SearchHeader from "../Widgets/SearchHeader";
 import { MDBContainer, MDBRow, MDBCol, MDBBtn, MDBIcon} from 'mdbreact';
+import {METHODS, URLS} from "../../../../controller/strings";
 import ModelFields from "../../../../utils/enums";
 import {User} from "../../../../utils/dtos";
-import NavBar from "../../../Common/NavBar";
+import NavBar from "../../../Common/HTPNavBar";
 import ErrorParser from "./ErrorParser";
 import HTPInput from "../../../Common/Inputs/HTPInput";
 import HTPAutoCompleteInput from "../../../Common/Inputs/HTPAutoCompleteInput";
+import MiscellaneousRequests from "../../../../controller/requests/miscellaneous_requests";
 
 
 class CreateModel extends Component {
 
     constructor(props) {
         super(props)
-        this.state = { vendor:'', model_number:'', serial_number:'', comment:''}
+        this.state = { vendor:'', model_number:'', serial_number:'', comment:'', model_options:[],categories_chosen:[]}
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
     }
-    
-    
+
+    async componentDidMount() {
+        this.loadVendors()
+        this.loadCategories()
+    }
+
+    loadVendors() {
+        let getVendorsCallBack = (json) => {
+            this.setState({vendors: json})
+        }
+        MiscellaneousRequests.getVendors(this.props.token, '', getVendorsCallBack)
+    }
+
+    loadCategories(){
+        let token = 'Token ' + this.props.token
+        let requestOptions = {
+            method: 'GET',
+            headers: {'Content-Type': 'application/json', 'Authorization': token, 'Accept': 'application/json'},
+        };
+
+        const response = fetch(URLS.INSTRUMENT_CATEGORIES, requestOptions)
+            .then(response => {
+                return response.text()})
+            .then(json => {
+                let results = ErrorParser.parseCategories(json)
+                console.log(results)
+                this.setState({'categories':results})
+            })
+            .catch((error) => {
+                console.log("here")
+                console.error('Error:', error);
+            });
+    }
+
+
+
     handleChange(event) {
         this.setState({
             [event.target.name] : event.target.value
@@ -27,15 +63,17 @@ class CreateModel extends Component {
     }
 
     async handleSubmit(event){
+        console.log(this.state.categories_chosen)
+
         let token = 'Token ' + this.props.token
-        const { vendor, model_number, comment, serial_number} = this.state
+        const { vendor, model_number, comment, serial_number, categories_chosen} = this.state
         const requestOptions = {
             method: 'GET',
             headers: {'Authorization':token},
             //params: JSON.stringify({vendor: vendor, model_number: vendor})
         };
         let pk = ''
-        const url = 'http://group-six-test.colab.duke.edu/models/' + '?' + 'vendor=' + vendor + '&model=' + model_number
+        const url = URLS.MODELS + '?' + 'vendor=' + vendor + '&model=' + model_number
         const response = await fetch(url, requestOptions)
             .then(response => {
                 return response.text()})
@@ -76,10 +114,10 @@ class CreateModel extends Component {
             const requestOptions = {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization':token, 'Accept':'application/json'},
-                body: JSON.stringify({model: pk, serial_number: serial_number, comment: comment, instrument_categories: []})
+                body: JSON.stringify({model: pk, serial_number: serial_number, comment: comment, instrument_categories: categories_chosen})
             };
 
-            const response = await fetch('http://group-six-test.colab.duke.edu/instruments/', requestOptions)
+            const response = await fetch(URLS.INSTRUMENTS, requestOptions)
                 .then(response => {
                     return response.text()})
                 .then(json => {
@@ -111,7 +149,6 @@ class CreateModel extends Component {
                   ${error} 
                   
                 `)
-                    console.log("here")
                     console.error('Error:', error);
                 });
 
@@ -138,68 +175,27 @@ class CreateModel extends Component {
         return(
             <div>
                 <NavBar user={this.props.user}/>
-            <MDBContainer>
-                <br />
-                <MDBRow>
-                    <MDBCol md="10">
-                        <form onSubmit={this.handleSubmit}>
-                            {/*<label htmlFor="defaultFormLoginEmailEx" className="grey-text">*/}
-                            {/*    Vendor*/}
-                            {/*</label>*/}
-                            {/*<input*/}
-                            {/*    name='vendor'*/}
-                            {/*    placeholder='required'*/}
-                            {/*    value = {this.state.vendor}*/}
-                            {/*    onChange={this.handleChange}*/}
-                            {/*/>*/}
-                            {/*<br />*/}
-                            <HTPAutoCompleteInput options = {['1', '5', '7']} label={'Vendor'} name = 'vendor' onChange={this.handleChange('vendor')} placeholder={'required'}></HTPAutoCompleteInput>
+                <MDBContainer>
+                    <br />
+                    <MDBRow>
+                        <MDBCol md="10">
+                            <form onSubmit={this.handleSubmit}>
 
+                                <HTPAutoCompleteInput options = {this.state.vendors} label={'Vendor'} onChange={this.handleChange('vendor')} placeholder={'required'}/>
+                                <HTPAutoCompleteInput options = {this.state.model_options} label={'Model Number'} onChange={this.handleChange('model_number')} placeholder={'required'}></HTPAutoCompleteInput>
+                                <HTPInput label={'Serial Number'} onChange={this.handleChange('serial_number')} placeholder={'required'}></HTPInput>
+                                <HTPInput label={'Comment'} onChange={this.handleChange('comment')} placeholder={'optional'}></HTPInput>
+                                <HTPAutoCompleteInput multiple = {true} options = {this.state.categories} label={'Categories'} onChange={this.handleChange('categories_chosen')} placeholder={'required'}/>
 
-                            <label htmlFor="defaultFormLoginEmailEx" className="grey-text">
-                                Model Number
-                            </label>
-                            <input
-                                name='model_number'
-                                placeholder='required'
-                                value = {this.state.model_number}
-                                onChange={this.handleChange}
-                            />
-                            <br />
-
-                            <label htmlFor="defaultFormLoginEmailEx" className="grey-text">
-                                Serial Number
-                            </label>
-                            <input
-                                name='serial_number'
-                                placeholder='required'
-                                value = {this.state.serial_number}
-                                onChange={this.handleChange}
-                            />
-                            <br />
-
-                            <label htmlFor="defaultFormLoginEmailEx" className="grey-text">
-                                Comment
-                            </label>
-                            <input
-                                name='comment'
-                                placeholder='optional'
-                                value = {this.state.comment}
-                                onChange={this.handleChange}
-                            />
-
-                            <br />
-                            <br />
-
-                            <MDBBtn color="warning" outline type="button" onClick={this.handleSubmit}>
-                                Create Instrument
-                                <MDBIcon far icon="paper-plane" className="ml-2" />
-                            </MDBBtn>
-                        </form>
-                    </MDBCol>
-                </MDBRow>
-            </MDBContainer>
-                </div>
+                                <MDBBtn color="warning" outline type="button" onClick={this.handleSubmit}>
+                                    Create Instrument
+                                    <MDBIcon far icon="paper-plane" className="ml-2" />
+                                </MDBBtn>
+                            </form>
+                        </MDBCol>
+                    </MDBRow>
+                </MDBContainer>
+            </div>
         )
     }
 }

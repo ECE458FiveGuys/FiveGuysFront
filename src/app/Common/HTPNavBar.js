@@ -38,6 +38,9 @@ class NavbarPage extends Component {
         let Buttons = []
         if (user.is_staff) {
             Buttons.push(<MDBNavItem>
+                            <MDBNavLink to="/categories">Categories</MDBNavLink>
+                        </MDBNavItem>)
+            Buttons.push(<MDBNavItem>
                             <MDBNavLink to="/create-model">Create Model</MDBNavLink>
                         </MDBNavItem>)
             Buttons.push(<MDBNavItem>
@@ -53,9 +56,6 @@ class NavbarPage extends Component {
         Buttons.push(<MDBNavItem>
                         <MDBNavLink to="/import-export">{user.is_staff ? "Import/Export" : "Export"}</MDBNavLink>
                     </MDBNavItem>)
-        Buttons.push(<MDBNavItem>
-            <MDBNavLink to="/load-bank">Load Bank</MDBNavLink>
-        </MDBNavItem>)
         return (
                 <MDBNavbar color={"green"} dark expand="md">
                     <MDBNavbarBrand>
@@ -65,7 +65,7 @@ class NavbarPage extends Component {
                     <MDBCollapse id="navbarCollapse3" isOpen={this.state.isOpen} navbar>
                         <MDBNavbarNav left>
                             <MDBNavItem active>
-                                <MDBNavLink to="/">Home</MDBNavLink>
+                                <MDBNavLink to="/">Inventory</MDBNavLink>
                             </MDBNavItem>
                             {Buttons}
                         </MDBNavbarNav>

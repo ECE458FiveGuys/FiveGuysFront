@@ -2,32 +2,71 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import SearchHeader from "../Widgets/SearchHeader";
 import { MDBContainer, MDBRow, MDBCol, MDBBtn, MDBIcon} from 'mdbreact';
+import {METHODS, URLS} from "../../../../controller/strings";
 import ModelFields from "../../../../utils/enums";
 import {User} from "../../../../utils/dtos";
-import NavBar from "../../../Common/NavBar";
+import NavBar from "../../../Common/HTPNavBar";
 import ErrorParser from "./ErrorParser";
 import HTPInput from "../../../Common/Inputs/HTPInput";
-
+import HTPAutoCompleteInput from "../../../Common/Inputs/HTPAutoCompleteInput";
+import MiscellaneousRequests from "../../../../controller/requests/miscellaneous_requests";
+import {EquipmentModel, Instrument} from "../../../../utils/ModelEnums";
 
 class CreateModel extends Component {
 
     constructor(props) {
         super(props)
-        this.state = {vendor:'', model_number:'', description:'', comment:'',calibration_frequency:''}
+        this.state = {vendor:'', model_number:'', description:'', comment:'',calibration_frequency:'',categories_chosen:[]}
+
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
     }
 
-    async handleSubmit(event){
+    async componentDidMount() {
+        this.loadVendors()
+        this.loadCategories()
+    }
+
+    loadCategories(){
         let token = 'Token ' + this.props.token
-        const { vendor, model_number, description, comment, calibration_frequency } = this.state
+        let requestOptions = {
+            method: 'GET',
+            headers: {'Content-Type': 'application/json', 'Authorization': token, 'Accept': 'application/json'},
+        };
+
+        const response = fetch(URLS.MODEL_CATEGORIES, requestOptions)
+            .then(response => {
+                return response.text()})
+            .then(json => {
+                let results = ErrorParser.parseCategories(json)
+                console.log(results)
+                this.setState({'categories':results})
+            })
+            .catch((error) => {
+                console.log("here")
+                console.error('Error:', error);
+            });
+    }
+
+    loadVendors() {
+        let getVendorsCallBack = (json) => {
+            this.setState({vendors: json})
+        }
+        MiscellaneousRequests.getVendors(this.props.token, '', getVendorsCallBack)
+    }
+
+    async handleSubmit(event){
+        console.log(this.state.categories_chosen)
+
+        let token = 'Token ' + this.props.token
+        const { vendor, model_number, description, comment, calibration_frequency, categories_chosen} = this.state
         let requestOptions = {}
-        if (calibration_frequency==''){ //nothing inputed
+        if (calibration_frequency=='') { //nothing inputed
             requestOptions = {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization':token, 'Accept':'application/json'},
                 body: JSON.stringify({vendor: vendor, model_number: model_number, description: description,
-                    comment: comment, model_categories: []})
+                    comment: comment, model_categories: categories_chosen})
             };
         }
         else {
@@ -36,12 +75,12 @@ class CreateModel extends Component {
                 headers: {'Content-Type': 'application/json', 'Authorization': token, 'Accept': 'application/json'},
                 body: JSON.stringify({
                     vendor: vendor, model_number: model_number, description: description,
-                    comment: comment, calibration_frequency: calibration_frequency, model_categories: []
+                    comment: comment, calibration_frequency: calibration_frequency, model_categories: categories_chosen
                 })
             };
         }
 
-        const response = await fetch('http://group-six-test.colab.duke.edu/models/', requestOptions)
+        const response = await fetch(URLS.MODELS, requestOptions)
             .then(response => {
                 return response.text()})
             .then(json => {
@@ -54,7 +93,8 @@ class CreateModel extends Component {
                       Model Number : ${model_number} 
                       Description : ${description} 
                       Comment : ${comment} 
-                      Calibration Frequency : ${calibration_frequency} 
+                      Calibration Frequency : ${calibration_frequency}
+                      Categories : ${categories_chosen}  
                     `)
                 }
                 else {
@@ -79,6 +119,7 @@ class CreateModel extends Component {
             });
     }
 
+
     // Method causes to store all the values of the
     // input field in react state single method handle
     // input changes of all the input field using ES6
@@ -87,14 +128,8 @@ class CreateModel extends Component {
         let newState = {}
         newState[name] = value
         this.setState(newState)
-
-        //this.setState({
-            // Computed property names
-            // keys of the objects are computed dynamically
-            //[event.target.name] : event.target.value
-
-        //})
     }
+
 
     // Return a controlled form i.e. values of the
     // input field not stored in DOM values are exist
@@ -103,82 +138,34 @@ class CreateModel extends Component {
         return(
             <div>
                 <NavBar user={this.props.user}/>
-            <MDBContainer>
-                <br />
-                <MDBRow>
-                    <MDBCol md="10">
-                        <form onSubmit={this.handleSubmit}>
-                            {/*<label htmlFor="defaultFormLoginEmailEx" className="grey-text">*/}
-                            {/*    Vendor*/}
-                            {/*</label>*/}
-                            {/*<input*/}
-                            {/*    type = 'text'*/}
-                            {/*    classname = {'form-control'}*/}
-                            {/*    name='vendor'*/}
-                            {/*    placeholder='required'*/}
-                            {/*    value = {this.state.vendor}*/}
-                            {/*    onChange={this.handleChange}*/}
-                            {/*/>*/}
-                            <HTPInput label={'Vendor'} name = 'vendor' onChange={this.handleChange('vendor')} placeholder={'required'}></HTPInput>
-                            <br />
+                <MDBContainer>
+                    <br />
+                    <MDBRow >
+                        <MDBCol>
+                            <form onSubmit={this.handleSubmit}>
 
-                            <label htmlFor="defaultFormLoginEmailEx" className="grey-text">
-                                Model Number
-                            </label>
-                            <input
-                                name='model_number'
-                                placeholder='required'
-                                value = {this.state.model_number}
-                                onChange={this.handleChange}
-                            />
-                            <br />
+                                <HTPAutoCompleteInput options = {this.state.vendors} label={'Vendor'} onChange={this.handleChange('vendor')} placeholder={'required'}/>
 
+                                <HTPInput label={'Model Number'} onChange={this.handleChange('model_number')} placeholder={'required'}></HTPInput>
 
-                            <label htmlFor="defaultFormLoginEmailEx" className="grey-text">
-                                Description
-                            </label>
-                            <input
-                                name='description'
-                                placeholder='required'
-                                value = {this.state.description}
-                                onChange={this.handleChange}
-                            />
-                            <br />
+                                <HTPInput label={'Description'} onChange={this.handleChange('description')} placeholder={'required'}></HTPInput>
 
+                                <HTPInput label={'Comment'} onChange={this.handleChange('comment')} placeholder={'optional'}></HTPInput>
 
-                            <label htmlFor="defaultFormLoginEmailEx" className="grey-text">
-                                Comment
-                            </label>
-                            <input
-                                name='comment'
-                                placeholder='optional'
-                                value = {this.state.comment}
-                                onChange={this.handleChange}
-                            />
-                            <br />
+                                <HTPInput label={'Calibration Frequency'} onChange={this.handleChange('calibration_frequency')} placeholder={'optional (integer)'}></HTPInput>
 
+                                <HTPAutoCompleteInput multiple = {true} options = {this.state.categories} label={'Categories'} onChange={this.handleChange('categories_chosen')} placeholder={'required'}/>
 
-                            <label htmlFor="defaultFormLoginEmailEx" className="grey-text">
-                                Calibration Frequency
-                            </label>
-                            <input
-                                name='calibration_frequency'
-                                placeholder='optional (integer)'
-                                value = {this.state.calibration_frequency}
-                                onChange={this.handleChange}
-                            />
-                            <br />
-                            <br />
+                                <MDBBtn color="warning" outline type="button" onClick={this.handleSubmit}>
+                                    Create Model
+                                    <MDBIcon far icon="paper-plane" className="ml-2" />
+                                </MDBBtn>
 
-                            <MDBBtn color="warning" outline type="button" onClick={this.handleSubmit}>
-                                Create Model
-                                <MDBIcon far icon="paper-plane" className="ml-2" />
-                            </MDBBtn>
-                        </form>
-                    </MDBCol>
-                </MDBRow>
-            </MDBContainer>
-                </div>
+                            </form>
+                        </MDBCol>
+                    </MDBRow>
+                </MDBContainer>
+            </div>
         )
     }
 }

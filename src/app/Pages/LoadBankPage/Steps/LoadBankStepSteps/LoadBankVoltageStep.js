@@ -1,7 +1,8 @@
 import React from "react";
 import HTPInput from "../../../../Common/Inputs/HTPInput";
 import PropTypes from "prop-types";
-import {isNumeric, percentErrorGreaterThan} from "./step_utils";
+import {percentErrorGreaterThan} from "./step_utils";
+import {isNumeric} from "../../utils";
 
 const IDEAL_VOLTAGE = 48
 

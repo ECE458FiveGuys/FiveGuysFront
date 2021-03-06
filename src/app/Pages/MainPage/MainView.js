@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import TabView from "./TabView";
 import {Gradient} from "react-gradient";
-import NavBar from "../../Common/NavBar";
+import NavBar from "../../Common/HTPNavBar";
 import PropTypes from "prop-types";
 import {User} from "../../../utils/dtos";
 import ModelTable from "./InventoryTables/ModelTable";

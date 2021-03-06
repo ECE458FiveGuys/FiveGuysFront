@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import NavBar from "../../Common/NavBar";
+import NavBar from "../../Common/HTPNavBar";
 import PropTypes from "prop-types";
 import CategoryPage from "./CategoryPage";
 import ModelFields from "../../../utils/enums";

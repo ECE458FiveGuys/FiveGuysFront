@@ -5,8 +5,8 @@ import PropTypes from "prop-types";
 import {Gradient} from "react-gradient";
 import {MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn, MDBDropdown, MDBDropdownToggle, MDBDropdownMenu} from 'mdbreact';
 import CSV_Import from "./Widgets/CSV_Import";
-import NavBar from "../Common/NavBar";
 import HTPButton from "../Common/Inputs/HTPButton";
+import NavBar from "../Common/HTPNavBar";
 
 
 const gradients = [

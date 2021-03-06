@@ -1,7 +1,7 @@
 import {MDBBtn, MDBCol} from "mdbreact";
 import React from "react";
 import PropTypes from "prop-types";
-import HTPInput from "./HTPInput";
+import HTPInput from "./Inputs/HTPInput";
 
 export default class HTPButton extends React.Component {
 

@@ -113,6 +113,12 @@ export default class TableColumns {
             field: 'comment',
             sort: 'asc',
             width: 270
+        },
+        {
+            label: 'Additonal Evidence',
+            field: 'additional_evidence',
+            sort: 'asc',
+            width: 270
         }
     ]
 
@@ -160,38 +166,38 @@ export default class TableColumns {
             label: 'Name',
             field: ModelFields.UserFields.NAME,
             sort: 'asc',
-            width: 180
+            width: 150
         },
         {
             label: 'Email',
             field: ModelFields.UserFields.EMAIL,
             sort: 'asc',
-            width: 180
+            width: 150
         },
         {
             label: 'Activity',
             field: ModelFields.UserFields.ACTIVITY,
             sort: 'asc',
-            width: 180
+            width: 150
         },
         {
             label: 'ID',
             field: ModelFields.UserFields.ID,
             sort: 'asc',
-            width: 180
+            width: 150
         },
         {
             label: 'Password',
             field: 'password',
             sort: 'asc',
-            width: 180
+            width: 150
         },
 
         {
             label: 'Admin Privilege',
             field: ModelFields.UserFields.IS_STAFF,
             sort: 'asc',
-            width: 200
+            width: 150
         },
     ]
 }

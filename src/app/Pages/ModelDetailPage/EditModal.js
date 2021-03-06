@@ -43,6 +43,7 @@ class EditModal extends Component{
                                                handleFormChange = {this.props.handleFormChange}
                                                isEdit = {this.props.isEdit}
                                                handleDayClick = {this.props.handleDayClick}
+                                               handleFileSelect = {this.props.handleFileSelect}
                                     />
                                     <div className="text-center mt-4">
                                         <MDBBtn color="dark-green"

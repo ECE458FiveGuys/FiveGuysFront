@@ -14,6 +14,9 @@ import LoadBankMain from "./app/Pages/LoadBankPage/LoadBankMain";
 import OAuthRedirect from "./auth/OAuthRedirect";
 import ImportDocumentation from "./app/ImportExport/Widgets/ImportDocumentation";
 import UserSettingsView from "./app/UserSettings/UserSettingsView";
+import CreateModel from "./app/Pages/MainPage/CreateFunctions/CreateModel";
+import CreateInstrument from "./app/Pages/MainPage/CreateFunctions/CreateInstrument";
+import CreateUser from "./app/Pages/MainPage/CreateFunctions/CreateUser";
 
 class App extends Component {
 
@@ -70,7 +73,7 @@ class App extends Component {
           <BrowserRouter>
             <Switch>
               <Route exact path="/"
-                    render={(props) => <MainView history = {props.history}
+                    render={(props) => <MainView history={props.history}
                                                  token={this.state.token}
                                                  user={this.state.user}/>}>
               </Route>
@@ -81,6 +84,7 @@ class App extends Component {
               </Route>
               <Route  path="/instruments/:id"
                       render={(props) => (<InstrumentDetailView id={props.match.params.id}
+                                                                history={props.history}
                                                            token={this.state.token}
                                                            user={this.state.user}/>)} >
               </Route>
@@ -94,9 +98,22 @@ class App extends Component {
               </Route>
 
               <Route path="/load-bank/:id"
-                     render = {(props) => (<LoadBankMain token={this.state.token}
-                              instrumentId={props.match.params.id}
-                              user={this.state.user}/>)}>
+                     render = {(props) => (<LoadBankMain  instrumentId={props.match.params.id}
+                                                          history={props.history}
+                                                          user={this.state.user}
+                                                          token={this.state.token}/>)}>
+              </Route>
+              <Route path="/create-model/">
+                <CreateModel token={this.state.token}
+                             user={this.state.user}/>
+              </Route>
+              <Route path="/create-instrument/">
+                <CreateInstrument token={this.state.token}
+                                  user={this.state.user}/>
+              </Route>
+              <Route path="/create-user/">
+                <CreateUser token={this.state.token}
+                            user={this.state.user}/>
               </Route>
               <Route path="/documentation">
                 <ImportDocumentation token={this.state.token}

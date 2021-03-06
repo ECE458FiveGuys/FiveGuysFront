@@ -1,11 +1,11 @@
 
 import React from "react";
 import {Button, Step, StepButton, StepContent, StepIcon, StepLabel, Stepper} from "@material-ui/core";
-import HTPButton from "../../Common/Inputs/HTPButton";
+import HTPButton from "./HTPButton";
 import PropTypes from "prop-types";
-import {User} from "../../../utils/dtos";
-import HTPPopup from "../../Common/HTPPopup";
-import {StepNames} from "./Steps/step_enums";
+import {User} from "../../utils/dtos";
+import HTPPopup from "./HTPPopup";
+import {StepNames} from "../Pages/LoadBankPage/Steps/step_enums";
 
 export default class HTPStepper extends React.Component {
 
@@ -113,12 +113,12 @@ export default class HTPStepper extends React.Component {
     }
 
     renderStepContent = () => {
-        let {activeStep, completed} = this.state
+        let {completeButtonLabel, finishButtonLabel} = this.props
+        let {activeStep} = this.state
         return(<div style={{flex : 1}}>
             {this.allStepsCompleted() ? (
                 <div>
-                    All steps completed - you&apos;re finished
-                    <Button onClick={this.handleReset}>Reset</Button>
+                    All steps completed!
                 </div>
             ) : (
                 <div style={{display : "flex",
@@ -126,16 +126,16 @@ export default class HTPStepper extends React.Component {
                     alignItems: 'center'}}>
                     {this.getStepContent(activeStep)}
                     <div style={{display : 'flex', background : 'white'}}>
-                        <HTPButton disabled={activeStep === 0}
-                                   label={"Back"}
-                                   color={"primary"}
-                                   onSubmit={this.handleBack}/>
+                        {/*<HTPButton disabled={activeStep === 0}*/}
+                        {/*           label={"Back"}*/}
+                        {/*           color={"primary"}*/}
+                        {/*           onSubmit={this.handleBack}/>*/}
                         <HTPButton
                             disabled={!this.state.readyToSubmit}
                             onSubmit={this.handleComplete}
                             label={activeStep === this.totalSteps() - 1
-                                ? "Finish"
-                                : "Complete Step"}
+                                ? finishButtonLabel
+                                : completeButtonLabel}
                         />
                         {this.state.errorMessage ?
                             <HTPPopup toggleModal={this.toggleModal}
@@ -152,7 +152,7 @@ export default class HTPStepper extends React.Component {
     }
 
     render() {
-        let {stepNames, stepContent} = this.props
+        let {stepNames} = this.props
         let {activeStep, completed} = this.state
         let style = {justifyContent : "center", alignItems: 'center'}
         if (stepNames[activeStep] === StepNames.LOAD_STEPS || this.props.orientation === 'vertical') style["display"] = "flex"
@@ -164,7 +164,7 @@ export default class HTPStepper extends React.Component {
                         {stepNames.map((label, index) => (
                             <Step key={label}>
                                 <StepButton
-                                    onClick={this.handleStep(index)}
+                                    disabled={true}
                                     completed={completed[index]}
                                 >
                                     <text style={{alignItems : 'center', justifyContent: 'center'}}>{label}</text>
@@ -191,9 +191,13 @@ HTPStepper.propTypes = {
     onStepSubmit : PropTypes.array.isRequired, // an array of functions to be called on the submission of each step
     orientation : PropTypes.string, // vertical or horizontal
     updateMasterState : PropTypes.func, // a method to be called to update the parent state
-    onAllStepsComplete : PropTypes.func.isRequired
+    onAllStepsComplete : PropTypes.func.isRequired,
+    completeButtonLabel : PropTypes.string,
+    finishButtonLabel : PropTypes.string
 }
 
 HTPStepper.defaultProps = {
-    orientation : 'horizontal'
+    orientation : 'horizontal',
+    completeButtonLabel : "Complete Step",
+    finishButtonLabel : "Finish"
 }

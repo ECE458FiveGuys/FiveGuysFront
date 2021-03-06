@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import DataTable from "./DataTable";
 import Checkbox from "./TableWidgets/Checkbox";
 import HTPInput from "../Inputs/HTPInput";
-import HTPButton from "../Inputs/HTPButton";
+import HTPButton from "../HTPButton";
 import {MDBBtn, MDBCol, MDBModal, MDBModalBody, MDBModalFooter, MDBModalHeader} from "mdbreact";
 import {ModalBody} from "react-bootstrap";
 import HTPPopup from "../HTPPopup";

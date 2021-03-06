@@ -49,8 +49,8 @@ class FormEntry extends Component {
         if(fieldName === "File"){ //TODO
             return (
                 <div>
-                    <label className="form-label" htmlFor="customFile">Currently disabled file input</label>
-                    <input type="file" className="form-control" id="customFile" disabled={true}/>
+                    <label className="form-label" htmlFor="additionalEvidence">Currently disabled file input</label>
+                    <input type="file" className="form-control" id="additionalEvidence" onChange={(e) => this.props.handleFileSelect(e)}/>
                 </div>
             );
         }

@@ -5,7 +5,10 @@ import MiscellaneousRequests from "../../../../controller/requests/miscellaneous
 import ModelFields from "../../../../utils/enums";
 import {EquipmentModel, Instrument} from "../../../../utils/ModelEnums";
 import DataTable from "../../../Common/Tables/DataTable";
-
+import jsPDF from 'jspdf'
+import 'jspdf-autotable'
+import HTPButton from "../../../Common/HTPButton";
+import Image from "../../../../assets/hpt_logo.png"
 class InventoryTable extends Component {
 
     constructor(props) {
@@ -52,13 +55,10 @@ class InventoryTable extends Component {
         let {token, searchFields} = this.props
         // categoryType = model_categories or instrument_categories
         let getCategoriesCallBack = (categoryType) => (json) => {
-            let newState = {}
-            let categories = []
-            json.forEach(category => {
-                categories.push(category[ModelFields.CategoryFields.NAME])
+            let categories = json.map(category => {
+                return category[ModelFields.CategoryFields.NAME]
             })
-            newState[categoryType] = categories
-            this.setState(newState)
+            this.setState({[categoryType] : categories})
         }
         MiscellaneousRequests.getCategories(token,
             searchFields == EquipmentModel.SEARCH_FIELDS ? EquipmentModel.TYPE : Instrument.TYPE,
@@ -76,6 +76,29 @@ class InventoryTable extends Component {
         )
     }
 
+    // table () {
+    //     const doc = new jsPDF()
+    //     doc.autoTable({
+    //         header: 'Calibration Info',
+    //         head: [['fields', '']],
+    //         body: [
+    //             ['Sweden', 'Japan', 'Canada'],
+    //             ['Norway', 'China', 'USA'],
+    //             ['Denmark', 'China', 'Mexico'],
+    //         ],
+    //     })
+    //     doc.autoTable({
+    //         header: 'Calibration Info',
+    //         head: [['fields', 'values']],
+    //         body: [
+    //             ['Sweden', 'Japan', 'Canada'],
+    //             ['Norway', 'China', 'USA'],
+    //             ['Denmark', 'China', 'Mexico'],
+    //         ],
+    //     })
+    //     doc.save('table.pdf')
+    // }
+
     render() {
         return (
             <div style={{background: "white"}}>
@@ -89,6 +112,7 @@ class InventoryTable extends Component {
                 {this.props.children}
                 <DataTable columns = {this.props.columns}
                            rows = {this.state.results}
+                           searching={false}
                 />
             </div>);
     }
