@@ -12,22 +12,25 @@ import {EquipmentModel, Instrument} from "../../../utils/ModelEnums";
 import {handleNavClick} from "../../utils";
 import {MDBBadge, MDBIcon} from "mdbreact";
 import HTPNavBar from "../../Common/HTPNavBar";
-import ModelDisplay from "../../Common/HTPModelDisplay";
+import ModelDisplay from "../../Common/Displays/HTPModelDisplay";
 import HTPButton from "../../Common/HTPButton";
 import {Divider} from "@material-ui/core";
+import {createCertificate, writeCertificate} from "../ModelDetailPage/certificate_writer";
 
 class InstrumentDetailView extends Component {
 
     constructor(props) {
         super(props);
         this.state = {}
-    }s
+    }
 
      componentDidMount() {
         let retrieveInstrumentCallback = (instrument) => {
-            let calibrations = this.enhanceCalibrationData(instrument['calibration_history'])
-            this.setState({calibrations : calibrations, instrument : instrument, model: instrument.model,
-                serial_number : instrument["serial_number"], comment : instrument["comment"]});
+            let calibrations = instrument['calibration_history']
+            let calibrationTableRows = this.buildCalibrationTableRows(calibrations)
+            this.setState({calibrations : calibrations,
+                                calibrationTableRows : calibrationTableRows,
+                                instrument : instrument});
         }
         let retrieveInstrumentError = (e) => {
             alert("RETRIEVE"+e)
@@ -35,16 +38,17 @@ class InstrumentDetailView extends Component {
         InstrumentRequests.retrieveInstrument(this.props.token, this.props.id, retrieveInstrumentCallback,retrieveInstrumentError);//
     }
 
-    enhanceCalibrationData = (calibrations) => {
+    buildCalibrationTableRows = (calibrations) => {
         return calibrations.map(calibration => {
-            calibration[ModelFields.CalibrationFields.AdditionalFile] = (
-                calibration[ModelFields.CalibrationFields.AdditionalFile] ?
-                <a target="_blank" href={calibration[ModelFields.CalibrationFields.AdditionalFile]}>
+            let calibrationCopy = {...calibration}
+            calibrationCopy[ModelFields.CalibrationFields.AdditionalFile] = (
+                calibrationCopy[ModelFields.CalibrationFields.AdditionalFile] ?
+                <a target="_blank" href={calibrationCopy[ModelFields.CalibrationFields.AdditionalFile]}>
                     <MDBIcon size={"2x"}
                              icon="file-alt" />
-                </a> : calibration[ModelFields.CalibrationFields.LoadBankFile] ? "Calibrated using the load bank wizard" : false
+                </a> : calibrationCopy[ModelFields.CalibrationFields.LoadBankFile] ? "Calibrated using the load bank wizard" : false
                 )
-            return calibration
+            return calibrationCopy
         })
     }
 
@@ -99,7 +103,7 @@ class InstrumentDetailView extends Component {
         return this.state.instrument.model[EquipmentModel.FIELDS.CALIBRATION_MODE] != ModelFields.CalibrationModes.NOT_CALIBRATABLE
     }
 
-    renderCalibrationButtons = () => {
+    renderRecordCalibrationButtons = () => {
         let {instrument} = this.state
         let model = instrument.model
         return (
@@ -118,15 +122,12 @@ class InstrumentDetailView extends Component {
     }
 
     renderCalibrationCertificateButton = () => {
-        let {instrument} = this.state
+        let {user} = this.props
+        let {instrument, calibrations} = this.state
         let model = instrument.model
         return (this.instrumentCalibratable()) ?
             <Button onClick={() => {
-                if (model[EquipmentModel.FIELDS.CALIBRATION_MODE] == ModelFields.CalibrationModes.LOAD_BANK) {
-                    handleNavClick("/load-bank/" + instrument.pk, this.props.history)
-                } else {
-                    this.setCalibrationModalShow(true)
-                }
+                createCertificate(instrument, user, calibrations[0])
             }}>
                 Download Calibration Certificate
             </Button> : <div></div>
@@ -267,11 +268,11 @@ class InstrumentDetailView extends Component {
                         </h1>
                         <h1 style={{alignSelf : 'center', justifySelf : 'center', textAlign : "center"}}
                             className={"h5-responsive"}>
-                            You must calibrate this instrument frequently!
+                            Calibrate your instrument here
                         </h1>
                         <div style={{display : 'flex', justifyContent : 'space-between'}}>
                             <div>
-                                {this.renderCalibrationButtons()}
+                                {this.renderRecordCalibrationButtons()}
                             </div>
                             {this.renderCalibrationCertificateButton()}
                         </div>
@@ -284,7 +285,7 @@ class InstrumentDetailView extends Component {
                             // message={"Are you sure you wat to remove instrument "+this.state.instrument.serial_number+"?"}
                         />
                         <DataTable columns={TableColumns.CALIBRATION_COLUMNS}
-                                   rows={this.state.calibrations}/>
+                                   rows={this.state.calibrationTableRows}/>
                     </div>
                 </div>
 

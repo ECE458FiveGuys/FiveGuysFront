@@ -3,7 +3,7 @@ import SelectInput from "./SelectInput";
 import Select from "react-select";
 import DatePicker from "react-datepicker";
 import ModelRequests from "../../../controller/requests/model_requests";
-import DatePickers from "./DatePickers";
+import DatePickers from "../../Common/DatePickers";
 import DayPicker from "react-day-picker";
 
 class FormEntry extends Component {

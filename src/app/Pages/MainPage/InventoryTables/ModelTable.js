@@ -3,7 +3,7 @@ import TableColumns from "./Columns";
 import InventoryTable from "./InventoryTable";
 import ModelFields from "../../../../utils/enums";
 import ModelRequests from "../../../../controller/requests/model_requests";
-import {handleNavClick, newTab} from "../../../utils";
+import {handleNavClick} from "../../../utils";
 import TableUtils from "./TableUtils";
 
 export default class ModelTable extends Component {
