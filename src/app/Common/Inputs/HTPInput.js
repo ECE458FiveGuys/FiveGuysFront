@@ -20,13 +20,13 @@ export default class HTPInput extends Component {
 
 
     render() {
-        let {onChange, label, placeholder, size, value, defaultValue, style}= this.props
+        let {onChange, label, placeholder, size, value, type, defaultValue, style}= this.props
         return(
             <div style={style}>
                 <label htmlFor="defaultFormLoginEmailEx" className="grey-text">
                     {label}
                 </label>
-                <input type="text"
+                <input type={type}
                        placeholder={placeholder}
                        className="form-control"
                        defaultValue={defaultValue}
@@ -43,11 +43,14 @@ HTPInput.propTypes = {
     onChange : PropTypes.func.isRequired,
     label : PropTypes.string.isRequired,
     placeholder : PropTypes.string.isRequired,
+    type : PropTypes.string,
     size : PropTypes.number,
     value : PropTypes.string,
     defaultValue : PropTypes.string
 }
 
 HTPInput.defaultProps = {
-    size : 2
+    size : 2,
+    type : 'text'
+
 }
