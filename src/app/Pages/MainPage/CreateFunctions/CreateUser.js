@@ -6,6 +6,8 @@ import ModelFields from "../../../../utils/enums";
 import {User} from "../../../../utils/dtos";
 import NavBar from "../../../Common/HTPNavBar";
 import ErrorParser from "./ErrorParser";
+import HTPInput from "../../../Common/Inputs/HTPInput";
+import {AUTH_URLS, URLS} from "../../../../controller/strings";
 
 
 class CreateModel extends Component {
@@ -16,8 +18,8 @@ class CreateModel extends Component {
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
     }
-    
-    
+
+
     handleChange(event) {
         this.setState({
             [event.target.name] : event.target.value
@@ -33,7 +35,7 @@ class CreateModel extends Component {
             body: JSON.stringify({username: username, name: name, email: email, password: password, is_active: true})
         };
 
-        const response = await fetch('http://group-six-test.colab.duke.edu/auth/users/', requestOptions)
+        const response = await fetch(AUTH_URLS.USERS, requestOptions)
             .then(response => {
                 return response.text()})
             .then(json => { //success
@@ -50,7 +52,7 @@ class CreateModel extends Component {
                     let results = ErrorParser.parse(json)
                     event.preventDefault()
                     alert(` 
-                      Error while creating the model:\n 
+                      Error while creating the User:\n 
                       ${results} 
                     `)
                 }
@@ -73,13 +75,10 @@ class CreateModel extends Component {
     // input field in react state single method handle
     // input changes of all the input field using ES6
     // javascript feature computed property names
-    handleChange(event){
-        this.setState({
-            // Computed property names
-            // keys of the objects are computed dynamically
-            [event.target.name] : event.target.value
-        })
-        //<h4 className="modal-title w-100 font-weight-bold">Create User</h4>
+    handleChange=(name)=>(value)=>{
+        let newState = {}
+        newState[name] = value
+        this.setState(newState)
     }
 
     // Return a controlled form i.e. values of the
@@ -89,69 +88,25 @@ class CreateModel extends Component {
         return(
             <div>
                 <NavBar user={this.props.user}/>
-            <MDBContainer>
-                <br />
-                <MDBRow>
-                    <MDBCol md="10">
-                        <form onSubmit={this.handleSubmit}>
-                            <label htmlFor="defaultFormLoginEmailEx" className="grey-text">
-                                name
-                            </label>
-                            <input
-                                name='name'
-                                placeholder='required'
-                                value = {this.state.name}
-                                onChange={this.handleChange}
-                            />
-                            <br />
+                <MDBContainer>
+                    <br />
+                    <MDBRow>
+                        <MDBCol md="10">
+                            <form onSubmit={this.handleSubmit}>
+                                <HTPInput label={'Name'} onChange={this.handleChange('name')} placeholder={'required'}></HTPInput>
+                                <HTPInput label={'Username'} onChange={this.handleChange('username')} placeholder={'required'}></HTPInput>
+                                <HTPInput label={'Email'} onChange={this.handleChange('email')} placeholder={'required'}></HTPInput>
+                                <HTPInput label={'Password'} type = 'Password' onChange={this.handleChange('password')} placeholder={'required'} type="password"></HTPInput>
 
-                            <label htmlFor="defaultFormLoginEmailEx" className="grey-text">
-                                Username
-                            </label>
-                            <input
-                                name='username'
-                                placeholder='required'
-                                value = {this.state.username}
-                                onChange={this.handleChange}
-                            />
-                            <br />
-
-
-                            <label htmlFor="defaultFormLoginEmailEx" className="grey-text">
-                                Email
-                            </label>
-                            <input
-                                name='email'
-                                placeholder='required'
-                                value = {this.state.email}
-                                onChange={this.handleChange}
-                            />
-                            <br />
-
-
-                            <label htmlFor="defaultFormLoginEmailEx" className="grey-text">
-                                Password
-                            </label>
-                            <input
-                                name='password'
-                                placeholder='required'
-                                input type="password"
-                                value = {this.state.password}
-                                onChange={this.handleChange}
-                            />
-
-                            <br />
-                            <br />
-
-                            <MDBBtn color="warning" outline type="button" onClick={this.handleSubmit}>
-                                Create User
-                                <MDBIcon far icon="paper-plane" className="ml-2" />
-                            </MDBBtn>
-                        </form>
-                    </MDBCol>
-                </MDBRow>
-            </MDBContainer>
-                </div>
+                                <MDBBtn color="warning" outline type="button" onClick={this.handleSubmit}>
+                                    Create User
+                                    <MDBIcon far icon="paper-plane" className="ml-2" />
+                                </MDBBtn>
+                            </form>
+                        </MDBCol>
+                    </MDBRow>
+                </MDBContainer>
+            </div>
         )
     }
 }

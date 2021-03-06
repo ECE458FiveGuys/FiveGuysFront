@@ -12,6 +12,9 @@ import InstrumentDetailView from "./app/Pages/InstrumentDetailPage/InstrumentDet
 import CategoryTabView from "./app/Pages/CategoryPage/CategoryTabView";
 import LoadBankMain from "./app/Pages/LoadBankPage/LoadBankMain";
 import OAuthRedirect from "./auth/OAuthRedirect";
+import CreateModel from "./app/Pages/MainPage/CreateFunctions/CreateModel";
+import CreateInstrument from "./app/Pages/MainPage/CreateFunctions/CreateInstrument";
+import CreateUser from "./app/Pages/MainPage/CreateFunctions/CreateUser";
 
 class App extends Component {
 
@@ -97,6 +100,18 @@ class App extends Component {
                                                           history={props.history}
                                                           user={this.state.user}
                                                           token={this.state.token}/>)}>
+              </Route>
+              <Route path="/create-model/">
+                <CreateModel token={this.state.token}
+                             user={this.state.user}/>
+              </Route>
+              <Route path="/create-instrument/">
+                <CreateInstrument token={this.state.token}
+                                  user={this.state.user}/>
+              </Route>
+              <Route path="/create-user/">
+                <CreateUser token={this.state.token}
+                            user={this.state.user}/>
               </Route>
               <Route>
                 <NotFound/>
