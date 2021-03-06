@@ -11,12 +11,14 @@ import HTPInput from "../../../Common/Inputs/HTPInput";
 import HTPAutoCompleteInput from "../../../Common/Inputs/HTPAutoCompleteInput";
 import MiscellaneousRequests from "../../../../controller/requests/miscellaneous_requests";
 import {EquipmentModel, Instrument} from "../../../../utils/ModelEnums";
+import HTPPopup from "../../../Common/HTPPopup";
 
 class CreateModel extends Component {
 
     constructor(props) {
         super(props)
-        this.state = {vendor:'', model_number:'', description:'', comment:'',calibration_frequency:'',categories_chosen:[]}
+        this.state = {vendor:'', model_number:'', description:'', comment:'',
+            calibration_frequency:'',categories_chosen:[], modal : false, displayMessage: [], requestStatus:''}
 
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
@@ -48,6 +50,12 @@ class CreateModel extends Component {
             });
     }
 
+    toggleModal = () => {
+        this.setState({
+            modal: !this.state.modal
+        });
+    }
+
     loadVendors() {
         let getVendorsCallBack = (json) => {
             this.setState({vendors: json})
@@ -56,7 +64,7 @@ class CreateModel extends Component {
     }
 
     async handleSubmit(event){
-        console.log(this.state.categories_chosen)
+
 
         let token = 'Token ' + this.props.token
         const { vendor, model_number, description, comment, calibration_frequency, categories_chosen} = this.state
@@ -85,38 +93,41 @@ class CreateModel extends Component {
                 return response.text()})
             .then(json => {
                 json.toString()
+                let returnArray = []
+                let responseTitle = ''
                 if (json.includes('pk')) {
-                    event.preventDefault()
-                    alert(` 
-                      Successful added a new Model:\n 
-                      Vendor : ${vendor} 
-                      Model Number : ${model_number} 
-                      Description : ${description} 
-                      Comment : ${comment} 
-                      Calibration Frequency : ${calibration_frequency}
-                      Categories : ${categories_chosen}  
-                    `)
+                    returnArray =
+                      [
+                      'Vendor : '+ this.state.vendor,
+                      'Model Number : '+ this.state.model_number,
+                      'Description : '+ this.state.description,
+                      'Comment : '+ this.state.comment,
+                      'Calibration Frequency : '+ this.state.calibration_frequency,
+                      'Categories : '+ this.state.categories_chosen
+                    ]
+                    responseTitle = 'Success! The model was added:'
                 }
                 else {
-                    let results = ErrorParser.parse(json)
-                    event.preventDefault()
-                    alert(` 
-                      Error while creating the model:\n 
-                      ${results} 
-                    `)
+                    returnArray = ErrorParser.parse(json)
+                    responseTitle = 'Error when creating the model:'
                 }
+                let newState = {}
+                newState['displayMessage'] = returnArray
+                newState['requestStatus'] = responseTitle
+                this.setState(newState)
                 console.log(json)
             })
-            .catch((error) => { //failure
-                event.preventDefault()
-                alert(` 
-                  Error when creating the model:\n 
-                  ${error} 
-                  
-                `)
-                console.log("here")
-                console.error('Error:', error);
-            });
+            // .catch((error) => { //failure
+            //     event.preventDefault()
+            //     alert(`
+            //       Error when creating the model:\n
+            //       ${error}
+            //
+            //     `)
+            //     console.log("here")
+            //     console.error('Error:', error);
+            // });
+        this.toggleModal()
     }
 
 
@@ -128,6 +139,18 @@ class CreateModel extends Component {
         let newState = {}
         newState[name] = value
         this.setState(newState)
+    }
+
+    getDisplayMessage = () => {
+        let displayMessage = this.state.displayMessage
+        console.log(displayMessage)
+        return (<div>
+            <ol>
+                {displayMessage.map(function(name, index){
+                    return <ul key={ index }>{name}</ul>;
+                })}
+            </ol>
+        </div>)
     }
 
 
@@ -160,6 +183,11 @@ class CreateModel extends Component {
                                     Create Model
                                     <MDBIcon far icon="paper-plane" className="ml-2" />
                                 </MDBBtn>
+                                <HTPPopup isOpen={this.state.modal}
+                                          toggleModal={this.toggleModal}
+                                          className={"text-info"}
+                                          title={this.state.requestStatus}
+                                          message={this.getDisplayMessage()}/>
 
                             </form>
                         </MDBCol>
