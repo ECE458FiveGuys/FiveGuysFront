@@ -8,19 +8,10 @@ import {EquipmentModel, Instrument} from "../../../utils/ModelEnums";
 
 export let writeLoadBankTableData = (loadBank, voltmeter, shuntMeter, user, recordedCurrents, recordedVoltage) => {
     return {
-        calibrationInfo:
-            {
-                head: [['Calibration Info', '']],
-                body: [['Model', loadBank.model.model_number],
-                    ['Serial', loadBank[ModelFields.InstrumentFields.SERIAL_NUMBER]],
-                    ['Asset Number', loadBank[ModelFields.InstrumentFields.ASSET_TAG]],
-                    ['Date of Calibration', getCurrentDate()],
-                    ['Engineer', user.username]]
-            },
         visualInspection:
             {
                 head: [['Visual Inspection', '[y/n]']],
-                columnStyles: {1: {fillColor: [0, 255, 0]}},
+                columnStyles: {1: {fillColor: [0, 250, 0]}},
                 body: [['Visual inspection ok?', 'y']]
             },
         meterInitialization:
@@ -40,14 +31,14 @@ export let writeLoadBankTableData = (loadBank, voltmeter, shuntMeter, user, reco
                     'CA: Accepted Range [A]',
                     'ok?'
                 ]],
-                columnStyles: {5: {fillColor: [0, 255, 0]}},
+                columnStyles: {5: {fillColor: [0, 250, 0]}},
                 body: Object.keys(recordedCurrents).map(stepName => {
                     let recordedCurrent = recordedCurrents[stepName]
                     return [stepName,
                         recordedCurrent.CR,
                         recordedCurrent.CA,
-                        `${IdealCurrents[stepName] * .97}-${IdealCurrents[stepName] * 1.03}`,
-                        `${IdealCurrents[stepName] * .95}-${IdealCurrents[stepName] * 1.05}`,
+                        `${(IdealCurrents[stepName] * .97).toFixed(1)}-${(IdealCurrents[stepName] * 1.03).toFixed(1)}`,
+                        `${(IdealCurrents[stepName] * .95).toFixed(1)}-${(IdealCurrents[stepName] * 1.05).toFixed(1)}`,
                         'ok']
                 })
             },
@@ -59,32 +50,23 @@ export let writeLoadBankTableData = (loadBank, voltmeter, shuntMeter, user, reco
                     'VR: Accepted range [V]',
                     'VA: Accepted range [V]',
                     'ok?']],
-                columnStyles: {5: {fillColor: [0, 255, 0]}},
+                columnStyles: {5: {fillColor: [0, 250, 0]}},
                 body: [[
                     'Voltages with all banks on',
                     recordedVoltage.VR,
                     recordedVoltage.VA,
-                    `${(48 * .99).toFixed(3)}-${(48 * 1.01).toFixed(3)}`,
-                    `${(48 * .90).toFixed(3)}-${(48 * 1.10).toFixed(3)}`,
+                    `${(48 * .99).toFixed(1)}-${(48 * 1.01).toFixed(1)}`,
+                    `${(48 * .90).toFixed(1)}-${(48 * 1.10).toFixed(1)}`,
                     'ok']]
             },
         functionalChecks:
             {
                 head: [['Functional Checks', '[y/n]']],
-                columnStyles: {1: {fillColor: [0, 255, 0]}, 2: {fillColor: [0, 255, 0]}},
+                columnStyles: {1: {fillColor: [0, 250, 0]}},
                 body: [['Low voltage cutoff', 'y'],
                     ['Cell voltage disconnect alarm', 'y'],
                     ['Recorded data ok', 'y'],
                     ['Printer ok', 'y']]
             }
     }
-}
-
-export let onCalibrationSuccess = (loadBankData) =>
-{
-    const doc = new jsPDF()
-    Object.values(loadBankData).forEach(table =>{
-        doc.autoTable(table)
-    })
-    doc.save("calib.pdf")
 }
