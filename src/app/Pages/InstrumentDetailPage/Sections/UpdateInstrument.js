@@ -5,7 +5,7 @@ import React from "react";
 import {EquipmentModel, Instrument} from "../../../../utils/ModelEnums";
 import PropTypes from "prop-types";
 import InstrumentRequests from "../../../../controller/requests/instrument_requests";
-import {handleFormChange, handleInputChange, handleInputValueChange} from "../../../Common/Inputs/input_utils";
+import {handleFormChange, handleInputValueChange} from "../../../Common/Inputs/input_utils";
 import MiscellaneousRequests from "../../../../controller/requests/miscellaneous_requests";
 import {isNumeric} from "../../LoadBankPage/utils";
 
@@ -51,14 +51,16 @@ export default class UpdateInstrument extends React.Component {
         let getVendorsCallBack = (json) => {
             this.setState({vendors: json})
         }
-        MiscellaneousRequests.getVendors(this.props.token, this.state[ModelFields.EquipmentModelFields.MODEL_NUMBER], getVendorsCallBack, error => alert(error))
+        MiscellaneousRequests.getVendors(this.props.token, this.state[ModelFields.EquipmentModelFields.MODEL_NUMBER],
+            getVendorsCallBack, error => alert(error))
     }
 
     loadModelNumbers () {
         let getModelNumbersCallBack = (json) => {
                 this.setState({modelNumbers: json})
         }
-        MiscellaneousRequests.getModelNumbers(this.props.token, this.state[ModelFields.EquipmentModelFields.VENDOR], getModelNumbersCallBack, error => alert(error))
+        MiscellaneousRequests.getModelNumbers(this.props.token, this.state[ModelFields.EquipmentModelFields.VENDOR],
+            getModelNumbersCallBack, error => alert(error))
     }
 
     loadCategories () {
@@ -135,7 +137,7 @@ export default class UpdateInstrument extends React.Component {
                     title={mode == UpdateInstrument.EDIT_MODE ? "Edit Instrument " + instrument[Instrument.FIELDS.ASSET_TAG] : "Create Instrument"}
                     handleFormChange={handleFormChange(this)}
                     handleInputChange={this.handleInputValueChange}
-                    isEdit = {false}
+                    isEdit = {mode == UpdateInstrument.EDIT_MODE}
                     modelCategories={all_model_categories}
                     instrumentCategories={all_instrument_categories}
                     vendors={vendors}
