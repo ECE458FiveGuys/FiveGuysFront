@@ -9,8 +9,6 @@ import ActionSection from "./Sections/ActionSection";
 import CalibrationSection from "./Sections/CalibrationSection";
 import PropTypes from "prop-types";
 import {User} from "../../../utils/dtos";
-import ModelFields from "../../../utils/enums";
-import {EquipmentModel} from "../../../utils/ModelEnums";
 import {instrumentCalibratable} from "./utils";
 
 export default class InstrumentDetailView extends Component {
@@ -28,7 +26,7 @@ export default class InstrumentDetailView extends Component {
         let retrieveInstrumentError = (e) => {
             alert("RETRIEVE ERROR:" + e)
         }
-        InstrumentRequests.retrieveInstrument(token, id, retrieveInstrumentCallback,retrieveInstrumentError);
+        InstrumentRequests.retrieveInstrument(token, id, retrieveInstrumentCallback, retrieveInstrumentError);
     }
 
     updatePageState = (state) => {

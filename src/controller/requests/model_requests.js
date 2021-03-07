@@ -39,14 +39,14 @@ export default class ModelRequests {
             METHODS.GET, fullCallBack, errorMessageCallBack, header, params)
     }
 
-    static async getModelsWithSearchParams(token, params,
+    static async getModelsWithSearchParams(token,
+                                           searchParams,
                                            callBack = (json) => json,
-                                           errorMessageCallBack = (errorMessage) => errorMessage) {
-        let header = RequestUtils.buildTokenHeader(token)
-        params = RequestUtils.removeEmptyFields(params)
-        let url = URLS.MODELS + RequestUtils.applySearchParams(params, EquipmentModel.TYPE)
-        RequestUtils.assistedFetch(url,
-            METHODS.GET, callBack, errorMessageCallBack, header, {}, undefined)
+                                           errorMessageCallBack = (errorMessage) => errorMessage,
+                                           pageNum= undefined,
+                                           ordering = undefined) {
+        RequestUtils.getWithSearchParams(ModelFields.ModelTypes.EQUIPMENT_MODEL, token, searchParams, callBack,
+            errorMessageCallBack, pageNum, ordering)
     }
 
     static async retrieveModel(token,
@@ -109,7 +109,6 @@ export default class ModelRequests {
         fields[ModelFields.EquipmentModelFields.DESCRIPTION] = description
         fields[ModelFields.EquipmentModelFields.COMMENT] = comment
         fields[ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY] = calibration_frequency
-        // RequestUtils.removeEmptyFields(fields)
         RequestUtils.assistedFetch(url, method,
                                     callBack, errorMessageCallBack,
                                     header, undefined, fields)

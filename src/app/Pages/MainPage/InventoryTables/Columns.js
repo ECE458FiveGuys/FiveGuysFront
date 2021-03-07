@@ -29,7 +29,7 @@ export default class TableColumns {
         {
             label: 'Categories',
             field: ModelFields.EquipmentModelFields.MODEL_CATEGORIES,
-            sort: 'asc',
+            sortNone: () => {},
             width: 100
         },
     ]
@@ -37,13 +37,13 @@ export default class TableColumns {
     static INSTRUMENT_COLUMNS = [
         {
             label: 'Vendor',
-            field: ModelFields.EquipmentModelFields.VENDOR,
+            field: ModelFields.InstrumentSearchFields.Vendor,
             sort: 'asc',
             width: 270
         },
         {
             label: 'Model Number',
-            field: ModelFields.EquipmentModelFields.MODEL_NUMBER,
+            field: ModelFields.InstrumentSearchFields["Model Number"],
             sort: 'asc',
             width: 200
         },
@@ -61,7 +61,7 @@ export default class TableColumns {
         },
         {
             label: 'Description',
-            field: ModelFields.EquipmentModelFields.DESCRIPTION,
+            field: ModelFields.InstrumentSearchFields.Description,
             sort: 'asc',
             width: 100
         },

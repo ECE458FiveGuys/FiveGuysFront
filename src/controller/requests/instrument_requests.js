@@ -45,19 +45,12 @@ export default class InstrumentRequests {
             METHODS.GET, fullCallBack, errorMessageCallBack, header, params)
     }
 
-    static async getInstrumentsWithSearchParams(token, params,
+    static async getInstrumentsWithSearchParams(token, searchParams,
                                                 callBack = (json) => json,
-                                                errorMessageCallBack = (errorMessage) => errorMessage) {
-        let header = RequestUtils.buildTokenHeader(token)
-        params = RequestUtils.removeEmptyFields(params)
-        let url = URLS.INSTRUMENTS + RequestUtils.applySearchParams(params, Instrument.TYPE)
-        RequestUtils.assistedFetch(url,
-            METHODS.GET,
-            callBack,
-            errorMessageCallBack,
-            header,
-            {},
-            undefined)
+                                                errorMessageCallBack = (errorMessage) => errorMessage,
+                                                pageNum, ordering) {
+        RequestUtils.getWithSearchParams(ModelFields.ModelTypes.INSTRUMENT, token, searchParams, callBack,
+            errorMessageCallBack, pageNum, ordering)
     }
 
     static async retrieveInstrument(token, pk,

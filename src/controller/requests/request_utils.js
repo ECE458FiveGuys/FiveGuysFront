@@ -128,6 +128,28 @@ export default class RequestUtils {
         }
     }
 
+    static getWithSearchParams(type,
+                                 token,
+                                searchParams,
+                                callBack = (json) => json,
+                                errorMessageCallBack = (errorMessage) => errorMessage,
+                                pageNum= undefined,
+                                ordering = undefined) {
+            let header = RequestUtils.buildTokenHeader(token)
+            searchParams = RequestUtils.removeEmptyFields(searchParams)
+            let urlSuffix = RequestUtils.applySearchParams(searchParams, type)
+            urlSuffix = RequestUtils.appendToUrlSuffix(urlSuffix, 'page', pageNum)
+            urlSuffix = RequestUtils.appendToUrlSuffix(urlSuffix, 'ordering', ordering)
+            let url = (type == ModelFields.ModelTypes.EQUIPMENT_MODEL ?
+                        URLS.MODELS :
+                        type == ModelFields.ModelTypes.INSTRUMENT ?
+                        URLS.INSTRUMENTS : '') + urlSuffix
+            RequestUtils.assistedFetch(url,
+            METHODS.GET, callBack, errorMessageCallBack, header, undefined, undefined)
+    }
+
+
+
     static buildTokenHeader(token) {
         return {
             'Authorization': 'Token ' + token
@@ -177,6 +199,9 @@ export default class RequestUtils {
         return suffix.slice(0, -1) // removes last &
     }
 
+    static appendToUrlSuffix(urlSuffix, fieldName, value) {
+        return urlSuffix + (value ? urlSuffix && urlSuffix.length > 0 ? `&${fieldName}=${value}` : `?${fieldName}=${value}` : '')
+    }
 
     static removeEmptyFields(obj) {
         for (var propName in obj) {

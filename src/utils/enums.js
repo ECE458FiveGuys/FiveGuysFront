@@ -53,9 +53,9 @@ export default class ModelFields {
     }
 
     static InstrumentSearchFields = {
-        "Vendor": ModelFields.EquipmentModelFields.VENDOR,
-        "Model Number": ModelFields.EquipmentModelFields.MODEL_NUMBER,
-        "Description": ModelFields.EquipmentModelFields.DESCRIPTION,
+        "Vendor": "model__" + ModelFields.EquipmentModelFields.VENDOR,
+        "Model Number": "model__" + ModelFields.EquipmentModelFields.MODEL_NUMBER,
+        "Description": "model__" + ModelFields.EquipmentModelFields.DESCRIPTION,
         "Serial Number": ModelFields.InstrumentFields.SERIAL_NUMBER,
         "Asset Tag" : ModelFields.InstrumentFields.ASSET_TAG,
         "Model Categories": ModelFields.EquipmentModelFields.MODEL_CATEGORIES,

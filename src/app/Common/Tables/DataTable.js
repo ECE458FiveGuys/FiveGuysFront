@@ -10,27 +10,33 @@ export default class DataTable extends Component {
     }
 
     render() {
+        let {columns, rows, searching, backendPagination} = this.props
         let data = {
-            columns: this.props.columns,
-            rows: this.props.rows
+            columns: columns,
+            rows: rows
         }
-        return !this.props.rows ?
+        return !rows ?
             (<Loading/>)
-            :
-            (<MDBDataTable
-                autoWidth={false}
-                hover
-                striped
-                bordered
-                small
-                searching={this.props.searching}
-                data={data}
-            />)
+                :
+                (<MDBDataTable
+                    autoWidth={false}
+                    hover
+                    striped
+                    bordered
+                    small
+                    searching={searching}
+                    data={data}
+                />)
     }
 }
 
 DataTable.propTypes = {
     columns: PropTypes.array.isRequired, // the columns of the datatable
     rows : PropTypes.array.isRequired,
-    searching : PropTypes.bool
+    searching : PropTypes.bool,
+    backendPaginated : PropTypes.bool,
+}
+
+DataTable.defaultProps = {
+    backendPaginated : false
 }
