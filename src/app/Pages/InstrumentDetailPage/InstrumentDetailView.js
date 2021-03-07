@@ -10,6 +10,7 @@ import CalibrationSection from "./Sections/CalibrationSection";
 import PropTypes from "prop-types";
 import {User} from "../../../utils/dtos";
 import {instrumentCalibratable} from "./utils";
+import MainView from "../MainPage/MainView";
 
 export default class InstrumentDetailView extends Component {
 
@@ -35,11 +36,13 @@ export default class InstrumentDetailView extends Component {
 
     render() {
         let {instrument, calibrations} = this.state
-        let {token, history, user} = this.props
+        let {token, history, user, location} = this.props
         if (instrument) {
             return (
                 <div>
-                    <HTPNavBar user={this.props.user}></HTPNavBar>
+                    <HTPNavBar user={user}
+                               location={location}
+                    ></HTPNavBar>
                     <div style={{flex : 1, display : "flex", flexDirection : "column", justifyContent : 'space-evenly', alignItems : 'center', marginLeft : 100, marginRight : 100}}>
                         <h1 style={{marginTop : 20, marginBottom : 30}}
                             className={"h1-responsive"}>

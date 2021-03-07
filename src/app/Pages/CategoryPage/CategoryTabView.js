@@ -17,14 +17,9 @@ class MainView extends Component {
 
     render() {
         return (
-            // <Gradient
-            //     gradients={ gradients } // required
-            //     property="background"
-            //     duration={ 3000 }
-            //     angle="45deg"
-            // >
             <div>
-                <NavBar user={this.props.user}/>
+                <NavBar user={this.props.user}
+                        location={this.props.location}/>
                 <TabView token={this.props.token}
                          user={this.props.user}
                          modelPage={<CategoryPage token={this.props.token}
