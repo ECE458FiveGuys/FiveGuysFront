@@ -67,65 +67,94 @@ class CSV_Import extends Component{
         const data = new FormData();
         let dat = this.state.file
         data.append('file', dat);
-        let result = await ImportExportRequests.importInstruments(this.props.token, data);
-        result = await this.instrParse(result)
-        this.setState({results: result, modelSelected: false, instrumentSelected: true})
+        let name = this.state.file.name
+        let result = await ImportExportRequests.importInstruments(this.props.token, data,name);
+        if(result != undefined) {
+            result = await this.instrParse(result)
+            this.setState({results: result, modelSelected: false, instrumentSelected: true})
+        }
+        else{
+            this.setState({results:undefined})
+        }
     }
 
     handleModelSubmission = async() => {
         const data = new FormData();
         let dat = this.state.file
         data.append('file', dat);
-        let result = await ImportExportRequests.importModels(this.props.token, data);
-        result = await this.modParse(result)
-        this.setState({results: result, modelSelected: true, instrumentSelected: false})
+        let name = this.state.file.name
+        let result = await ImportExportRequests.importModels(this.props.token, data, name);
+        if(result != undefined) {
+            result = await this.modParse(result)
+            this.setState({results: result, modelSelected: true, instrumentSelected: false})
+        }
+        else{
+            this.setState({results:[]})
+        }
     }
 
     modParse = (results) => {
-        results.forEach(result => {
-            let model_pk = result[ModelFields.EquipmentModelFields.PK]
-            result[ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY] =
-                result[ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY] === "00:00:00" ?
-                    "Noncalibratable"
-                    :
-                    result[ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY].split(" ")[0]
+        if(results != undefined) {
+            results.forEach(result => {
+                result[ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY] =
+                    result[ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY] === "00:00:00" ?
+                        "Noncalibratable"
+                        :
+                        result[ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY].split(" ")[0]
 
-            result[ModelFields.EquipmentModelFields.MODEL_CATEGORIES] =
-                TableUtils.categoriesToString(result[ModelFields.EquipmentModelFields.MODEL_CATEGORIES])
-            result.clickEvent = handleNavClick("/models/" + model_pk)
-        })
-        return results
+                result[ModelFields.EquipmentModelFields.MODEL_CATEGORIES] =
+                    TableUtils.categoriesToString(result[ModelFields.EquipmentModelFields.MODEL_CATEGORIES])
+            })
+            return results
+        }
+        else {
+            return [];
+        }
     }
 
     instrParse = (results) => {
-        results.forEach(result => {
-            let model = result[ModelFields.InstrumentFields.MODEL]
-            delete result[ModelFields.InstrumentFields.MODEL]
-            result[ModelFields.InstrumentFields.EXPIRATION_DATE] = this.calculateCalibrationExpirationElement(result)
-            if (!result[ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION]) {
-                result[ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION] = "Noncalibratable"
-            }
-            let instrument_pk = result[ModelFields.InstrumentFields.PK]
-            result[ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES] =
-                TableUtils.categoriesToString(result[ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES])
-            model[ModelFields.EquipmentModelFields.MODEL_CATEGORIES] =
-                TableUtils.categoriesToString(model[ModelFields.EquipmentModelFields.MODEL_CATEGORIES])
-            result.clickEvent = handleNavClick("/instruments/" + instrument_pk)
-            Object.assign(result, model)
-        })
-        return results
+        if (results != undefined) {
+
+            results.forEach(result => {
+                let model = result[ModelFields.InstrumentFields.MODEL]
+                delete result[ModelFields.InstrumentFields.MODEL]
+                result[ModelFields.InstrumentFields.EXPIRATION_DATE] = this.calculateCalibrationExpirationElement(result)
+                if (!result[ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION]) {
+                    result[ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION] = "Noncalibratable"
+                }
+                result[ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES] =
+                    TableUtils.categoriesToString(result[ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES])
+                model[ModelFields.EquipmentModelFields.MODEL_CATEGORIES] =
+                    TableUtils.categoriesToString(model[ModelFields.EquipmentModelFields.MODEL_CATEGORIES])
+                Object.assign(result, model)
+            })
+            return results
+        } else {
+            return [];
+        }
     }
-
-
 
     render(){
         const {results, modelSelected, instrumentSelected} = this.state;
+        let datatable = []
+        if(results!=undefined){
+           datatable.push(
+               <DataTable_NoGIF
+                columns = {modelSelected ? TableColumns.MODEL_COLUMNS : TableColumns.INSTRUMENT_COLUMNS}
+                rows={results}
+                searching={false}
+               />
+            )
+        }
+        else{
+            datatable = []
+        }
 
         return(
             <MDBContainer>
                 <MDBRow style={{justifyContent: 'center', alignItems: 'center', marginTop: 50, xs: 2}}>
                     <MDBInput color="dark-green" type="file" id="input-file-now" className="file-upload-input" data-mdb-file-upload="file-upload"
-                           accept="text/csv" onChange={this.fileSelected}>
+                           accept="text/csv, .csv" onChange={this.fileSelected}>
                     </MDBInput>
                     <HTPButton
                             onSubmit={this.importTypeSelected('models')}
@@ -142,11 +171,7 @@ class CSV_Import extends Component{
                     </a>
                 </MDBRow>
                 <MDBRow style={{justifyContent: 'center', alignItems: 'center', marginTop: 50, xs: 2}}>
-                    <DataTable_NoGIF
-                                columns = {modelSelected ? TableColumns.MODEL_COLUMNS : TableColumns.INSTRUMENT_COLUMNS}
-                                rows={results}
-                                searching={false}
-                            />
+                    {datatable}
                 </MDBRow>
             </MDBContainer>
     );

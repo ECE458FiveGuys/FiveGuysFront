@@ -84,12 +84,13 @@ class UserSettingsPage extends Component{
 
 
     getUserList = async() => {
-        let result = UserRequests.getAllUsers(this.props.token)
-        result = await this.userParse(result)
-        this.setState({userList: result})
+        let results = await UserRequests.getAllUsers(this.props.token)
+        results = await this.userParse(results)
+        this.setState({userList: results})
     }
 
     userParse = (results) => {
+        console.log(results)
         results.forEach(result => {
             result[ModelFields.UserFields.USER_CATEGORIES] =
                 TableUtils.categoriesToString(result[ModelFields.UserFields.USER_CATEGORIES])

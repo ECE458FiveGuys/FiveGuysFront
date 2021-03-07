@@ -19,48 +19,34 @@ export default class UserRequests {
             params)
     }
 
-    static async getAllUsers(token,
-                             callBack = (json) => json,
-                             errorMessageCallBack = (errorMessage) => errorMessage)
+    static async getAllUsers(token)
     {
         let header = RequestUtils.buildTokenHeader(token)
         //let params = {}
-        RequestUtils.assistedFetch(AUTH_URLS.USERS,
-            METHODS.GET,
-            callBack,
-            errorMessageCallBack,
-            header)
+        return await RequestUtils.assisted_simple_fetch(AUTH_URLS.USERS,
+            METHODS.GET, header)
     }
 
     static async deactivateUser(token,
-                             pk,
-                             callBack = (json) => json,
-                             errorMessageCallBack = (errorMessage) => errorMessage)
+                             pk)
     {
         let header = RequestUtils.buildTokenHeader(token)
         //let params = {}
-        RequestUtils.assistedFetch(AUTH_URLS.USERS + pk + '/deactivate',
+        return await RequestUtils.assisted_simple_fetch(AUTH_URLS.USERS + pk + '/deactivate',
             METHODS.POST,
-            callBack,
-            errorMessageCallBack,
             header)
     }
 
     static async passwordChange(token,
                                 password,
-                                old_password,
-                                callBack = (json) => json,
-                                errorMessageCallBack = (errorMessage) => errorMessage){
+                                old_password){
         let header = RequestUtils.buildTokenHeader(token)
-        let params = {"new_password" : password, "re_new_password" : password, "current_password" : old_password}
+        let data = {"new_password" : password, "re_new_password" : password, "current_password" : old_password}
 
-        RequestUtils.assistedFetch(AUTH_URLS.PASSWORD_CHANGE,
+        return await RequestUtils.assisted_simple_fetch(AUTH_URLS.PASSWORD_CHANGE,
             METHODS.POST,
-            callBack,
-            errorMessageCallBack,
             header,
-            params)
+            {},
+            data)
     }
-
-
 }
