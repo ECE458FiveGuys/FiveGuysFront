@@ -135,6 +135,7 @@ class FormEntry extends Component {
                     <label className={"grey-text"}>{formFields[fieldKey]}</label>
                     <input name={fieldKey}
                            aria-multiline={true}
+                           placeholder={formFields[fieldKey]}
                             className="form-control"
                             onChange={this.props.handleFormChange}
                             defaultValue={(this.props.isEdit) ? this.props.subject[fieldKey] : ""}
