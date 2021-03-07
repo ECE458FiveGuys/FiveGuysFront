@@ -12,13 +12,15 @@ import HTPAutoCompleteInput from "../../../Common/Inputs/HTPAutoCompleteInput";
 import MiscellaneousRequests from "../../../../controller/requests/miscellaneous_requests";
 import {EquipmentModel, Instrument} from "../../../../utils/ModelEnums";
 import HTPPopup from "../../../Common/HTPPopup";
+import HTPButton from "../../../Common/HTPButton";
 
 class CreateModel extends Component {
 
     constructor(props) {
         super(props)
         this.state = {vendor:'', model_number:'', description:'', comment:'',
-            calibration_frequency:'',categories_chosen:[], modal : false, displayMessage: [], requestStatus:''}
+            calibration_frequency:'',categories_chosen:[], modal : false, displayMessage: [],
+            requestStatus:'', responseColor:'red'}
 
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
@@ -89,9 +91,11 @@ class CreateModel extends Component {
                 json.toString()
                 let returnArray = []
                 let responseTitle = ''
+                let responseColor = ''
                 if (json.includes('pk')) {
                     returnArray =
                       [
+                          'Success! The model was added:',
                       'Vendor : '+ this.state.vendor,
                       'Model Number : '+ this.state.model_number,
                       'Description : '+ this.state.description,
@@ -100,27 +104,20 @@ class CreateModel extends Component {
                       'Categories : '+ this.state.categories_chosen
                     ]
                     responseTitle = 'Success! The model was added:'
+                    responseColor = 'green'
                 }
                 else {
                     returnArray = ErrorParser.parse(json)
                     responseTitle = 'Error when creating the model:'
+                    responseColor = 'red'
                 }
                 let newState = {}
                 newState['displayMessage'] = returnArray
                 newState['requestStatus'] = responseTitle
+                newState['responseColor'] = responseColor
                 this.setState(newState)
                 console.log(json)
             })
-            // .catch((error) => { //failure
-            //     event.preventDefault()
-            //     alert(`
-            //       Error when creating the model:\n
-            //       ${error}
-            //
-            //     `)
-            //     console.log("here")
-            //     console.error('Error:', error);
-            // });
         this.toggleModal()
     }
 
@@ -159,13 +156,10 @@ class CreateModel extends Component {
     render(){
         return(
             <div>
-                <NavBar user={this.props.user}/>
                 <MDBContainer>
                     <br />
                     <MDBRow >
                         <MDBCol>
-                            <form onSubmit={this.handleSubmit}>
-
                                 <HTPAutoCompleteInput options = {this.state.vendors} label={'Vendor'} onChange={this.handleChange('vendor')} placeholder={'required'}/>
 
                                 <HTPInput label={'Model Number'} onChange={this.handleChange('model_number')} placeholder={'required'}></HTPInput>
@@ -178,17 +172,9 @@ class CreateModel extends Component {
 
                                 <HTPAutoCompleteInput multiple = {true} options = {this.state.categories} label={'Categories'} onChange={this.handleChange('categories_chosen')} placeholder={'required'}/>
 
-                                <MDBBtn color="warning" outline type="button" onClick={this.handleSubmit}>
-                                    Create Model
-                                    <MDBIcon far icon="paper-plane" className="ml-2" />
-                                </MDBBtn>
-                                <HTPPopup isOpen={this.state.modal}
-                                          toggleModal={this.toggleModal}
-                                          className={"text-info"}
-                                          title={this.state.requestStatus}
-                                          message={this.getDisplayMessage()}/>
-
-                            </form>
+                                <HTPButton label={'Create Model'} onSubmit={this.handleSubmit}></HTPButton>
+                                <br/>
+                                <text style={{ color: this.state.responseColor }}>{this.getDisplayMessage()}</text>
                         </MDBCol>
                     </MDBRow>
                 </MDBContainer>
