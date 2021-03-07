@@ -15,6 +15,7 @@ import OAuthRedirect from "./auth/OAuthRedirect";
 import CreateModel from "./app/Pages/MainPage/CreateFunctions/CreateModel";
 import CreateInstrument from "./app/Pages/MainPage/CreateFunctions/CreateInstrument";
 import CreateUser from "./app/Pages/MainPage/CreateFunctions/CreateUser";
+import TempPage from "./app/Pages/MainPage/CreateFunctions/TempPage";
 
 class App extends Component {
 
@@ -111,6 +112,10 @@ class App extends Component {
               </Route>
               <Route path="/create-user/">
                 <CreateUser token={this.state.token}
+                            user={this.state.user}/>
+              </Route>
+              <Route path="/temp-page/">
+                <TempPage token={this.state.token}
                             user={this.state.user}/>
               </Route>
               <Route>

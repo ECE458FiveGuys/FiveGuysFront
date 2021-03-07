@@ -10,13 +10,14 @@ export default class HTPPopup extends Component {
     }
 
     render() {
-        let {isOpen, toggleModal, className, title, message, additionalButtons} = this.props
+        let {isOpen, toggleModal, className, title, message, additionalButtons, additionalElements} = this.props
         return (<MDBModal isOpen={isOpen} toggle={toggleModal}>
                     <MDBModalHeader toggle={toggleModal} className={className}>
                         {title}
                     </MDBModalHeader>
                     <ModalBody>
                         {message}
+                        {additionalElements}
                     </ModalBody>
                     <MDBModalFooter>
                         <MDBBtn color="green" onClick={toggleModal}>Close</MDBBtn>
@@ -32,10 +33,12 @@ HTPPopup.propTypes = {
     className : PropTypes.string,
     title : PropTypes.string.isRequired,
     message : PropTypes.string.isRequired,
-    additionalButtons : PropTypes.element
+    additionalButtons : PropTypes.element,
+    additionalElements : PropTypes.element
 }
 
 HTPPopup.defaultProps = {
     additionalButtons : <div/>,
+    additionalElements : <div/>,
     className : "text-info"
 }
