@@ -14,8 +14,8 @@ import DataTable_NoGIF from "../../Common/Tables/DataTable_NoGIF";
 import TableColumns from "../../Pages/MainPage/InventoryTables/Columns";
 import ModelFields from "../../../utils/enums";
 import TableUtils from "../../Pages/MainPage/InventoryTables/TableUtils";
-import {newTab} from "../../utils";
-import HTPButton from "../../Common/Inputs/HTPButton";
+import {handleNavClick} from "../../utils";
+import HTPButton from "../../Common/HTPButton";
 
 let fileSize = 32000000
 let sizeError = "File Size Exceeds 32 MB"
@@ -92,7 +92,7 @@ class CSV_Import extends Component{
 
             result[ModelFields.EquipmentModelFields.MODEL_CATEGORIES] =
                 TableUtils.categoriesToString(result[ModelFields.EquipmentModelFields.MODEL_CATEGORIES])
-            result.clickEvent = newTab("/models/" + model_pk)
+            result.clickEvent = handleNavClick("/models/" + model_pk)
         })
         return results
     }
@@ -110,7 +110,7 @@ class CSV_Import extends Component{
                 TableUtils.categoriesToString(result[ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES])
             model[ModelFields.EquipmentModelFields.MODEL_CATEGORIES] =
                 TableUtils.categoriesToString(model[ModelFields.EquipmentModelFields.MODEL_CATEGORIES])
-            result.clickEvent = newTab("/instruments/" + instrument_pk)
+            result.clickEvent = handleNavClick("/instruments/" + instrument_pk)
             Object.assign(result, model)
         })
         return results

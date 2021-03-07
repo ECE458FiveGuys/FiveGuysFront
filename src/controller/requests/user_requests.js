@@ -20,12 +20,11 @@ export default class UserRequests {
     }
 
     static async getAllUsers(token,
-                             user_pk,
                              callBack = (json) => json,
                              errorMessageCallBack = (errorMessage) => errorMessage)
     {
         let header = RequestUtils.buildTokenHeader(token)
-        let params = {}
+        //let params = {}
         RequestUtils.assistedFetch(AUTH_URLS.USERS,
             METHODS.GET,
             callBack,
@@ -34,15 +33,34 @@ export default class UserRequests {
     }
 
     static async deactivateUser(token,
+                             pk,
                              callBack = (json) => json,
                              errorMessageCallBack = (errorMessage) => errorMessage)
     {
         let header = RequestUtils.buildTokenHeader(token)
-        // let params = {}
-        RequestUtils.assistedFetch(AUTH_URLS.USERS,
-            METHODS.GET,
+        //let params = {}
+        RequestUtils.assistedFetch(AUTH_URLS.USERS + pk + '/deactivate',
+            METHODS.POST,
             callBack,
             errorMessageCallBack,
             header)
     }
+
+    static async passwordChange(token,
+                                password,
+                                old_password,
+                                callBack = (json) => json,
+                                errorMessageCallBack = (errorMessage) => errorMessage){
+        let header = RequestUtils.buildTokenHeader(token)
+        let params = {"new_password" : password, "re_new_password" : password, "current_password" : old_password}
+
+        RequestUtils.assistedFetch(AUTH_URLS.PASSWORD_CHANGE,
+            METHODS.POST,
+            callBack,
+            errorMessageCallBack,
+            header,
+            params)
+    }
+
+
 }

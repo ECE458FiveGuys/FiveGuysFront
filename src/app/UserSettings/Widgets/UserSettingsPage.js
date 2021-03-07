@@ -4,11 +4,8 @@ import DatatableEditable from "../../Common/Tables/DatatableEditable";
 import UserRequests from "../../../controller/requests/user_requests";
 import ModelFields from "../../../utils/enums";
 import TableUtils from "../../Pages/MainPage/InventoryTables/TableUtils";
-import {newTab} from "../../utils";
 import TableColumns from "../../Pages/MainPage/InventoryTables/Columns";
-import NavBar from "../../Common/NavBar";
-import {Gradient} from "react-gradient";
-import {TextField} from "@material-ui/core";
+import async from "async";
 
 class UserSettingsPage extends Component{
 
@@ -20,6 +17,8 @@ class UserSettingsPage extends Component{
             userList: [],
             input: {},
             errors: {},
+            new_pass: "",
+            pk: "",
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -40,11 +39,15 @@ class UserSettingsPage extends Component{
         if(this.validate()){
             console.log(this.state);
 
+            this.setState({new_pass: this.state.input.password})
+
             let input = {};
+            input["old_pass"] = ""
             input["password"] = "";
             input["confirm_password"] = "";
             this.setState({input:input});
 
+            let result = this.submitPassword()
             alert('Password Change Submitted');
         }
     }
@@ -102,12 +105,19 @@ class UserSettingsPage extends Component{
 
     }
 
-    deactivate(){
+    deactivate = async() =>{
+        let result = await UserRequests.deactivateUser(this.props.token,this.state.pk)
+        return result
+    }
 
+    submitPassword = async() =>{
+        let result = await UserRequests.passwordChange(this.props.token,this.state.input.password, this.state.input.old_pass)
+        return result
     }
 
 
     render() {
+        let res = this.getUserList()
         const {userList} = this.state
         let {user} = this.props
         let datatable = []
@@ -116,7 +126,7 @@ class UserSettingsPage extends Component{
                 <DatatableEditable
                     token={this.props.token}
                     columns={TableColumns.USER_COLUMNS}
-                    rows={userList}
+                    rows={res}
                     editableColumns={TableColumns.USER_COLUMNS_EDITABLE}
                     editFunction={this.changeAdminState}
                     createFunction={this.makeUser}
@@ -128,21 +138,33 @@ class UserSettingsPage extends Component{
         return(
             <div>
                 <MDBContainer>
-                    <MDBCol style={{justifyContent: 'center', alignItems: 'center', marginTop: 50, xs: 2}}>
+                    <MDBRow style={{justifyContent: 'center', alignItems: 'center', marginTop: 50, xs: 2}}>
                         <form onSubmit={this.handleSubmit}>
                             <h1>Password Reset:</h1>
                             <div className="form-group">
-                                    <label htmlFor="password">New Password:</label>
-                                    <input
-                                        type="password"
-                                        name="password"
-                                        value={this.state.input.password}
-                                        onChange={this.handleChange}
-                                        className="form-control"
-                                        placeholder="Enter password"
-                                        id="password"/>
-                                    <div className="text-danger">{this.state.errors.password}</div>
-                                </div>
+                                <label htmlFor="password">Old Password:</label>
+                                <input
+                                    type="password"
+                                    name="old_pass"
+                                    value={this.state.input.old_pass}
+                                    onChange={this.handleChange}
+                                    className="form-control"
+                                    placeholder="Enter password"
+                                    id="password"/>
+                                <div className="text-danger">{this.state.errors.password}</div>
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="password">New Password:</label>
+                                <input
+                                    type="password"
+                                    name="password"
+                                    value={this.state.input.password}
+                                    onChange={this.handleChange}
+                                    className="form-control"
+                                    placeholder="Enter password"
+                                    id="password"/>
+                                <div className="text-danger">{this.state.errors.password}</div>
+                            </div>
                                 <div className="form-group">
                                     <label htmlFor="password">Confirm New Password:</label>
                                     <input
@@ -156,7 +178,7 @@ class UserSettingsPage extends Component{
                                 </div>
                             <input type="submit" value="Submit" className="btn btn-success"/>
                         </form>
-                        </MDBCol>
+                        </MDBRow>
                     <MDBRow style={{justifyContent: 'center', alignItems: 'center', marginTop: 50, xs: 2}}>
                         <h2>User Table:</h2>
                         {datatable}

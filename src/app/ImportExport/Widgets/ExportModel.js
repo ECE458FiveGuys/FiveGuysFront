@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import ImportExportRequests from "../../../controller/requests/import_export_requests";
 import {CSVLink} from "react-csv";
 import "react-papaparse";
-import HTPButton from "../../Common/Inputs/HTPButton";
+import HTPButton from "../../Common/HTPButton";
 
 class ExportModel extends Component{
 

@@ -5,8 +5,7 @@ import PropTypes from "prop-types";
 import {Gradient} from "react-gradient";
 import {MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn, MDBDropdown, MDBDropdownToggle, MDBDropdownMenu} from 'mdbreact';
 import CSV_Import from "./Widgets/CSV_Import";
-import HTPButton from "../Common/Inputs/HTPButton";
-import NavBar from "../Common/HTPNavBar";
+import HTPNavBar from "../Common/HTPNavBar";
 
 
 const gradients = [
@@ -28,7 +27,7 @@ render(){
                 duration={ 3000 }
                 angle="45deg"
             >
-                <NavBar user={this.props.user}/>
+                <HTPNavBar user={this.props.user}/>
                 <MDBContainer>
                     <MDBRow style={{justifyContent: 'center', alignItems: 'center', marginTop: 200, xs: 2}}>
                         <ExportModel token = {this.props.token}/>
