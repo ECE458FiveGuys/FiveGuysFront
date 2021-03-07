@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import SearchHeader from "../Widgets/SearchHeader";
 import MiscellaneousRequests from "../../../../controller/requests/miscellaneous_requests";
 import ModelFields from "../../../../utils/enums";
 import {EquipmentModel, Instrument} from "../../../../utils/ModelEnums";
@@ -10,6 +9,7 @@ import 'jspdf-autotable'
 import HTPButton from "../../../Common/HTPButton";
 import Image from "../../../../assets/hpt_logo.png"
 import BackendPaginatedDataTable from "../../../Common/Tables/BackendPaginatedDataTable";
+import ActionHeader from "../Widgets/ActionHeader";
 class InventoryTable extends Component {
 
     constructor(props) {
@@ -60,17 +60,22 @@ class InventoryTable extends Component {
         )
     }
 
+    updatePageState = (state) => {
+        this.setState(state)
+    }
+
     render() {
         let {searchRequestFunction, parseSearchResultsFunction, token, columns, searchFields} = this.props
         let {searchFieldValues} = this.state
         return (
-            <div style={{background: "white"}}>
-                <SearchHeader searchFields={searchFields}
+            <div>
+                <ActionHeader searchFields={searchFields}
                               updateSearchFieldValues={this.updateSearchFieldValues}
                               token={token}
                               vendors={this.state.vendors}
                               modelCategories={this.state.model_categories ? this.state.model_categories : []}
                               instrumentCategories={this.state.instrument_categories ? this.state.instrument_categories : []}
+                              updatePageState={this.updatePageState}
                                 />
                 {this.props.children}
                 <BackendPaginatedDataTable columns={columns}

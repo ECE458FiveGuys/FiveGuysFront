@@ -9,7 +9,11 @@ import {handleFormChange, handleInputChange, handleInputValueChange} from "../..
 import MiscellaneousRequests from "../../../../controller/requests/miscellaneous_requests";
 import {isNumeric} from "../../LoadBankPage/utils";
 
+
 export default class UpdateInstrument extends React.Component {
+
+    static EDIT_MODE = "EDIT"
+    static CREATE_MODE = "CREATE"
 
     constructor(props) {
         super(props);
@@ -17,16 +21,16 @@ export default class UpdateInstrument extends React.Component {
     }
 
     makeRefreshState () {
-        let {instrument} = this.props
+        let {mode, instrument} = this.props
         return {
-            vendor: instrument.model.vendor,
-            model_number: instrument.model.model_number,
-            serial_number: instrument.serial_number,
-            comment: instrument.comment,
-            asset_tag_number: instrument.asset_tag_number,
-            instrument_categories: instrument.instrument_categories,
-            error: undefined
-        }
+                vendor: mode == UpdateInstrument.EDIT_MODE ? instrument.model.vendor : undefined,
+                model_number: mode == UpdateInstrument.EDIT_MODE ? instrument.model.model_number : undefined,
+                serial_number: mode == UpdateInstrument.EDIT_MODE ? instrument.serial_number : undefined,
+                comment: mode == UpdateInstrument.EDIT_MODE ? instrument.comment : undefined,
+                asset_tag_number: mode == UpdateInstrument.EDIT_MODE ? instrument.asset_tag_number : undefined,
+                instrument_categories: mode == UpdateInstrument.EDIT_MODE ? instrument.instrument_categories : undefined,
+                error: undefined
+            }
     }
 
     setDeleteModalShow(boolean) {
@@ -70,11 +74,11 @@ export default class UpdateInstrument extends React.Component {
             getCategoriesCallBack)
     }
 
-    handleEdit = () => {
-        let {instrument, updatePageState, token} = this.props
+    handleUpdate = () => {
+        let {instrument, updatePageState, token, mode} = this.props
         let {model_number, vendor, serial_number, comment, asset_tag_number, instrument_categories} = this.state
 
-        if (!isNumeric(asset_tag_number.toString()) || parseInt(asset_tag_number) > 999999 || parseInt(asset_tag_number) < 100000) {
+        if (!asset_tag_number || (!isNumeric(asset_tag_number.toString()) || parseInt(asset_tag_number) > 999999 || parseInt(asset_tag_number) < 100000)) {
             this.setState({error : "Asset tag must be a 6 digit number"})
             return
         } else if (comment && comment.length > 2000) {
@@ -82,19 +86,23 @@ export default class UpdateInstrument extends React.Component {
             return;
         }
 
-        let editCallback = (response) => {
+        let callBack = (response) => {
             InstrumentRequests.retrieveInstrument(token, instrument.pk, (json) => {
                 updatePageState({instrument: json})
             })
             if (this.state.error) this.setState({error : false})
             this.setEditModalShow(false)
         }
-        let editError = (e) => {
-            // alert("edit"+e)
+        let errorCallBack = (e) => {
             this.setState({error : e})
         }
-        InstrumentRequests.editInstrument(token, instrument.pk, model_number, vendor,
-            serial_number,comment,asset_tag_number, instrument_categories, editCallback,editError)
+        if (mode == UpdateInstrument.EDIT_MODE) {
+            InstrumentRequests.editInstrument(token, instrument.pk, model_number, vendor,
+                serial_number, comment, asset_tag_number, instrument_categories, callBack, errorCallBack())
+        } else if (mode == UpdateInstrument.CREATE_MODE) {
+            InstrumentRequests.createInstrument(token, model_number, vendor,
+                serial_number, comment, asset_tag_number, instrument_categories, callBack, errorCallBack())
+        }
     }
 
     handleInputValueChange = (name) => (value) => {
@@ -111,23 +119,23 @@ export default class UpdateInstrument extends React.Component {
 
     render() {
         let {editModalShow, all_model_categories, all_instrument_categories, vendors, modelNumbers, error} = this.state
-        let {token, instrument} = this.props
+        let {token, instrument, mode} = this.props
         return(
             <div>
                 <Button variant="green" onClick={() => this.setEditModalShow(true)}>
-                    Edit
+                    {mode == UpdateInstrument.EDIT_MODE ? 'Edit' : 'Create'}
                 </Button>
                 <EditModal
                     show={editModalShow}
                     onHide={() => this.setState(this.makeRefreshState(), () => this.setEditModalShow(false))}
                     token={token}
-                    submitMethod={this.handleEdit}
+                    submitMethod={this.handleUpdate}
                     subject={instrument}
                     fields={ModelFields.InstrumentEditFields}
-                    title={"Edit Instrument " + instrument[Instrument.FIELDS.ASSET_TAG]}
+                    title={mode == UpdateInstrument.EDIT_MODE ? "Edit Instrument " + instrument[Instrument.FIELDS.ASSET_TAG] : "Create Instrument"}
                     handleFormChange={handleFormChange(this)}
                     handleInputChange={this.handleInputValueChange}
-                    isEdit = {true}
+                    isEdit = {false}
                     modelCategories={all_model_categories}
                     instrumentCategories={all_instrument_categories}
                     vendors={vendors}
@@ -141,5 +149,6 @@ UpdateInstrument.propTypes = {
     token : PropTypes.string.isRequired,
     instrument : PropTypes.object.isRequired,
     updatePageState : PropTypes.func.isRequired,
-    history : PropTypes.object.isRequired
+    history : PropTypes.object.isRequired,
+    mode : PropTypes.string.isRequired
 }

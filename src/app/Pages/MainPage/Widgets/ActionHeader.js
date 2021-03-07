@@ -6,10 +6,11 @@ import 'react-bootstrap-typeahead/css/Typeahead.css';
 import HTPAutoCompleteInput from "../../../Common/Inputs/HTPAutoCompleteInput";
 import HTPInput from "../../../Common/Inputs/HTPInput";
 import {EquipmentModel, Instrument, Models} from "../../../../utils/ModelEnums";
+import UpdateInstrument from "../../InstrumentDetailPage/Sections/UpdateInstrument";
 
 let SEARCH_FIELD_COLS = 8
 
-export default class SearchHeader extends Component {
+export default class ActionHeader extends Component {
     
     constructor(props) {
         super(props)
@@ -47,7 +48,7 @@ export default class SearchHeader extends Component {
     render() {
         let Rows = []
         let col = 1
-        let {searchFields, updateSearchFieldValues} = this.props
+        let {searchFields, updateSearchFieldValues, token, updatePageState} = this.props
         Object.keys(searchFields).forEach(key => {
             let searchFieldName = searchFields[key]
             if (searchFieldName == ModelFields.EquipmentModelSearchFields.Vendor ||
@@ -83,6 +84,14 @@ export default class SearchHeader extends Component {
             </button>
                 </MDBCol>
         )
+        Rows.push(
+            <MDBCol size={1} style={{display: "flex", marginLeft: 20, alignItems : "center", justifyContent:"center"}}>
+                <UpdateInstrument
+                    mode={UpdateInstrument.CREATE_MODE}
+                    token={token}
+                    updatePageState={updatePageState}/>
+            </MDBCol>
+        )
 
         let type = this.getTableType() == ModelFields.ModelTypes.EQUIPMENT_MODEL ? "Models" : "Instruments"
 
@@ -100,7 +109,7 @@ export default class SearchHeader extends Component {
 }
 
 
-SearchHeader.propTypes = {
+ActionHeader.propTypes = {
     searchFields: PropTypes.object.isRequired,
     updateSearchFieldValues: PropTypes.func.isRequired,
     token: PropTypes.string.isRequired,

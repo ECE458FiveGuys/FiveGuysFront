@@ -43,6 +43,7 @@ export default class ActionSection extends React.Component {
                 </h1>
                 <div style={{display : "flex", flexDirection : 'row'}}>
                     <UpdateInstrument
+                        mode={UpdateInstrument.EDIT_MODE}
                         token={token}
                         instrument={instrument}
                         updatePageState={updatePageState}
