@@ -2,9 +2,6 @@ import React, { Component } from "react";
 import {Button, Form, Modal} from "react-bootstrap";
 import {MDBBtn, MDBCol, MDBContainer, MDBRow} from "mdbreact";
 import FormEntry from "./FormEntry";
-import MiscellaneousRequests from "../../../controller/requests/miscellaneous_requests";
-import ModelFields from "../../../utils/enums";
-import {EquipmentModel, Instrument} from "../../../utils/ModelEnums";
 
 class EditModal extends Component{
 
@@ -49,7 +46,12 @@ class EditModal extends Component{
                                                instrumentCategories = {this.props.instrumentCategories}
                                                vendors = {this.props.vendors}
                                                modelNumbers = {this.props.modelNumbers}
-                                    />
+                                    />{this.props.error &&
+                                        <div style={{marginTop : 10, display : 'flex', justifyContent : 'center', alignItems : "center"}}>
+                                            <text className={'text-danger'}>
+                                                {this.props.error}
+                                            </text>
+                                        </div>}
                                     <div className="text-center mt-4">
                                         <MDBBtn color="dark-green"
                                                 onClick={this.props.submitMethod}>

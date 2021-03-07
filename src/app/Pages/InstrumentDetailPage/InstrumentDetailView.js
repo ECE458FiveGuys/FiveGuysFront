@@ -41,11 +41,12 @@ export default class InstrumentDetailView extends Component {
                 <div>
                     <HTPNavBar user={this.props.user}></HTPNavBar>
                     <div style={{flex : 1, display : "flex", flexDirection : "column", justifyContent : 'space-evenly', alignItems : 'center', marginLeft : 100, marginRight : 100}}>
-                        <h1 style={{marginTop : 20}}
+                        <h1 style={{marginTop : 20, marginBottom : 30}}
                             className={"h1-responsive"}>
                             Instrument Details
                         </h1>
-                        <Divider orientation={'horizontal'} flexItem={true}/>
+                        <Divider orientation={'horizontal'}
+                                 flexItem={true}/>
                         <div style={{flex : 1, display : "flex", flexDirection : "row", justifyContent : 'space-between'}}>
                             {ModelSection(instrument)}
                                 <Divider style={{marginRight : 30, marginLeft : 30}}

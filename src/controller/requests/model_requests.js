@@ -7,13 +7,12 @@ import {PaginatedResponseFields} from "../../app/Common/Tables/pagination_utils"
 
 export default class ModelRequests {
 
-    static async getModels(token, page_num = undefined, vendor = undefined, model_number = undefined,
-                            description = undefined, search = undefined, search_field = undefined,
-                            ordering = undefined,
-                            callBack = (json) => json,
-                            errorMessageCallBack = (errorMessage) => errorMessage) {
-        let params = RequestUtils.buildGetModelParams(page_num, vendor, model_number,
-            description, search, search_field, ordering)
+    static async getModels(token,
+                           params,
+                           callBack = (json) => json,
+                           errorMessageCallBack = (errorMessage) => errorMessage,
+                           pageNum= undefined,
+                           ordering = undefined) {
 
         let header = RequestUtils.buildTokenHeader(token)
 
@@ -49,6 +48,7 @@ export default class ModelRequests {
         RequestUtils.getWithSearchParams(ModelFields.ModelTypes.EQUIPMENT_MODEL, token, searchParams, callBack,
             errorMessageCallBack, pageNum, ordering)
     }
+
 
     static async retrieveModel(token,
                                pk,

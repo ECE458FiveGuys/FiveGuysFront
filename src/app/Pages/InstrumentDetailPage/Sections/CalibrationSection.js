@@ -67,12 +67,12 @@ export default class CalibrationSection extends React.Component {
     }
 
     renderCalibrationCertificateButton = () => {
-        let {user, instrument, calibrations} = this.props
+        let {instrument, calibrations} = this.props
         return (instrumentCalibratable(instrument)) ?
             <Button
                 disabled={!calibrations || calibrations.length == 0}
                 onClick={() => {
-                        createCertificate(instrument, user, calibrations[0])
+                        createCertificate(instrument, calibrations[0].user, calibrations[0])
                 }}>
                 Download Calibration Certificate
             </Button> : <div></div>
@@ -82,19 +82,23 @@ export default class CalibrationSection extends React.Component {
         let {token, instrument, user} = this.props
         let {calibrationModalShow, calibrationTableRows} = this.state
         return(<div style={{marginLeft : 100, marginRight : 100, marginTop : 20}}>
-                    <h1 style={{alignSelf : 'center', justifySelf : 'center', textAlign : "center"}}
-                        className={"h2-responsive"}>
-                        Calibration
-                    </h1>
-                    <h1 style={{alignSelf : 'center', justifySelf : 'center', textAlign : "center"}}
-                        className={"h5-responsive"}>
-                        Calibrate your instrument here
-                    </h1>
                     <div style={{display : 'flex', justifyContent : 'space-between'}}>
                         <div>
                             {this.renderRecordCalibrationButtons()}
                         </div>
-                        {this.renderCalibrationCertificateButton()}
+                        <div>
+                            <h1 style={{alignSelf : 'center', justifySelf : 'center', textAlign : "center"}}
+                                className={"h2-responsive"}>
+                                Calibration
+                            </h1>
+                            <h1 style={{alignSelf : 'center', justifySelf : 'center', textAlign : "center"}}
+                                className={"h5-responsive"}>
+                                Calibrate your instrument here
+                            </h1>
+                        </div>
+                        <div>
+                            {this.renderCalibrationCertificateButton()}
+                        </div>
                     </div>
                     <RecordCalibration
                         show={calibrationModalShow}
