@@ -8,14 +8,22 @@ export default class ErrorParser {
      for model categories in instrument objects, each model category in the list of categories is just an id referencing the category
      */
     static parse(json) {
+        let resultingArray = []
         let resultingString = ''
         let on = false
-        for (let i=1; i<json.length-1; i++){
+        for (let i=1; i<json.length-2; i++){
             if (json.substring(i, i+1)=='"'){
                 on = !on;
             }
-            else if (json.substring(i, i+1)==','){
-                resultingString = resultingString + '\n'
+            else if (json.substring(i, i+1)==',') {
+                if (json.substring(i+1, i+2)==' '){
+                    resultingArray.push(resultingString + json.substring(i, json.length-3))
+                    resultingString = ''
+                }
+                else {
+                resultingArray.push(resultingString)
+                resultingString = ''
+                }
             }
             else if (json.substring(i, i+1)=='[' || json.substring(i, i+1)==']'){
                 resultingString = resultingString + ' '
@@ -24,7 +32,10 @@ export default class ErrorParser {
                 resultingString = resultingString + json.substring(i, i+1)
             }
         }
-        return resultingString
+        if (resultingArray.length==0){
+            resultingArray.push(resultingString)
+        }
+        return resultingArray
     }
 
     static parseCategories(json){

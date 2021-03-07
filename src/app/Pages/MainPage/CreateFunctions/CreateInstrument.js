@@ -10,13 +10,15 @@ import ErrorParser from "./ErrorParser";
 import HTPInput from "../../../Common/Inputs/HTPInput";
 import HTPAutoCompleteInput from "../../../Common/Inputs/HTPAutoCompleteInput";
 import MiscellaneousRequests from "../../../../controller/requests/miscellaneous_requests";
+import HTPPopup from "../../../Common/HTPPopup";
 
 
 class CreateModel extends Component {
 
     constructor(props) {
         super(props)
-        this.state = { vendor:'', model_number:'', serial_number:'', comment:'', model_options:[],categories_chosen:[]}
+        this.state = { vendor:'', model_number:'', serial_number:'', comment:'', model_options:[],categories_chosen:[],
+            modal : false, displayMessage: [], requestStatus:''}
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
     }
@@ -45,11 +47,9 @@ class CreateModel extends Component {
                 return response.text()})
             .then(json => {
                 let results = ErrorParser.parseCategories(json)
-                console.log(results)
                 this.setState({'categories':results})
             })
             .catch((error) => {
-                console.log("here")
                 console.error('Error:', error);
             });
     }
@@ -63,7 +63,6 @@ class CreateModel extends Component {
     }
 
     async handleSubmit(event){
-        console.log(this.state.categories_chosen)
 
         let token = 'Token ' + this.props.token
         const { vendor, model_number, comment, serial_number, categories_chosen} = this.state
@@ -73,12 +72,14 @@ class CreateModel extends Component {
             //params: JSON.stringify({vendor: vendor, model_number: vendor})
         };
         let pk = ''
-        const url = URLS.MODELS + '?' + 'vendor=' + vendor + '&model=' + model_number
+        const url = URLS.MODELS + '?' + 'vendor=' + vendor + '&model_number=' + model_number
         const response = await fetch(url, requestOptions)
             .then(response => {
                 return response.text()})
             .then(json => { //success
                 json.toString()
+                let returnArray = []
+                let responseTitle = ''
                 if (json.includes('pk')) {
                     const start = json.indexOf('pk')
                     let restOfJSON = json.substring(start+4)
@@ -86,25 +87,28 @@ class CreateModel extends Component {
                     pk = restOfJSON.substring(0, end-1)
                 }
                 else {
-                    event.preventDefault()
-                    alert(` 
-                      Error while creating the instrument:\n 
-                      Vendor and Model Number do not match a Model
-                    `)
+                    returnArray =
+                        [
+                            'Vendor and Model Number do not match a model'
+                        ]
+                    responseTitle = 'Failure!'
+                    let newState = {}
+                    newState['displayMessage'] = returnArray
+                    newState['requestStatus'] = responseTitle
+                    this.setState(newState)
                 }
-                console.log(json)
             })
             .catch((error) => { //failure
-                event.preventDefault()
-                alert(` 
-                  Error when creating the model:\n 
-                  Vendor and Model Number do not match a model
-                  
-                `)
-                console.error('Error:', error);
+                let returnArray = []
+                let responseTitle = ''
+                returnArray =
+                    ['Vendor and Model Number do not match a model']
+                responseTitle = 'Failure!'
+                let newState = {}
+                newState['displayMessage'] = returnArray
+                newState['requestStatus'] = responseTitle
+                this.setState(newState)
             });
-
-
 
 
 
@@ -123,38 +127,45 @@ class CreateModel extends Component {
                 .then(json => {
                     json.toString()
                     if (json.includes('pk')) {
-                        event.preventDefault()
-                        alert(` 
-                      Successful added a new Instrument:\n 
-                      Model : ${pk} 
-                      Serial Number : ${serial_number} 
-                      Comment : ${comment} 
-                    `)
+                        let returnArray = []
+                        let responseTitle = ''
+                        returnArray =
+                            [
+                                'Vendor : '+ this.state.vendor,
+                                'Model Number : '+ this.state.model_number,
+                                'Serial Number : '+ this.state.serial_number,
+                                'Comment : '+ this.state.comment,
+                                'Categories : '+ this.state.categories_chosen
+                            ]
+                        let newState = {}
+                        responseTitle = 'Success! The Instrument was added:'
+                        newState['displayMessage'] = returnArray
+                        newState['requestStatus'] = responseTitle
+                        this.setState(newState)
                     }
                     else {
                         let results = ErrorParser.parse(json)
-                        event.preventDefault()
-                        alert(` 
-                      Error while creating the model:\n 
-                      ${results} 
-                    `)
+                        let returnArray = []
+                        let responseTitle = ''
+                        responseTitle = 'Failure!'
+                        let newState = {}
+                        newState['displayMessage'] = results
+                        newState['requestStatus'] = responseTitle
+                        this.setState(newState)
                     }
-
-                    console.log(json)
                 })
                 .catch((error) => { //failure
-                    event.preventDefault()
-                    alert(` 
-                  Error when creating the model:\n 
-                  ${error} 
-                  
-                `)
+                    let responseTitle = ''
+                    responseTitle = 'Failure!'
+                    let newState = {}
+                    newState['displayMessage'] = error
+                    newState['requestStatus'] = responseTitle
+                    this.setState(newState)
                     console.error('Error:', error);
                 });
-
             //end of insertion
         }
-
+        this.toggleModal()
 
     }
 
@@ -166,6 +177,23 @@ class CreateModel extends Component {
         let newState = {}
         newState[name] = value
         this.setState(newState)
+    }
+
+    toggleModal = () => {
+        this.setState({
+            modal: !this.state.modal
+        });
+    }
+
+    getDisplayMessage = () => {
+        let displayMessage = this.state.displayMessage
+        return (<div>
+            <ol>
+                {displayMessage.map(function(name, index){
+                    return <ul key={ index }>{name}</ul>;
+                })}
+            </ol>
+        </div>)
     }
 
     // Return a controlled form i.e. values of the
@@ -191,6 +219,11 @@ class CreateModel extends Component {
                                     Create Instrument
                                     <MDBIcon far icon="paper-plane" className="ml-2" />
                                 </MDBBtn>
+                                <HTPPopup isOpen={this.state.modal}
+                                          toggleModal={this.toggleModal}
+                                          className={"text-info"}
+                                          title={this.state.requestStatus}
+                                          message={this.getDisplayMessage()}/>
                             </form>
                         </MDBCol>
                     </MDBRow>

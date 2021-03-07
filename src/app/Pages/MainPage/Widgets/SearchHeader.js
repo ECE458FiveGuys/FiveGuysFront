@@ -50,7 +50,8 @@ export default class SearchHeader extends Component {
         let {searchFields, updateSearchFieldValues} = this.props
         Object.keys(searchFields).forEach(key => {
             let searchFieldName = searchFields[key]
-            if (searchFieldName == ModelFields.EquipmentModelFields.VENDOR) {
+            if (searchFieldName == ModelFields.EquipmentModelSearchFields.Vendor ||
+                searchFieldName == ModelFields.InstrumentSearchFields.Vendor) {
                 Rows.push(<HTPAutoCompleteInput placeholder={"Search"}
                                                 options={this.props.vendors}
                                                 onChange={this.updateSearchFields(searchFieldName)}

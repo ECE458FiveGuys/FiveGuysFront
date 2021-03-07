@@ -9,6 +9,7 @@ import jsPDF from 'jspdf'
 import 'jspdf-autotable'
 import HTPButton from "../../../Common/HTPButton";
 import Image from "../../../../assets/hpt_logo.png"
+import BackendPaginatedDataTable from "../../../Common/Tables/BackendPaginatedDataTable";
 class InventoryTable extends Component {
 
     constructor(props) {
@@ -20,28 +21,12 @@ class InventoryTable extends Component {
         this.state = {
             searchFieldValues : searchFieldValues
         }
-        this.updateSearchFieldValues = this.updateSearchFieldValues.bind(this)
-        this.loadTableData = this.loadTableData.bind(this)
+        this.tableRef = React.createRef()
     }
 
     async componentDidMount() {
-        this.loadTableData()
         this.loadVendors()
         this.loadCategories()
-    }
-
-    loadTableData = () => {
-        let {searchRequestFunction, parseSearchResultsFunction, token} = this.props
-        let getModelsCallBack = async (json) => {
-            let parsedResults = parseSearchResultsFunction(json)
-            this.setState({results: parsedResults})
-        }
-        searchRequestFunction(token,
-            this.state.searchFieldValues,
-            getModelsCallBack,
-            (errorMessage) => {
-                alert(errorMessage)
-            })
     }
 
     loadVendors () {
@@ -70,49 +55,30 @@ class InventoryTable extends Component {
      */
 
     updateSearchFieldValues = (searchFieldValues) => {
-        this.setState({results : undefined },
-            ()=> this.setState({searchFieldValues : searchFieldValues},
-                this.loadTableData)
+        this.setState({searchFieldValues : searchFieldValues},
+            this.tableRef.current.forceSearch
         )
     }
 
-    // table () {
-    //     const doc = new jsPDF()
-    //     doc.autoTable({
-    //         header: 'Calibration Info',
-    //         head: [['fields', '']],
-    //         body: [
-    //             ['Sweden', 'Japan', 'Canada'],
-    //             ['Norway', 'China', 'USA'],
-    //             ['Denmark', 'China', 'Mexico'],
-    //         ],
-    //     })
-    //     doc.autoTable({
-    //         header: 'Calibration Info',
-    //         head: [['fields', 'values']],
-    //         body: [
-    //             ['Sweden', 'Japan', 'Canada'],
-    //             ['Norway', 'China', 'USA'],
-    //             ['Denmark', 'China', 'Mexico'],
-    //         ],
-    //     })
-    //     doc.save('table.pdf')
-    // }
-
     render() {
+        let {searchRequestFunction, parseSearchResultsFunction, token, columns, searchFields} = this.props
+        let {searchFieldValues} = this.state
         return (
             <div style={{background: "white"}}>
-                <SearchHeader searchFields= {this.props.searchFields}
+                <SearchHeader searchFields={searchFields}
                               updateSearchFieldValues={this.updateSearchFieldValues}
-                              token={this.props.token}
+                              token={token}
                               vendors={this.state.vendors}
                               modelCategories={this.state.model_categories ? this.state.model_categories : []}
                               instrumentCategories={this.state.instrument_categories ? this.state.instrument_categories : []}
                                 />
                 {this.props.children}
-                <DataTable columns = {this.props.columns}
-                           rows = {this.state.results}
-                           searching={false}
+                <BackendPaginatedDataTable columns={columns}
+                                           dataFetchFunction={searchRequestFunction}
+                                           dataFetchFunctionParser={parseSearchResultsFunction}
+                                           searchParams={searchFieldValues}
+                                           token={token}
+                                           ref={this.tableRef}
                 />
             </div>);
     }

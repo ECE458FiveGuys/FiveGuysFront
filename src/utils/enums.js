@@ -54,9 +54,9 @@ export default class ModelFields {
     }
 
     static InstrumentSearchFields = {
-        "Vendor": ModelFields.EquipmentModelFields.VENDOR,
-        "Model Number": ModelFields.EquipmentModelFields.MODEL_NUMBER,
-        "Description": ModelFields.EquipmentModelFields.DESCRIPTION,
+        "Vendor": "model__" + ModelFields.EquipmentModelFields.VENDOR,
+        "Model Number": "model__" + ModelFields.EquipmentModelFields.MODEL_NUMBER,
+        "Description": "model__" + ModelFields.EquipmentModelFields.DESCRIPTION,
         "Serial Number": ModelFields.InstrumentFields.SERIAL_NUMBER,
         "Asset Tag" : ModelFields.InstrumentFields.ASSET_TAG,
         "Model Categories": ModelFields.EquipmentModelFields.MODEL_CATEGORIES,
@@ -64,10 +64,12 @@ export default class ModelFields {
     }
 
     static InstrumentEditFields = {
-        "Model": ModelFields.InstrumentFields.MODEL,
-        "Serial Number": ModelFields.InstrumentFields.SERIAL_NUMBER,
-        "Comment": ModelFields.InstrumentFields.COMMENT,
-
+        [ModelFields.EquipmentModelFields.MODEL_NUMBER] : "Model Number",
+        [ModelFields.EquipmentModelFields.VENDOR] : "Vendor",
+        [ModelFields.InstrumentFields.SERIAL_NUMBER] : "Serial Number",
+        [ModelFields.InstrumentFields.ASSET_TAG] : "Asset Tag",
+        [ModelFields.InstrumentFields.COMMENT] : "Comment",
+        [ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES] : "Instrument Categories"
     }
 
     static CategoryFields = {
@@ -91,9 +93,9 @@ export default class ModelFields {
     }
 
     static CalibrationFormFields = {
-        "Date" : "date",
-        "Comment" : "comment",
-        "File" : "file"
+        "date" : "Date",
+        "comment" : "Comment",
+        "additional_evidence" : "Additional Evidence"
     }
 
     static CalibrationModes = {

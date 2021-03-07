@@ -5,7 +5,9 @@ import {MDBBadge, MDBContainer, MDBListGroup, MDBListGroupItem} from "mdbreact";
 import ModelFields from "../../../../utils/enums";
 import InstrumentRequests from "../../../../controller/requests/instrument_requests";
 import Loading from "../../../Common/Images/Loading";
-import ModelDisplay from "../../../Common/HTPModelDisplay";
+import ModelDisplay from "../../../Common/Displays/HTPModelDisplay";
+import {parseDate} from "../../../utils";
+import InstrumentDisplay from "../../../Common/Displays/HTPInstrumentDisplay";
 
 export default class VisualCheckStep extends React.Component {
 
@@ -32,13 +34,7 @@ export default class VisualCheckStep extends React.Component {
                     <p style={{marginTop : 20, marginBottom: 30, justifyContent: "center", alignItems: 'center'}}>
                         To get started, retrieve the load bank with the following properties:
                     </p>
-                    {ModelDisplay(["Model Number", "Serial Number", "Asset Tag", "Most Recent Calibration"],
-                                                    [
-                                                        instrument[ModelFields.InstrumentFields.MODEL][ModelFields.EquipmentModelFields.MODEL_NUMBER],
-                                                        instrument[ModelFields.InstrumentFields.SERIAL_NUMBER],
-                                                        instrument[ModelFields.InstrumentFields.ASSET_TAG],
-                                                        instrument[ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION],
-                                                    ])}
+                    {InstrumentDisplay(instrument)}
                     <p style={{marginTop : 20, marginBottom: 30, justifyContent: "center", alignItems: 'center'}}>
                         Inspect the load bank, including each resistor. Is everything looking right? Any visual damage?
                     </p>

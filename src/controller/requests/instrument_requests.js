@@ -4,6 +4,9 @@ import ModelFields from "../../utils/enums";
 import {UserError} from "../exceptions";
 import {METHODS, URLS} from "../strings";
 import {EquipmentModel, Instrument} from "../../utils/ModelEnums";
+import {PaginatedResponseFields} from "../../app/Common/Tables/pagination_utils";
+import {User} from "../../utils/dtos";
+import ModelRequests from "./model_requests";
 
 export default class InstrumentRequests {
 
@@ -33,7 +36,7 @@ export default class InstrumentRequests {
         params[ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES + "__name"] = categoryObj.name
 
         let fullCallBack = (json) => {
-            if (json.length > 0) {
+            if (json[PaginatedResponseFields.RESULTS].length > 0) {
                 throw new UserError("Instances using this category exist")
             } else {
                 callBack()
@@ -45,19 +48,12 @@ export default class InstrumentRequests {
             METHODS.GET, fullCallBack, errorMessageCallBack, header, params)
     }
 
-    static async getInstrumentsWithSearchParams(token, params,
+    static async getInstrumentsWithSearchParams(token, searchParams,
                                                 callBack = (json) => json,
-                                                errorMessageCallBack = (errorMessage) => errorMessage) {
-        let header = RequestUtils.buildTokenHeader(token)
-        params = RequestUtils.removeEmptyFields(params)
-        let url = URLS.INSTRUMENTS + RequestUtils.applySearchParams(params, Instrument.TYPE)
-        RequestUtils.assistedFetch(url,
-            METHODS.GET,
-            callBack,
-            errorMessageCallBack,
-            header,
-            {},
-            undefined)
+                                                errorMessageCallBack = (errorMessage) => errorMessage,
+                                                pageNum, ordering) {
+        RequestUtils.getWithSearchParams(ModelFields.ModelTypes.INSTRUMENT, token, searchParams, callBack,
+            errorMessageCallBack, pageNum, ordering)
     }
 
     static async retrieveInstrument(token, pk,
@@ -79,12 +75,17 @@ export default class InstrumentRequests {
         InstrumentRequests.updateInstrument(token, "post", URLS.MODELS, callBack, errorMessageCallBack, model_pk, serial_number, comment)
     }
 
-    static async editInstrument(token, instrument_pk, model_pk=undefined, serial_number=undefined, comment=undefined,
+    static async editInstrument(token, instrument_pk, model_number=undefined,
+                                vendor=undefined,
+                                serial_number=undefined,
+                                comment=undefined,
+                                   asset_tag = undefined,
+                                   instrument_categories = undefined,
                                    callBack = (json) => json,
                                    errorMessageCallBack = (errorMessage) => errorMessage) {
 
         InstrumentRequests.updateInstrument(token, "put", URLS.INSTRUMENTS + instrument_pk + "/",
-            callBack, errorMessageCallBack, model_pk, serial_number, comment)
+            callBack, errorMessageCallBack, model_number, vendor, serial_number, comment, asset_tag, instrument_categories)
     }
 
     static async deleteInstruments(token, instrument_pk,
@@ -99,11 +100,25 @@ export default class InstrumentRequests {
     static async updateInstrument(token, method, full_url,
                                   callBack = (json) => json,
                                   errorMessageCallBack = (errorMessage) => errorMessage,
-                                  model_pk=undefined, serial_number=undefined, comment=undefined) {
-        let header = RequestUtils.buildTokenHeader(token)
-        let fields = RequestUtils.buildCreateInstrumentData(model_pk, serial_number, comment)
-        RequestUtils.assistedFetch(full_url, method,
-                                    callBack, errorMessageCallBack,
-                                    header, undefined, fields)
+                                  model_number=undefined, vendor=undefined, serial_number=undefined, comment=undefined,
+                                  asset_tag = undefined, instrument_categories = undefined) {
+
+        let getModelCallBack = (json) => {
+            let results = json[PaginatedResponseFields.RESULTS]
+            if (results.length == 0) {
+                throw new UserError("No model with this vendor and model number exist")
+            }
+            let model_pk = results[0].pk
+            let header = RequestUtils.buildTokenHeader(token)
+            let fields = RequestUtils.buildCreateInstrumentData(model_pk, serial_number, comment, asset_tag, instrument_categories)
+            RequestUtils.assistedFetch(full_url, method,
+                callBack, errorMessageCallBack,
+                header, undefined, fields)
+        }
+
+        ModelRequests.getModelsWithSearchParams(token,
+            {vendor : vendor, model_number : model_number}, getModelCallBack, errorMessageCallBack)
+
+
     }
 }

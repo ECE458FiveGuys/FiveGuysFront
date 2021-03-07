@@ -17,23 +17,16 @@ class MainView extends Component {
 
     render() {
         return (
-            // <Gradient
-            //     gradients={ gradients } // required
-            //     property="background"
-            //     duration={ 3000 }
-            //     angle="45deg"
-            // >
             <div>
-            <NavBar user={this.props.user}/>
-            <TabView token={this.props.token}
-                     user={this.props.user}
-                     modelPage={<ModelTable history={this.props.history}
-                                            token={this.props.token}/>}
-                     instrumentPage={<InstrumentTable token={this.props.token}
-                                                      history={this.props.history}/>}
-            ></TabView>
+                <NavBar user={this.props.user}/>
+                <TabView token={this.props.token}
+                         user={this.props.user}
+                         modelPage={<ModelTable history={this.props.history}
+                                                token={this.props.token}/>}
+                         instrumentPage={<InstrumentTable token={this.props.token}
+                                                          history={this.props.history}/>}
+                />
             </div>
-            // </Gradient>
         );
     }
 }

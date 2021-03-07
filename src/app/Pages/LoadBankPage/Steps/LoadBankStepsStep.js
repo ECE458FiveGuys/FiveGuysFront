@@ -97,13 +97,12 @@ export default class LoadBankStepsStep extends React.Component {
         });
     }
 
-
     render() {
         let {user, token} = this.props
         let stepNames = Object.values(CurrentStepNames)
         stepNames.push(LoadBankVoltageStep.StepName)
         return (<div style={{display: "flex", flex: 1, flexDirection: "column", width : "100%", alignItems: "center", justifyContent: 'center', marginBottom : 30}}>
-            <h1 className={"h2-responsive"}>{`Now the fun part, ${user.username}!`}</h1>
+            <h1 className={"h2-responsive"}>{`Now, let's step through these currents`}</h1>
             <div>
                 <ol>
                     <li>Connect to a DC source</li>

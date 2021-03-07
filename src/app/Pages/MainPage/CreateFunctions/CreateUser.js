@@ -8,13 +8,15 @@ import NavBar from "../../../Common/HTPNavBar";
 import ErrorParser from "./ErrorParser";
 import HTPInput from "../../../Common/Inputs/HTPInput";
 import {AUTH_URLS, URLS} from "../../../../controller/strings";
+import HTPPopup from "../../../Common/HTPPopup";
 
 
 class CreateModel extends Component {
 
     constructor(props) {
         super(props)
-        this.state = { vendor:'', model_number:'', description:'', comment:'',calibration_frequency:''}
+        this.state = { vendor:'', model_number:'', description:'', comment:'',calibration_frequency:'',
+            modal : false, displayMessage: [], requestStatus:''}
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
     }
@@ -39,36 +41,38 @@ class CreateModel extends Component {
             .then(response => {
                 return response.text()})
             .then(json => { //success
+                let returnArray = []
+                let responseTitle = ''
                 if (json.includes('"id"')) {
-                    event.preventDefault()
-                    alert(` 
-                  Successful added a new User:\n 
-                  Username : ${username} 
-                  Name : ${name} 
-                  Email : ${email} 
-                `)
+                    returnArray =
+                        [
+                            'Name : '+ this.state.name,
+                            'Username : '+ this.state.username,
+                            'Email : '+ this.state.email,
+                        ]
+                    responseTitle = 'Success! The user was added:'
                 }
                 else {
-                    let results = ErrorParser.parse(json)
-                    event.preventDefault()
-                    alert(` 
-                      Error while creating the User:\n 
-                      ${results} 
-                    `)
+                    returnArray = ErrorParser.parse(json)
+                    responseTitle = 'Error while creating the User'
                 }
+
+                let newState = {}
+                newState['displayMessage'] = returnArray
+                newState['requestStatus'] = responseTitle
+                this.setState(newState)
 
                 console.log(json)
             })
             .catch((error) => { //failure
-                event.preventDefault()
-                alert(` 
-                  Error when creating the model:\n 
-                  ${error} 
-                  
-                `)
-                console.log("here")
-                console.error('Error:', error);
+                let returnArray = error
+                let responseTitle = 'Error while creating the User'
+                let newState = {}
+                newState['displayMessage'] = returnArray
+                newState['requestStatus'] = responseTitle
+                this.setState(newState)
             });
+        this.toggleModal()
     }
 
     // Method causes to store all the values of the
@@ -79,6 +83,23 @@ class CreateModel extends Component {
         let newState = {}
         newState[name] = value
         this.setState(newState)
+    }
+
+    toggleModal = () => {
+        this.setState({
+            modal: !this.state.modal
+        });
+    }
+
+    getDisplayMessage = () => {
+        let displayMessage = this.state.displayMessage
+        return (<div>
+            <ol>
+                {displayMessage.map(function(name, index){
+                    return <ul key={ index }>{name}</ul>;
+                })}
+            </ol>
+        </div>)
     }
 
     // Return a controlled form i.e. values of the
@@ -102,6 +123,11 @@ class CreateModel extends Component {
                                     Create User
                                     <MDBIcon far icon="paper-plane" className="ml-2" />
                                 </MDBBtn>
+                                <HTPPopup isOpen={this.state.modal}
+                                          toggleModal={this.toggleModal}
+                                          className={"text-info"}
+                                          title={this.state.requestStatus}
+                                          message={this.getDisplayMessage()}/>
                             </form>
                         </MDBCol>
                     </MDBRow>
