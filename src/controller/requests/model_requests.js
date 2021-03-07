@@ -3,6 +3,7 @@ import {METHODS, URLS} from "../strings";
 import ModelFields from "../../utils/enums";
 import {UserError} from "../exceptions";
 import {EquipmentModel} from "../../utils/ModelEnums";
+import {PaginatedResponseFields} from "../../app/Common/Tables/pagination_utils";
 
 export default class ModelRequests {
 
@@ -27,7 +28,7 @@ export default class ModelRequests {
         params[ModelFields.EquipmentModelFields.MODEL_CATEGORIES + "__name"] = categoryObj.name
 
         let fullCallBack = (json) => {
-            if (json.length > 0) {
+            if (json[PaginatedResponseFields.RESULTS].length > 0) {
                 throw new UserError("Instances using this category exist")
             } else {
                 callBack()

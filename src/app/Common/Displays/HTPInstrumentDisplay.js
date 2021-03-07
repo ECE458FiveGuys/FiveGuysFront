@@ -4,7 +4,8 @@ import {parseDate} from "../../utils";
 import {Instrument} from "../../../utils/ModelEnums";
 
 export default function InstrumentDisplay(instrument) {
-    let mostRecentCalbrationDate = instrument['calibration_history'][0][ModelFields.CalibrationFields.Date]
+    let calib_history = instrument['calibration_history']
+    let mostRecentCalbrationDate = calib_history.length > 0 ? calib_history[0][ModelFields.CalibrationFields.Date] : "None yet!"
     return ModelDisplay(["Model Number", "Vendor", "Serial Number", "Asset Tag", "Most Recent Calibration", "Calibration Expiration"],
     [
         instrument[ModelFields.InstrumentFields.MODEL][ModelFields.EquipmentModelFields.MODEL_NUMBER],

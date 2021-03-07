@@ -14,7 +14,7 @@ export const dateIcons = {
 
 export function parseDate(expirationDateString) {
     if (expirationDateString == undefined) {
-        return this.createCalibrationExpirationElement("Noncalibratable", "black")
+        return undefined
     }
     let expirationDate = moment(expirationDateString, "YYYY-MM-DD")
     let diff = expirationDate.diff(moment.now(), 'days')

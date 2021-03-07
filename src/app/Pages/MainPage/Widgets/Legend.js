@@ -25,7 +25,7 @@ export class InstrumentTableLegend extends Component {
 
     render() {
         return(
-        <div style={{justifyContent: "flex-end", display: "inline-flex", flexDirection: "row", alignItems: "center", marginBottom: 10}}>
+        <div style={{justifyContent: "flex-end", display: "inline-flex", flexDirection: "row", alignItems: "center", marginBottom: 30}}>
             <LegendElement color={"green"}
                            value={"Calibration Stable"}></LegendElement>
             <LegendElement color={"orange"}

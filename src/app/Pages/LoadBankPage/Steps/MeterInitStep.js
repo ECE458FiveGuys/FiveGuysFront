@@ -8,6 +8,7 @@ import {dateColors, parseDate} from "../../../utils";
 import {UserError} from "../../../../controller/exceptions";
 import {EquipmentModel, Instrument} from "../../../../utils/ModelEnums";
 import {isNumeric} from "../utils";
+import {PaginatedResponseFields} from "../../../Common/Tables/pagination_utils";
 
 
 export default class MeterInitStep extends React.Component {
@@ -29,6 +30,7 @@ export default class MeterInitStep extends React.Component {
         }
         InstrumentRequests.getInstruments(token,
             (json) => {
+                json = json[PaginatedResponseFields.RESULTS]
                 if (!json[0]) {
                     throw new UserError(`No such ${meterType} exists.`)
                 }

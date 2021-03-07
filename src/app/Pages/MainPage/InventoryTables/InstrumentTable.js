@@ -50,9 +50,9 @@ export default class InstrumentTable extends Component {
             result[ModelFields.InstrumentSearchFields.Vendor] = result[ModelFields.EquipmentModelFields.VENDOR]
             result[ModelFields.InstrumentSearchFields["Model Number"]] = result[ModelFields.EquipmentModelFields.MODEL_NUMBER]
             result[ModelFields.InstrumentSearchFields.Description] = result[ModelFields.EquipmentModelFields.DESCRIPTION]
-            // delete result[ModelFields.EquipmentModelFields.VENDOR]
-            // delete result[ModelFields.EquipmentModelFields.MODEL_NUMBER]
-            // delete result[ModelFields.EquipmentModelFields.DESCRIPTION]
+            delete result[ModelFields.EquipmentModelFields.VENDOR]
+            delete result[ModelFields.EquipmentModelFields.MODEL_NUMBER]
+            delete result[ModelFields.EquipmentModelFields.DESCRIPTION]
 
             // render calibration symbols:
 
@@ -81,7 +81,7 @@ export default class InstrumentTable extends Component {
                             searchRequestFunction={InstrumentRequests.getInstrumentsWithSearchParams}
                             parseSearchResultsFunction={this.parseSearchResults}
             >
-                <InstrumentTableLegend></InstrumentTableLegend>
+                <InstrumentTableLegend/>
             </InventoryTable>
         );
     }
