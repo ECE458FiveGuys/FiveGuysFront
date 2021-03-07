@@ -68,11 +68,13 @@ export default class InstrumentRequests {
             header)
     }
 
-    static async createInstrument(token, model_pk, serial_number, comment=undefined,
+    static async createInstrument(token, model_number, vendor, serial_number, comment=undefined,
+                                  asset_tag_number, instrument_categories,
                                   callBack = (json) => json,
                                   errorMessageCallBack = (errorMessage) => errorMessage) {
 
-        InstrumentRequests.updateInstrument(token, "post", URLS.MODELS, callBack, errorMessageCallBack, model_pk, serial_number, comment)
+        InstrumentRequests.updateInstrument(token, "post", URLS.INSTRUMENTS, callBack, errorMessageCallBack,
+            model_number, vendor, serial_number, comment, asset_tag_number, instrument_categories)
     }
 
     static async editInstrument(token, instrument_pk, model_number=undefined,
@@ -104,7 +106,7 @@ export default class InstrumentRequests {
                                   asset_tag = undefined, instrument_categories = undefined) {
 
         if (!vendor || !model_number) {
-            errorMessageCallBack("Vendor and Model Number are required fields")
+            errorMessageCallBack("Vendor and model number are required fields")
             return
         }
 

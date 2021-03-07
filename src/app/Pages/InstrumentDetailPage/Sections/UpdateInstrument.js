@@ -8,6 +8,7 @@ import InstrumentRequests from "../../../../controller/requests/instrument_reque
 import {handleFormChange, handleInputValueChange} from "../../../Common/Inputs/input_utils";
 import MiscellaneousRequests from "../../../../controller/requests/miscellaneous_requests";
 import {isNumeric} from "../../LoadBankPage/utils";
+import HTPPopup from "../../../Common/HTPPopup";
 
 
 export default class UpdateInstrument extends React.Component {
@@ -31,6 +32,10 @@ export default class UpdateInstrument extends React.Component {
                 instrument_categories: mode == UpdateInstrument.EDIT_MODE ? instrument.instrument_categories : undefined,
                 error: undefined
             }
+    }
+
+    toggleSuccessModal = () => {
+        this.setState({successModalShow : !this.state.successModalShow})
     }
 
     setDeleteModalShow(boolean) {
@@ -80,7 +85,7 @@ export default class UpdateInstrument extends React.Component {
         let {instrument, updatePageState, token, mode} = this.props
         let {model_number, vendor, serial_number, comment, asset_tag_number, instrument_categories} = this.state
 
-        if (!asset_tag_number || (!isNumeric(asset_tag_number.toString()) || parseInt(asset_tag_number) > 999999 || parseInt(asset_tag_number) < 100000)) {
+        if (asset_tag_number && (!isNumeric(asset_tag_number.toString()) || parseInt(asset_tag_number) > 999999 || parseInt(asset_tag_number) < 100000)) {
             this.setState({error : "Asset tag must be a 6 digit number"})
             return
         } else if (comment && comment.length > 2000) {
@@ -88,39 +93,48 @@ export default class UpdateInstrument extends React.Component {
             return;
         }
 
-        let callBack = (response) => {
+        let editCallBack = (response) => {
+            this.toggleSuccessModal()
             InstrumentRequests.retrieveInstrument(token, instrument.pk, (json) => {
                 updatePageState({instrument: json})
             })
             if (this.state.error) this.setState({error : false})
             this.setEditModalShow(false)
         }
+
+        let createCallBack = () => {
+            this.toggleSuccessModal()
+            if (this.state.error) this.setState({error : false})
+            this.setEditModalShow(false)
+        }
+
         let errorCallBack = (e) => {
             this.setState({error : e})
         }
+
         if (mode == UpdateInstrument.EDIT_MODE) {
             InstrumentRequests.editInstrument(token, instrument.pk, model_number, vendor,
-                serial_number, comment, asset_tag_number, instrument_categories, callBack, errorCallBack())
+                serial_number, comment, asset_tag_number, instrument_categories, editCallBack, errorCallBack)
         } else if (mode == UpdateInstrument.CREATE_MODE) {
             InstrumentRequests.createInstrument(token, model_number, vendor,
-                serial_number, comment, asset_tag_number, instrument_categories, callBack, errorCallBack())
+                serial_number, comment, asset_tag_number, instrument_categories, createCallBack, errorCallBack)
         }
     }
 
     handleInputValueChange = (name) => (value) => {
         if (name == ModelFields.EquipmentModelFields.VENDOR) {
             handleInputValueChange(this, () => {
-                this.loadVendors()
+                this.loadModelNumbers()
             })(name)(value)
         } else if (name == ModelFields.EquipmentModelFields.MODEL_NUMBER) {
             handleInputValueChange(this, () => {
-                this.loadModelNumbers()
+                this.loadVendors()
             })(name)(value)
         } else handleInputValueChange(this)(name)(value)
     }
 
     render() {
-        let {editModalShow, all_model_categories, all_instrument_categories, vendors, modelNumbers, error} = this.state
+        let {editModalShow, successModalShow, all_model_categories, all_instrument_categories, vendors, modelNumbers, error} = this.state
         let {token, instrument, mode} = this.props
         return(
             <div>
@@ -143,6 +157,12 @@ export default class UpdateInstrument extends React.Component {
                     vendors={vendors}
                     modelNumbers={modelNumbers}
                     error={error}
+                />
+                <HTPPopup toggleModal={this.toggleSuccessModal}
+                          message={`The instrument was ${mode == UpdateInstrument.EDIT_MODE ? "edited" : "created"} successfully`}
+                          title={"Success!"}
+                          isOpen={successModalShow}
+                          className={"text-success"}
                 />
             </div>)}
 }
