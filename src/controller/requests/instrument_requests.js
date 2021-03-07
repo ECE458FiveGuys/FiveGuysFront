@@ -103,10 +103,15 @@ export default class InstrumentRequests {
                                   model_number=undefined, vendor=undefined, serial_number=undefined, comment=undefined,
                                   asset_tag = undefined, instrument_categories = undefined) {
 
+        if (!vendor || !model_number) {
+            errorMessageCallBack("Vendor and Model Number are required fields")
+            return
+        }
+
         let getModelCallBack = (json) => {
             let results = json[PaginatedResponseFields.RESULTS]
             if (results.length == 0) {
-                throw new UserError("No model with this vendor and model number exist")
+                throw new UserError("No models with this vendor and model number exist")
             }
             let model_pk = results[0].pk
             let header = RequestUtils.buildTokenHeader(token)
@@ -116,9 +121,8 @@ export default class InstrumentRequests {
                 header, undefined, fields)
         }
 
-        ModelRequests.getModelsWithSearchParams(token,
+        ModelRequests.getModels(token,
             {vendor : vendor, model_number : model_number}, getModelCallBack, errorMessageCallBack)
-
 
     }
 }

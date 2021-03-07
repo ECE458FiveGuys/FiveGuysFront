@@ -33,7 +33,7 @@ class InventoryTable extends Component {
         let getVendorsCallBack = (json) => {
             this.setState({vendors: json})
         }
-        MiscellaneousRequests.getVendors(this.props.token, this.state.searchFieldValues[ModelFields.EquipmentModelFields.VENDOR], getVendorsCallBack)
+        MiscellaneousRequests.getVendors(this.props.token, undefined, getVendorsCallBack)
     }
 
     loadCategories () {
