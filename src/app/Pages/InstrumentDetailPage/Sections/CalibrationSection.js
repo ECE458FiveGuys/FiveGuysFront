@@ -69,9 +69,11 @@ export default class CalibrationSection extends React.Component {
     renderCalibrationCertificateButton = () => {
         let {user, instrument, calibrations} = this.props
         return (instrumentCalibratable(instrument)) ?
-            <Button onClick={() => {
-                createCertificate(instrument, user, calibrations[0])
-            }}>
+            <Button
+                disabled={!calibrations || calibrations.length == 0}
+                onClick={() => {
+                        createCertificate(instrument, user, calibrations[0])
+                }}>
                 Download Calibration Certificate
             </Button> : <div></div>
     }
@@ -113,5 +115,6 @@ CalibrationSection.propTypes = {
     token : PropTypes.string.isRequired,
     user : PropTypes.instanceOf(User).isRequired,
     instrument : PropTypes.object.isRequired,
-    history : PropTypes.object.isRequired
+    history : PropTypes.object.isRequired,
+    calibrations : PropTypes.array.isRequired
 }

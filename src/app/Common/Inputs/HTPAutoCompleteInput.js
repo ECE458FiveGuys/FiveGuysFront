@@ -13,12 +13,13 @@ export default class HTPAutoCompleteInput extends Component {
     }
 
     render() {
-        let {options, onChange, label, placeholder, size, multiple, value, selected}= this.props
+        let {options, onChange, label, placeholder, size, multiple, value, selected, defaultValue}= this.props
         return(
         <MDBCol size={size}>
             <Form.Group>
                 <Form.Label className="grey-text">{label}</Form.Label>
                     <Typeahead
+                        defaultSelected={defaultValue ? multiple ? defaultValue : [defaultValue] : undefined}
                         id="basic-typeahead-single"
                         labelKey="name"
                         multiple={multiple}
@@ -47,12 +48,14 @@ HTPAutoCompleteInput.propTypes = {
     size : PropTypes.number,
     multiple : PropTypes.bool,
     value : PropTypes.string,
-    selected : PropTypes.array
+    selected : PropTypes.array,
+    defaultValue : PropTypes.array
 }
 
 HTPAutoCompleteInput.defaultProps = {
     size : 2,
     multiple : false,
+    defaultValue : ''
 }
 
 

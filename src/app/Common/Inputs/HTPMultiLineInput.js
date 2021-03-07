@@ -32,7 +32,6 @@ export default class HTPMultiLineInput extends Component {
                     defaultValue={defaultValue}
                     ref={el => this.inputRef = el}
                     contentEditable={true}
-                    name={name}
                     onChangeCapture={event => {
                         onChange(event)
                     }}

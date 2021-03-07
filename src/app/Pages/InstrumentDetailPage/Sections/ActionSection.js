@@ -3,15 +3,25 @@ import EditModal from "../../ModelDetailPage/EditModal";
 import ModelFields from "../../../../utils/enums";
 import DeleteModal from "../../ModelDetailPage/DeleteModal";
 import React from "react";
-import {Instrument} from "../../../../utils/ModelEnums";
+import {EquipmentModel, Instrument} from "../../../../utils/ModelEnums";
 import PropTypes from "prop-types";
 import InstrumentRequests from "../../../../controller/requests/instrument_requests";
+import {handleFormChange, handleInputChange} from "../../../Common/Inputs/input_utils";
+import MiscellaneousRequests from "../../../../controller/requests/miscellaneous_requests";
 
 export default class ActionSection extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+            vendor : props.instrument.model.vendor,
+            model_number : props.instrument.model.model_number,
+            serial_number : props.instrument.serial_number,
+            comment : props.instrument.comment,
+            asset_tag_number : props.instrument.asset_tag_number,
+            instrument_categories : props.instrument.instrument_categories,
+            error : undefined
+        }
     }
 
     setDeleteModalShow(boolean) {
@@ -22,22 +32,53 @@ export default class ActionSection extends React.Component {
         this.setState({editModalShow:boolean})
     }
 
+    async componentDidMount() {
+        this.loadVendors()
+        this.loadModelNumbers()
+        this.loadCategories()
+    }
+
+    loadVendors () {
+        let getVendorsCallBack = (json) => {
+            this.setState({vendors: json})
+        }
+        MiscellaneousRequests.getVendors(this.props.token, this.state[ModelFields.EquipmentModelFields.VENDOR], getVendorsCallBack, error => alert(error))
+    }
+
+    loadModelNumbers () {
+        let getModelNumbersCallBack = (json) => {
+            this.setState({modelNumbers: json})
+        }
+        MiscellaneousRequests.getModelNumbers(this.props.token, this.state[ModelFields.EquipmentModelFields.MODEL_NUMBER], getModelNumbersCallBack, error => alert(error))
+    }
+
+    loadCategories () {
+        let {token} = this.props
+        let getCategoriesCallBack = (categoryType) => (json) => {
+            let categories = json.map(category => {
+                return category[ModelFields.CategoryFields.NAME]
+            })
+            this.setState({["all_" + categoryType] : categories})
+        }
+        MiscellaneousRequests.getCategories(token,
+            Instrument.TYPE,
+            getCategoriesCallBack)
+    }
+
     handleEdit = () => {
         this.setEditModalShow(false)
         let {instrument, updatePageState, token} = this.props
-        let {serial_number, comment} = this.state
+        let {model_number, vendor, serial_number, comment, asset_tag_number, instrument_categories} = this.state
         let editCallback = (response) => {
-            var temp_instrument = {...instrument}
-            for (var field in ModelFields.InstrumentEditFields) {
-                temp_instrument[ModelFields.InstrumentEditFields[field]] = this.state[ModelFields.InstrumentEditFields[field]]
-            }
-            updatePageState({instrument: temp_instrument})
+            InstrumentRequests.retrieveInstrument(token, instrument.pk, (json) => {
+                updatePageState({instrument: json})
+            })
         }
         let editError = (e) => {
             alert("edit"+e)
         }
-        InstrumentRequests.editInstrument(token, instrument.pk, instrument.model['pk'],
-            serial_number,comment,editCallback,editError)
+        InstrumentRequests.editInstrument(token, instrument.pk, model_number, vendor,
+            serial_number,comment,asset_tag_number, instrument_categories, editCallback,editError)
     }
 
     handleDelete = () => {
@@ -52,8 +93,8 @@ export default class ActionSection extends React.Component {
     }
 
     render() {
-        let {editModalShow, deleteModalShow} = this.state
-        let {token, instrument, handleFormChange} = this.props
+        let {editModalShow, deleteModalShow, all_model_categories, all_instrument_categories, vendors, modelNumbers} = this.state
+        let {token, instrument} = this.props
         return(
             <div style={{flex : .6, display : "flex", flexDirection : "column", justifyContent : 'center', alignItems : 'center'}}>
                 <h1 style={{marginTop : 20}}
@@ -80,8 +121,13 @@ export default class ActionSection extends React.Component {
                     subject={instrument}
                     fields={ModelFields.InstrumentEditFields}
                     title={"Edit Instrument " + instrument[Instrument.FIELDS.ASSET_TAG]}
-                    handleFormChange={handleFormChange}
+                    handleFormChange={handleFormChange(this)}
+                    handleInputChange={handleInputChange(this)}
                     isEdit = {true}
+                    modelCategories={all_model_categories}
+                    instrumentCategories={all_instrument_categories}
+                    vendors={vendors}
+                    modelNumbers={modelNumbers}
                 />
                 <DeleteModal
                     show={deleteModalShow}
@@ -96,7 +142,6 @@ export default class ActionSection extends React.Component {
 ActionSection.propTypes = {
     token : PropTypes.string.isRequired,
     instrument : PropTypes.object.isRequired,
-    handleFormChange : PropTypes.func.isRequired,
     updatePageState : PropTypes.func.isRequired,
     history : PropTypes.object.isRequired
 }

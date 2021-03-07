@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import {Button, Form, Modal} from "react-bootstrap";
 import {MDBBtn, MDBCol, MDBContainer, MDBRow} from "mdbreact";
 import FormEntry from "./FormEntry";
+import MiscellaneousRequests from "../../../controller/requests/miscellaneous_requests";
+import ModelFields from "../../../utils/enums";
+import {EquipmentModel, Instrument} from "../../../utils/ModelEnums";
 
 class EditModal extends Component{
 
@@ -17,10 +20,7 @@ class EditModal extends Component{
         // }
     }
 
-
-
     render() {
-
         return (
             <Modal
                 {... this.props}
@@ -41,9 +41,14 @@ class EditModal extends Component{
                                     <FormEntry fields = {this.props.fields}
                                                subject = {this.props.subject}
                                                handleFormChange = {this.props.handleFormChange}
+                                               handleInputChange = {this.props.handleInputChange}
                                                isEdit = {this.props.isEdit}
                                                handleDayClick = {this.props.handleDayClick}
                                                handleFileSelect = {this.props.handleFileSelect}
+                                               modelCategories = {this.props.modelCategories}
+                                               instrumentCategories = {this.props.instrumentCategories}
+                                               vendors = {this.props.vendors}
+                                               modelNumbers = {this.props.modelNumbers}
                                     />
                                     <div className="text-center mt-4">
                                         <MDBBtn color="dark-green"

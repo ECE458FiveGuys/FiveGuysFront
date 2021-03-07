@@ -8,11 +8,23 @@ export default class MiscellaneousRequests{
     static async getVendors(token,
                             vendorSubstring=undefined,
                             callBack = (json) => json,
+                            errorMessageCallBack = (errorMessage) => errorMessage,
+                            modelNumberSubstring = undefined) {
+        let params = {vendor: vendorSubstring, model_number : modelNumberSubstring}
+        RequestUtils.removeEmptyFields(params)
+        let header = RequestUtils.buildTokenHeader(token)
+        RequestUtils.assistedFetch(URLS.VENDORS,
+            METHODS.GET, callBack, errorMessageCallBack, header, params)
+    }
+
+    static async getModelNumbers(token,
+                            vendorSubstring=undefined,
+                            callBack = (json) => json,
                             errorMessageCallBack = (errorMessage) => errorMessage) {
         let params = {vendor: vendorSubstring}
         RequestUtils.removeEmptyFields(params)
         let header = RequestUtils.buildTokenHeader(token)
-        RequestUtils.assistedFetch(URLS.VENDORS,
+        RequestUtils.assistedFetch(URLS.MODEL_NUMBERS,
             METHODS.GET, callBack, errorMessageCallBack, header, params)
     }
 

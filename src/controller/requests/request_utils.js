@@ -241,12 +241,18 @@ export default class RequestUtils {
         return params
     }
 
-    static buildCreateInstrumentData(model_pk, serial_number, comment) {
-        let fields = {}
-        fields[ModelFields.InstrumentFields.MODEL] = model_pk
-        fields[ModelFields.InstrumentFields.SERIAL_NUMBER] = serial_number
-        fields[ModelFields.InstrumentFields.COMMENT] = comment
-        return RequestUtils.removeEmptyFields(fields)
+    static buildCreateInstrumentData(model_pk, serial_number, comment, asset_tag, instrument_categories) {
+        let fields = new FormData()
+        fields.append(ModelFields.InstrumentFields.MODEL, model_pk)
+        fields.append(ModelFields.InstrumentFields.SERIAL_NUMBER, serial_number)
+        if (comment) fields.append(ModelFields.InstrumentFields.COMMENT, comment)
+        if (asset_tag) fields.append(ModelFields.InstrumentFields.ASSET_TAG, asset_tag)
+        if (instrument_categories) {
+            instrument_categories.forEach(category => {
+                fields.append(ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES, category.name ? category.name : category)
+            })
+        }
+        return fields
     }
 
    static parseErrorMessage(object) {

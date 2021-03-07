@@ -7,6 +7,7 @@ import DatePickers from "../../Common/DatePickers";
 import DayPicker from "react-day-picker";
 import HTPMultiLineInput from "../../Common/Inputs/HTPMultiLineInput";
 import ModelFields from "../../../utils/enums";
+import HTPAutoCompleteInput from "../../Common/Inputs/HTPAutoCompleteInput";
 
 class FormEntry extends Component {
 
@@ -23,7 +24,7 @@ class FormEntry extends Component {
     }
 
     renderAlternateInputs(fieldName) {
-        if (fieldName === "Date") {
+        if (fieldName === "date") {
             const today = new Date();
             return ( <DayPicker
                         formatDate={'YYYY-MM-DD'}
@@ -34,16 +35,17 @@ class FormEntry extends Component {
 
         }
 
-        if (fieldName === "Comment") {
+        if (fieldName === ModelFields.InstrumentFields.COMMENT) {
             return (
-                <HTPMultiLineInput onChange={this.props.handleFormChange}
+                <HTPMultiLineInput onChange={(area) => this.props.handleInputChange(ModelFields.CalibrationFields.Comment)(area.target.value)}
                                    label={"Comment"}
                                    name={ModelFields.CalibrationFormFields.Comment}
+                                   defaultValue={(this.props.isEdit) ? this.props.subject[fieldName] : ""}
                                    placeholder={"Comment"}/>
             )
         }
 
-        if(fieldName === "File"){
+        if (fieldName === ModelFields.CalibrationFields.AdditionalFile){
             return (
                 <div className="input-group">
                     {/*<div className="input-group-prepend">*/}
@@ -70,25 +72,46 @@ class FormEntry extends Component {
                 </div>
             );
         }
-        if(fieldName === "Model"){
+
+        if (fieldName === ModelFields.EquipmentModelFields.MODEL_CATEGORIES || fieldName === ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES) {
+            let {modelCategories, instrumentCategories, handleInputChange} = this.props
+            return (
+                <HTPAutoCompleteInput placeholder={fieldName === ModelFields.EquipmentModelFields.MODEL_CATEGORIES ? "Model Categories" : "Instrument Categories"}
+                                      options={fieldName === ModelFields.EquipmentModelFields.MODEL_CATEGORIES ? modelCategories : instrumentCategories}
+                                      onChange={handleInputChange(fieldName)}
+                                      label={fieldName === ModelFields.EquipmentModelFields.MODEL_CATEGORIES ? "Model Categories" : "Instrument Categories"}
+                                      multiple={true}
+                                        defaultValue={(this.props.isEdit) ?
+                                                      fieldName === ModelFields.EquipmentModelFields.MODEL_CATEGORIES ?
+                                                      this.props.subject.model[fieldName] :
+                                                          this.props.subject[fieldName] : ""}
+                                        size={13}/>
+            )
+        }
+
+        if (fieldName === ModelFields.EquipmentModelFields.MODEL_NUMBER || fieldName === ModelFields.EquipmentModelFields.VENDOR){
+            let {vendors, modelNumbers, handleInputChange} = this.props
             return(
-                <div>
-                    <label>{fieldName}</label>
-                    <Select
-                        defaultValue = {{value: "",label: "5"}}
-                        options = {[{value: "",label: "2"}]}
-                    />
-                </div>
+                <HTPAutoCompleteInput placeholder={fieldName === ModelFields.EquipmentModelFields.MODEL_NUMBER ? "Model Number" : "Vendor"}
+                                      options={fieldName === ModelFields.EquipmentModelFields.MODEL_NUMBER ? modelNumbers : vendors}
+                                      onChange={handleInputChange(fieldName)}
+                                      label={fieldName === ModelFields.EquipmentModelFields.MODEL_NUMBER ? "Model Number" : "Vendor"}
+                                      multiple={false}
+                                      defaultValue={(this.props.isEdit) ? this.props.subject.model[fieldName] : ""}
+                                      size={13}/>
             );
         }
     }
 
     render() {
         let AlternateInputs = [
-            "Model",
-            "Date",
-            "File",
-            "Comment",
+            ModelFields.CalibrationFields.Date,
+            ModelFields.CalibrationFields.AdditionalFile,
+            ModelFields.EquipmentModelFields.MODEL_NUMBER,
+            ModelFields.EquipmentModelFields.VENDOR,
+            ModelFields.InstrumentFields.COMMENT,
+            ModelFields.EquipmentModelFields.MODEL_CATEGORIES,
+            ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES
         ]
 
         // let models = ModelRequests.getModels()
@@ -96,18 +119,18 @@ class FormEntry extends Component {
         // let test = this.props.subject[formFields["model"]]
         return(
             <div>
-                {Object.keys(formFields).map((fieldName, index) => (
-                    AlternateInputs.includes(fieldName) ? (
+                {Object.keys(formFields).map((fieldKey, index) => (
+                    AlternateInputs.includes(fieldKey) ? (
                         <div>
-                            {this.renderAlternateInputs(fieldName)}
+                            {this.renderAlternateInputs(fieldKey)}
                         </div>): (
                     <div>
-                    <label>{fieldName}</label>
-                    <input name={formFields[fieldName]}
+                    <label>{formFields[fieldKey]}</label>
+                    <input name={fieldKey}
                            aria-multiline={true}
                             className="form-control"
                             onChange={this.props.handleFormChange}
-                            defaultValue={(this.props.isEdit) ? this.props.subject[formFields[fieldName]] : ""}
+                            defaultValue={(this.props.isEdit) ? this.props.subject[fieldKey] : ""}
                     />
                     <br />
                     </div>

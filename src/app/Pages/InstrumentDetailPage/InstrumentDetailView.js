@@ -21,7 +21,7 @@ export default class InstrumentDetailView extends Component {
      componentDidMount() {
         let {token, id} = this.props
         let retrieveInstrumentCallback = (instrument) => {
-            this.setState({instrument : instrument});
+            this.setState({instrument : instrument, calibrations : instrument['calibration_history']});
         }
         let retrieveInstrumentError = (e) => {
             alert("RETRIEVE ERROR:" + e)
@@ -33,14 +33,8 @@ export default class InstrumentDetailView extends Component {
         this.setState(state)
     }
 
-    handleFormChange = (e, context) => {
-        let name = e.target.name;
-        let value = e.target.value;
-        context.setState({[name]: value})
-    }
-
     render() {
-        let {instrument} = this.state
+        let {instrument, calibrations} = this.state
         let {token, history, user} = this.props
         if (instrument) {
             return (
@@ -65,7 +59,6 @@ export default class InstrumentDetailView extends Component {
                             {user.is_staff &&
                                 <ActionSection token={token}
                                                instrument={instrument}
-                                               handleFormChange={this.handleFormChange}
                                                updatePageState={this.updatePageState}
                                                history={history}/>}
                         </div>
@@ -77,7 +70,9 @@ export default class InstrumentDetailView extends Component {
                             <CalibrationSection token={token}
                                                 user={user}
                                                 instrument={instrument}
-                                                history={history}/>}
+                                                history={history}
+                                                calibrations={calibrations}
+                            />}
                 </div>
 
 
