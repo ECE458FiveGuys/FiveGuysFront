@@ -36,7 +36,7 @@ class EditModal extends Component{
                 <Modal.Body>
                     <MDBContainer>
                         <MDBRow style={{justifyContent: 'center', alignItems: 'center'}}>
-                            <MDBCol md="5">
+                            <MDBCol md="7">
                                 <form>
                                     <FormEntry fields = {this.props.fields}
                                                subject = {this.props.subject}

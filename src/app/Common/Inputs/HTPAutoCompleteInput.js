@@ -4,7 +4,6 @@ import {Typeahead} from "react-bootstrap-typeahead";
 import React, {Component} from "react";
 import PropTypes from "prop-types";
 
-
 // http://ericgio.github.io/react-bootstrap-typeahead/
 
 export default class HTPAutoCompleteInput extends Component {

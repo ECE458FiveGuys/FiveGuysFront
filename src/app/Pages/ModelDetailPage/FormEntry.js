@@ -5,19 +5,17 @@ import DatePicker from "react-datepicker";
 import ModelRequests from "../../../controller/requests/model_requests";
 import DatePickers from "../../Common/DatePickers";
 import DayPicker from "react-day-picker";
+import HTPMultiLineInput from "../../Common/Inputs/HTPMultiLineInput";
+import ModelFields from "../../../utils/enums";
 
 class FormEntry extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            selectedDay: undefined
+            selectedDay: new Date()
         }
     }
-    // parseFields(formFields,fieldName) {
-    //     let ret = this.props.subject[formFields[fieldName]]
-    //     return ret
-    // }
 
     handleDayClick = (day) => {
         this.props.handleDayClick(day)
@@ -25,32 +23,50 @@ class FormEntry extends Component {
     }
 
     renderAlternateInputs(fieldName) {
-        // var today = new Date()
-        // var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-        // var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-        // var dateTime = date+' '+time;
-        // const [startDate, setStartDate] = useState(new Date());
-        if(fieldName === "Date") {
-            // const [startDate, setStartDate] = new Date();
-            // return
-                // <div>{DatePickers}</div>
-                // <DatePicker selected={today} dateFormat={'YYYY-MM-DD'}/>
-                // <div></div>
+        if (fieldName === "Date") {
             const today = new Date();
             return ( <DayPicker
-                formatDate={'YYYY-MM-DD'}
-                disabledDays={{ after: today }}
-                selectedDays={this.state.selectedDay}
-                onDayClick={this.handleDayClick}
-            />);
+                        formatDate={'YYYY-MM-DD'}
+                        disabledDays={{ after: today }}
+                        selectedDays={this.state.selectedDay}
+                        onDayClick={this.handleDayClick}
+                    />);
 
         }
 
-        if(fieldName === "File"){ //TODO
+        if (fieldName === "Comment") {
             return (
-                <div>
-                    <label className="form-label" htmlFor="additionalEvidence">Currently disabled file input</label>
-                    <input type="file" className="form-control" id="additionalEvidence" onChange={(e) => this.props.handleFileSelect(e)}/>
+                <HTPMultiLineInput onChange={this.props.handleFormChange}
+                                   label={"Comment"}
+                                   name={ModelFields.CalibrationFormFields.Comment}
+                                   placeholder={"Comment"}/>
+            )
+        }
+
+        if(fieldName === "File"){
+            return (
+                <div className="input-group">
+                    {/*<div className="input-group-prepend">*/}
+                    {/*    <span className="input-group-text" id="additionalEvidenceAddon01">*/}
+                    {/*      Upload*/}
+                    {/*    </span>*/}
+                    {/*</div>*/}
+                    <div className="custom-file">
+                        <input
+                            type="file"
+                            className="custom-file-input"
+                            id="additionalEvidence"
+                            aria-describedby="additionalEvidenceAddon01"
+                            onChange={event => {
+                                this.props.handleFileSelect(event)
+                                let filename = event.target.value.split("\\").pop();
+                                this.setState({fileSelected : filename})
+                            }}
+                        />
+                        <label className="custom-file-label" htmlFor="additionalEvidence">
+                            {this.state.fileSelected ? this.state.fileSelected : "Choose file"}
+                        </label>
+                    </div>
                 </div>
             );
         }
@@ -72,6 +88,7 @@ class FormEntry extends Component {
             "Model",
             "Date",
             "File",
+            "Comment",
         ]
 
         // let models = ModelRequests.getModels()
@@ -87,9 +104,10 @@ class FormEntry extends Component {
                     <div>
                     <label>{fieldName}</label>
                     <input name={formFields[fieldName]}
-                    className="form-control"
-                    onChange={this.props.handleFormChange}
-                    defaultValue={(this.props.isEdit) ? this.props.subject[formFields[fieldName]] : ""}
+                           aria-multiline={true}
+                            className="form-control"
+                            onChange={this.props.handleFormChange}
+                            defaultValue={(this.props.isEdit) ? this.props.subject[formFields[fieldName]] : ""}
                     />
                     <br />
                     </div>

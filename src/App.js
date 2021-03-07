@@ -83,8 +83,8 @@ class App extends Component {
               <Route  path="/instruments/:id"
                       render={(props) => (<InstrumentDetailView id={props.match.params.id}
                                                                 history={props.history}
-                                                           token={this.state.token}
-                                                           user={this.state.user}/>)} >
+                                                               token={this.state.token}
+                                                               user={this.state.user}/>)} >
               </Route>
               <Route path="/import-export">
                 <ImportExportView token={this.state.token}
