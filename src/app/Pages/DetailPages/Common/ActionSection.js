@@ -24,7 +24,7 @@ export default class ActionSection extends React.Component {
     handleDelete = () => {
         let {subject, token, history, deleteFunction, type} = this.props
         this.setDeleteModalShow(false)
-        if (type == ModelFields.ModelTypes.EQUIPMENT_MODEL && subject["instruments"]) {
+        if (type == ModelFields.ModelTypes.EQUIPMENT_MODEL && (subject["instruments"] && subject["instruments"].length > 0)) {
             this.setState({error : "Cannot delete this model, as instances already exist", modal : true})
             return
         }
