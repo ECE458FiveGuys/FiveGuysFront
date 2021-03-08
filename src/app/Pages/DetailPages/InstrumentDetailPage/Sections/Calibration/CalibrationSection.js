@@ -1,18 +1,20 @@
-import RecordCalibration from "../../ModelDetailPage/RecordCalibration";
-import DataTable from "../../../Common/Tables/DataTable";
-import TableColumns from "../../MainPage/InventoryTables/Columns";
+import RecordCalibration from "./RecordCalibration";
+import DataTable from "../../../../../Common/Tables/DataTable";
+import TableColumns from "../../../../MainPage/InventoryTables/Columns";
 import React from "react";
-import {EquipmentModel} from "../../../../utils/ModelEnums";
-import ModelFields from "../../../../utils/enums";
-import HTPButton from "../../../Common/HTPButton";
-import {handleNavClick} from "../../../utils";
+import {EquipmentModel} from "../../../../../../utils/ModelEnums";
+import ModelFields from "../../../../../../utils/enums";
+import HTPButton from "../../../../../Common/HTPButton";
+import {handleNavClick} from "../../../../../utils";
 import {Button} from "react-bootstrap";
-import {createCertificate} from "../../ModelDetailPage/certificate_writer";
+import {createCertificate} from "./certificate_writer";
 import PropTypes from "prop-types";
-import ActionSection from "./ActionSection";
-import {User} from "../../../../utils/dtos";
+import ActionSection from "../../../Common/ActionSection";
+import {User} from "../../../../../../utils/dtos";
 import {MDBIcon} from "mdbreact";
-import {instrumentCalibratable} from "../utils";
+import {instrumentCalibratable} from "../../utils";
+import {Divider} from "@material-ui/core";
+import FileUtils from "../../../../../../utils/file_utils";
 
 export default class CalibrationSection extends React.Component {
 
@@ -36,8 +38,13 @@ export default class CalibrationSection extends React.Component {
             calibrationCopy[ModelFields.CalibrationFields.AdditionalFile] = (
                 calibrationCopy[ModelFields.CalibrationFields.AdditionalFile] ?
                     <a target="_blank" href={calibrationCopy[ModelFields.CalibrationFields.AdditionalFile]}>
-                        <MDBIcon size={"2x"}
-                                 icon="file-alt" />
+                        <div style={{display : "flex", flexDirection : "row", alignItems : 'center'}}>
+                            <MDBIcon size={"2x"}
+                                     icon="file-alt" />
+                            <text style={{marginLeft : 10}}>
+                                {FileUtils.getFileNameFromPath(calibrationCopy[ModelFields.CalibrationFields.AdditionalFile])}
+                            </text>
+                        </div>
                     </a> : calibrationCopy[ModelFields.CalibrationFields.LoadBankFile] ? "Calibrated using the load bank wizard" : false
             )
             return calibrationCopy
@@ -81,8 +88,8 @@ export default class CalibrationSection extends React.Component {
     render() {
         let {token, instrument, user} = this.props
         let {calibrationModalShow, calibrationTableRows} = this.state
-        return(<div style={{marginLeft : 100, marginRight : 100, marginTop : 20}}>
-                    <div style={{display : 'flex', justifyContent : 'space-between'}}>
+        return(<div style={{marginLeft : 100, marginRight : 100, marginTop : 60}}>
+                    <div style={{display : 'flex', justifyContent : 'space-between', alignItems : 'center'}}>
                         <div>
                             {this.renderRecordCalibrationButtons()}
                         </div>
@@ -95,6 +102,10 @@ export default class CalibrationSection extends React.Component {
                                 className={"h5-responsive"}>
                                 Calibrate your instrument here
                             </h1>
+                            <div style={{display: "flex", justifyContent : 'center'}}>
+                                <Divider style={{marginTop: 20, marginBottom: 0, width : window.innerWidth / 4 }}
+                                         orientation={"horizontal"}/>
+                            </div>
                         </div>
                         <div>
                             {this.renderCalibrationCertificateButton()}
@@ -107,7 +118,6 @@ export default class CalibrationSection extends React.Component {
                         instrument={instrument}
                         closeModal={()=>this.setCalibrationModalShow(false)}
                         user={user}
-                        // message={"Are you sure you wat to remove instrument "+this.state.instrument.serial_number+"?"}
                     />
                     <DataTable columns={TableColumns.CALIBRATION_COLUMNS}
                                rows={calibrationTableRows}/>

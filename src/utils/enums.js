@@ -33,12 +33,13 @@ export default class ModelFields {
     }
 
     static EquipmentModelEditFields = {
-        "Vendor": ModelFields.EquipmentModelFields.VENDOR,
-        "Model Number": ModelFields.EquipmentModelFields.MODEL_NUMBER,
-        "Description": ModelFields.EquipmentModelFields.DESCRIPTION,
-        "Comment": ModelFields.EquipmentModelFields.COMMENT,
-        "Categories": ModelFields.EquipmentModelFields.MODEL_CATEGORIES,
-        "Calibration Frequency": ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY,
+        [ModelFields.EquipmentModelFields.VENDOR] : "Vendor",
+        [ModelFields.EquipmentModelFields.MODEL_NUMBER] : "Model Number",
+        [ModelFields.EquipmentModelFields.DESCRIPTION] : "Description",
+        [ModelFields.EquipmentModelFields.COMMENT] : "Comment",
+        [ModelFields.EquipmentModelFields.MODEL_CATEGORIES] : "Categories",
+        [ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY] : "Calibration Frequency",
+        [ModelFields.EquipmentModelFields.CALIBRATION_MODE] : "Load Bank Wizard Supported?"
     }
 
     static InstrumentFields = {

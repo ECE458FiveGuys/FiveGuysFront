@@ -1,16 +1,19 @@
 import React, { Component } from "react";
-import InstrumentRequests from "../../../controller/requests/instrument_requests";
+import InstrumentRequests from "../../../../controller/requests/instrument_requests";
 
-import HTPNavBar from "../../Common/HTPNavBar";
+import HTPNavBar from "../../../Common/HTPNavBar";
 import {Divider} from "@material-ui/core";
-import ModelSection from "./Sections/ModelSection";
-import InstrumentSection from "./Sections/InstrumentSection";
-import ActionSection from "./Sections/ActionSection";
-import CalibrationSection from "./Sections/CalibrationSection";
+import ActionSection from "../Common/ActionSection";
+import CalibrationSection from "./Sections/Calibration/CalibrationSection";
 import PropTypes from "prop-types";
-import {User} from "../../../utils/dtos";
+import {User} from "../../../../utils/dtos";
 import {instrumentCalibratable} from "./utils";
-import MainView from "../MainPage/MainView";
+import MainView from "../../MainPage/MainView";
+import ModelSection from "../Common/ModelSection";
+import InstrumentSection from "./Sections/InstrumentSection";
+import ModelFields from "../../../../utils/enums";
+
+const DIVIDER_MARGINS = 100
 
 export default class InstrumentDetailView extends Component {
 
@@ -41,35 +44,33 @@ export default class InstrumentDetailView extends Component {
             return (
                 <div>
                     <HTPNavBar user={user}
-                               location={location}
-                    ></HTPNavBar>
+                               location={location}/>
                     <div style={{flex : 1, display : "flex", flexDirection : "column", justifyContent : 'space-evenly', alignItems : 'center', marginLeft : 100, marginRight : 100}}>
-                        <h1 style={{marginTop : 20, marginBottom : 30}}
+                        <h1 style={{marginTop : 30, marginBottom : 40}}
                             className={"h1-responsive"}>
                             Instrument Details
                         </h1>
                         <Divider orientation={'horizontal'}
                                  flexItem={true}/>
                         <div style={{flex : 1, display : "flex", flexDirection : "row", justifyContent : 'space-between'}}>
-                            {ModelSection(instrument)}
-                                <Divider style={{marginRight : 30, marginLeft : 30}}
+                            {ModelSection(instrument.model, "You are viewing an instance of the following model:", history, true)}
+                                <Divider style={{marginRight : DIVIDER_MARGINS, marginLeft : DIVIDER_MARGINS}}
                                             orientation={"vertical"}
                                             flexItem={true}/>
-                            {InstrumentSection(instrument, history)}
+                            {InstrumentSection(instrument)}
                             {user.is_staff &&
-                                <Divider style={{marginRight : 30, marginLeft : 30}}
+                                <Divider style={{marginRight : DIVIDER_MARGINS, marginLeft : DIVIDER_MARGINS}}
                                          flexItem={true}
                                          orientation={"vertical"}/>}
                             {user.is_staff &&
                                 <ActionSection token={token}
-                                               instrument={instrument}
+                                               subject={instrument}
                                                updatePageState={this.updatePageState}
-                                               history={history}/>}
+                                               history={history}
+                                               type={ModelFields.ModelTypes.INSTRUMENT}
+                                                deleteFunction={InstrumentRequests.deleteInstruments}/>}
                         </div>
                     </div>
-                        {instrumentCalibratable(instrument) &&
-                            <Divider style={{marginTop: 30, marginBottom: 30}}
-                                         orientation={"horizontal"}/>}
                         {instrumentCalibratable(instrument) &&
                             <CalibrationSection token={token}
                                                 user={user}
@@ -78,11 +79,8 @@ export default class InstrumentDetailView extends Component {
                                                 calibrations={calibrations}
                             />}
                 </div>
-
-
-            );
-        }
-        else {
+            )
+        } else {
             return (<div/>);
         }
     }

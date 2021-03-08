@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import {Button, Form, Modal} from "react-bootstrap";
 import {MDBBtn, MDBCol, MDBContainer, MDBRow} from "mdbreact";
-import FormEntry from "./FormEntry";
+import FormEntry from "../FormEntry";
 
 class EditModal extends Component{
 
@@ -37,7 +37,6 @@ class EditModal extends Component{
                                 <form>
                                     <FormEntry fields = {this.props.fields}
                                                subject = {this.props.subject}
-                                               handleFormChange = {this.props.handleFormChange}
                                                handleInputChange = {this.props.handleInputChange}
                                                isEdit = {this.props.isEdit}
                                                handleDayClick = {this.props.handleDayClick}

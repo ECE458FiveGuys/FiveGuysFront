@@ -1,8 +1,8 @@
 import jsPDF from "jspdf";
-import ModelFields from "../../../utils/enums";
-import {EquipmentModel, Instrument} from "../../../utils/ModelEnums";
-import Image from "../../../assets/hpt_logo.png"
-import {IdealCurrents} from "../LoadBankPage/Steps/LoadBankStepSteps/step_utils";
+import ModelFields from "../../../../../../utils/enums";
+import {EquipmentModel, Instrument} from "../../../../../../utils/ModelEnums";
+import Image from "../../../../../../assets/hpt_logo.png"
+import {IdealCurrents} from "../../../../LoadBankPage/Steps/LoadBankStepSteps/step_utils";
 
 const LOGO_ASPECT_RATIO = 1.26
 const IMAGE_HEIGHT = 80

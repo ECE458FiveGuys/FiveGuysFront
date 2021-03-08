@@ -1,13 +1,10 @@
 import React, {Component, useState} from "react";
-import SelectInput from "./SelectInput";
-import Select from "react-select";
-import DatePicker from "react-datepicker";
-import ModelRequests from "../../../controller/requests/model_requests";
-import DatePickers from "../../Common/DatePickers";
 import DayPicker from "react-day-picker";
-import HTPMultiLineInput from "../../Common/Inputs/HTPMultiLineInput";
-import ModelFields from "../../../utils/enums";
-import HTPAutoCompleteInput from "../../Common/Inputs/HTPAutoCompleteInput";
+import HTPMultiLineInput from "../../../Common/Inputs/HTPMultiLineInput";
+import ModelFields from "../../../../utils/enums";
+import HTPAutoCompleteInput from "../../../Common/Inputs/HTPAutoCompleteInput";
+import FileUtils from "../../../../utils/file_utils";
+import Checkbox from "../../../Common/Tables/TableWidgets/Checkbox";
 
 class FormEntry extends Component {
 
@@ -38,6 +35,25 @@ class FormEntry extends Component {
 
         }
 
+        if (fieldName === ModelFields.EquipmentModelFields.CALIBRATION_MODE) {
+            return (
+                <div className="custom-control custom-checkbox">
+                    <input type="checkbox"
+                           className="custom-control-input"
+                           id="defaultUnchecked"
+                           onChange={(event) => {
+                               this.props.handleInputChange(fieldName)(event.target.checked ?
+                                   ModelFields.CalibrationModes.LOAD_BANK : ModelFields.CalibrationModes.DEFAULT)
+                           }}
+                           defaultChecked={this.props.isEdit && this.props.subject[ModelFields.EquipmentModelFields.CALIBRATION_MODE] == ModelFields.CalibrationModes.LOAD_BANK}
+                    />
+                        <label className="custom-control-label" htmlFor="defaultUnchecked">
+                            Load Bank Supported?
+                        </label>
+                </div>
+            )
+        }
+
         if (fieldName === ModelFields.InstrumentFields.COMMENT) {
             return (
                 <HTPMultiLineInput onChange={(area) => this.props.handleInputChange(ModelFields.CalibrationFields.Comment)(area.target.value)}
@@ -53,11 +69,6 @@ class FormEntry extends Component {
                 <div>
                     Choose some additional evidence!
                     <div className="input-group" style={{marginTop : 10}}>
-                        {/*<div className="input-group-prepend">*/}
-                        {/*    <span className="input-group-text" id="additionalEvidenceAddon01">*/}
-                        {/*      Upload*/}
-                        {/*    </span>*/}
-                        {/*</div>*/}
                         <div className="custom-file">
                             <input
                                 type="file"
@@ -66,7 +77,7 @@ class FormEntry extends Component {
                                 aria-describedby="additionalEvidenceAddon01"
                                 onChange={event => {
                                     this.props.handleFileSelect(event)
-                                    let filename = event.target.value.split("\\").pop();
+                                    let filename = FileUtils.getFileNameFromPath(event.target.value)
                                     this.setState({fileSelected : filename})
                                 }}
                             />
@@ -88,10 +99,7 @@ class FormEntry extends Component {
                                       label={fieldName === ModelFields.EquipmentModelFields.MODEL_CATEGORIES ? "Model Categories" : "Instrument Categories"}
                                       multiple={true}
                                         defaultValue={ this.props.subject ? ((this.props.isEdit) ?
-                                                                  fieldName === ModelFields.EquipmentModelFields.MODEL_CATEGORIES ?
-                                                                  this.props.subject.model[fieldName] :
-                                                                      this.props.subject[fieldName] : "")
-                                                            : ""}
+                                                                      this.props.subject[fieldName] : "") : ""}
                                         size={13}/>
             )
         }
@@ -104,7 +112,7 @@ class FormEntry extends Component {
                                       onChange={handleInputChange(fieldName)}
                                       label={fieldName === ModelFields.EquipmentModelFields.MODEL_NUMBER ? "Model Number" : "Vendor"}
                                       multiple={false}
-                                      defaultValue={(this.props.isEdit) ? this.props.subject.model[fieldName] : ""}
+                                      defaultValue={(this.props.isEdit) ? this.props.subject.model ? this.props.subject.model[fieldName] : this.props.subject[fieldName] : ""}
                                       size={13}/>
             );
         }
@@ -118,12 +126,11 @@ class FormEntry extends Component {
             ModelFields.EquipmentModelFields.VENDOR,
             ModelFields.InstrumentFields.COMMENT,
             ModelFields.EquipmentModelFields.MODEL_CATEGORIES,
-            ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES
+            ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES,
+            ModelFields.EquipmentModelFields.CALIBRATION_MODE
         ]
 
-        // let models = ModelRequests.getModels()
         let formFields = this.props.fields
-        // let test = this.props.subject[formFields["model"]]
         return(
             <div>
                 {Object.keys(formFields).map((fieldKey, index) => (
@@ -137,7 +144,7 @@ class FormEntry extends Component {
                            aria-multiline={true}
                            placeholder={formFields[fieldKey]}
                             className="form-control"
-                            onChange={this.props.handleFormChange}
+                            onChange={(e) => this.props.handleInputChange(fieldKey)(e.target.value)}
                             defaultValue={(this.props.isEdit) ? this.props.subject[fieldKey] : ""}
                     />
                     <br />
