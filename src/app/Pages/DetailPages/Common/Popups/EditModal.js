@@ -26,7 +26,9 @@ class EditModal extends Component{
                 centered
             >
                 <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title-vcenter">
+                    <Modal.Title
+                        className={"text-info"}
+                        id="contained-modal-title-vcenter">
                         {this.props.title}
                     </Modal.Title>
                 </Modal.Header>

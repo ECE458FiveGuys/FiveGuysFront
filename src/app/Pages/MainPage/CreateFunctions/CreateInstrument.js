@@ -9,6 +9,7 @@ import HTPInput from "../../../Common/Inputs/HTPInput";
 import HTPAutoCompleteInput from "../../../Common/Inputs/HTPAutoCompleteInput";
 import MiscellaneousRequests from "../../../../controller/requests/miscellaneous_requests";
 import HTPPopup from "../../../Common/HTPPopup";
+import HTPButton from "../../../Common/HTPButton";
 
 
 class CreateModel extends Component {
@@ -16,7 +17,7 @@ class CreateModel extends Component {
     constructor(props) {
         super(props)
         this.state = { vendor:'', model_number:'', serial_number:'', comment:'', model_options:[],categories_chosen:[],
-            modal : false, displayMessage: [], requestStatus:''}
+            modal : false, displayMessage: [], requestStatus:'', responseColor:'red'}
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
     }
@@ -76,9 +77,11 @@ class CreateModel extends Component {
                 return response.text()})
             .then(json => { //success
                 json.toString()
+                console.log(json)
                 let returnArray = []
                 let responseTitle = ''
-                if (json.includes('pk')) {
+                let responseColor = ''
+                if (json.includes('"count":1')) {
                     const start = json.indexOf('pk')
                     let restOfJSON = json.substring(start+4)
                     let end = restOfJSON.indexOf('"')
@@ -89,9 +92,11 @@ class CreateModel extends Component {
                         [
                             'Vendor and Model Number do not match a model'
                         ]
+                    responseColor = 'red'
                     responseTitle = 'Failure!'
                     let newState = {}
                     newState['displayMessage'] = returnArray
+                    newState['responseColor'] = responseColor
                     newState['requestStatus'] = responseTitle
                     this.setState(newState)
                 }
@@ -104,6 +109,7 @@ class CreateModel extends Component {
                 responseTitle = 'Failure!'
                 let newState = {}
                 newState['displayMessage'] = returnArray
+                newState['responseColor'] = 'red'
                 newState['requestStatus'] = responseTitle
                 this.setState(newState)
             });
@@ -126,6 +132,7 @@ class CreateModel extends Component {
                     json.toString()
                     if (json.includes('pk')) {
                         let returnArray = []
+                        let responseColor = ''
                         let responseTitle = ''
                         returnArray =
                             [
@@ -136,18 +143,22 @@ class CreateModel extends Component {
                                 'Categories : '+ this.state.categories_chosen
                             ]
                         let newState = {}
+                        responseColor = 'green'
                         responseTitle = 'Success! The Instrument was added:'
                         newState['displayMessage'] = returnArray
+                        newState['responseColor'] = responseColor
                         newState['requestStatus'] = responseTitle
                         this.setState(newState)
                     }
                     else {
+                        console.log(json)
                         let results = ErrorParser.parse(json)
                         let returnArray = []
-                        let responseTitle = ''
-                        responseTitle = 'Failure!'
+                        let responseTitle = 'Failure!'
+                        let responseColor = 'red'
                         let newState = {}
                         newState['displayMessage'] = results
+                        newState['responseColor'] = responseColor
                         newState['requestStatus'] = responseTitle
                         this.setState(newState)
                     }
@@ -157,6 +168,7 @@ class CreateModel extends Component {
                     responseTitle = 'Failure!'
                     let newState = {}
                     newState['displayMessage'] = error
+                    newState['responseColor'] = 'red'
                     newState['requestStatus'] = responseTitle
                     this.setState(newState)
                     console.error('Error:', error);
@@ -200,29 +212,19 @@ class CreateModel extends Component {
     render(){
         return(
             <div>
-                <NavBar user={this.props.user}/>
                 <MDBContainer>
                     <br />
                     <MDBRow>
                         <MDBCol md="10">
-                            <form onSubmit={this.handleSubmit}>
-
                                 <HTPAutoCompleteInput options = {this.state.vendors} label={'Vendor'} onChange={this.handleChange('vendor')} placeholder={'required'}/>
                                 <HTPAutoCompleteInput options = {this.state.model_options} label={'Model Number'} onChange={this.handleChange('model_number')} placeholder={'required'}></HTPAutoCompleteInput>
                                 <HTPInput label={'Serial Number'} onChange={this.handleChange('serial_number')} placeholder={'required'}></HTPInput>
                                 <HTPInput label={'Comment'} onChange={this.handleChange('comment')} placeholder={'optional'}></HTPInput>
                                 <HTPAutoCompleteInput multiple = {true} options = {this.state.categories} label={'Categories'} onChange={this.handleChange('categories_chosen')} placeholder={'required'}/>
 
-                                <MDBBtn color="warning" outline type="button" onClick={this.handleSubmit}>
-                                    Create Instrument
-                                    <MDBIcon far icon="paper-plane" className="ml-2" />
-                                </MDBBtn>
-                                <HTPPopup isOpen={this.state.modal}
-                                          toggleModal={this.toggleModal}
-                                          className={"text-info"}
-                                          title={this.state.requestStatus}
-                                          message={this.getDisplayMessage()}/>
-                            </form>
+                            <HTPButton label={'Create Instrument'} onSubmit={this.handleSubmit}></HTPButton>
+                            <br/>
+                            <text style={{ color: this.state.responseColor}}>{this.getDisplayMessage()}</text>
                         </MDBCol>
                     </MDBRow>
                 </MDBContainer>

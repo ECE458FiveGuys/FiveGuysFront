@@ -174,7 +174,7 @@ export default class UpdateInventory extends React.Component {
                           isOpen={successModalShow}
                           className={"text-success"}
                           additionalButtons={mode == UpdateInventory.CREATE_MODE && <HTPButton label={`Go to ${this.getInventoryTypeName(true)}`}
-                                                                                                color={"blue"}
+                                                                                                color={"green"}
                                                                                                 onSubmit={() => {
                                                                                                     history.push(`${this.getInventoryTypeUrl()}${createdSubject.pk}`)
                                                                                                 }}/>}

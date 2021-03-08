@@ -8,6 +8,7 @@ import ErrorParser from "./ErrorParser";
 import HTPInput from "../../../Common/Inputs/HTPInput";
 import {AUTH_URLS, URLS} from "../../../../controller/strings";
 import HTPPopup from "../../../Common/HTPPopup";
+import HTPButton from "../../../Common/HTPButton";
 
 
 class CreateModel extends Component {
@@ -15,7 +16,7 @@ class CreateModel extends Component {
     constructor(props) {
         super(props)
         this.state = { vendor:'', model_number:'', description:'', comment:'',calibration_frequency:'',
-            modal : false, displayMessage: [], requestStatus:''}
+            modal : false, displayMessage: [], requestStatus:'', resultingColor:'red'}
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
     }
@@ -42,22 +43,27 @@ class CreateModel extends Component {
             .then(json => { //success
                 let returnArray = []
                 let responseTitle = ''
+                let responseColor = ''
                 if (json.includes('"id"')) {
                     returnArray =
                         [
+                            'Success! The user was added:',
                             'Name : '+ this.state.name,
                             'Username : '+ this.state.username,
                             'Email : '+ this.state.email,
                         ]
                     responseTitle = 'Success! The user was added:'
+                    responseColor = 'green'
                 }
                 else {
                     returnArray = ErrorParser.parse(json)
                     responseTitle = 'Error while creating the User'
+                    responseColor = 'red'
                 }
 
                 let newState = {}
                 newState['displayMessage'] = returnArray
+                newState['responseColor'] = responseColor
                 newState['requestStatus'] = responseTitle
                 this.setState(newState)
 
@@ -69,6 +75,7 @@ class CreateModel extends Component {
                 let newState = {}
                 newState['displayMessage'] = returnArray
                 newState['requestStatus'] = responseTitle
+                newState['responseColor'] = 'red'
                 this.setState(newState)
             });
         this.toggleModal()
@@ -107,27 +114,18 @@ class CreateModel extends Component {
     render(){
         return(
             <div>
-                <NavBar user={this.props.user}/>
                 <MDBContainer>
                     <br />
                     <MDBRow>
                         <MDBCol md="10">
-                            <form onSubmit={this.handleSubmit}>
                                 <HTPInput label={'Name'} onChange={this.handleChange('name')} placeholder={'required'}></HTPInput>
                                 <HTPInput label={'Username'} onChange={this.handleChange('username')} placeholder={'required'}></HTPInput>
                                 <HTPInput label={'Email'} onChange={this.handleChange('email')} placeholder={'required'}></HTPInput>
                                 <HTPInput label={'Password'} type = 'Password' onChange={this.handleChange('password')} placeholder={'required'} type="password"></HTPInput>
 
-                                <MDBBtn color="warning" outline type="button" onClick={this.handleSubmit}>
-                                    Create User
-                                    <MDBIcon far icon="paper-plane" className="ml-2" />
-                                </MDBBtn>
-                                <HTPPopup isOpen={this.state.modal}
-                                          toggleModal={this.toggleModal}
-                                          className={"text-info"}
-                                          title={this.state.requestStatus}
-                                          message={this.getDisplayMessage()}/>
-                            </form>
+                                <HTPButton label={'Create User'} onSubmit={this.handleSubmit}></HTPButton>
+                                <br/>
+                                <text style={{ color: this.state.responseColor }}>{this.getDisplayMessage()}</text>
                         </MDBCol>
                     </MDBRow>
                 </MDBContainer>
