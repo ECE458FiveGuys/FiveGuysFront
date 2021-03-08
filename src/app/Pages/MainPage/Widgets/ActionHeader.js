@@ -7,6 +7,7 @@ import HTPAutoCompleteInput from "../../../Common/Inputs/HTPAutoCompleteInput";
 import HTPInput from "../../../Common/Inputs/HTPInput";
 import {EquipmentModel, Instrument, Models} from "../../../../utils/ModelEnums";
 import UpdateInstrument from "../../InstrumentDetailPage/Sections/UpdateInstrument";
+import {User} from "../../../../utils/dtos";
 
 let SEARCH_FIELD_COLS = 8
 
@@ -43,55 +44,70 @@ export default class ActionHeader extends Component {
                                       label={searchFieldTitle}
                                       multiple={true}
                                       size={3}/>)
-        }
+    }
+
+    renderSearchButton = () => {
+        return(<MDBCol size={1} style={{display: "flex", marginLeft: 20, alignItems : "center", justifyContent:"center"}}>
+            <button type="button"
+                    className="btn btn-primary"
+                    onClick={()=>this.props.updateSearchFieldValues(this.state.searchFieldValues)}>
+                Search
+            </button>
+        </MDBCol>)
+    }
+
+    renderCreateInstrumentButton = () => {
+        let {token, updatePageState} = this.props
+        return (<MDBCol size={1}
+                style={{display: "flex", marginLeft: 20, alignItems: "center", justifyContent: "center"}}>
+                    <UpdateInstrument
+                        mode={UpdateInstrument.CREATE_MODE}
+                        token={token}
+                        updatePageState={updatePageState}/>
+                </MDBCol>)
+    }
+
+    appendSearchFields = (Rows, col) => {
+        let {searchFields, updateSearchFieldValues, token, updatePageState} = this.props
+        Object.keys(searchFields).forEach(key => {
+                let searchFieldName = searchFields[key]
+                if (searchFieldName == ModelFields.EquipmentModelSearchFields.Vendor ||
+                    searchFieldName == ModelFields.InstrumentSearchFields.Vendor) {
+                    Rows.push(<HTPAutoCompleteInput placeholder={"Search"}
+                                                    options={this.props.vendors}
+                                                    onChange={this.updateSearchFields(searchFieldName)}
+                                                    label={key}/>)
+                } else if (searchFieldName == ModelFields.EquipmentModelFields.MODEL_CATEGORIES ||
+                    searchFieldName == ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES) {
+                    Rows.push(this.renderAutoCompleteMultipleSearchBox(searchFieldName, key))
+                } else {
+                    Rows.push(<MDBCol size={2}>
+                        <HTPInput label={key}
+                                  onChange={this.updateSearchFields(searchFieldName)}
+                                  placeholder={"Search"}/>
+                    </MDBCol>)
+                }
+                if (col == SEARCH_FIELD_COLS) {
+                    Rows.push(<div className="w-100"/>)
+                    col = 1
+                } else {
+                    col+=1
+                }
+            }
+        )
+
+    }
 
     render() {
         let Rows = []
         let col = 1
-        let {searchFields, updateSearchFieldValues, token, updatePageState} = this.props
-        Object.keys(searchFields).forEach(key => {
-            let searchFieldName = searchFields[key]
-            if (searchFieldName == ModelFields.EquipmentModelSearchFields.Vendor ||
-                searchFieldName == ModelFields.InstrumentSearchFields.Vendor) {
-                Rows.push(<HTPAutoCompleteInput placeholder={"Search"}
-                                                options={this.props.vendors}
-                                                onChange={this.updateSearchFields(searchFieldName)}
-                                                label={key}/>)
-            } else if (searchFieldName == ModelFields.EquipmentModelFields.MODEL_CATEGORIES ||
-                searchFieldName == ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES) {
-                Rows.push(this.renderAutoCompleteMultipleSearchBox(searchFieldName, key))
-            } else {
-                Rows.push(<MDBCol size={2}>
-                            <HTPInput label={key}
-                                    onChange={this.updateSearchFields(searchFieldName)}
-                                    placeholder={"Search"}/>
-                            </MDBCol>)
-            }
-            if (col == SEARCH_FIELD_COLS) {
-                Rows.push(<div className="w-100"/>)
-                col = 1
-            } else {
-                col+=1
-            }
-            }
-        )
-        Rows.push(
-            <MDBCol size={1} style={{display: "flex", marginLeft: 20, alignItems : "center", justifyContent:"center"}}>
-            <button type="button"
-                    className="btn btn-primary"
-                    onClick={()=>updateSearchFieldValues(this.state.searchFieldValues)}>
-                Search
-            </button>
-                </MDBCol>
-        )
-        Rows.push(
-            <MDBCol size={1} style={{display: "flex", marginLeft: 20, alignItems : "center", justifyContent:"center"}}>
-                <UpdateInstrument
-                    mode={UpdateInstrument.CREATE_MODE}
-                    token={token}
-                    updatePageState={updatePageState}/>
-            </MDBCol>
-        )
+        this.appendSearchFields(Rows, col)
+        Rows.push(this.renderSearchButton())
+        this.props.user.is_staff ?
+            this.getTableType() == ModelFields.ModelTypes.INSTRUMENT ?
+                Rows.push(this.renderCreateInstrumentButton()) :
+                Rows.push() : // TODO: Luke, add a function for the create model/button popup
+                 void(0)
 
         let type = this.getTableType() == ModelFields.ModelTypes.EQUIPMENT_MODEL ? "Models" : "Instruments"
 
@@ -115,5 +131,6 @@ ActionHeader.propTypes = {
     token: PropTypes.string.isRequired,
     vendors: PropTypes.array.isRequired,
     modelCategories: PropTypes.array.isRequired,
-    instrumentCategories: PropTypes.array
+    instrumentCategories: PropTypes.array,
+    user : PropTypes.instanceOf(User)
 }

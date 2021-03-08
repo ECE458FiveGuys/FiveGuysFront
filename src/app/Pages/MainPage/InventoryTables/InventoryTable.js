@@ -10,6 +10,7 @@ import HTPButton from "../../../Common/HTPButton";
 import Image from "../../../../assets/hpt_logo.png"
 import BackendPaginatedDataTable from "../../../Common/Tables/BackendPaginatedDataTable";
 import ActionHeader from "../Widgets/ActionHeader";
+import {User} from "../../../../utils/dtos";
 class InventoryTable extends Component {
 
     constructor(props) {
@@ -65,7 +66,7 @@ class InventoryTable extends Component {
     }
 
     render() {
-        let {searchRequestFunction, parseSearchResultsFunction, token, columns, searchFields} = this.props
+        let {searchRequestFunction, parseSearchResultsFunction, token, columns, searchFields, user} = this.props
         let {searchFieldValues} = this.state
         return (
             <div>
@@ -76,6 +77,7 @@ class InventoryTable extends Component {
                               modelCategories={this.state.model_categories ? this.state.model_categories : []}
                               instrumentCategories={this.state.instrument_categories ? this.state.instrument_categories : []}
                               updatePageState={this.updatePageState}
+                              user={user}
                                 />
                 {this.props.children}
                 <BackendPaginatedDataTable columns={columns}
@@ -96,6 +98,7 @@ InventoryTable.propTypes = {
     searchRequestFunction: PropTypes.func.isRequired,  // the request from the shared library used to populate the table
     categoriesName: PropTypes.string.isRequired,
     parseSearchResultsFunction: PropTypes.func, // the parser used to format the data from the request so it can be added to the table
+    user: PropTypes.instanceOf(User)
 }
 
 InventoryTable.defaultProps = {
