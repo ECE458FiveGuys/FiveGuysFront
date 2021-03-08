@@ -58,12 +58,13 @@ export default class ActionHeader extends Component {
     }
 
     renderCreateInstrumentButton = () => {
-        let {token, updatePageState} = this.props
+        let {token, updatePageState, history} = this.props
         return (<MDBCol size={1}
                 style={{display: "flex", marginLeft: 20, alignItems: "center", justifyContent: "center"}}>
                     <UpdateInstrument
                         mode={UpdateInstrument.CREATE_MODE}
                         token={token}
+                        history={history}
                         updatePageState={updatePageState}/>
                 </MDBCol>)
     }
@@ -143,5 +144,6 @@ ActionHeader.propTypes = {
     vendors: PropTypes.array.isRequired,
     modelCategories: PropTypes.array.isRequired,
     instrumentCategories: PropTypes.array,
-    user : PropTypes.instanceOf(User)
+    user : PropTypes.instanceOf(User),
+    history : PropTypes.object.isRequired
 }
