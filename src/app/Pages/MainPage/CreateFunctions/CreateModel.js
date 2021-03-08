@@ -73,7 +73,6 @@ class CreateModel extends Component {
                         model_number: model_number,
                         description: description,
                         comment: comment,
-                        calibration_frequency: calibration_frequency,
                         model_categories: categories_chosen,
                         calibration_mode: 'LOAD_BANK'
                     })
@@ -88,7 +87,6 @@ class CreateModel extends Component {
                         model_number: model_number,
                         description: description,
                         comment: comment,
-                        calibration_frequency: calibration_frequency,
                         model_categories: categories_chosen
                     })
                 }
