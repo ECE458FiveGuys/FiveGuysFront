@@ -18,7 +18,7 @@ class CreateModel extends Component {
         super(props)
         this.state = {vendor:'', model_number:'', description:'', comment:'',
             calibration_frequency:'',categories_chosen:[], modal : false, displayMessage: [],
-            requestStatus:'', responseColor:'red'}
+            requestStatus:'', responseColor:'red', calibration_mode : false}
 
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
@@ -64,22 +64,66 @@ class CreateModel extends Component {
         const { vendor, model_number, description, comment, calibration_frequency, categories_chosen} = this.state
         let requestOptions = {}
         if (calibration_frequency=='') { //nothing inputed
-            requestOptions = {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Authorization':token, 'Accept':'application/json'},
-                body: JSON.stringify({vendor: vendor, model_number: model_number, description: description,
-                    comment: comment, model_categories: categories_chosen})
-            };
+            if (this.state.calibration_mode) {
+                requestOptions = {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json', 'Authorization': token, 'Accept': 'application/json'},
+                    body: JSON.stringify({
+                        vendor: vendor,
+                        model_number: model_number,
+                        description: description,
+                        comment: comment,
+                        calibration_frequency: calibration_frequency,
+                        model_categories: categories_chosen,
+                        calibration_mode: 'LOAD_BANK'
+                    })
+                }
+            }
+            else {
+                requestOptions = {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json', 'Authorization': token, 'Accept': 'application/json'},
+                    body: JSON.stringify({
+                        vendor: vendor,
+                        model_number: model_number,
+                        description: description,
+                        comment: comment,
+                        calibration_frequency: calibration_frequency,
+                        model_categories: categories_chosen
+                    })
+                }
+            }
         }
         else {
-            requestOptions = {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json', 'Authorization': token, 'Accept': 'application/json'},
-                body: JSON.stringify({
-                    vendor: vendor, model_number: model_number, description: description,
-                    comment: comment, calibration_frequency: calibration_frequency, model_categories: categories_chosen
-                })
-            };
+            if (this.state.calibration_mode) {
+                requestOptions = {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json', 'Authorization': token, 'Accept': 'application/json'},
+                    body: JSON.stringify({
+                        vendor: vendor,
+                        model_number: model_number,
+                        description: description,
+                        comment: comment,
+                        calibration_frequency: calibration_frequency,
+                        model_categories: categories_chosen,
+                        calibration_mode: 'LOAD_BANK'
+                    })
+                }
+            }
+            else {
+                requestOptions = {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json', 'Authorization': token, 'Accept': 'application/json'},
+                    body: JSON.stringify({
+                        vendor: vendor,
+                        model_number: model_number,
+                        description: description,
+                        comment: comment,
+                        calibration_frequency: calibration_frequency,
+                        model_categories: categories_chosen,
+                    })
+                }
+            }
         }
 
         const response = await fetch(URLS.MODELS, requestOptions)
@@ -136,6 +180,12 @@ class CreateModel extends Component {
         });
     }
 
+    changeCheckedCalibrationMode = () => {
+        this.setState({
+            calibration_mode: !this.state.calibration_mode
+        });
+    }
+
     getDisplayMessage = () => {
         let displayMessage = this.state.displayMessage
         return (<div>
@@ -155,7 +205,6 @@ class CreateModel extends Component {
         return(
             <div>
                 <MDBContainer>
-                    <br />
                     <MDBRow >
                         <MDBCol>
                             <HTPAutoCompleteInput options = {this.state.vendors} label={'Vendor'} size = {15} onChange={this.handleChange('vendor')} placeholder={'required'}/>
@@ -170,6 +219,15 @@ class CreateModel extends Component {
 
                             <HTPAutoCompleteInput multiple = {true} options = {this.state.categories} label={'Categories'} size = {15} onChange={this.handleChange('categories_chosen')} placeholder={'required'}/>
 
+                            <label>
+                                Load Bank as calibration mode?
+                                <input
+                                    name="calibration_mode"
+                                    type="checkbox"
+                                    checked={this.state.calibration_mode}
+                                    onChange={this.changeCheckedCalibrationMode} />
+                            </label>
+                            <br />
                             <HTPButton label={'Create Model'} onSubmit={this.handleSubmit}></HTPButton>
                             <br/>
                             <text style={{ color: this.state.responseColor }}>{this.getDisplayMessage()}</text>

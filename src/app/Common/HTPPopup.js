@@ -20,7 +20,7 @@ export default class HTPPopup extends Component {
                         {additionalElements}
                     </ModalBody>
                     <MDBModalFooter>
-                        <MDBBtn color="green" onClick={toggleModal}>Close</MDBBtn>
+                        <MDBBtn color="blue" onClick={toggleModal}>Close</MDBBtn>
                         {additionalButtons}
                     </MDBModalFooter>
                 </MDBModal>)
