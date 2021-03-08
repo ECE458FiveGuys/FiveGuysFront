@@ -34,6 +34,7 @@ export default class ModelTable extends Component {
                             searchFields={ModelFields.EquipmentModelSearchFields}
                             token={this.props.token}
                             user={this.props.user}
+                            history={this.props.history}
                             searchRequestFunction={ModelRequests.getModelsWithSearchParams}
                             parseSearchResultsFunction={this.parseSearchResults}/>
         );
