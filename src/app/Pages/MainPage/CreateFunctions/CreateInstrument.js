@@ -3,12 +3,10 @@ import PropTypes from "prop-types";
 import { MDBContainer, MDBRow, MDBCol, MDBBtn, MDBIcon} from 'mdbreact';
 import {METHODS, URLS} from "../../../../controller/strings";
 import {User} from "../../../../utils/dtos";
-import NavBar from "../../../Common/HTPNavBar";
 import ErrorParser from "./ErrorParser";
 import HTPInput from "../../../Common/Inputs/HTPInput";
 import HTPAutoCompleteInput from "../../../Common/Inputs/HTPAutoCompleteInput";
 import MiscellaneousRequests from "../../../../controller/requests/miscellaneous_requests";
-import HTPPopup from "../../../Common/HTPPopup";
 import HTPButton from "../../../Common/HTPButton";
 
 

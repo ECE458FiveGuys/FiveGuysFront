@@ -1,20 +1,12 @@
 import React, { Component } from "react";
 import {Button, Form, Modal} from "react-bootstrap";
 import {MDBBtn, MDBCol, MDBContainer, MDBRow} from "mdbreact";
-import FormEntry from "../FormEntry";
+import FormEntry from "./FormEntry";
 
-class EditModal extends Component{
+class FormModal extends Component{
 
     constructor(props){
         super(props)
-        // let model = this.props.subject
-        // this.state = {
-        //     vendor: model['vendor'],
-        //     model_number: model['model_number'],
-        //     description: model['description'],
-        //     comment: model['comment'],
-        //     calibration_frequency: model['calibration_frequency'],
-        // }
     }
 
     render() {
@@ -48,7 +40,7 @@ class EditModal extends Component{
                                                vendors = {this.props.vendors}
                                                modelNumbers = {this.props.modelNumbers}
                                     />{this.props.error &&
-                                        <div style={{marginTop : 10, display : 'flex', justifyContent : 'center', alignItems : "center"}}>
+                                        <div style={{marginTop : 10, display : 'flex', justifyContent : 'center', alignItems : "center", textAlign: 'center'}}>
                                             <text className={'text-danger'}>
                                                 {this.props.error}
                                             </text>
@@ -72,4 +64,4 @@ class EditModal extends Component{
     }
 }
 
-export default EditModal;
+export default FormModal;

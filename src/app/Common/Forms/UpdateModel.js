@@ -31,20 +31,18 @@ export default class UpdateModel extends React.Component {
     }
 
     validateFields = (fields) => {
-        let {description, comment, calibration_frequency, calibration_mode} = fields
-        if (calibration_frequency && (!isNumeric(calibration_frequency.toString()) || calibration_frequency < 0 || Math.ceil(calibration_frequency) != calibration_frequency)) {
+        let {vendor, model_number, description, comment, calibration_frequency, calibration_mode} = fields
+        if (!vendor || !model_number || !description) {
+            throw new UserError("Nice try! Vendor, model number, and description are required fields")
+        } else if (calibration_frequency && (!isNumeric(calibration_frequency.toString()) || calibration_frequency < 0 || Math.ceil(calibration_frequency) != calibration_frequency)) {
             throw new UserError("Calibration frequency must be a positive integer")
         } else if (comment && comment.length > 100) {
             throw new UserError("Description cannot be greater than 100 characters")
-            return;
-        } else if (description && description.length > 2000) {
+        } else if (description.length > 2000) {
             throw new UserError("Comment cannot be greater than 2000 characters")
-            return;
         } else if (!calibration_frequency && calibration_mode == ModelFields.CalibrationModes.LOAD_BANK) {
             throw new UserError("If the load bank wizard is enabled, the model must have a calibration frequency")
-            return;
-}
-
+        }
     }
 
     render() {

@@ -1,10 +1,10 @@
 import React, {Component, useState} from "react";
 import DayPicker from "react-day-picker";
-import HTPMultiLineInput from "../../../Common/Inputs/HTPMultiLineInput";
-import ModelFields from "../../../../utils/enums";
-import HTPAutoCompleteInput from "../../../Common/Inputs/HTPAutoCompleteInput";
-import FileUtils from "../../../../utils/file_utils";
-import Checkbox from "../../../Common/Tables/TableWidgets/Checkbox";
+import HTPMultiLineInput from "../Inputs/HTPMultiLineInput";
+import ModelFields from "../../../utils/enums";
+import HTPAutoCompleteInput from "../Inputs/HTPAutoCompleteInput";
+import FileUtils from "../../../utils/file_utils";
+import Checkbox from "../Tables/TableWidgets/Checkbox";
 
 class FormEntry extends Component {
 

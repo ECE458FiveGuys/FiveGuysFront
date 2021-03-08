@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {Button, Modal} from "react-bootstrap";
 import {MDBBtn, MDBCol, MDBContainer, MDBRow} from "mdbreact";
-import FormEntry from "../FormEntry";
+import FormEntry from "../../../../Common/Forms/FormEntry";
 import ModelRequests from "../../../../../controller/requests/model_requests";
 import HTPButton from "../../../../Common/HTPButton";
 
@@ -34,7 +34,7 @@ class DeleteModal extends Component {
                         <Button onClick={this.props.onHide}>On second thought . . .</Button>
                         <HTPButton color={'red'}
                                    label={"Yes, get rid of it"}
-                                onClick={this.props.deleteMethod}>
+                                onSubmit={this.props.deleteMethod}>
                         </HTPButton>
                     </div>
                 </Modal.Body>

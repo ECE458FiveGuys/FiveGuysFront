@@ -104,3 +104,19 @@ export default class ModelFields {
         LOAD_BANK : "LOAD_BANK"
     }
 }
+
+
+export class ModelFieldTypes {
+
+    Types = {
+        OPTIONAL : "optional",
+        OPTIONAL_INT : "optional (integer)",
+        OPTIONAL_MULTIPLE : "optional (multiple)",
+        REQUIRED : ''
+    }
+
+    InstrumentFieldTypes = {
+
+    }
+
+}

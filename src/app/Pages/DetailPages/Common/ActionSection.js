@@ -8,6 +8,7 @@ import ModelFields from "../../../../utils/enums";
 import UpdateInventory from "../../../Common/Forms/UpdateInventory";
 import UpdateInstrument from "../../../Common/Forms/UpdateInstrument";
 import UpdateModel from "../../../Common/Forms/UpdateModel";
+import HTPPopup from "../../../Common/HTPPopup";
 
 export default class ActionSection extends React.Component {
 
@@ -21,18 +22,27 @@ export default class ActionSection extends React.Component {
     }
 
     handleDelete = () => {
-        let {subject, token, history, deleteFunction} = this.props
+        let {subject, token, history, deleteFunction, type} = this.props
+        this.setDeleteModalShow(false)
+        if (type == ModelFields.ModelTypes.EQUIPMENT_MODEL && subject["instruments"]) {
+            this.setState({error : "Cannot delete this model, as instances already exist", modal : true})
+            return
+        }
         let deleteCallback = (model) => {
             history.push("/")
         }
         let deleteErrorCallBack = (e) => {
-            alert("DELETE: "+e)
+            alert(e)
         }
         deleteFunction(token, subject.pk, deleteCallback, deleteErrorCallBack);
     }
 
+    toggleModal = () => {
+        this.setState({modal : !this.state.modal}, () => {if (!this.state.modal) this.setState({error : false})})
+    }
+
     render() {
-        let {deleteModalShow} = this.state
+        let {deleteModalShow, error, modal} = this.state
         let {token, subject, history, updatePageState, type, hasText, hasLogo} = this.props
         return(
             <div style={{flex : 1, display : "flex", flexDirection : "column", justifyContent : 'flex-start', alignItems : 'center'}}>
@@ -72,6 +82,11 @@ export default class ActionSection extends React.Component {
                     deleteMethod = {this.handleDelete}
                     message={"Are you sure you want to remove this from your inventory? This action cannot be undone."}
                 />
+                <HTPPopup toggleModal={this.toggleModal}
+                          message={error}
+                          title={"Error!"}
+                          className={"text-danger"}
+                          isOpen={modal}/>
         </div>)}
 }
 
@@ -81,7 +96,9 @@ ActionSection.propTypes = {
     updatePageState : PropTypes.func.isRequired,
     history : PropTypes.object.isRequired,
     deleteFunction : PropTypes.object.isRequired,
-    type : PropTypes.string.isRequired
+    type : PropTypes.string.isRequired,
+    hasText : PropTypes.bool.isRequired,
+    hasLogo : PropTypes.bool.isRequired
 }
 
 ActionSection.defaultProps = {

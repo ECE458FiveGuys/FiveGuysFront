@@ -243,7 +243,7 @@ export default class RequestUtils {
 
     static buildCreateInstrumentData(model_pk, serial_number, comment, asset_tag, instrument_categories) {
         let fields = new FormData()
-        fields.append(ModelFields.InstrumentFields.MODEL, model_pk)
+        if (model_pk) fields.append(ModelFields.InstrumentFields.MODEL, model_pk)
         if (serial_number) fields.append(ModelFields.InstrumentFields.SERIAL_NUMBER, serial_number)
         if (comment) fields.append(ModelFields.InstrumentFields.COMMENT, comment)
         if (asset_tag) fields.append(ModelFields.InstrumentFields.ASSET_TAG, asset_tag)
@@ -275,6 +275,23 @@ export default class RequestUtils {
                 RequestUtils.deepSearchObjectForErrorMessages(object[k], messageSet);
             }
         });
+    }
+
+    static createFormData(fields) {
+        let data = new FormData()
+        Object.keys(fields).forEach(key => {
+            let val = fields[key]
+            if (val) {
+                if (key == ModelFields.EquipmentModelFields.MODEL_CATEGORIES || key == ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES) {
+                    val.forEach(category => {
+                        fields.append(key, category.name ? category.name : category)
+                    })
+                } else if (key == ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY) {
+                    data.append(key, parseInt(val))
+                } else data.append(key, val)
+            }
+        })
+        return data
     }
 
 }

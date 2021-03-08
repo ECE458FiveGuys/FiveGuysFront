@@ -4,7 +4,7 @@ import ModelRequests from "../../../../controller/requests/model_requests";
 import ModelFields from "../../../../utils/enums";
 import TableColumns from "../../MainPage/InventoryTables/Columns";
 import DataTable from "../../../Common/Tables/DataTable";
-import {EquipmentModel} from "../../../../utils/ModelEnums";
+import {EquipmentModel, Instrument} from "../../../../utils/ModelEnums";
 import InstrumentRequests from "../../../../controller/requests/instrument_requests";
 import HTPNavBar from "../../../Common/HTPNavBar";
 import {Divider} from "@material-ui/core";
@@ -85,6 +85,7 @@ export default class ModelDetailView extends Component {
                                                    subject={model}
                                                    updatePageState={this.updatePageState}
                                                    history={history}
+                                                   type={EquipmentModel.TYPE}
                                                    deleteFunction={ModelRequests.deleteModel}/>
                                         </div>}
                                 </div>

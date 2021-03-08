@@ -8,7 +8,7 @@ import InstrumentRequests from "../../../controller/requests/instrument_requests
 import {handleFieldValueChange, handleFormChange, handleInputValueChange} from "../Inputs/input_utils";
 import {Button} from "@material-ui/core";
 import * as PropTypes from "prop-types";
-import EditModal from "../../Pages/DetailPages/Common/Popups/EditModal";
+import FormModal from "./FormModal";
 
 export default class UpdateInventory extends React.Component {
 
@@ -120,8 +120,9 @@ export default class UpdateInventory extends React.Component {
             this.setEditModalShow(false)
         }
 
-        let errorCallBack = (e) => {
-            this.setState({error : e})
+        let errorCallBack = (message) => {
+            message = message.replace("model_number", "model number")
+            this.setState({error : message})
         }
 
         if (mode == UpdateInventory.EDIT_MODE) {
@@ -152,7 +153,7 @@ export default class UpdateInventory extends React.Component {
                            label={mode == UpdateInventory.EDIT_MODE ? 'Edit' : 'Create'}
                            onSubmit={() => this.setEditModalShow(true)}>
                 </HTPButton>
-                <EditModal
+                <FormModal
                     show={editModalShow}
                     onHide={() => this.setState(this.makeRefreshState(), () => this.setEditModalShow(false))}
                     token={token}
