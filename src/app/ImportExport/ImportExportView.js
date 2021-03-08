@@ -25,7 +25,8 @@ class ImportExportView extends Component{
                 duration={ 3000 }
                 angle="45deg"
             >
-                <NavBar user={this.props.user}/>
+                <NavBar user={this.props.user}
+                        location={this.props.location}/>
                 <MDBContainer>
                     <MDBRow style={{justifyContent: 'center', alignItems: 'center', marginTop: 200, xs: 2}}>
                         <ExportModel token = {this.props.token}/>

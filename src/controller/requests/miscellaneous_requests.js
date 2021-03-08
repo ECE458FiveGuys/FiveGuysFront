@@ -6,11 +6,10 @@ import {EquipmentModel, Instrument} from "../../utils/ModelEnums";
 export default class MiscellaneousRequests{
 
     static async getVendors(token,
-                            vendorSubstring=undefined,
+                            modelNumberSubstring,
                             callBack = (json) => json,
-                            errorMessageCallBack = (errorMessage) => errorMessage,
-                            modelNumberSubstring = undefined) {
-        let params = {vendor: vendorSubstring, model_number : modelNumberSubstring}
+                            errorMessageCallBack = (errorMessage) => errorMessage) {
+        let params = {model_number : modelNumberSubstring}
         RequestUtils.removeEmptyFields(params)
         let header = RequestUtils.buildTokenHeader(token)
         RequestUtils.assistedFetch(URLS.VENDORS,

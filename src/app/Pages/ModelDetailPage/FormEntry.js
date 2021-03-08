@@ -26,48 +26,54 @@ class FormEntry extends Component {
     renderAlternateInputs(fieldName) {
         if (fieldName === "date") {
             const today = new Date();
-            return ( <DayPicker
-                        formatDate={'YYYY-MM-DD'}
-                        disabledDays={{ after: today }}
-                        selectedDays={this.state.selectedDay}
-                        onDayClick={this.handleDayClick}
-                    />);
+            return (
+                <div style={{display : "flex", justifyContent : "center"}}>
+                    <DayPicker
+                            formatDate={'YYYY-MM-DD'}
+                            disabledDays={{ after: today }}
+                            selectedDays={this.state.selectedDay}
+                            onDayClick={this.handleDayClick}
+                        />
+                </div>);
 
         }
 
         if (fieldName === ModelFields.InstrumentFields.COMMENT) {
             return (
                 <HTPMultiLineInput onChange={(area) => this.props.handleInputChange(ModelFields.CalibrationFields.Comment)(area.target.value)}
-                                   label={"Comment"}
+                                   label={"Any comments?"}
                                    name={ModelFields.CalibrationFormFields.Comment}
                                    defaultValue={(this.props.isEdit) ? this.props.subject[fieldName] : ""}
-                                   placeholder={"Comment"}/>
+                                   placeholder={"Share your thoughts"}/>
             )
         }
 
         if (fieldName === ModelFields.CalibrationFields.AdditionalFile){
             return (
-                <div className="input-group">
-                    {/*<div className="input-group-prepend">*/}
-                    {/*    <span className="input-group-text" id="additionalEvidenceAddon01">*/}
-                    {/*      Upload*/}
-                    {/*    </span>*/}
-                    {/*</div>*/}
-                    <div className="custom-file">
-                        <input
-                            type="file"
-                            className="custom-file-input"
-                            id="additionalEvidence"
-                            aria-describedby="additionalEvidenceAddon01"
-                            onChange={event => {
-                                this.props.handleFileSelect(event)
-                                let filename = event.target.value.split("\\").pop();
-                                this.setState({fileSelected : filename})
-                            }}
-                        />
-                        <label className="custom-file-label" htmlFor="additionalEvidence">
-                            {this.state.fileSelected ? this.state.fileSelected : "Choose file"}
-                        </label>
+                <div>
+                    Choose some additional evidence!
+                    <div className="input-group" style={{marginTop : 10}}>
+                        {/*<div className="input-group-prepend">*/}
+                        {/*    <span className="input-group-text" id="additionalEvidenceAddon01">*/}
+                        {/*      Upload*/}
+                        {/*    </span>*/}
+                        {/*</div>*/}
+                        <div className="custom-file">
+                            <input
+                                type="file"
+                                className="custom-file-input"
+                                id="additionalEvidence"
+                                aria-describedby="additionalEvidenceAddon01"
+                                onChange={event => {
+                                    this.props.handleFileSelect(event)
+                                    let filename = event.target.value.split("\\").pop();
+                                    this.setState({fileSelected : filename})
+                                }}
+                            />
+                            <label className="custom-file-label" htmlFor="additionalEvidence">
+                                {this.state.fileSelected ? this.state.fileSelected : "Choose file"}
+                            </label>
+                        </div>
                     </div>
                 </div>
             );
@@ -81,10 +87,11 @@ class FormEntry extends Component {
                                       onChange={handleInputChange(fieldName)}
                                       label={fieldName === ModelFields.EquipmentModelFields.MODEL_CATEGORIES ? "Model Categories" : "Instrument Categories"}
                                       multiple={true}
-                                        defaultValue={(this.props.isEdit) ?
-                                                      fieldName === ModelFields.EquipmentModelFields.MODEL_CATEGORIES ?
-                                                      this.props.subject.model[fieldName] :
-                                                          this.props.subject[fieldName] : ""}
+                                        defaultValue={ this.props.subject ? ((this.props.isEdit) ?
+                                                                  fieldName === ModelFields.EquipmentModelFields.MODEL_CATEGORIES ?
+                                                                  this.props.subject.model[fieldName] :
+                                                                      this.props.subject[fieldName] : "")
+                                                            : ""}
                                         size={13}/>
             )
         }
@@ -125,9 +132,10 @@ class FormEntry extends Component {
                             {this.renderAlternateInputs(fieldKey)}
                         </div>): (
                     <div>
-                    <label>{formFields[fieldKey]}</label>
+                    <label className={"grey-text"}>{formFields[fieldKey]}</label>
                     <input name={fieldKey}
                            aria-multiline={true}
+                           placeholder={formFields[fieldKey]}
                             className="form-control"
                             onChange={this.props.handleFormChange}
                             defaultValue={(this.props.isEdit) ? this.props.subject[fieldKey] : ""}

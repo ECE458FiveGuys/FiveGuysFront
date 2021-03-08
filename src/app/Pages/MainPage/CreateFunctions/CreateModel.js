@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import SearchHeader from "../Widgets/SearchHeader";
 import { MDBContainer, MDBRow, MDBCol, MDBBtn, MDBIcon} from 'mdbreact';
 import {METHODS, URLS} from "../../../../controller/strings";
 import ModelFields from "../../../../utils/enums";

@@ -4,6 +4,6 @@ export let handleFormChange = (context) => (e) => {
     context.setState({[name]: value})
 }
 
-export let handleInputChange = (context) => (name) => (value) => {
-    context.setState({[name]: value})
+export let handleInputValueChange = (context, callBack) => (name) => (value) => {
+    context.setState({[name]: value}, callBack)
 }

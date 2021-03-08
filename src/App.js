@@ -73,31 +73,37 @@ class App extends Component {
             <Switch>
               <Route exact path="/"
                     render={(props) => <MainView history={props.history}
+                                                 location={props.location}
                                                  token={this.state.token}
                                                  user={this.state.user}/>}>
               </Route>
               <Route path="/models/:id"
                      render={(props) => (<ModelDetailView id={props.match.params.id}
+                                                          location={props.location}
                                                           token={this.state.token}
                                                           user={this.state.user}/>)} >
               </Route>
               <Route  path="/instruments/:id"
                       render={(props) => (<InstrumentDetailView id={props.match.params.id}
+                                                                location={props.location}
                                                                 history={props.history}
                                                                token={this.state.token}
                                                                user={this.state.user}/>)} >
               </Route>
-              <Route path="/import-export">
-                <ImportExportView token={this.state.token}
-                                  user={this.state.user}/>
+              <Route path="/import-export"
+                     render={(props) => (<ImportExportView location={props.location}
+                                                           token={this.state.token}
+                                                           user={this.state.user}/>)}>
               </Route>
-              <Route path="/categories/">
-                <CategoryTabView token={this.state.token}
-                                 user={this.state.user}/>
+              <Route path="/categories/"
+                     render={(props) => (<CategoryTabView location={props.location}
+                                                          token={this.state.token}
+                                                          user={this.state.user}/>)}>
               </Route>
 
               <Route path="/load-bank/:id"
                      render = {(props) => (<LoadBankMain  instrumentId={props.match.params.id}
+                                                          location={props.location}
                                                           history={props.history}
                                                           user={this.state.user}
                                                           token={this.state.token}/>)}>

@@ -22,7 +22,9 @@ export default class HTPMultiLineInput extends Component {
         let {onChange, placeholder, name, type, defaultValue, style, label}= this.props
         return(
             <div className="form-group" style={style}>
-                <label htmlFor="exampleFormControlTextarea1">
+                <label
+                    className="grey-text"
+                    htmlFor="exampleFormControlTextarea1">
                     {label}
                 </label>
                 <textarea

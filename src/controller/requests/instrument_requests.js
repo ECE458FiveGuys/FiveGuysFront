@@ -68,11 +68,13 @@ export default class InstrumentRequests {
             header)
     }
 
-    static async createInstrument(token, model_pk, serial_number, comment=undefined,
+    static async createInstrument(token, model_number, vendor, serial_number, comment=undefined,
+                                  asset_tag_number, instrument_categories,
                                   callBack = (json) => json,
                                   errorMessageCallBack = (errorMessage) => errorMessage) {
 
-        InstrumentRequests.updateInstrument(token, "post", URLS.MODELS, callBack, errorMessageCallBack, model_pk, serial_number, comment)
+        InstrumentRequests.updateInstrument(token, "post", URLS.INSTRUMENTS, callBack, errorMessageCallBack,
+            model_number, vendor, serial_number, comment, asset_tag_number, instrument_categories)
     }
 
     static async editInstrument(token, instrument_pk, model_number=undefined,
@@ -103,10 +105,15 @@ export default class InstrumentRequests {
                                   model_number=undefined, vendor=undefined, serial_number=undefined, comment=undefined,
                                   asset_tag = undefined, instrument_categories = undefined) {
 
+        if (!vendor || !model_number) {
+            errorMessageCallBack("Vendor and model number are required fields")
+            return
+        }
+
         let getModelCallBack = (json) => {
             let results = json[PaginatedResponseFields.RESULTS]
             if (results.length == 0) {
-                throw new UserError("No model with this vendor and model number exist")
+                throw new UserError("No models with this vendor and model number exist")
             }
             let model_pk = results[0].pk
             let header = RequestUtils.buildTokenHeader(token)
@@ -116,9 +123,8 @@ export default class InstrumentRequests {
                 header, undefined, fields)
         }
 
-        ModelRequests.getModelsWithSearchParams(token,
+        ModelRequests.getModels(token,
             {vendor : vendor, model_number : model_number}, getModelCallBack, errorMessageCallBack)
-
 
     }
 }
