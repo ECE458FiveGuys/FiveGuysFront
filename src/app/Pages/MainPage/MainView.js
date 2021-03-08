@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import {User} from "../../../utils/dtos";
 import ModelTable from "./InventoryTables/ModelTable";
 import InstrumentTable from "./InventoryTables/InstrumentTable";
+import InventoryTable from "./InventoryTables/InventoryTable";
 
 
 const gradients = [
@@ -16,15 +17,19 @@ const gradients = [
 class MainView extends Component {
 
     render() {
+        let {user, location, token, history} = this.props
         return (
             <div>
-                <NavBar user={this.props.user}/>
-                <TabView token={this.props.token}
-                         user={this.props.user}
-                         modelPage={<ModelTable history={this.props.history}
-                                                token={this.props.token}/>}
-                         instrumentPage={<InstrumentTable token={this.props.token}
-                                                          history={this.props.history}/>}
+                <NavBar user={user}
+                        location={location}/>
+                <TabView token={token}
+                         user={user}
+                         modelPage={<ModelTable history={history}
+                                                user={user}
+                                                token={token}/>}
+                         instrumentPage={<InstrumentTable token={token}
+                                                          user={user}
+                                                          history={history}/>}
                 />
             </div>
         );

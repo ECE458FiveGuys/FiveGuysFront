@@ -34,10 +34,10 @@ class NavbarPage extends Component {
     }
 
     render() {
-        let {user} = this.props
+        let {user, location} = this.props
         let Buttons = []
         if (user.is_staff) {
-            Buttons.push(<MDBNavItem>
+            Buttons.push(<MDBNavItem active={location.pathname == "/categories"}>
                             <MDBNavLink to="/categories">Categories</MDBNavLink>
                         </MDBNavItem>)
             Buttons.push(<MDBNavItem>
@@ -53,7 +53,7 @@ class NavbarPage extends Component {
                 <MDBNavLink to="/user-settings">User Settings</MDBNavLink>
             </MDBNavItem>)
         }
-        Buttons.push(<MDBNavItem>
+        Buttons.push(<MDBNavItem active={location.pathname == "/import-export"}>
                         <MDBNavLink to="/import-export">{user.is_staff ? "Import/Export" : "Export"}</MDBNavLink>
                     </MDBNavItem>)
         return (
@@ -64,7 +64,7 @@ class NavbarPage extends Component {
                     <MDBNavbarToggler onClick={this.toggleCollapse} />
                     <MDBCollapse id="navbarCollapse3" isOpen={this.state.isOpen} navbar>
                         <MDBNavbarNav left>
-                            <MDBNavItem active>
+                            <MDBNavItem active={location.pathname == "/"}>
                                 <MDBNavLink to="/">Inventory</MDBNavLink>
                             </MDBNavItem>
                             {Buttons}
@@ -100,5 +100,6 @@ class NavbarPage extends Component {
 export default NavbarPage;
 
 NavbarPage.propTypes = {
-    user : PropTypes.instanceOf(User).isRequired
+    user : PropTypes.instanceOf(User).isRequired,
+    location : PropTypes.object.isRequired
 }

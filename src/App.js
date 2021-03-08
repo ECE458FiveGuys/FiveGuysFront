@@ -17,6 +17,7 @@ import UserSettingsView from "./app/UserSettings/UserSettingsView";
 import CreateModel from "./app/Pages/MainPage/CreateFunctions/CreateModel";
 import CreateInstrument from "./app/Pages/MainPage/CreateFunctions/CreateInstrument";
 import CreateUser from "./app/Pages/MainPage/CreateFunctions/CreateUser";
+import UserSettingsPage from "./app/UserSettings/Widgets/UserSettingsPage";
 
 class App extends Component {
 
@@ -74,32 +75,37 @@ class App extends Component {
             <Switch>
               <Route exact path="/"
                     render={(props) => <MainView history={props.history}
+                                                 location={props.location}
                                                  token={this.state.token}
                                                  user={this.state.user}/>}>
               </Route>
               <Route path="/models/:id"
                      render={(props) => (<ModelDetailView id={props.match.params.id}
+                                                          location={props.location}
                                                           token={this.state.token}
                                                           user={this.state.user}/>)} >
               </Route>
               <Route  path="/instruments/:id"
                       render={(props) => (<InstrumentDetailView id={props.match.params.id}
+                                                                location={props.location}
                                                                 history={props.history}
                                                                token={this.state.token}
                                                                user={this.state.user}/>)} >
               </Route>
               <Route path="/import-export"
-                    render={(props) => <ImportExportView history={props.history}
-                                                 token={this.state.token}
-                                                 user={this.state.user}/>}>
+                     render={(props) => (<ImportExportView location={props.location}
+                                                           token={this.state.token}
+                                                           user={this.state.user}/>)}>
               </Route>
-              <Route path="/categories/">
-                <CategoryTabView token={this.state.token}
-                                 user={this.state.user}/>
+              <Route path="/categories/"
+                     render={(props) => (<CategoryTabView location={props.location}
+                                                          token={this.state.token}
+                                                          user={this.state.user}/>)}>
               </Route>
 
               <Route path="/load-bank/:id"
                      render = {(props) => (<LoadBankMain  instrumentId={props.match.params.id}
+                                                          location={props.location}
                                                           history={props.history}
                                                           user={this.state.user}
                                                           token={this.state.token}/>)}>
@@ -120,11 +126,10 @@ class App extends Component {
                 <ImportDocumentation token={this.state.token}
                                   user={this.state.user}/>
               </Route>
-              <Route path="/user-settings">
-                <UserSettingsView
-                  token={this.state.token}
-                  user={this.state.user}
-                />
+              <Route path="/user-settings"
+                     render={(props) => (<UserSettingsView location={props.location}
+                                                          token={this.state.token}
+                                                          user={this.state.user}/>)}>
               </Route>
 
               <Route>

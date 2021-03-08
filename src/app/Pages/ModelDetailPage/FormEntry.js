@@ -87,10 +87,11 @@ class FormEntry extends Component {
                                       onChange={handleInputChange(fieldName)}
                                       label={fieldName === ModelFields.EquipmentModelFields.MODEL_CATEGORIES ? "Model Categories" : "Instrument Categories"}
                                       multiple={true}
-                                        defaultValue={(this.props.isEdit) ?
-                                                      fieldName === ModelFields.EquipmentModelFields.MODEL_CATEGORIES ?
-                                                      this.props.subject.model[fieldName] :
-                                                          this.props.subject[fieldName] : ""}
+                                        defaultValue={ this.props.subject ? ((this.props.isEdit) ?
+                                                                  fieldName === ModelFields.EquipmentModelFields.MODEL_CATEGORIES ?
+                                                                  this.props.subject.model[fieldName] :
+                                                                      this.props.subject[fieldName] : "")
+                                                            : ""}
                                         size={13}/>
             )
         }
@@ -134,6 +135,7 @@ class FormEntry extends Component {
                     <label className={"grey-text"}>{formFields[fieldKey]}</label>
                     <input name={fieldKey}
                            aria-multiline={true}
+                           placeholder={formFields[fieldKey]}
                             className="form-control"
                             onChange={this.props.handleFormChange}
                             defaultValue={(this.props.isEdit) ? this.props.subject[fieldKey] : ""}

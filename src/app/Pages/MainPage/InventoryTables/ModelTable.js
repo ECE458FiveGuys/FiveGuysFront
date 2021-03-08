@@ -33,6 +33,7 @@ export default class ModelTable extends Component {
             <InventoryTable columns={TableColumns.MODEL_COLUMNS}
                             searchFields={ModelFields.EquipmentModelSearchFields}
                             token={this.props.token}
+                            user={this.props.user}
                             searchRequestFunction={ModelRequests.getModelsWithSearchParams}
                             parseSearchResultsFunction={this.parseSearchResults}/>
         );

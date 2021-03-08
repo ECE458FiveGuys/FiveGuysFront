@@ -11,6 +11,7 @@ import VisualCheckStep from "./Steps/VisualCheckStep";
 import FunctionalChecksStep from "./Steps/FunctionalChecksStep";
 import CalibrationRequests from "../../../controller/requests/calibration_requests";
 import {getCurrentDate} from "../../utils";
+import MainView from "../MainPage/MainView";
 
 export default class LoadBankMain extends React.Component {
 
@@ -40,7 +41,7 @@ export default class LoadBankMain extends React.Component {
     }
 
     render() {
-        let {user, token, instrumentId} = this.props
+        let {user, token, instrumentId, location} = this.props
         let StepContentBuilders = [
                             (stepperState, updateStepperState, markReadyToSubmit) => <VisualCheckStep user={user}
                                                                                               token={token}
@@ -75,13 +76,15 @@ export default class LoadBankMain extends React.Component {
                              ]
         return (
             <div>
-                <NavBar user={this.props.user}/>
+                <NavBar
+                        location={location}
+                        user={user}/>
                 <Header className={"h1-responsive"}
                         style={{display: 'flex', justifyContent : 'center', marginTop: 50, marginBottom: 10}}>
                     Load Bank
                 </Header>
-            <HTPStepper token={this.props.token}
-                        user={this.props.user}
+            <HTPStepper token={token}
+                        user={user}
                         stepNames={StepNameList}
                         stepContent={StepContentBuilders}
                         onStepSubmit={onStepSubmitFunctions}

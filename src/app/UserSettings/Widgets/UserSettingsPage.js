@@ -1,11 +1,10 @@
 import React, {Component} from "react";
-import {MDBCol, MDBContainer, MDBRow} from "mdbreact";
+import {MDBContainer, MDBRow} from "mdbreact";
 import DatatableEditable from "../../Common/Tables/DatatableEditable";
 import UserRequests from "../../../controller/requests/user_requests";
 import ModelFields from "../../../utils/enums";
 import TableUtils from "../../Pages/MainPage/InventoryTables/TableUtils";
 import TableColumns from "../../Pages/MainPage/InventoryTables/Columns";
-import async from "async";
 
 class UserSettingsPage extends Component{
 
@@ -92,8 +91,8 @@ class UserSettingsPage extends Component{
     userParse = (results) => {
         console.log(results)
         results.forEach(result => {
-            result[ModelFields.UserFields.USER_CATEGORIES] =
-                TableUtils.categoriesToString(result[ModelFields.UserFields.USER_CATEGORIES])
+            // result[ModelFields.UserFields.USER_CATEGORIES] =
+            //     TableUtils.categoriesToString(result[ModelFields.UserFields.USER_CATEGORIES])
         })
         return results
     }
@@ -107,13 +106,12 @@ class UserSettingsPage extends Component{
     }
 
     deactivate = async() =>{
-        let result = await UserRequests.deactivateUser(this.props.token,this.state.pk)
-        return result
+        return await UserRequests.deactivateUser(this.props.token, this.state.pk);
     }
 
     submitPassword = async() =>{
         let result = await UserRequests.passwordChange(this.props.token,this.state.input.password, this.state.input.old_pass)
-        return result
+        return result;
     }
 
 
@@ -122,7 +120,8 @@ class UserSettingsPage extends Component{
         const {userList} = this.state
         let {user} = this.props
         let datatable = []
-        if(user.is_staff){
+        if(user.is_staff)
+        {
             datatable.push(
                 <DatatableEditable
                     token={this.props.token}
