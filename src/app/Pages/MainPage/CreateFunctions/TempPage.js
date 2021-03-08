@@ -1,24 +1,23 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import SearchHeader from "../Widgets/SearchHeader";
 import { MDBContainer, MDBRow, MDBCol, MDBBtn, MDBIcon} from 'mdbreact';
 import {METHODS, URLS} from "../../../../controller/strings";
 import ModelFields from "../../../../utils/enums";
 import {User} from "../../../../utils/dtos";
-import NavBar from "../../../Common/HTPNavBar";
 import ErrorParser from "./ErrorParser";
 import HTPInput from "../../../Common/Inputs/HTPInput";
 import HTPAutoCompleteInput from "../../../Common/Inputs/HTPAutoCompleteInput";
 import MiscellaneousRequests from "../../../../controller/requests/miscellaneous_requests";
 import HTPPopup from "../../../Common/HTPPopup";
-import CreateUser from "./CreateUser";
+import CreateModel from "./CreateModel";
+import {Button} from "react-bootstrap";
 
 
 class TempPage extends Component {
 
     constructor(props) {
         super(props)
-        this.state = {modal : true, requestStatus : "Create User", displayMessage : "hi"}
+        this.state = {modal : false, requestStatus : "Create Model", displayMessage : "hi"}
     }
 
 
@@ -31,14 +30,14 @@ class TempPage extends Component {
     render(){
         return(
             <div>
-                <NavBar user={this.props.user}/>
-                <MDBContainer>
+                    <Button variant="green" onClick={() => this.toggleModal()}>
+                        Create
+                    </Button>
                     <HTPPopup isOpen={this.state.modal}
                               toggleModal={this.toggleModal}
                               className={"text-info"}
                               title={this.state.requestStatus}
-                              message={<CreateUser token={this.props.token} user={this.props.user}></CreateUser>}/>
-                </MDBContainer>
+                              message={<CreateModel token={this.props.token} user={this.props.user}></CreateModel>}/>
             </div>
         )
     }

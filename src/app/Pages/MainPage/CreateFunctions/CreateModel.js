@@ -4,7 +4,6 @@ import { MDBContainer, MDBRow, MDBCol, MDBBtn, MDBIcon} from 'mdbreact';
 import {METHODS, URLS} from "../../../../controller/strings";
 import ModelFields from "../../../../utils/enums";
 import {User} from "../../../../utils/dtos";
-import NavBar from "../../../Common/HTPNavBar";
 import ErrorParser from "./ErrorParser";
 import HTPInput from "../../../Common/Inputs/HTPInput";
 import HTPAutoCompleteInput from "../../../Common/Inputs/HTPAutoCompleteInput";
@@ -93,15 +92,15 @@ class CreateModel extends Component {
                 let responseColor = ''
                 if (json.includes('pk')) {
                     returnArray =
-                      [
-                          'Success! The model was added:',
-                      'Vendor : '+ this.state.vendor,
-                      'Model Number : '+ this.state.model_number,
-                      'Description : '+ this.state.description,
-                      'Comment : '+ this.state.comment,
-                      'Calibration Frequency : '+ this.state.calibration_frequency,
-                      'Categories : '+ this.state.categories_chosen
-                    ]
+                        [
+                            'Success! The model was added:',
+                            'Vendor : '+ this.state.vendor,
+                            'Model Number : '+ this.state.model_number,
+                            'Description : '+ this.state.description,
+                            'Comment : '+ this.state.comment,
+                            'Calibration Frequency : '+ this.state.calibration_frequency,
+                            'Categories : '+ this.state.categories_chosen
+                        ]
                     responseTitle = 'Success! The model was added:'
                     responseColor = 'green'
                 }
@@ -159,21 +158,21 @@ class CreateModel extends Component {
                     <br />
                     <MDBRow >
                         <MDBCol>
-                                <HTPAutoCompleteInput options = {this.state.vendors} label={'Vendor'} onChange={this.handleChange('vendor')} placeholder={'required'}/>
+                            <HTPAutoCompleteInput options = {this.state.vendors} label={'Vendor'} size = {15} onChange={this.handleChange('vendor')} placeholder={'required'}/>
 
-                                <HTPInput label={'Model Number'} onChange={this.handleChange('model_number')} placeholder={'required'}></HTPInput>
+                            <HTPInput label={'Model Number'} onChange={this.handleChange('model_number')} placeholder={'required'}></HTPInput>
 
-                                <HTPInput label={'Description'} onChange={this.handleChange('description')} placeholder={'required'}></HTPInput>
+                            <HTPInput label={'Description'} onChange={this.handleChange('description')} placeholder={'required'}></HTPInput>
 
-                                <HTPInput label={'Comment'} onChange={this.handleChange('comment')} placeholder={'optional'}></HTPInput>
+                            <HTPInput label={'Comment'} onChange={this.handleChange('comment')} placeholder={'optional'}></HTPInput>
 
-                                <HTPInput label={'Calibration Frequency'} onChange={this.handleChange('calibration_frequency')} placeholder={'optional (integer)'}></HTPInput>
+                            <HTPInput label={'Calibration Frequency'} onChange={this.handleChange('calibration_frequency')} placeholder={'optional (integer)'}></HTPInput>
 
-                                <HTPAutoCompleteInput multiple = {true} options = {this.state.categories} label={'Categories'} onChange={this.handleChange('categories_chosen')} placeholder={'required'}/>
+                            <HTPAutoCompleteInput multiple = {true} options = {this.state.categories} label={'Categories'} size = {15} onChange={this.handleChange('categories_chosen')} placeholder={'required'}/>
 
-                                <HTPButton label={'Create Model'} onSubmit={this.handleSubmit}></HTPButton>
-                                <br/>
-                                <text style={{ color: this.state.responseColor }}>{this.getDisplayMessage()}</text>
+                            <HTPButton label={'Create Model'} onSubmit={this.handleSubmit}></HTPButton>
+                            <br/>
+                            <text style={{ color: this.state.responseColor }}>{this.getDisplayMessage()}</text>
                         </MDBCol>
                     </MDBRow>
                 </MDBContainer>
