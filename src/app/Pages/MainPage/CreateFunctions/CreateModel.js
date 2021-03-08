@@ -202,6 +202,7 @@ class CreateModel extends Component {
     // input field not stored in DOM values are exist
     // in react component itself as state
     render(){
+        let text = 'Load Bank as calibration mode? '
         return(
             <div>
                 <MDBContainer>
@@ -220,7 +221,7 @@ class CreateModel extends Component {
                             <HTPAutoCompleteInput multiple = {true} options = {this.state.categories} label={'Categories'} size = {15} onChange={this.handleChange('categories_chosen')} placeholder={'required'}/>
 
                             <label>
-                                Load Bank as calibration mode?
+                                {text}
                                 <input
                                     name="calibration_mode"
                                     type="checkbox"
