@@ -284,7 +284,7 @@ export default class RequestUtils {
             if (val) {
                 if (key == ModelFields.EquipmentModelFields.MODEL_CATEGORIES || key == ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES) {
                     val.forEach(category => {
-                        fields.append(key, category.name ? category.name : category)
+                        data.append(key, category.name ? category.name : category)
                     })
                 } else if (key == ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY) {
                     data.append(key, parseInt(val))
