@@ -10,7 +10,7 @@ import HTPButton from "../../Common/HTPButton";
 
 let adminName = 'Admin'
 
-class UserSettingsPage extends Component{
+class UserTablePage extends Component{
 
 
     //ToDo: Make sure admin can't be deleted/edited
@@ -28,7 +28,6 @@ class UserSettingsPage extends Component{
         }
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleUserChange = this.handleUserChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
         this.makeUser = this.makeUser.bind(this);
     }
 
@@ -92,58 +91,6 @@ class UserSettingsPage extends Component{
             }
         }
         return isValid
-    }
-
-    handleSubmit(event) {
-        event.preventDefault();
-
-        if(this.validate()){
-            console.log(this.state);
-
-            this.setState({new_pass: this.state.input.password})
-            let result = this.submitPassword()
-
-            let input = {};
-            input["old_pass"] = ""
-            input["password"] = "";
-            input["confirm_password"] = "";
-            this.setState({input:input});
-
-            //alert('Password Change Submitted');
-        }
-        else{
-            alert("Invalid Password")
-        }
-    }
-
-    validate(){
-        let input = this.state.input;
-        let errors = {};
-        let isValid = true;
-
-        if (!input["password"]) {
-            isValid = false;
-            errors["password"] = "Please enter your password.";
-        }
-
-        if (!input["confirm_password"]) {
-            isValid = false;
-            errors["confirm_password"] = "Please enter your confirm password.";
-        }
-
-        if (typeof input["password"] !== "undefined" && typeof input["confirm_password"] !== "undefined") {
-
-            if (input["password"] != input["confirm_password"]) {
-                isValid = false;
-                errors["password"] = "Passwords don't match.";
-            }
-        }
-
-        this.setState({
-            errors: errors
-        });
-
-        return isValid;
     }
 
     getUserList = async() =>{
@@ -219,16 +166,6 @@ class UserSettingsPage extends Component{
         let result = await UserRequests.deactivateUser(this.props.token, pk);
         console.log(result)
         await this.getUserList()
-        return result
-    }
-
-    submitPassword = async() =>{
-        let dat = new FormData
-        dat.append("new_password", this.state.input.password)
-        dat.append("re_new_password", this.state.input.password)
-        dat.append("current_password", this.state.input.old_pass)
-
-        let result = await UserRequests.passwordChange(this.props.token,dat)
         return result
     }
 
@@ -335,47 +272,6 @@ class UserSettingsPage extends Component{
         return(
                 <MDBContainer fluid>
                     <MDBRow style={{justifyContent: 'center', alignItems: 'center', marginTop: 50, xs: 2}}>
-                        <form onSubmit={this.handleSubmit}>
-                            <h2>Password Reset:</h2>
-                            <div className="form-group">
-                                <label htmlFor="old_pass">Old Password:</label>
-                                <input
-                                    type="password"
-                                    name="old_pass"
-                                    value={this.state.input.old_pass}
-                                    onChange={this.handleInputChange}
-                                    className="form-control"
-                                    placeholder="Enter old password"
-                                    id="old_pass"/>
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="password">New Password:</label>
-                                <input
-                                    type="password"
-                                    name="password"
-                                    value={this.state.input.password}
-                                    onChange={this.handleInputChange}
-                                    className="form-control"
-                                    placeholder="Enter new password"
-                                    id="password"/>
-                                <div className="text-danger">{this.state.errors.password}</div>
-                            </div>
-                                <div className="form-group">
-                                    <label htmlFor="password">Confirm New Password:</label>
-                                    <input
-                                        type="password"
-                                        name="confirm_password"
-                                        value={this.state.input.confirm_password}
-                                        onChange={this.handleInputChange}
-                                        className="form-control"
-                                        placeholder="Confirm new password"
-                                        id="confirm_password"/>
-                                    <div className="text-danger">{this.state.errors.confirm_password}</div>
-                                </div>
-                            <input type="submit" value="Submit" className="btn btn-success"/>
-                        </form>
-                        </MDBRow>
-                    <MDBRow style={{justifyContent: 'center', alignItems: 'center', marginTop: 50, xs: 2}}>
                         <h2>User Table:</h2>
 
                     </MDBRow>
@@ -387,4 +283,4 @@ class UserSettingsPage extends Component{
     }
 }
 
-export default UserSettingsPage
+export default UserTablePage

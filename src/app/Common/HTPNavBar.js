@@ -34,7 +34,7 @@ class NavbarPage extends Component {
     }
 
     render() {
-        let {user, location} = this.props
+        let {user, location, navbarColor} = this.props
         let Buttons = []
         if (user.is_staff) {
             Buttons.push(<MDBNavItem active={location.pathname == "/categories"}>
@@ -45,7 +45,7 @@ class NavbarPage extends Component {
                         <MDBNavLink to="/import-export">{user.is_staff ? "Import/Export" : "Export"}</MDBNavLink>
                     </MDBNavItem>)
         return (
-                <MDBNavbar color={"green"} dark expand="md">
+                <MDBNavbar color={navbarColor} dark expand="md">
                     <MDBNavbarBrand>
                         <strong className="white-text">HPT</strong>
                     </MDBNavbarBrand>
@@ -88,6 +88,11 @@ class NavbarPage extends Component {
 export default NavbarPage;
 
 NavbarPage.propTypes = {
+    navbarColor : PropTypes.string,
     user : PropTypes.instanceOf(User).isRequired,
     location : PropTypes.object.isRequired
+}
+
+NavbarPage.defaultProps = {
+    navbarColor : "green"
 }

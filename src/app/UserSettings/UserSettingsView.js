@@ -1,7 +1,8 @@
 import React, {Component} from "react";
 import {MDBContainer} from "mdbreact";
-import UserSettingsPage from "./Widgets/UserSettingsPage";
+import UserTablePage from "./Widgets/UserTablePage";
 import HTPNavBar from "../Common/HTPNavBar";
+import UserSettingsPage from "./UserSettingsPage";
 
 class UserSettingsView extends Component{
 
@@ -11,6 +12,7 @@ class UserSettingsView extends Component{
         return(
             <div>
                 <HTPNavBar
+                    navbarColor={"black"}
                     user={this.props.user}
                     location={this.props.location}
                 />

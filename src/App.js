@@ -17,7 +17,7 @@ import UserSettingsView from "./app/UserSettings/UserSettingsView";
 import CreateModel from "./app/Pages/MainPage/CreateFunctions/CreateModel";
 import CreateInstrument from "./app/Pages/MainPage/CreateFunctions/CreateInstrument";
 import CreateUser from "./app/Pages/MainPage/CreateFunctions/CreateUser";
-import UserSettingsPage from "./app/UserSettings/Widgets/UserSettingsPage";
+import UserTablePage from "./app/UserSettings/Widgets/UserTablePage";
 import UserTester from "./app/Pages/MainPage/CreateFunctions/UserTester";
 
 class App extends Component {

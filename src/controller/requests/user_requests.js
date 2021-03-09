@@ -39,13 +39,17 @@ export default class UserRequests {
     }
 
     static async passwordChange(token,
-                                password_data) {
+                                password_data,
+                                callBack = () => {},
+                                errorMessageCallBack = () => {}) {
         let header = RequestUtils.buildTokenHeader(token)
         let data = password_data
-        return await RequestUtils.assisted_password_fetch(AUTH_URLS.PASSWORD_CHANGE,
+        RequestUtils.assistedFetch(AUTH_URLS.PASSWORD_CHANGE,
             METHODS.POST,
+            callBack,
+            errorMessageCallBack,
             header,
-            {},
+            undefined,
             data)
     }
 
