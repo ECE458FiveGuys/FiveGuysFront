@@ -19,4 +19,12 @@ export class User {
                 obj[ModelFields.UserFields.IS_STAFF])
     }
 
+    isNetIdUser() {
+        return this.email.endsWith("@duke.edu")
+    }
+
+    getFirstName() {
+        return this.name.split(" ")[0]
+    }
+
 }

@@ -45,7 +45,7 @@ export default class FunctionalChecksStep extends React.Component {
     render() {
         let {user, token} = this.props
         return (<div style={{flex: 1, display: "flex", flexDirection: "column", alignItems: "center", marginBottom : 30}}>
-                <h1 className={"h2-responsive"}>{`You're in the final stretch, ${user.username}!`}</h1>
+                <h1 className={"h2-responsive"}>{`You're in the final stretch, ${user.getFirstName()}!`}</h1>
                 <h1 className={"h4-responsive"}>{`Let's just check these core functions.`}</h1>
                 <HTPStepper user={user}
                             token={token}

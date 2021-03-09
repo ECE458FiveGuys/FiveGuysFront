@@ -30,7 +30,7 @@ export default class VisualCheckStep extends React.Component {
         let instrument = this.props.stepperState.instrument
         return instrument ?
             (<div style={{flex: 1, display: "flex", flexDirection: "column", alignItems: "center", marginBottom : 30}}>
-                    <h1 className={"h1-responsive"}>{`Hello, ${user.username}!`}</h1>
+                    <h1 className={"h1-responsive"}>{`Hello, ${user.getFirstName()}!`}</h1>
                     <p style={{marginTop : 20, marginBottom: 30, justifyContent: "center", alignItems: 'center'}}>
                         To get started, retrieve the load bank with the following properties:
                     </p>

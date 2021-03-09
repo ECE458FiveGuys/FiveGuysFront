@@ -61,7 +61,7 @@ class NavbarPage extends Component {
                             {Buttons}
                         </MDBNavbarNav>
                         <text className={"white-text"} style={{position: "absolute", left: this.state.width / 2}}>
-                            {`Welcome, ${user.name}`}
+                            {`Welcome, ${user.getFirstName()}`}
                         </text>
                         <MDBNavbarNav right>
                             <MDBNavItem style={{marginRight: 100}}>
@@ -77,7 +77,7 @@ class NavbarPage extends Component {
                                                          }}>
                                             Logout
                                         </MDBDropdownItem>
-                                        <MDBDropdownItem href="/user-settings">User Settings</MDBDropdownItem>
+                                        {!user.isNetIdUser() && <MDBDropdownItem href="/user-settings">User Settings</MDBDropdownItem>}
                                     </MDBDropdownMenu>
                                 </MDBDropdown>
                             </MDBNavItem>

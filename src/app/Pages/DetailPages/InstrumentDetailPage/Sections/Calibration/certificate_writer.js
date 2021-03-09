@@ -41,7 +41,7 @@ function writeInstrumentDetails (pdf, user, instrument, calibrationEvent, pageWi
                 ['Asset Number', instrument[ModelFields.InstrumentFields.ASSET_TAG]],
                 ['Most Recent Calibration', calibrationEvent[ModelFields.CalibrationFields.Date]],
                 ['Calibration Expiration Date', instrument[Instrument.FIELDS.EXPIRATION_DATE]],
-                ['Engineer', user.username]]
+                ['Engineer', user.getFirstName()]]
     })
 }
 
