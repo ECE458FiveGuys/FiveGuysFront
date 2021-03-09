@@ -88,12 +88,7 @@ export default class CalibrationSection extends React.Component {
     render() {
         let {token, instrument, user} = this.props
         let {calibrationModalShow, calibrationTableRows} = this.state
-        return(<div style={{marginLeft : 100, marginRight : 100, marginTop : 60}}>
-                    <div style={{display : 'flex', justifyContent : 'space-between', alignItems : 'center'}}>
-                        <div>
-                            {this.renderRecordCalibrationButtons()}
-                        </div>
-                        <div>
+        return(<div style={{marginLeft : 100, marginRight : 100, marginBottom : 50, textAlign : 'center', flex : 1.2}}>
                             <h1 style={{alignSelf : 'center', justifySelf : 'center', textAlign : "center"}}
                                 className={"h2-responsive"}>
                                 Calibration
@@ -102,15 +97,6 @@ export default class CalibrationSection extends React.Component {
                                 className={"h5-responsive"}>
                                 Calibrate your instrument here
                             </h1>
-                            <div style={{display: "flex", justifyContent : 'center'}}>
-                                <Divider style={{marginTop: 20, marginBottom: 0, width : window.innerWidth / 4 }}
-                                         orientation={"horizontal"}/>
-                            </div>
-                        </div>
-                        <div>
-                            {this.renderCalibrationCertificateButton()}
-                        </div>
-                    </div>
                     <RecordCalibration
                         show={calibrationModalShow}
                         onHide={()=>this.setCalibrationModalShow(false)}
@@ -121,6 +107,10 @@ export default class CalibrationSection extends React.Component {
                     />
                     <DataTable columns={TableColumns.CALIBRATION_COLUMNS}
                                rows={calibrationTableRows}/>
+                    <div>
+                        {this.renderRecordCalibrationButtons()}
+                        {this.renderCalibrationCertificateButton()}
+                    </div>
                 </div>)
     }
 }

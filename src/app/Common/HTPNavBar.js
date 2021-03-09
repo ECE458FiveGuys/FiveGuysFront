@@ -74,7 +74,7 @@ class NavbarPage extends Component {
                                                          }}>
                                             Logout
                                         </MDBDropdownItem>
-                                        <MDBDropdownItem href="/settings">User Settings</MDBDropdownItem>
+                                        <MDBDropdownItem href="/user-settings">User Settings</MDBDropdownItem>
                                     </MDBDropdownMenu>
                                 </MDBDropdown>
                             </MDBNavItem>

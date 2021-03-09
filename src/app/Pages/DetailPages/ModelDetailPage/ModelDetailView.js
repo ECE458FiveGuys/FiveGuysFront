@@ -95,7 +95,6 @@ export default class ModelDetailView extends Component {
                                 <Divider style={{marginRight: DIVIDER_MARGINS, marginLeft: DIVIDER_MARGINS, height : 300, marginTop : 100}}
                                          orientation={"vertical"}
                                          flexItem={true}/>
-                                {/*<MDBCol size={7}>*/}
                                     <div style={{marginLeft : 100, marginRight : 100, marginBottom : 50, textAlign : 'center', flex : 1.2}}>
                                         <h1 className={"h2-responsive"}>
                                             Instances
@@ -112,7 +111,6 @@ export default class ModelDetailView extends Component {
                                                               existingFields={{model_number : model.model_number, vendor : model.vendor}}
                                                               mode={UpdateInstrument.CREATE_MODE}/>
                                     </div>
-                                {/*</MDBCol>*/}
                             </div>
                         </div>
                     </div>

@@ -1,10 +1,10 @@
 import React, {Component} from "react";
 import FormModal from "../../../../../Common/Forms/FormModal";
 import ModelFields from "../../../../../../utils/enums";
-import ModelRequests from "../../../../../../controller/requests/model_requests";
 import CalibrationRequests from "../../../../../../controller/requests/calibration_requests";
-import {handleFormChange} from "../../../../../Common/Inputs/input_utils";
 import {Instrument} from "../../../../../../utils/ModelEnums";
+import {handleFieldValueChange} from "../../../../../Common/Inputs/input_utils";
+import {UserError} from "../../../../../../controller/exceptions";
 
 
 class RecordCalibration extends Component {
@@ -13,29 +13,27 @@ class RecordCalibration extends Component {
         const today = new Date()
         this.state = {
             date: this.parseDate(today),
+            fields : {}
         }
     }
 
     validateSubmit = () => {
-        let {date, comment, file} = this.state
+        let {date, comment, file} = this.state.fields
         let extension = file.name.split(".").pop()
         let allowedExtensions = ['jpg', 'png', 'gif', 'pdf', 'xlsx']
         if (comment && comment.length > 2000) {
-            this.setState({error : "Comment cannot be greater than 2000 characters"})
-            return;
+            throw new UserError("Comment cannot be greater than 2000 characters")
         } else if (file.size > 32000000) {
-            this.setState({error : "File cannot be more than 32MB"})
-            return
+            throw new UserError("File cannot be more than 32MB")
         } else if (!allowedExtensions.includes(extension)) {
-            this.setState({error : "Extensions must be 'jpg', 'png', 'gif', 'pdf', or 'xlsx'"})
-            return
+            throw new UserError("Extensions must be 'jpg', 'png', 'gif', 'pdf', or 'xlsx'")
         }
     }
 
     handleSubmit = () => {
         let {instrument, user} = this.props
-        let {date, comment, file} = this.state
-        this.validateSubmit()
+        let {date, comment, file} = this.state.fields
+
         let editCallback = (response) => {
             this.props.closeModal()
             window.location.reload(false)
@@ -43,7 +41,13 @@ class RecordCalibration extends Component {
         let calibrationError = (e) => {
             this.setState({error : e})
         }
-        CalibrationRequests.recordCalibration(this.props.token, instrument.pk, date, user.id, comment, file, undefined, editCallback, calibrationError)
+
+        try {
+            this.validateSubmit()
+            CalibrationRequests.recordCalibration(this.props.token, instrument.pk, date, user.id, comment, file, undefined, editCallback, calibrationError)
+        } catch (e) {
+            this.setState({generalError : e.message})
+        }
     }
 
     parseDate(day) {
@@ -51,12 +55,18 @@ class RecordCalibration extends Component {
     }
 
     handleDayClick = (day) => {
-        this.setState({date: this.parseDate(day)})
+        let fields = this.state
+        if (!fields) fields = {}
+        fields.date = this.parseDate(day)
+        this.setState({fields: fields})
     }
 
     handleFileSelect = (e) => {
         let file = document.getElementById('additionalEvidence').files[0];
-        this.setState({file : file})
+        let fields = this.state
+        if (!fields) fields = {}
+        fields.file = file
+        this.setState({fields : fields})
     }
 
     render() {
@@ -68,11 +78,11 @@ class RecordCalibration extends Component {
                 submitMethod={this.handleSubmit}
                 fields={ModelFields.CalibrationFormFields}
                 title={"Record New Calibration Event for Instrument "+this.props.instrument[Instrument.FIELDS.ASSET_TAG]}
-                handleFormChange={handleFormChange(this)}
+                handleInputChange={handleFieldValueChange(this)}
                 isEdit = {false}
                 handleDayClick = {this.handleDayClick}
                 handleFileSelect = {this.handleFileSelect}
-                error = {this.state.error}
+                generalError = {this.state.generalError}
             />
         );
     }

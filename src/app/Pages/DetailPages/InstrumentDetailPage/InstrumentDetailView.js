@@ -12,6 +12,10 @@ import MainView from "../../MainPage/MainView";
 import ModelSection from "../Common/ModelSection";
 import InstrumentSection from "./Sections/InstrumentSection";
 import ModelFields from "../../../../utils/enums";
+import {EquipmentModel, Instrument} from "../../../../utils/ModelEnums";
+import ModelRequests from "../../../../controller/requests/model_requests";
+import DataTable from "../../../Common/Tables/DataTable";
+import UpdateInstrument from "../../../Common/Forms/UpdateInstrument";
 
 const DIVIDER_MARGINS = 100
 
@@ -42,42 +46,53 @@ export default class InstrumentDetailView extends Component {
         let {token, history, user, location} = this.props
         if (instrument) {
             return (
-                <div>
+                <div style={{height : "100%"}}>
                     <HTPNavBar user={user}
                                location={location}/>
-                    <div style={{flex : 1, display : "flex", flexDirection : "column", justifyContent : 'space-evenly', alignItems : 'center', marginLeft : 100, marginRight : 100}}>
-                        <h1 style={{marginTop : 30, marginBottom : 30}}
-                            className={"h1-responsive"}>
-                            Instrument Details
-                        </h1>
-                        <Divider orientation={'horizontal'}
-                                 flexItem={true}/>
-                        <div style={{flex : 1, display : "flex", flexDirection : "row", justifyContent : 'space-between'}}>
-                            {ModelSection(instrument.model, "You are viewing an instance of the following model:", history, true)}
-                                <Divider style={{marginRight : DIVIDER_MARGINS, marginLeft : DIVIDER_MARGINS}}
-                                            orientation={"vertical"}
-                                            flexItem={true}/>
-                            {InstrumentSection(instrument)}
-                            {user.is_staff &&
-                                <Divider style={{marginRight : DIVIDER_MARGINS, marginLeft : DIVIDER_MARGINS}}
-                                         flexItem={true}
-                                         orientation={"vertical"}/>}
-                            {user.is_staff &&
-                                <ActionSection token={token}
-                                               subject={instrument}
-                                               updatePageState={this.updatePageState}
-                                               history={history}
-                                               type={ModelFields.ModelTypes.INSTRUMENT}
-                                                deleteFunction={InstrumentRequests.deleteInstruments}/>}
+                    <div style={{height : "100%"}}>
+                        <div style={{textAlign : 'center'}}>
+                            <h1 style={{marginTop: 30, marginBottom: 40}}
+                                className={"h1-responsive"}>
+                                Instrument Details
+                            </h1>
+                        </div>
+                        <div style={{
+                            flex: 1,
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: 'center',
+                            marginLeft: 100,
+                            marginRight: 100,
+                            marginBottom : 50
+                        }}>
+                            <div style={{flex: 1, display: "flex", flexDirection: "row", justifyContent: 'space-between'}}>
+                                <div style={{flex : 1, display : "flex", flexDirection : "column"}}>
+                                    {InstrumentSection(instrument, history, false)}
+                                    {user.is_staff &&
+                                    <div style={{marginTop : 50, marginBottom : 50}}>
+                                        <ActionSection token={token}
+                                                       hasText={false}
+                                                       hasLogo={false}
+                                                       subject={instrument}
+                                                       updatePageState={this.updatePageState}
+                                                       history={history}
+                                                       type={Instrument.TYPE}
+                                                       deleteFunction={InstrumentRequests.deleteInstruments}/>
+                                    </div>}
+                                </div>
+                                <Divider style={{marginRight: DIVIDER_MARGINS, marginLeft: DIVIDER_MARGINS, height : 300, marginTop : 100}}
+                                         orientation={"vertical"}
+                                         flexItem={true}/>
+                                {instrumentCalibratable(instrument) &&
+                                <CalibrationSection token={token}
+                                                    user={user}
+                                                    instrument={instrument}
+                                                    history={history}
+                                                    calibrations={calibrations}
+                                />}
+                            </div>
                         </div>
                     </div>
-                        {instrumentCalibratable(instrument) &&
-                            <CalibrationSection token={token}
-                                                user={user}
-                                                instrument={instrument}
-                                                history={history}
-                                                calibrations={calibrations}
-                            />}
                 </div>
             )
         } else {

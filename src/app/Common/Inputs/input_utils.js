@@ -9,6 +9,7 @@ export let handleFormChange = (context) => (e) => {
 // }
 
 export let handleFieldValueChange = (context, callBack) => (name) => (value) => {
+    if (!context.state.fields) context.state.fields = {}
     context.state.fields[name] = value
     context.setState(context.state, callBack)
 }

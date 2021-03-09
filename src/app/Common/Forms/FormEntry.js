@@ -4,9 +4,11 @@ import HTPMultiLineInput from "../Inputs/HTPMultiLineInput";
 import ModelFields from "../../../utils/enums";
 import HTPAutoCompleteInput from "../Inputs/HTPAutoCompleteInput";
 import FileUtils from "../../../utils/file_utils";
-import Checkbox from "../Tables/TableWidgets/Checkbox";
 import {MDBBtn} from "mdbreact";
 import {FormEnums} from "./form_enums";
+import PropTypes from "prop-types";
+import {User} from "../../../utils/dtos";
+import "react-day-picker/lib/style.css";
 
 class FormEntry extends Component {
 
@@ -24,11 +26,13 @@ class FormEntry extends Component {
 
     renderAlternateInputs(fieldName) {
         let {fixedFields, subject} = this.props
+
         if (fieldName === "date") {
             const today = new Date();
             return (
                 <div style={{display : "flex", justifyContent : "center"}}>
                     <DayPicker
+                            className={"react-datepicker__day"}
                             formatDate={'YYYY-MM-DD'}
                             disabledDays={{ after: today }}
                             selectedDays={this.state.selectedDay}
@@ -98,14 +102,14 @@ class FormEntry extends Component {
         if (fieldName === ModelFields.EquipmentModelFields.MODEL_CATEGORIES || fieldName === ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES) {
             let {modelCategories, instrumentCategories, handleInputChange} = this.props
             return (<HTPAutoCompleteInput placeholder={FormEnums.AllFieldPlaceHolders[fieldName]}
-                                      options={fieldName === ModelFields.EquipmentModelFields.MODEL_CATEGORIES ? modelCategories : instrumentCategories}
-                                      onChange={handleInputChange(fieldName)}
-                                      label={fieldName === ModelFields.EquipmentModelFields.MODEL_CATEGORIES ? "Model Categories" : "Instrument Categories"}
-                                      disabled={fixedFields[fieldName]}
-                                      multiple={true}
-                                      error={this.props.fieldErrors[fieldName]}
-                                        defaultValue={subject ? subject[fieldName] : fixedFields[fieldName] ? fixedFields[fieldName] : ''}
-                                        size={13}/>
+                                          options={fieldName === ModelFields.EquipmentModelFields.MODEL_CATEGORIES ? modelCategories : instrumentCategories}
+                                          onChange={handleInputChange(fieldName)}
+                                          label={fieldName === ModelFields.EquipmentModelFields.MODEL_CATEGORIES ? "Model Categories" : "Instrument Categories"}
+                                          disabled={fixedFields[fieldName]}
+                                          multiple={true}
+                                          error={this.props.fieldErrors[fieldName]}
+                                            defaultValue={subject ? subject[fieldName] : fixedFields[fieldName] ? fixedFields[fieldName] : ''}
+                                            size={13}/>
             )
         }
 
@@ -175,7 +179,9 @@ class FormEntry extends Component {
                                     defaultValue={subject ? subject[fieldKey] : fixedFields[fieldKey] ? fixedFields[fieldKey] : ''}
                                 />
                                 {fieldErrors[fieldKey] &&
-                                    <div style={{fontSize : 13}} className="text-danger">{fieldErrors[fieldKey]}</div>
+                                    <div style={{fontSize : 13}} className="text-danger">
+                                        {fieldErrors[fieldKey]}
+                                    </div>
                                 }
                             </div>)}
                 {generalError &&
@@ -197,3 +203,28 @@ class FormEntry extends Component {
         );}
 }
 export default FormEntry
+
+
+FormEntry.propTypes = {
+    token : PropTypes.string.isRequired,
+    user : PropTypes.instanceOf(User).isRequired,
+    formFields : PropTypes.object.isRequired,
+    submitMethod : PropTypes.func.isRequired,
+    handleInputChange : PropTypes.func.isRequired,
+
+    generalError : PropTypes.string,
+    fieldErrors : PropTypes.object,
+    fixedFields : PropTypes.object,
+    subject : PropTypes.object,
+    handleDayClick : PropTypes.func,
+    handleFileSelect : PropTypes.func,
+    modelCategories : PropTypes.array,
+    instrumentCategories : PropTypes.array,
+    vendors : PropTypes.array,
+    modelNumbers : PropTypes.array,
+}
+
+FormEntry.defaultProps = {
+    fixedFields : {},
+    fieldErrors : {}
+}
