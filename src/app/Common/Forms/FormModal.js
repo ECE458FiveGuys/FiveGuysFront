@@ -28,8 +28,8 @@ class FormModal extends Component{
                     <MDBContainer>
                         <MDBRow style={{justifyContent: 'center', alignItems: 'center'}}>
                             <MDBCol md="7">
-                                <form>
-                                    <FormEntry fields = {this.props.fields}
+                                <div>
+                                    <FormEntry formFields = {this.props.fields}
                                                subject = {this.props.subject}
                                                handleInputChange = {this.props.handleInputChange}
                                                isEdit = {this.props.isEdit}
@@ -39,19 +39,11 @@ class FormModal extends Component{
                                                instrumentCategories = {this.props.instrumentCategories}
                                                vendors = {this.props.vendors}
                                                modelNumbers = {this.props.modelNumbers}
-                                    />{this.props.error &&
-                                        <div style={{marginTop : 10, display : 'flex', justifyContent : 'center', alignItems : "center", textAlign: 'center'}}>
-                                            <text className={'text-danger'}>
-                                                {this.props.error}
-                                            </text>
-                                        </div>}
-                                    <div className="text-center mt-4">
-                                        <MDBBtn color="dark-green"
-                                                onClick={this.props.submitMethod}>
-                                            Submit
-                                        </MDBBtn>
-                                    </div>
-                                </form>
+                                               submitMethod = {this.props.submitMethod}
+                                               generalError = {this.props.generalError}
+                                               fieldErrors = {this.props.fieldErrors}
+                                    />
+                                </div>
                             </MDBCol>
                         </MDBRow>
                     </MDBContainer>

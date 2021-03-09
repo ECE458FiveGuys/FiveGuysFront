@@ -28,10 +28,11 @@ export default class UpdateInstrument extends React.Component {
 
     validateFields = (fields) => {
         let {model_number, vendor, serial_number, comment, asset_tag_number, instrument_categories} = fields
+        let fieldErrors = {}
         if (asset_tag_number && (!isNumeric(asset_tag_number.toString()) || parseInt(asset_tag_number) > 999999 || parseInt(asset_tag_number) < 100000)) {
-            throw new UserError("Asset tag must be a 6 digit number")
+            fieldErrors.asset_tag_number = "Asset tag must be a 6 digit number"
         } else if (comment && comment.length > 2000) {
-            throw new UserError("Comment cannot be greater than 2000 characters")
+           fieldErrors.comment = "Comment cannot be greater than 2000 characters"
         }
     }
 

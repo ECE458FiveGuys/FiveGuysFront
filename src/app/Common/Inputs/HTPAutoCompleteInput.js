@@ -13,28 +13,30 @@ export default class HTPAutoCompleteInput extends Component {
     }
 
     render() {
-        let {options, onChange, label, placeholder, size, multiple, value, selected, defaultValue}= this.props
+        let {options, onChange, label, placeholder, size, multiple, value, selected, defaultValue, isValid, error}= this.props
         return(
         <MDBCol size={size}>
-            <Form.Group>
-                <Form.Label className="grey-text">{label}</Form.Label>
+                <label className="grey-text form-label">{label}</label>
                     <Typeahead
                         defaultSelected={defaultValue ? multiple ? defaultValue : [defaultValue] : undefined}
                         id="basic-typeahead-single"
+                        isInvalid={error}
+                        isValid={isValid}
+                        required={true}
                         labelKey="name"
                         multiple={multiple}
                         onInputChange={event => {
                             if (!multiple) onChange(event)
                         }}
                         onChange={event => {
-                            multiple ? onChange(event) : onChange(event[0])
+                            multiple ? onChange(event) : event[0] ? onChange(event[0]) : void(0)
                         }}
                         options={options}
                         placeholder={placeholder}
                         value={value}
                         selected={selected}
                     />
-            </Form.Group>
+                    {error && <text style={{fontSize : 13}} className="text-danger">{error}</text>}
         </MDBCol>
         )
     }
@@ -49,13 +51,17 @@ HTPAutoCompleteInput.propTypes = {
     multiple : PropTypes.bool,
     value : PropTypes.string,
     selected : PropTypes.array,
-    defaultValue : PropTypes.array
+    defaultValue : PropTypes.array,
+    isValid : PropTypes.bool,
+    error : PropTypes.string
 }
 
 HTPAutoCompleteInput.defaultProps = {
     size : 2,
     multiple : false,
-    defaultValue : ''
+    defaultValue : '',
+    isValid : undefined,
+    error : undefined
 }
 
 

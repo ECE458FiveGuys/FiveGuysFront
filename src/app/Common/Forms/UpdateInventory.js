@@ -9,6 +9,7 @@ import {handleFieldValueChange, handleFormChange, handleInputValueChange} from "
 import {Button} from "@material-ui/core";
 import * as PropTypes from "prop-types";
 import FormModal from "./FormModal";
+import {FormEnums} from "./form_enums";
 
 export default class UpdateInventory extends React.Component {
 
@@ -24,7 +25,8 @@ export default class UpdateInventory extends React.Component {
         let {mode, subject} = this.props
         return {
             fields: this.props.refreshFields(mode, subject),
-            error: undefined,
+            generalError: undefined,
+            fieldErrors : {},
             createdSubject: undefined
         }
     }
@@ -51,7 +53,7 @@ export default class UpdateInventory extends React.Component {
     }
 
     getEditFields = () => {
-        return this.isInstrumentType() ? ModelFields.InstrumentEditFields : ModelFields.EquipmentModelEditFields
+        return this.isInstrumentType() ? FormEnums.InstrumentFieldNames : FormEnums.EquipmentModelFieldNames
     }
 
     toggleSuccessModal = () => {
@@ -101,13 +103,24 @@ export default class UpdateInventory extends React.Component {
             getCategoriesCallBack)
     }
 
+    validateRequiredFields(fields) {
+        let fieldErrors = {}
+        Object.keys(fields).forEach(fieldKey => {
+            if (FormEnums.AllFieldRequirementTypes[fieldKey] === FormEnums.FieldRequirementTypes.REQUIRED && (!fields[fieldKey] || fields[fieldKey] == "")) {
+                fieldErrors[fieldKey] = "Nice try! This is a required field"
+            }
+        })
+        return fieldErrors
+    }
+
     handleUpdate = () => {
         let {subject, updatePageState, token, mode, validateFields, editFunction, createFunction, retrieveFunction} = this.props
         let {fields} = this.state
-        try {
-            validateFields(fields)
-        } catch (e) {
-            this.setState({error : e.message})
+
+        let fieldErrors = this.validateRequiredFields(fields)
+        Object.assign(fieldErrors, validateFields(fields))
+        if (Object.keys(fieldErrors).length > 0) {
+            this.setState({fieldErrors : fieldErrors})
             return
         }
 
@@ -116,13 +129,14 @@ export default class UpdateInventory extends React.Component {
             retrieveFunction(token, response.pk, (json) => {
                 mode == UpdateInventory.EDIT_MODE ? updatePageState({[this.getInventoryTypeName()]: json}) : this.setState({createdSubject : json})
             })
-            if (this.state.error) this.setState({error : false})
+            if (this.state.fieldErrors) this.setState({fieldErrors : {}})
+            if (this.state.generalError) this.setState({generalError : undefined})
             this.setEditModalShow(false)
         }
 
         let errorCallBack = (message) => {
             message = message.replace("model_number", "model number")
-            this.setState({error : message})
+            this.setState({generalError : message})
         }
 
         if (mode == UpdateInventory.EDIT_MODE) {
@@ -144,7 +158,8 @@ export default class UpdateInventory extends React.Component {
     }
 
     render() {
-        let {editModalShow, successModalShow, all_model_categories, all_instrument_categories, vendors, modelNumbers, error, createdSubject} = this.state
+        let {editModalShow, successModalShow, all_model_categories, all_instrument_categories, vendors, modelNumbers,
+            generalError, fieldErrors, createdSubject} = this.state
         let {token, subject, mode, history} = this.props
         return(
             <div>
@@ -157,7 +172,7 @@ export default class UpdateInventory extends React.Component {
                     show={editModalShow}
                     onHide={() => this.setState(this.makeRefreshState(), () => this.setEditModalShow(false))}
                     token={token}
-                    submitMethod={this.handleUpdate}
+                    submitMethod={() => this.setState({fieldErrors : {}, generalError : undefined}, this.handleUpdate)}
                     subject={subject}
                     fields={this.getEditFields()}
                     title={mode == UpdateInventory.EDIT_MODE ? `Edit ${this.getInventoryTypeName(true)} ${subject[this.getIdentifier()]}` : `Create ${this.getInventoryTypeName(true)}`}
@@ -167,7 +182,8 @@ export default class UpdateInventory extends React.Component {
                     instrumentCategories={all_instrument_categories}
                     vendors={vendors}
                     modelNumbers={modelNumbers}
-                    error={error}
+                    generalError={generalError}
+                    fieldErrors={fieldErrors}
                 />
                 <HTPPopup toggleModal={this.toggleSuccessModal}
                           message={`The ${this.getInventoryTypeName()} was ${mode == UpdateInventory.EDIT_MODE ? "edited" : "created"} successfully`}
