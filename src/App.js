@@ -18,6 +18,7 @@ import CreateModel from "./app/Pages/MainPage/CreateFunctions/CreateModel";
 import CreateInstrument from "./app/Pages/MainPage/CreateFunctions/CreateInstrument";
 import CreateUser from "./app/Pages/MainPage/CreateFunctions/CreateUser";
 import UserSettingsPage from "./app/UserSettings/Widgets/UserSettingsPage";
+import UserTester from "./app/Pages/MainPage/CreateFunctions/UserTester";
 
 class App extends Component {
 
@@ -131,7 +132,10 @@ class App extends Component {
                                                           token={this.state.token}
                                                           user={this.state.user}/>)}>
               </Route>
-
+              <Route path="/example-create-user/">
+                <UserTester token={this.state.token}
+                            user={this.state.user}/>
+              </Route>
               <Route>
                 <NotFound/>
               </Route>

@@ -9,6 +9,7 @@ import {handleFormChange, handleInputValueChange} from "../../../Common/Inputs/i
 import MiscellaneousRequests from "../../../../controller/requests/miscellaneous_requests";
 import {isNumeric} from "../../LoadBankPage/utils";
 import HTPPopup from "../../../Common/HTPPopup";
+import HTPButton from "../../../Common/HTPButton";
 
 
 export default class UpdateInstrument extends React.Component {
@@ -30,12 +31,16 @@ export default class UpdateInstrument extends React.Component {
                 comment: mode == UpdateInstrument.EDIT_MODE ? instrument.comment : undefined,
                 asset_tag_number: mode == UpdateInstrument.EDIT_MODE ? instrument.asset_tag_number : undefined,
                 instrument_categories: mode == UpdateInstrument.EDIT_MODE ? instrument.instrument_categories : undefined,
-                error: undefined
+                error: undefined,
+                createdInstrument: undefined
             }
     }
 
     toggleSuccessModal = () => {
-        this.setState({successModalShow : !this.state.successModalShow})
+        this.setState({successModalShow : !this.state.successModalShow},
+            () => {if (!this.state.successModalShow) {
+                this.setState(this.makeRefreshState())
+            } })
     }
 
     setDeleteModalShow(boolean) {
@@ -93,17 +98,11 @@ export default class UpdateInstrument extends React.Component {
             return;
         }
 
-        let editCallBack = (response) => {
+        let callBack = (response) => {
             this.toggleSuccessModal()
-            InstrumentRequests.retrieveInstrument(token, instrument.pk, (json) => {
-                updatePageState({instrument: json})
+            InstrumentRequests.retrieveInstrument(token, response.pk, (json) => {
+                mode == UpdateInstrument.EDIT_MODE ? updatePageState({instrument: json}) : this.setState({createdInstrument : json})
             })
-            if (this.state.error) this.setState({error : false})
-            this.setEditModalShow(false)
-        }
-
-        let createCallBack = () => {
-            this.toggleSuccessModal()
             if (this.state.error) this.setState({error : false})
             this.setEditModalShow(false)
         }
@@ -114,10 +113,10 @@ export default class UpdateInstrument extends React.Component {
 
         if (mode == UpdateInstrument.EDIT_MODE) {
             InstrumentRequests.editInstrument(token, instrument.pk, model_number, vendor,
-                serial_number, comment, asset_tag_number, instrument_categories, editCallBack, errorCallBack)
+                serial_number, comment, asset_tag_number, instrument_categories, callBack, errorCallBack)
         } else if (mode == UpdateInstrument.CREATE_MODE) {
             InstrumentRequests.createInstrument(token, model_number, vendor,
-                serial_number, comment, asset_tag_number, instrument_categories, createCallBack, errorCallBack)
+                serial_number, comment, asset_tag_number, instrument_categories, callBack, errorCallBack)
         }
     }
 
@@ -134,8 +133,8 @@ export default class UpdateInstrument extends React.Component {
     }
 
     render() {
-        let {editModalShow, successModalShow, all_model_categories, all_instrument_categories, vendors, modelNumbers, error} = this.state
-        let {token, instrument, mode} = this.props
+        let {editModalShow, successModalShow, all_model_categories, all_instrument_categories, vendors, modelNumbers, error, createdInstrument} = this.state
+        let {token, instrument, mode, history} = this.props
         return(
             <div>
                 <Button variant="green" onClick={() => this.setEditModalShow(true)}>
@@ -163,6 +162,11 @@ export default class UpdateInstrument extends React.Component {
                           title={"Success!"}
                           isOpen={successModalShow}
                           className={"text-success"}
+                          additionalButtons={mode == UpdateInstrument.CREATE_MODE && <HTPButton label={"Go to Instrument"}
+                                                                                                color={"blue"}
+                                                                                                onSubmit={() => {
+                                                                                                    history.push(`/instruments/${createdInstrument.pk}`)
+                                                                                                }}/>}
                 />
             </div>)}
 }

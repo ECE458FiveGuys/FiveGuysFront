@@ -127,37 +127,31 @@ export default class TableColumns {
             label: 'Name',
             field: ModelFields.UserFields.NAME,
             sort: 'asc',
-            width: 200
+            width: 50
         },
         {
             label: 'Email',
             field: ModelFields.UserFields.EMAIL,
             sort: 'asc',
-            width: 200
-        },
-        {
-            label: 'Activity',
-            field: ModelFields.UserFields.ACTIVITY,
-            sort: 'asc',
-            width: 200
+            width: 50
         },
         {
             label: 'ID',
             field: ModelFields.UserFields.ID,
             sort: 'asc',
-            width: 200
+            width: 50
         },
         {
-            label: 'Admin Privilege',
+            label: 'Active',
+            field: ModelFields.UserFields.ACTIVITY,
+            sort: 'asc',
+            width: 50
+        },
+        {
+            label: 'Options',
             field: ModelFields.UserFields.IS_STAFF,
             sort: 'asc',
-            width: 200
-        },
-        {
-            label: 'Categories',
-            field: ModelFields.UserFields.USER_CATEGORIES,
-            sort: 'asc',
-            width: 100
+            width: 50
         },
     ]
 

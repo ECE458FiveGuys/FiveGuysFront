@@ -81,6 +81,7 @@ export default class InstrumentTable extends Component {
                             searchRequestFunction={InstrumentRequests.getInstrumentsWithSearchParams}
                             parseSearchResultsFunction={this.parseSearchResults}
                             user={this.props.user}
+                            history={this.props.history}
             >
                 <InstrumentTableLegend/>
             </InventoryTable>

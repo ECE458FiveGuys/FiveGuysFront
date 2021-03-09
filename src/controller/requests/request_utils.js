@@ -156,6 +156,32 @@ export default class RequestUtils {
         }
     }
 
+    static async assisted_password_fetch(url, method, header={}, params=undefined, data= undefined, all_search_fields=false){
+        let init = {
+            method: method,
+            headers: header,
+        }
+
+        if (data) {
+            init.body = data;
+        }
+        let response = await fetch(url + RequestUtils.applyRequestParamSuffix(params, all_search_fields), init)
+        // .catch(response=>response.text())
+        // .then(responsetext =>{
+        //     return responsetext
+        // })
+        if (response.ok) {
+            alert('Successful Password Change')
+        } else if (response.status >= 500 && response.status < 600) {
+            response.text().then(errorText => {
+                alert(new ServerError(errorText).message)
+            })
+        } else {
+            let json = await response.json()
+            alert(new UserError(RequestUtils.parseErrorMessage(json)))
+        }
+    }
+
 
     static getWithSearchParams(type,
                                  token,

@@ -66,7 +66,7 @@ class InventoryTable extends Component {
     }
 
     render() {
-        let {searchRequestFunction, parseSearchResultsFunction, token, columns, searchFields, user} = this.props
+        let {searchRequestFunction, parseSearchResultsFunction, token, columns, searchFields, user, history} = this.props
         let {searchFieldValues} = this.state
         return (
             <div>
@@ -78,6 +78,7 @@ class InventoryTable extends Component {
                               instrumentCategories={this.state.instrument_categories ? this.state.instrument_categories : []}
                               updatePageState={this.updatePageState}
                               user={user}
+                              history={history}
                                 />
                 {this.props.children}
                 <BackendPaginatedDataTable columns={columns}
@@ -98,7 +99,8 @@ InventoryTable.propTypes = {
     searchRequestFunction: PropTypes.func.isRequired,  // the request from the shared library used to populate the table
     categoriesName: PropTypes.string.isRequired,
     parseSearchResultsFunction: PropTypes.func, // the parser used to format the data from the request so it can be added to the table
-    user: PropTypes.instanceOf(User)
+    user: PropTypes.instanceOf(User),
+    history: PropTypes.object.isRequired
 }
 
 InventoryTable.defaultProps = {

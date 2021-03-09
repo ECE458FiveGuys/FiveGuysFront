@@ -8,6 +8,7 @@ import HTPInput from "../../../Common/Inputs/HTPInput";
 import {EquipmentModel, Instrument, Models} from "../../../../utils/ModelEnums";
 import UpdateInstrument from "../../InstrumentDetailPage/Sections/UpdateInstrument";
 import {User} from "../../../../utils/dtos";
+import TempPage from "../CreateFunctions/TempPage";
 
 let SEARCH_FIELD_COLS = 8
 
@@ -57,14 +58,25 @@ export default class ActionHeader extends Component {
     }
 
     renderCreateInstrumentButton = () => {
-        let {token, updatePageState} = this.props
+        let {token, updatePageState, history} = this.props
         return (<MDBCol size={1}
                 style={{display: "flex", marginLeft: 20, alignItems: "center", justifyContent: "center"}}>
                     <UpdateInstrument
                         mode={UpdateInstrument.CREATE_MODE}
                         token={token}
+                        history={history}
                         updatePageState={updatePageState}/>
                 </MDBCol>)
+    }
+
+    renderCreateModelButton = () => {
+        let {token, updatePageState} = this.props
+        return (<MDBCol size={1}
+                        style={{display: "flex", marginLeft: 20, alignItems: "center", justifyContent: "center"}}>
+            <TempPage
+                token={token}
+                />
+        </MDBCol>)
     }
 
     appendSearchFields = (Rows, col) => {
@@ -106,7 +118,7 @@ export default class ActionHeader extends Component {
         this.props.user.is_staff ?
             this.getTableType() == ModelFields.ModelTypes.INSTRUMENT ?
                 Rows.push(this.renderCreateInstrumentButton()) :
-                Rows.push() : // TODO: Luke, add a function for the create model/button popup
+                Rows.push(this.renderCreateModelButton()) : // TODO: Luke, add a function for the create model/button popup
                  void(0)
 
         let type = this.getTableType() == ModelFields.ModelTypes.EQUIPMENT_MODEL ? "Models" : "Instruments"
@@ -132,5 +144,6 @@ ActionHeader.propTypes = {
     vendors: PropTypes.array.isRequired,
     modelCategories: PropTypes.array.isRequired,
     instrumentCategories: PropTypes.array,
-    user : PropTypes.instanceOf(User)
+    user : PropTypes.instanceOf(User),
+    history : PropTypes.object.isRequired
 }
