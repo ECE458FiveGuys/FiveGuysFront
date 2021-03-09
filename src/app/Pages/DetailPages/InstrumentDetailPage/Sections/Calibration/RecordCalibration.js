@@ -1,10 +1,10 @@
 import React, {Component} from "react";
-import EditModal from "./EditModal";
-import ModelFields from "../../../utils/enums";
-import ModelRequests from "../../../controller/requests/model_requests";
-import CalibrationRequests from "../../../controller/requests/calibration_requests";
-import {handleFormChange} from "../../Common/Inputs/input_utils";
-import {Instrument} from "../../../utils/ModelEnums";
+import FormModal from "../../../../../Common/Forms/FormModal";
+import ModelFields from "../../../../../../utils/enums";
+import ModelRequests from "../../../../../../controller/requests/model_requests";
+import CalibrationRequests from "../../../../../../controller/requests/calibration_requests";
+import {handleFormChange} from "../../../../../Common/Inputs/input_utils";
+import {Instrument} from "../../../../../../utils/ModelEnums";
 
 
 class RecordCalibration extends Component {
@@ -61,7 +61,7 @@ class RecordCalibration extends Component {
 
     render() {
         return (
-            <EditModal
+            <FormModal
                 show={this.props.show}
                 onHide={this.props.onHide}
                 token={this.props.token}

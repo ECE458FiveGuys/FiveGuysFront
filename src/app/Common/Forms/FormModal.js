@@ -3,18 +3,10 @@ import {Button, Form, Modal} from "react-bootstrap";
 import {MDBBtn, MDBCol, MDBContainer, MDBRow} from "mdbreact";
 import FormEntry from "./FormEntry";
 
-class EditModal extends Component{
+class FormModal extends Component{
 
     constructor(props){
         super(props)
-        // let model = this.props.subject
-        // this.state = {
-        //     vendor: model['vendor'],
-        //     model_number: model['model_number'],
-        //     description: model['description'],
-        //     comment: model['comment'],
-        //     calibration_frequency: model['calibration_frequency'],
-        // }
     }
 
     render() {
@@ -26,7 +18,9 @@ class EditModal extends Component{
                 centered
             >
                 <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title-vcenter">
+                    <Modal.Title
+                        className={"text-info"}
+                        id="contained-modal-title-vcenter">
                         {this.props.title}
                     </Modal.Title>
                 </Modal.Header>
@@ -34,10 +28,9 @@ class EditModal extends Component{
                     <MDBContainer>
                         <MDBRow style={{justifyContent: 'center', alignItems: 'center'}}>
                             <MDBCol md="7">
-                                <form>
-                                    <FormEntry fields = {this.props.fields}
+                                <div>
+                                    <FormEntry formFields = {this.props.fields}
                                                subject = {this.props.subject}
-                                               handleFormChange = {this.props.handleFormChange}
                                                handleInputChange = {this.props.handleInputChange}
                                                isEdit = {this.props.isEdit}
                                                handleDayClick = {this.props.handleDayClick}
@@ -46,19 +39,11 @@ class EditModal extends Component{
                                                instrumentCategories = {this.props.instrumentCategories}
                                                vendors = {this.props.vendors}
                                                modelNumbers = {this.props.modelNumbers}
-                                    />{this.props.error &&
-                                        <div style={{marginTop : 10, display : 'flex', justifyContent : 'center', alignItems : "center"}}>
-                                            <text className={'text-danger'}>
-                                                {this.props.error}
-                                            </text>
-                                        </div>}
-                                    <div className="text-center mt-4">
-                                        <MDBBtn color="dark-green"
-                                                onClick={this.props.submitMethod}>
-                                            Submit
-                                        </MDBBtn>
-                                    </div>
-                                </form>
+                                               submitMethod = {this.props.submitMethod}
+                                               generalError = {this.props.generalError}
+                                               fieldErrors = {this.props.fieldErrors}
+                                    />
+                                </div>
                             </MDBCol>
                         </MDBRow>
                     </MDBContainer>
@@ -71,4 +56,4 @@ class EditModal extends Component{
     }
 }
 
-export default EditModal;
+export default FormModal;

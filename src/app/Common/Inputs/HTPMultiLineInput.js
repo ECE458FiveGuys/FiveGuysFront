@@ -19,16 +19,16 @@ export default class HTPMultiLineInput extends Component {
 
 
     render() {
-        let {onChange, placeholder, name, type, defaultValue, style, label}= this.props
+        let {onChange, placeholder, name, type, defaultValue, style, label, error}= this.props
         return(
-            <div className="form-group" style={style}>
+            <div>
                 <label
                     className="grey-text"
                     htmlFor="exampleFormControlTextarea1">
                     {label}
                 </label>
                 <textarea
-                    className="form-control"
+                    className={"form-control"}
                     type={type}
                     placeholder={placeholder}
                     defaultValue={defaultValue}
@@ -40,7 +40,7 @@ export default class HTPMultiLineInput extends Component {
                     id="exampleFormControlTextarea1"
                     rows="5"
                 />
-                <br/>
+                {error && <text style={{fontSize : 13}} className="text-danger">{error}</text>}
             </div>
         )
     }

@@ -63,16 +63,20 @@ export default class ModelRequests {
             header)
     }
 
-    static async create_model(token, vendor, model_number, description,
-                              comment = undefined, calibration_frequency = undefined,
+    static async createModelWithFields(token, fields,
                               callBack = (json) => json,
                               errorMessageCallBack = (errorMessage) => errorMessage
                                 ) {
+        ModelRequests.updateModel(token, URLS.MODELS, METHODS.POST,
+            callBack, errorMessageCallBack, fields)
+    }
 
-        ModelRequests.updateModel(token, "post", URLS.MODELS,
-            callBack,
-            errorMessageCallBack,
-            vendor, model_number, description, comment, calibration_frequency)
+    static async editModelWithFields(token, modelId, fields,
+                                       callBack = (json) => json,
+                                       errorMessageCallBack = (errorMessage) => errorMessage
+    ) {
+        ModelRequests.updateModel(token, URLS.MODELS + modelId + "/", METHODS.PUT,
+            callBack, errorMessageCallBack, fields)
     }
 
     static async editModel(token, model_pk, vendor = undefined, model_number = undefined, description = undefined, comment = undefined,
@@ -98,20 +102,15 @@ export default class ModelRequests {
 
     // private helpers
 
-    static async updateModel(token, method, url,
+    static async updateModel(token, url, method,
                              callBack = (json) => json,
                              errorMessageCallBack = (errorMessage) => errorMessage,
-                             vendor = undefined, model_number = undefined,
-                              description = undefined, comment = undefined, calibration_frequency = undefined) {
+                             fields) {
         let header = RequestUtils.buildTokenHeader(token)
-        let fields = {}
-        fields[ModelFields.EquipmentModelFields.VENDOR] = vendor
-        fields[ModelFields.EquipmentModelFields.MODEL_NUMBER] = model_number
-        fields[ModelFields.EquipmentModelFields.DESCRIPTION] = description
-        fields[ModelFields.EquipmentModelFields.COMMENT] = comment
-        fields[ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY] = calibration_frequency
+        if (!fields.calibration_frequency || fields.calibration_frequency == 0) fields.calibration_mode = ModelFields.CalibrationModes.NOT_CALIBRATABLE
+        let data = RequestUtils.createFormData(fields)
         RequestUtils.assistedFetch(url, method,
                                     callBack, errorMessageCallBack,
-                                    header, undefined, fields)
+                                    header, undefined, data)
     }
 }

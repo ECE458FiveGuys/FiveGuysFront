@@ -6,9 +6,9 @@ import 'react-bootstrap-typeahead/css/Typeahead.css';
 import HTPAutoCompleteInput from "../../../Common/Inputs/HTPAutoCompleteInput";
 import HTPInput from "../../../Common/Inputs/HTPInput";
 import {EquipmentModel, Instrument, Models} from "../../../../utils/ModelEnums";
-import UpdateInstrument from "../../InstrumentDetailPage/Sections/UpdateInstrument";
 import {User} from "../../../../utils/dtos";
-import TempPage from "../CreateFunctions/TempPage";
+import UpdateInstrument from "../../../Common/Forms/UpdateInstrument";
+import UpdateModel from "../../../Common/Forms/UpdateModel";
 
 let SEARCH_FIELD_COLS = 8
 
@@ -70,12 +70,14 @@ export default class ActionHeader extends Component {
     }
 
     renderCreateModelButton = () => {
-        let {token, updatePageState} = this.props
+        let {token, updatePageState, history} = this.props
         return (<MDBCol size={1}
                         style={{display: "flex", marginLeft: 20, alignItems: "center", justifyContent: "center"}}>
-            <TempPage
+            <UpdateModel
+                mode={UpdateModel.CREATE_MODE}
                 token={token}
-                />
+                history={history}
+                updatePageState={updatePageState}/>
         </MDBCol>)
     }
 
@@ -118,14 +120,14 @@ export default class ActionHeader extends Component {
         this.props.user.is_staff ?
             this.getTableType() == ModelFields.ModelTypes.INSTRUMENT ?
                 Rows.push(this.renderCreateInstrumentButton()) :
-                Rows.push(this.renderCreateModelButton()) : // TODO: Luke, add a function for the create model/button popup
+                Rows.push(this.renderCreateModelButton()) :
                  void(0)
 
         let type = this.getTableType() == ModelFields.ModelTypes.EQUIPMENT_MODEL ? "Models" : "Instruments"
 
         return(
             <MDBContainer style={{marginLeft: -15, display: "inline"}}>
-                <header className={"h5-responsive"} style={{marginTop: 10, marginBottom: 10}}>
+                <header className={"h3-responsive"} style={{marginTop: 10, marginBottom: 10}}>
                     {`Search Your ${type}`}
                 </header>
                 <MDBRow>

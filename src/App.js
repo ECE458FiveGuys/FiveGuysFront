@@ -7,8 +7,8 @@ import Login from "./auth/Login";
 import NotFound from "./auth/NotFound";
 import {StorageKeys} from "./utils/enums";
 import {User} from "./utils/dtos";
-import ModelDetailView from "./app/Pages/ModelDetailPage/ModelDetailView";
-import InstrumentDetailView from "./app/Pages/InstrumentDetailPage/InstrumentDetailView";
+import ModelDetailView from "./app/Pages/DetailPages/ModelDetailPage/ModelDetailView";
+import InstrumentDetailView from "./app/Pages/DetailPages/InstrumentDetailPage/InstrumentDetailView";
 import CategoryTabView from "./app/Pages/CategoryPage/CategoryTabView";
 import LoadBankMain from "./app/Pages/LoadBankPage/LoadBankMain";
 import OAuthRedirect from "./auth/OAuthRedirect";
@@ -83,6 +83,7 @@ class App extends Component {
               <Route path="/models/:id"
                      render={(props) => (<ModelDetailView id={props.match.params.id}
                                                           location={props.location}
+                                                          history={props.history}
                                                           token={this.state.token}
                                                           user={this.state.user}/>)} >
               </Route>

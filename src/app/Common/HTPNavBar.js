@@ -40,18 +40,6 @@ class NavbarPage extends Component {
             Buttons.push(<MDBNavItem active={location.pathname == "/categories"}>
                             <MDBNavLink to="/categories">Categories</MDBNavLink>
                         </MDBNavItem>)
-            Buttons.push(<MDBNavItem>
-                            <MDBNavLink to="/create-model">Create Model</MDBNavLink>
-                        </MDBNavItem>)
-            Buttons.push(<MDBNavItem>
-                            <MDBNavLink to="/create-instrument">Create Instrument</MDBNavLink>
-                         </MDBNavItem>)
-            Buttons.push(<MDBNavItem>
-                <MDBNavLink to="/categories">Categories</MDBNavLink>
-            </MDBNavItem>)
-            Buttons.push(<MDBNavItem>
-                <MDBNavLink to="/user-settings">User Settings</MDBNavLink>
-            </MDBNavItem>)
         }
         Buttons.push(<MDBNavItem active={location.pathname == "/import-export"}>
                         <MDBNavLink to="/import-export">{user.is_staff ? "Import/Export" : "Export"}</MDBNavLink>

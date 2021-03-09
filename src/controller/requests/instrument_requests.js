@@ -77,6 +77,15 @@ export default class InstrumentRequests {
             model_number, vendor, serial_number, comment, asset_tag_number, instrument_categories)
     }
 
+    static async createInstrumentWithFields(token, fields,
+                                  callBack = (json) => json,
+                                  errorMessageCallBack = (errorMessage) => errorMessage) {
+
+        InstrumentRequests.updateInstrument(token, "post", URLS.INSTRUMENTS, callBack, errorMessageCallBack,
+            fields.model_number, fields.vendor, fields.serial_number,
+            fields.comment, fields[Instrument.FIELDS.ASSET_TAG], fields.instrument_categories)
+    }
+
     static async editInstrument(token, instrument_pk, model_number=undefined,
                                 vendor=undefined,
                                 serial_number=undefined,
@@ -89,6 +98,16 @@ export default class InstrumentRequests {
         InstrumentRequests.updateInstrument(token, "put", URLS.INSTRUMENTS + instrument_pk + "/",
             callBack, errorMessageCallBack, model_number, vendor, serial_number, comment, asset_tag, instrument_categories)
     }
+
+    static async editInstrumentWithFields(token, instrument_pk, fields,
+                                callBack = (json) => json,
+                                errorMessageCallBack = (errorMessage) => errorMessage) {
+
+        InstrumentRequests.updateInstrument(token, "put", URLS.INSTRUMENTS + instrument_pk + "/",
+            callBack, errorMessageCallBack, fields.model_number, fields.vendor, fields.serial_number,
+            fields.comment, fields[Instrument.FIELDS.ASSET_TAG], fields.instrument_categories)
+    }
+
 
     static async deleteInstruments(token, instrument_pk,
                                      callBack = (json) => json,
