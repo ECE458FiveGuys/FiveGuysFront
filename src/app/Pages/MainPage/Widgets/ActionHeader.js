@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {MDBBtn, MDBCol, MDBContainer, MDBRow} from "mdbreact";
+import {MDBBtn, MDBCol, MDBContainer, MDBIcon, MDBRow} from "mdbreact";
 import PropTypes from "prop-types";
 import ModelFields from "../../../../utils/enums";
 import 'react-bootstrap-typeahead/css/Typeahead.css';
@@ -9,6 +9,7 @@ import {EquipmentModel, Instrument, Models} from "../../../../utils/ModelEnums";
 import {User} from "../../../../utils/dtos";
 import UpdateInstrument from "../../../Common/Forms/UpdateInstrument";
 import UpdateModel from "../../../Common/Forms/UpdateModel";
+import {blue} from "@material-ui/core/colors";
 
 let SEARCH_FIELD_COLS = 8
 

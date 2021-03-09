@@ -46,10 +46,6 @@ export default class ActionSection extends React.Component {
         let {token, subject, history, updatePageState, type, hasText, hasLogo} = this.props
         return(
             <div style={{flex : 1, display : "flex", flexDirection : "column", justifyContent : 'flex-start', alignItems : 'center'}}>
-                {hasText && <h1
-                    className={"h3-responsive"}>
-                    Actions
-                </h1>}
                 {hasText && <h1 style={{marginTop : 20, marginBottom : 20, textAlign : 'center'}}
                     className={"h5-responsive"}>
                     {`As an admin, you may:`}

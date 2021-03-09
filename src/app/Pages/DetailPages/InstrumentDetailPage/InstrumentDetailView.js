@@ -16,6 +16,9 @@ import {EquipmentModel, Instrument} from "../../../../utils/ModelEnums";
 import ModelRequests from "../../../../controller/requests/model_requests";
 import DataTable from "../../../Common/Tables/DataTable";
 import UpdateInstrument from "../../../Common/Forms/UpdateInstrument";
+import HTPButton from "../../../Common/HTPButton";
+import {handleNavClick} from "../../../utils";
+import {MDBCol} from "mdbreact";
 
 const DIVIDER_MARGINS = 100
 
@@ -67,9 +70,9 @@ export default class InstrumentDetailView extends Component {
                         }}>
                             <div style={{flex: 1, display: "flex", flexDirection: "row", justifyContent: 'space-between'}}>
                                 <div style={{flex : 1, display : "flex", flexDirection : "column"}}>
-                                    {InstrumentSection(instrument, history, false)}
+                                    {InstrumentSection(instrument)}
                                     {user.is_staff &&
-                                    <div style={{marginTop : 50, marginBottom : 50}}>
+                                    <div style={{marginTop : 40, marginBottom : 40}}>
                                         <ActionSection token={token}
                                                        hasText={false}
                                                        hasLogo={false}
@@ -79,6 +82,16 @@ export default class InstrumentDetailView extends Component {
                                                        type={Instrument.TYPE}
                                                        deleteFunction={InstrumentRequests.deleteInstruments}/>
                                     </div>}
+                                    <div style={{display : 'flex', flexDirection : "column", justifyContent : "center", alignItems : 'center'}}>
+                                        <text className={"h5-responsive"} style={{marginBottom : 20}}>
+                                            Visit the model for this instance:
+                                        </text>
+                                        <HTPButton
+                                            onSubmit={() => handleNavClick("models/" + instrument.model.pk, history)}
+                                            color={"blue"}
+                                            label={"Go to Model"}
+                                            className={"form-control"}/>
+                                    </div>
                                 </div>
                                 <Divider style={{marginRight: DIVIDER_MARGINS, marginLeft: DIVIDER_MARGINS, height : 300, marginTop : 100}}
                                          orientation={"vertical"}
