@@ -8,14 +8,29 @@ export default class CreateUserPopup extends React.Component{
     constructor(props) {
         super(props)
         this.state = {
-            modal : false
+            modal : false,
+            successModal : false
         }
+    }
+
+    toggleSuccessModal = () => {
+        this.setState({
+            successModal: !this.state.successModal
+        }, () => {
+            if (!this.state.modal) this.setState({successMessage : undefined})
+        })
     }
 
     toggleModal = () => {
         this.setState({
             modal: !this.state.modal
-        });
+        })
+    }
+
+    onCreateSuccess = (successMessage) => {
+        this.toggleModal()
+        this.props.updatePage(successMessage)
+        this.toggleSuccessModal()
     }
 
     render() {
@@ -25,7 +40,16 @@ export default class CreateUserPopup extends React.Component{
                   toggleModal={this.toggleModal}
                   className={"text-default"}
                   title={"Create User"}
-                  message={<CreateUser token={this.props.token}/>}/>
-                </div>)
+                  message={<CreateUser
+                      updatePage={this.onCreateSuccess}
+                      token={this.props.token}/>}/>
+                <HTPPopup isOpen={this.state.successModal}
+                          toggleModal={this.toggleSuccessModal}
+                          className={"text-success"}
+                          title={"Success!"}
+                          message={"The user was created successfully!"}/>
+                </div>
+
+        )
     }
 }

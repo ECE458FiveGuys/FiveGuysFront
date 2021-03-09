@@ -10,7 +10,7 @@ export default class DataTable extends Component {
     }
 
     render() {
-        let {columns, rows, searching, backendPagination} = this.props
+        let {columns, rows, searching, backendPagination, disableRetreatAfterSorting} = this.props
         let data = {
             columns: columns,
             rows: rows
@@ -25,6 +25,7 @@ export default class DataTable extends Component {
                     bordered
                     small
                     searching={searching}
+                    disableRetreatAfterSorting={disableRetreatAfterSorting}
                     data={data}
                 />)
     }
@@ -35,8 +36,10 @@ DataTable.propTypes = {
     rows : PropTypes.array.isRequired,
     searching : PropTypes.bool,
     backendPaginated : PropTypes.bool,
+    disableRetreatAfterSorting : PropTypes.bool
 }
 
 DataTable.defaultProps = {
-    backendPaginated : false
+    backendPaginated : false,
+    disableRetreatAfterSorting : false
 }

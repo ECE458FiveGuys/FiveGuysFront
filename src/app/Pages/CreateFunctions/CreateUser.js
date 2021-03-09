@@ -54,6 +54,7 @@ class CreateModel extends Component {
                         ]
                     responseTitle = 'Success! The user was added:'
                     responseColor = 'green'
+                    this.props.updatePage(returnArray)
                 }
                 else {
                     returnArray = ErrorParser.parse(json)
@@ -66,8 +67,6 @@ class CreateModel extends Component {
                 newState['responseColor'] = responseColor
                 newState['requestStatus'] = responseTitle
                 this.setState(newState)
-
-                console.log(json)
             })
             .catch((error) => { //failure
                 let returnArray = error
@@ -99,13 +98,13 @@ class CreateModel extends Component {
 
     getDisplayMessage = () => {
         let displayMessage = this.state.displayMessage
-        return (<div>
-            <ol>
-                {displayMessage.map(function(name, index){
-                    return <ul key={ index }>{name}</ul>;
-                })}
-            </ol>
-        </div>)
+        return Array.isArray(displayMessage)  ? <div>
+                    <ol>
+                        {displayMessage.map(function(name, index){
+                            return <ul key={ index }>{name}</ul>;
+                        })}
+                    </ol>
+                </div> : <></>
     }
 
     // Return a controlled form i.e. values of the
@@ -136,7 +135,8 @@ class CreateModel extends Component {
 
 CreateModel.propTypes = {
     token: PropTypes.string.isRequired, // the token obtained through login
-    user : PropTypes.instanceOf(User).isRequired
+    user : PropTypes.instanceOf(User).isRequired,
+    updatePage : PropTypes.func.isRequired
 }
 
 export default CreateModel;
