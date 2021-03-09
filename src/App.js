@@ -12,9 +12,12 @@ import InstrumentDetailView from "./app/Pages/DetailPages/InstrumentDetailPage/I
 import CategoryTabView from "./app/Pages/CategoryPage/CategoryTabView";
 import LoadBankMain from "./app/Pages/LoadBankPage/LoadBankMain";
 import OAuthRedirect from "./auth/OAuthRedirect";
+import ImportDocumentation from "./app/ImportExport/Widgets/ImportDocumentation";
+import UserSettingsView from "./app/UserSettings/UserSettingsView";
 import CreateModel from "./app/Pages/MainPage/CreateFunctions/CreateModel";
 import CreateInstrument from "./app/Pages/MainPage/CreateFunctions/CreateInstrument";
 import CreateUser from "./app/Pages/MainPage/CreateFunctions/CreateUser";
+import UserSettingsPage from "./app/UserSettings/Widgets/UserSettingsPage";
 import UserTester from "./app/Pages/MainPage/CreateFunctions/UserTester";
 
 class App extends Component {
@@ -120,6 +123,15 @@ class App extends Component {
               <Route path="/create-user/">
                 <CreateUser token={this.state.token}
                             user={this.state.user}/>
+              </Route>
+              <Route path="/documentation">
+                <ImportDocumentation token={this.state.token}
+                                  user={this.state.user}/>
+              </Route>
+              <Route path="/user-settings"
+                     render={(props) => (<UserSettingsView location={props.location}
+                                                          token={this.state.token}
+                                                          user={this.state.user}/>)}>
               </Route>
               <Route path="/example-create-user/">
                 <UserTester token={this.state.token}

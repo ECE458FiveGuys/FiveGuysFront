@@ -35,7 +35,8 @@ export const AUTH_URLS =
         USERS : ROOT_URL_AUTH + "auth/users/",
         LOGIN : ROOT_URL_AUTH + "auth/token/login",
         GET_OAUTH_CODE : OAUTH_URL,
-        GET_OAUTH_TOKEN : ROOT_URL_AUTH + "auth/oauth/login/"
+        GET_OAUTH_TOKEN : ROOT_URL_AUTH + "auth/oauth/login/",
+        PASSWORD_CHANGE : ROOT_URL_AUTH + "auth/users/set_password/",
     }
 
 export const METHODS =

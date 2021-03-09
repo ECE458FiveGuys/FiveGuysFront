@@ -244,7 +244,7 @@ DatatableEditable.propTypes = {
     rows : PropTypes.array.isRequired,
     editableColumns : PropTypes.array.isRequired, // a subset of columns whose fields you want to have inputs for
     editFunction : PropTypes.func.isRequired, // a shared library API function to be called when the edit button is selected
-    createFunction : PropTypes.func.isRequired, // a shared library API function to be called when the create button is selected
+    createFunction : PropTypes.func, // a shared library API function to be called when the create button is selected
     deleteFunction : PropTypes.func.isRequired, // a shared library API function to be called when the delete button is selected
     validateDeleteFunction: PropTypes.func, // optional function to confirm whether warning should be displayed on delete
     tableName: PropTypes.string

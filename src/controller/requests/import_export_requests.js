@@ -4,16 +4,16 @@ import {METHODS, URLS} from "../strings";
 
 export default class ImportExportRequests{
 
-    static async importModels(token, data){
+    static async importModels(token, data, name){
         let header = RequestUtils.buildTokenHeader(token);
         return await RequestUtils.assisted_import_fetch(URLS.IMPORT_MODELS,
-            METHODS.POST, header, {}, data)
+            METHODS.POST, header, {}, data, name)
     }
 
-    static async importInstruments(token, data){
+    static async importInstruments(token, data, name){
         let header = RequestUtils.buildTokenHeader(token);
         return await RequestUtils.assisted_import_fetch(URLS.IMPORT_INSTRUMENTS,
-            METHODS.POST, header, {}, data)
+            METHODS.POST, header, {}, data, name)
     }
 
     static async exportModels(token){

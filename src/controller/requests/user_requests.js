@@ -3,6 +3,7 @@ import {AUTH_URLS, METHODS, URLS} from "../strings";
 import ErrorParser from "../../app/Pages/MainPage/CreateFunctions/ErrorParser";
 
 export default class UserRequests {
+    static params;
     static async retrieveUser(token,
                               username,
                               callBack = (json) => json,
@@ -17,6 +18,35 @@ export default class UserRequests {
             errorMessageCallBack,
             header,
             params)
+    }
+
+    static async getAllUsers(token)
+    {
+        let header = RequestUtils.buildTokenHeader(token)
+        //let params = {}
+        return await RequestUtils.assisted_simple_fetch(AUTH_URLS.USERS,
+            METHODS.GET, header)
+    }
+
+    static async deactivateUser(token,
+                             pk)
+    {
+        let header = RequestUtils.buildTokenHeader(token)
+        //let params = {}
+        return await RequestUtils.assisted_simple_fetch(AUTH_URLS.USERS + pk + '/deactivate/',
+            METHODS.POST,
+            header)
+    }
+
+    static async passwordChange(token,
+                                password_data) {
+        let header = RequestUtils.buildTokenHeader(token)
+        let data = password_data
+        return await RequestUtils.assisted_password_fetch(AUTH_URLS.PASSWORD_CHANGE,
+            METHODS.POST,
+            header,
+            {},
+            data)
     }
 
     static async addUser(token, name, username, email, password, callBack = (json) => json){
@@ -50,4 +80,18 @@ export default class UserRequests {
         console.log(returnArray)
         callBack(returnArray)
     }
+
+    static async changeAdminStatus(token, pk, adminBool)
+    {
+        let header = RequestUtils.buildTokenHeader(token)
+        //let params = {}
+        //header['Content-Type'] = 'application/json'
+        let data = adminBool
+        return await RequestUtils.assisted_simple_fetch(AUTH_URLS.USERS + pk + '/update_admin_status/',
+            METHODS.POST,
+            header,
+            {},
+            data)
+    }
+
 }

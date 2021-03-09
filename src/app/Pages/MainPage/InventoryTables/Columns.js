@@ -121,4 +121,77 @@ export default class TableColumns {
             width: 270
         }
     ]
+
+    static USER_COLUMNS = [
+        {
+            label: 'Name',
+            field: ModelFields.UserFields.NAME,
+            sort: 'asc',
+            width: 50
+        },
+        {
+            label: 'Email',
+            field: ModelFields.UserFields.EMAIL,
+            sort: 'asc',
+            width: 50
+        },
+        {
+            label: 'ID',
+            field: ModelFields.UserFields.ID,
+            sort: 'asc',
+            width: 50
+        },
+        {
+            label: 'Active',
+            field: ModelFields.UserFields.ACTIVITY,
+            sort: 'asc',
+            width: 50
+        },
+        {
+            label: 'Options',
+            field: ModelFields.UserFields.IS_STAFF,
+            sort: 'asc',
+            width: 50
+        },
+    ]
+
+    static USER_COLUMNS_EDITABLE = [
+        {
+            label: 'Name',
+            field: ModelFields.UserFields.NAME,
+            sort: 'asc',
+            width: 150
+        },
+        {
+            label: 'Email',
+            field: ModelFields.UserFields.EMAIL,
+            sort: 'asc',
+            width: 150
+        },
+        {
+            label: 'Activity',
+            field: ModelFields.UserFields.ACTIVITY,
+            sort: 'asc',
+            width: 150
+        },
+        {
+            label: 'ID',
+            field: ModelFields.UserFields.ID,
+            sort: 'asc',
+            width: 150
+        },
+        {
+            label: 'Password',
+            field: 'password',
+            sort: 'asc',
+            width: 150
+        },
+
+        {
+            label: 'Admin Privilege',
+            field: ModelFields.UserFields.IS_STAFF,
+            sort: 'asc',
+            width: 150
+        },
+    ]
 }
