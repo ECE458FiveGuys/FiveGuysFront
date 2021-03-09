@@ -51,9 +51,11 @@ export default class InstrumentRequests {
     static async getInstrumentsWithSearchParams(token, searchParams,
                                                 callBack = (json) => json,
                                                 errorMessageCallBack = (errorMessage) => errorMessage,
-                                                pageNum, ordering) {
+                                                pageNum,
+                                                ordering,
+                                                exportMode) {
         RequestUtils.getWithSearchParams(ModelFields.ModelTypes.INSTRUMENT, token, searchParams, callBack,
-            errorMessageCallBack, pageNum, ordering)
+            errorMessageCallBack, pageNum, ordering, exportMode)
     }
 
     static async retrieveInstrument(token, pk,

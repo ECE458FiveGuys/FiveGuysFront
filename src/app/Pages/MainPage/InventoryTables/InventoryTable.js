@@ -9,8 +9,14 @@ import 'jspdf-autotable'
 import HTPButton from "../../../Common/HTPButton";
 import Image from "../../../../assets/hpt_logo.png"
 import BackendPaginatedDataTable from "../../../Common/Tables/BackendPaginatedDataTable";
-import ActionHeader from "../Widgets/ActionHeader";
+import ActionHeader from "../Widgets/ActionHeader/ActionHeader";
 import {User} from "../../../../utils/dtos";
+import {MDBContainer, MDBRow} from "mdbreact";
+import {Divider} from "@material-ui/core";
+import UpdateModel from "../../../Common/Forms/UpdateModel";
+import UpdateInstrument from "../../../Common/Forms/UpdateInstrument";
+import ExportModel from "../../../ImportExport/Widgets/ExportModel";
+import {AdminSection} from "../Widgets/ActionHeader/AdminSection";
 class InventoryTable extends Component {
 
     constructor(props) {
@@ -65,22 +71,41 @@ class InventoryTable extends Component {
         this.setState(state)
     }
 
+    getTableType = () => {
+        return this.props.searchFields == EquipmentModel.SEARCH_FIELDS ? EquipmentModel.TYPE : Instrument.TYPE
+    }
+
     render() {
         let {searchRequestFunction, parseSearchResultsFunction, token, columns, searchFields, user, history} = this.props
         let {searchFieldValues} = this.state
         return (
             <div>
-                <ActionHeader searchFields={searchFields}
-                              updateSearchFieldValues={this.updateSearchFieldValues}
-                              token={token}
-                              vendors={this.state.vendors}
-                              modelCategories={this.state.model_categories ? this.state.model_categories : []}
-                              instrumentCategories={this.state.instrument_categories ? this.state.instrument_categories : []}
-                              updatePageState={this.updatePageState}
-                              user={user}
-                              history={history}
-                                />
-                {this.props.children}
+                <div style={{display: 'flex', flexDirection : "row"}}>
+                    <div style={{display: 'flex', flexDirection : "column", flex : 1, marginTop : 10, marginBottom : 20}}>
+                        <ActionHeader searchFields={searchFields}
+                                      updateSearchFieldValues={this.updateSearchFieldValues}
+                                      token={token}
+                                      vendors={this.state.vendors}
+                                      modelCategories={this.state.model_categories ? this.state.model_categories : []}
+                                      instrumentCategories={this.state.instrument_categories ? this.state.instrument_categories : []}
+                                      updatePageState={this.updatePageState}
+                                      user={user}
+                                      history={history}
+                                      legend={this.props.children}
+                        />
+                    </div>
+                    {this.props.user.is_staff &&
+                    <Divider orientation={'vertical'}
+                             flexItem={true}/>}
+                    {this.props.user.is_staff &&
+                    <div style={{flex : .1, display: 'flex', justifyContent : 'center', alignItems : 'center'}}>
+                        <AdminSection token={token}
+                                      updatePageState={this.updatePageState}
+                                      history={history}
+                                      tableType={this.getTableType()}
+                                      searchParams={searchFieldValues}/>
+                    </div>}
+                </div>
                 <BackendPaginatedDataTable columns={columns}
                                            dataFetchFunction={searchRequestFunction}
                                            dataFetchFunctionParser={parseSearchResultsFunction}

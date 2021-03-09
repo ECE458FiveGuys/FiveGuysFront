@@ -8,8 +8,8 @@ export class LegendElement extends Component {
         super(props)
     }
     render() {
-        return(<div style={{width: 200, marginTop: 10, justifyContent : "space-between", alignItems : "center", display: "inline-block"}}>
-                <MDBIcon style={{marginRight : 20, color: this.props.color}}
+        return(<div style={{marginRight: 30, marginTop: 10, justifyContent : "space-between", alignItems : "center", display: "inline-block"}}>
+                <MDBIcon style={{marginRight : 10, color: this.props.color}}
                          size={"2x"}
                          icon={dateIcons[this.props.color]}/>
                 {this.props.value}
@@ -25,7 +25,7 @@ export class InstrumentTableLegend extends Component {
 
     render() {
         return(
-        <div style={{justifyContent: "flex-end", display: "inline-flex", flexDirection: "row", alignItems: "center", marginBottom: 30, marginTop: 20}}>
+        <div style={{justifyContent: "flex-end", display: "inline-flex", flexDirection: "row", alignItems: "center", marginBottom: 30, marginTop: 20, marginLeft : 15}}>
             <LegendElement color={"green"}
                            value={"Calibration Stable"}></LegendElement>
             <LegendElement color={"orange"}

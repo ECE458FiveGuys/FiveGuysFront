@@ -1,15 +1,17 @@
 import React, {Component} from "react";
 import {MDBBtn, MDBCol, MDBContainer, MDBIcon, MDBRow} from "mdbreact";
 import PropTypes from "prop-types";
-import ModelFields from "../../../../utils/enums";
+import ModelFields from "../../../../../utils/enums";
 import 'react-bootstrap-typeahead/css/Typeahead.css';
-import HTPAutoCompleteInput from "../../../Common/Inputs/HTPAutoCompleteInput";
-import HTPInput from "../../../Common/Inputs/HTPInput";
-import {EquipmentModel, Instrument, Models} from "../../../../utils/ModelEnums";
-import {User} from "../../../../utils/dtos";
-import UpdateInstrument from "../../../Common/Forms/UpdateInstrument";
-import UpdateModel from "../../../Common/Forms/UpdateModel";
+import HTPAutoCompleteInput from "../../../../Common/Inputs/HTPAutoCompleteInput";
+import HTPInput from "../../../../Common/Inputs/HTPInput";
+import {EquipmentModel, Instrument, Models} from "../../../../../utils/ModelEnums";
+import {User} from "../../../../../utils/dtos";
+import UpdateInstrument from "../../../../Common/Forms/UpdateInstrument";
+import UpdateModel from "../../../../Common/Forms/UpdateModel";
 import {blue} from "@material-ui/core/colors";
+import ExportModel from "../../../../ImportExport/Widgets/ExportModel";
+import {Divider} from "@material-ui/core";
 
 let SEARCH_FIELD_COLS = 8
 
@@ -49,37 +51,13 @@ export default class ActionHeader extends Component {
     }
 
     renderSearchButton = () => {
-        return(<MDBCol size={1} style={{display: "flex", marginLeft: 20, alignItems : "center", justifyContent:"center"}}>
-            <button type="button"
-                    className="btn btn-primary"
-                    onClick={()=>this.props.updateSearchFieldValues(this.state.searchFieldValues)}>
-                Search
-            </button>
-        </MDBCol>)
-    }
-
-    renderCreateInstrumentButton = () => {
-        let {token, updatePageState, history} = this.props
-        return (<MDBCol size={1}
-                style={{display: "flex", marginLeft: 20, alignItems: "center", justifyContent: "center"}}>
-                    <UpdateInstrument
-                        mode={UpdateInstrument.CREATE_MODE}
-                        token={token}
-                        history={history}
-                        updatePageState={updatePageState}/>
+        return(<MDBCol size={1} style={{display: "flex", marginLeft: 20, marginRight : 20, alignItems : "center", justifyContent:"center"}}>
+                    <button type="button"
+                            className="btn btn-primary"
+                            onClick={()=>this.props.updateSearchFieldValues(this.state.searchFieldValues)}>
+                        Search
+                    </button>
                 </MDBCol>)
-    }
-
-    renderCreateModelButton = () => {
-        let {token, updatePageState, history} = this.props
-        return (<MDBCol size={1}
-                        style={{display: "flex", marginLeft: 20, alignItems: "center", justifyContent: "center"}}>
-            <UpdateModel
-                mode={UpdateModel.CREATE_MODE}
-                token={token}
-                history={history}
-                updatePageState={updatePageState}/>
-        </MDBCol>)
     }
 
     appendSearchFields = (Rows, col) => {
@@ -97,10 +75,10 @@ export default class ActionHeader extends Component {
                     Rows.push(this.renderAutoCompleteMultipleSearchBox(searchFieldName, key))
                 } else {
                     Rows.push(<MDBCol size={2}>
-                        <HTPInput label={key}
-                                  onChange={this.updateSearchFields(searchFieldName)}
-                                  placeholder={"Search"}/>
-                    </MDBCol>)
+                                    <HTPInput label={key}
+                                              onChange={this.updateSearchFields(searchFieldName)}
+                                              placeholder={"Search"}/>
+                                </MDBCol>)
                 }
                 if (col == SEARCH_FIELD_COLS) {
                     Rows.push(<div className="w-100"/>)
@@ -118,23 +96,21 @@ export default class ActionHeader extends Component {
         let col = 1
         this.appendSearchFields(Rows, col)
         Rows.push(this.renderSearchButton())
-        this.props.user.is_staff ?
-            this.getTableType() == ModelFields.ModelTypes.INSTRUMENT ?
-                Rows.push(this.renderCreateInstrumentButton()) :
-                Rows.push(this.renderCreateModelButton()) :
-                 void(0)
+        Rows.push(this.props.legend)
 
         let type = this.getTableType() == ModelFields.ModelTypes.EQUIPMENT_MODEL ? "Models" : "Instruments"
 
         return(
-            <MDBContainer style={{marginLeft: -15, display: "inline"}}>
+            <div style={{display: "inline"}}>
                 <header className={"h3-responsive"} style={{marginTop: 10, marginBottom: 10}}>
                     {`Search Your ${type}`}
                 </header>
-                <MDBRow>
-                    {Rows}
-                </MDBRow>
-            </MDBContainer>
+                <div style={{display: 'flex', flexDirection : "row"}}>
+                    <div style={{display : 'flex', flexDirection : 'row', flex : 1, flexWrap : 'wrap'}}>
+                        {Rows}
+                    </div>
+                </div>
+            </div>
         )
     }
 }

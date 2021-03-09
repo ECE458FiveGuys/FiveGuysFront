@@ -3,6 +3,8 @@ import ImportExportRequests from "../../../controller/requests/import_export_req
 import {CSVLink} from "react-csv";
 import "react-papaparse";
 import HTPButton from "../../Common/HTPButton";
+import ModelFields from "../../../utils/enums";
+import ModelRequests from "../../../controller/requests/model_requests";
 
 class ExportModel extends Component{
 
@@ -13,33 +15,34 @@ class ExportModel extends Component{
             loading: false
         }
         this.csvLinkEl = React.createRef();
-        // this.headers = [
-        //     {label: 'Vendor', key: 'Vendor'},
-        //     {label: 'Model Number', key: 'Model-Number'},
-        //     {label: 'Description', key: 'Short-Description'},
-        //     {label: 'Comment', key: 'Comment'},
-        //     {label: 'Calibration Frequency', key: 'Calibration-Frequency'}
-        // ]
     }
 
-    downloadModels = async()=> {
+    downloadModels = ()=> {
         this.setState({loading: true});
-        let data = await ImportExportRequests.exportModels(this.props.token).then(res => res.text());
-        console.log(data);
-        this.setState({data: data, loading: false}, () =>{
-            setTimeout(() => {
-                this.csvLinkEl.current.link.click();
-            });
-        });
+        ModelRequests.getModelsWithSearchParams(this.props.token,
+            this.props.searchParams,
+            (json) => {
+                this.setState({data: json, loading: false}, () => {
+                    setTimeout(() => {
+                        this.csvLinkEl.current.link.click();
+                    });
+                });
+            },
+            (errorMessage) => alert(errorMessage),
+            undefined,
+            undefined,
+            true)
     }
+
 
     render(){
         const { data, loading } = this.state;
         return (
                 <div>
                     <HTPButton
+                        color={"blue"}
                         onSubmit={this.downloadModels}
-                        label={loading ? "Downloading..." : "Export Models"}
+                        label={loading ? "Downloading..." : "Export"}
                         disabled={loading}
                     >
                     </HTPButton>

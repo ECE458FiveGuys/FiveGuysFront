@@ -2,6 +2,8 @@ import React, {Component} from "react";
 import ImportExportRequests from "../../../controller/requests/import_export_requests";
 import {CSVLink} from "react-csv"
 import HTPButton from "../../Common/HTPButton";
+import ModelRequests from "../../../controller/requests/model_requests";
+import InstrumentRequests from "../../../controller/requests/instrument_requests";
 class ExportInstrument extends Component{
 
     constructor(props) {
@@ -11,24 +13,23 @@ class ExportInstrument extends Component{
             loading: false
         }
         this.csvLinkEl = React.createRef();
-        // this.headers = [
-        //     {label: 'Vendor', key: 'Vendor'},
-        //     {label: 'Model Number', key: 'Model-Number'},
-        //     {label: 'Description', key: 'Short-Description'},
-        //     {label: 'Comment', key: 'Comment'},
-        //     {label: 'Calibration Frequency', key: 'Calibration-Frequency'}
-        // ]
     }
 
     downloadInstruments = async()=> {
         this.setState({loading: true});
-        let data = await ImportExportRequests.exportInstruments(this.props.token).then(res => res.text());
-        console.log(data);
-        this.setState({data: data, loading: false}, () =>{
-            setTimeout(() => {
-                this.csvLinkEl.current.link.click();
-            });
-        });
+        InstrumentRequests.getInstrumentsWithSearchParams(this.props.token,
+            this.props.searchParams,
+            (json) => {
+                this.setState({data: json, loading: false}, () => {
+                    setTimeout(() => {
+                        this.csvLinkEl.current.link.click();
+                    });
+                });
+            },
+            (errorMessage) => alert(errorMessage),
+            undefined,
+            undefined,
+            true)
     }
 
     render(){
@@ -37,7 +38,8 @@ class ExportInstrument extends Component{
             <div>
                 <HTPButton
                     onSubmit={this.downloadInstruments}
-                    label={loading ? "Downloading..." : "Export Instruments"}
+                    color={"blue"}
+                    label={loading ? "Downloading..." : "Export"}
                     disabled={loading}
                 >
                 </HTPButton>

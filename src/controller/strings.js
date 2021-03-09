@@ -6,15 +6,15 @@ export const HOSTS = {
 
 let ROOT_URL = window.location.host === HOSTS.PROD ? "https://group-six-prod.colab.duke.edu/api/" : "https://group-six-test.colab.duke.edu/api/"
 
-let ROOT_URL_AUTH = window.location.host === HOSTS.PROD ? "https://group-six-prod.colab.duke.edu/" : "https://group-six-test.colab.duke.edu/"
+let ROOT_URL_AUTH = window.location.host === HOSTS.PROD ? "https://group-six-prod.colab.duke.edu/auth/" : "https://group-six-test.colab.duke.edu/auth/"
 
 let OAUTH_URL = `https://oauth.oit.duke.edu/oidc/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=code`
 
 export const URLS =
     {
         ROOT : ROOT_URL,
-        EXPORT_MODELS : ROOT_URL + "export-models/",
-        EXPORT_INSTRUMENTS : ROOT_URL + "export-instruments/",
+        EXPORT_MODELS : ROOT_URL + "models/export/",
+        EXPORT_INSTRUMENTS : ROOT_URL + "instruments/export/",
         EXPORT_ALL : ROOT_URL + "export/",
         IMPORT_MODELS : ROOT_URL + "import-models/",
         IMPORT_INSTRUMENTS : ROOT_URL + "import-instruments/",
@@ -32,11 +32,12 @@ export const URLS =
 
 export const AUTH_URLS =
     {
-        USERS : ROOT_URL_AUTH + "auth/users/",
-        LOGIN : ROOT_URL_AUTH + "auth/token/login",
+        USERS : ROOT_URL_AUTH + "users/",
+        LOGIN : ROOT_URL_AUTH + "token/login",
         GET_OAUTH_CODE : OAUTH_URL,
-        GET_OAUTH_TOKEN : ROOT_URL_AUTH + "auth/oauth/login/",
-        PASSWORD_CHANGE : ROOT_URL_AUTH + "auth/users/set_password/",
+        GET_OAUTH_TOKEN : ROOT_URL_AUTH + "oauth/login/",
+        PASSWORD_CHANGE : ROOT_URL_AUTH + "users/set_password/",
+        SELF : ROOT_URL_AUTH + "users/me/"
     }
 
 export const METHODS =

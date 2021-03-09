@@ -44,9 +44,10 @@ export default class ModelRequests {
                                            callBack = (json) => json,
                                            errorMessageCallBack = (errorMessage) => errorMessage,
                                            pageNum= undefined,
-                                           ordering = undefined) {
+                                           ordering = undefined,
+                                           exportMode = false) {
         RequestUtils.getWithSearchParams(ModelFields.ModelTypes.EQUIPMENT_MODEL, token, searchParams, callBack,
-            errorMessageCallBack, pageNum, ordering)
+            errorMessageCallBack, pageNum, ordering, exportMode)
     }
 
 
