@@ -12,7 +12,7 @@ export default function InstrumentSection(instrument) {
                 </h1>
                 <h1 style={{marginTop : 20, marginBottom : 20, textAlign : 'center'}}
                     className={"h5-responsive"}>
-                    {`You are looking at the instrument with the following properties:`}
+                    {`This instrument has the following properties:`}
                 </h1>
                 {ModelDisplay(
                     ["Serial Number", "Asset Tag", "Most Recent Calibration"],

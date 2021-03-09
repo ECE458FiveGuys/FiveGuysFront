@@ -13,7 +13,7 @@ export default class HTPAutoCompleteInput extends Component {
     }
 
     render() {
-        let {options, onChange, label, placeholder, size, multiple, value, selected, defaultValue, isValid, error}= this.props
+        let {options, onChange, label, placeholder, size, disabled, multiple, value, selected, defaultValue, isValid, error}= this.props
         return(
         <MDBCol size={size}>
                 <label className="grey-text form-label">{label}</label>
@@ -25,6 +25,7 @@ export default class HTPAutoCompleteInput extends Component {
                         required={true}
                         labelKey="name"
                         multiple={multiple}
+                        disabled={disabled}
                         onInputChange={event => {
                             if (!multiple) onChange(event)
                         }}
@@ -53,7 +54,8 @@ HTPAutoCompleteInput.propTypes = {
     selected : PropTypes.array,
     defaultValue : PropTypes.array,
     isValid : PropTypes.bool,
-    error : PropTypes.string
+    error : PropTypes.string,
+    disabled : PropTypes.bool
 }
 
 HTPAutoCompleteInput.defaultProps = {
@@ -61,7 +63,8 @@ HTPAutoCompleteInput.defaultProps = {
     multiple : false,
     defaultValue : '',
     isValid : undefined,
-    error : undefined
+    error : undefined,
+    disabled : false
 }
 
 

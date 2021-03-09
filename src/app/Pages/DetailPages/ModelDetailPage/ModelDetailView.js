@@ -7,12 +7,13 @@ import DataTable from "../../../Common/Tables/DataTable";
 import {EquipmentModel, Instrument} from "../../../../utils/ModelEnums";
 import InstrumentRequests from "../../../../controller/requests/instrument_requests";
 import HTPNavBar from "../../../Common/HTPNavBar";
-import {Divider} from "@material-ui/core";
+import {Divider, Link} from "@material-ui/core";
 import ModelSection from "../Common/ModelSection";
 import ActionSection from "../Common/ActionSection";
 import TableUtils from "../../MainPage/InventoryTables/TableUtils";
 import {handleNavClick} from "../../../utils";
 import {MDBCol} from "mdbreact";
+import UpdateInstrument from "../../../Common/Forms/UpdateInstrument";
 
 
 const DIVIDER_MARGINS = 0
@@ -93,7 +94,7 @@ export default class ModelDetailView extends Component {
                                          orientation={"vertical"}
                                          flexItem={true}/>
                                 <MDBCol size={7}>
-                                <div style={{marginLeft : 100, marginRight : 100, textAlign : 'center', marginTop : 50}}>
+                                <div style={{marginLeft : 100, marginRight : 100, textAlign : 'center', marginTop : 0}}>
                                     <h1 className={"h2-responsive"}>
                                         Instances
                                     </h1>
@@ -101,8 +102,13 @@ export default class ModelDetailView extends Component {
                                         Here are the instances of this model in circulation:
                                     </h1>
                                         <DataTable columns={MODEL_INSTRUMENT_TABLE_COLUMNS}
-                                                   token={this.props.token}
+                                                   token={token}
                                                    rows={instrumentRows}/>
+                                        <UpdateInstrument token={token}
+                                                          updatePageState={this.updatePageState}
+                                                          history={history}
+                                                          existingFields={{model_number : model.model_number, vendor : model.vendor}}
+                                                          mode={UpdateInstrument.CREATE_MODE}/>
                                 </div>
                                 </MDBCol>
                             </div>

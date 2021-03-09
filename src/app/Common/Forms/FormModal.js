@@ -42,6 +42,7 @@ class FormModal extends Component{
                                                submitMethod = {this.props.submitMethod}
                                                generalError = {this.props.generalError}
                                                fieldErrors = {this.props.fieldErrors}
+                                               fixedFields = {this.props.fixedFields}
                                     />
                                 </div>
                             </MDBCol>

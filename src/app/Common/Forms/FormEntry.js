@@ -23,6 +23,7 @@ class FormEntry extends Component {
     }
 
     renderAlternateInputs(fieldName) {
+        let {fixedFields, subject} = this.props
         if (fieldName === "date") {
             const today = new Date();
             return (
@@ -96,31 +97,42 @@ class FormEntry extends Component {
 
         if (fieldName === ModelFields.EquipmentModelFields.MODEL_CATEGORIES || fieldName === ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES) {
             let {modelCategories, instrumentCategories, handleInputChange} = this.props
-            return (
-                <HTPAutoCompleteInput placeholder={FormEnums.AllFieldPlaceHolders[fieldName]}
+            return (<HTPAutoCompleteInput placeholder={FormEnums.AllFieldPlaceHolders[fieldName]}
                                       options={fieldName === ModelFields.EquipmentModelFields.MODEL_CATEGORIES ? modelCategories : instrumentCategories}
                                       onChange={handleInputChange(fieldName)}
                                       label={fieldName === ModelFields.EquipmentModelFields.MODEL_CATEGORIES ? "Model Categories" : "Instrument Categories"}
+                                      disabled={fixedFields[fieldName]}
                                       multiple={true}
                                       error={this.props.fieldErrors[fieldName]}
-                                        defaultValue={ this.props.subject ? ((this.props.isEdit) ?
-                                                                      this.props.subject[fieldName] : "") : ""}
+                                        defaultValue={subject ? subject[fieldName] : fixedFields[fieldName] ? fixedFields[fieldName] : ''}
                                         size={13}/>
             )
         }
 
         if (fieldName === ModelFields.EquipmentModelFields.MODEL_NUMBER || fieldName === ModelFields.EquipmentModelFields.VENDOR){
             let {vendors, modelNumbers, handleInputChange} = this.props
+            let defaultValue = ""
+            if (this.props.isEdit) {
+                if (subject.model) {
+                    defaultValue = subject.model[fieldName]
+                } else {
+                    defaultValue = subject[fieldName]
+                }
+            }
+            if (fixedFields[fieldName]) {
+                defaultValue = fixedFields[fieldName]
+            }
             return(
                 <div className="form-outline">
-                <HTPAutoCompleteInput placeholder={FormEnums.AllFieldPlaceHolders[fieldName]}
-                                      options={fieldName === ModelFields.EquipmentModelFields.MODEL_NUMBER ? modelNumbers : vendors}
-                                      onChange={handleInputChange(fieldName)}
-                                      label={fieldName === ModelFields.EquipmentModelFields.MODEL_NUMBER ? "Model Number" : "Vendor"}
-                                      multiple={false}
-                                      error={this.props.fieldErrors[fieldName]}
-                                      defaultValue={(this.props.isEdit) ? this.props.subject.model ? this.props.subject.model[fieldName] : this.props.subject[fieldName] : ""}
-                                      size={13}/>
+                    <HTPAutoCompleteInput placeholder={FormEnums.AllFieldPlaceHolders[fieldName]}
+                                          options={fieldName === ModelFields.EquipmentModelFields.MODEL_NUMBER ? modelNumbers : vendors}
+                                          onChange={handleInputChange(fieldName)}
+                                          label={fieldName === ModelFields.EquipmentModelFields.MODEL_NUMBER ? "Model Number" : "Vendor"}
+                                          multiple={false}
+                                          disabled={fixedFields[fieldName]}
+                                          error={this.props.fieldErrors[fieldName]}
+                                          defaultValue={defaultValue}
+                                          size={13}/>
                 </div>
             );
         }
@@ -138,7 +150,7 @@ class FormEntry extends Component {
             ModelFields.EquipmentModelFields.CALIBRATION_MODE
         ]
 
-        let {formFields, generalError, fieldErrors} = this.props
+        let {formFields, generalError, fieldErrors, fixedFields, subject} = this.props
         return(
             <form onKeyDown={(e) => {if (e.key === 'Enter') e.preventDefault()}}
                   onSubmit={(e) => {
@@ -158,9 +170,9 @@ class FormEntry extends Component {
                                     className={fieldErrors[fieldKey] ? "form-control is-invalid" : "form-control"}
                                     id="validationServer01"
                                     placeholder={FormEnums.AllFieldPlaceHolders[fieldKey]}
-                                    //required={FormEnums.AllFieldRequirementTypes[fieldKey] == FormEnums.FieldRequirementTypes.REQUIRED}
+                                    disabled={fixedFields[fieldKey]}
                                     onChange={(e) => this.props.handleInputChange(fieldKey)(e.target.value)}
-                                    defaultValue={(this.props.isEdit) ? this.props.subject[fieldKey] : ""}
+                                    defaultValue={subject ? subject[fieldKey] : fixedFields[fieldKey] ? fixedFields[fieldKey] : ''}
                                 />
                                 {fieldErrors[fieldKey] &&
                                     <div style={{fontSize : 13}} className="text-danger">{fieldErrors[fieldKey]}</div>
