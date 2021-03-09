@@ -7,20 +7,18 @@ import React from "react";
 import {handleNavClick} from "../../../utils";
 
 export default function ModelSection(model, subheading, history=undefined, displayNavButton=false) {
-    return(<div style={{flex : 1, display : "flex", flexDirection : "column", justifyContent : 'center', alignItems : 'center'}}>
-                    <div style={{flex : 1, display : 'flex', flexDirection : 'row', justifyContent : 'center', alignItems: 'center', marginBottom : 20}}>
-                        <h1 style={{marginRight : 20}}
-                            className={"h3-responsive"}>
+    return(<div style={{flex : 1, display : "flex", flexDirection : "column", justifyContent : 'center', alignItems : 'center', textAlign : 'center'}}>
+                    <h1 style={{marginRight : 20}}
+                            className={"h2-responsive"}>
                             {"Model Info"}
                         </h1>
-                    </div>
                     <h1 style={{textAlign : 'center'}}
                         className={"h5-responsive"}>
                         {subheading}
                     </h1>
                     <a  onClick={(e)=> displayNavButton ? handleNavClick("/models/" + model.pk, history) : void(0)}
                         style={{flex : 1, display : "flex", flexDirection : "row",
-                            alignItems : 'center', justifyContent : 'space-between',
+                            alignItems : 'center', justifyContent : 'space-between',marginTop : 20, textAlign : 'center',
                             cursor : displayNavButton ? "pointer" : "default"}}>
                         {ModelDisplay(
                             ["Model Number", "Vendor", "Calibration Frequency", "Load Bank Wizard Supported?"],
@@ -59,8 +57,6 @@ export default function ModelSection(model, subheading, history=undefined, displ
                                 Comment:
                             </h1>
                         </div>}
-                        <MDBCol size={5}>
                             <text style={{display : "flex", flexWrap : 'wrap', flex : 1}}>{model[EquipmentModel.FIELDS.COMMENT]}</text>
-                        </MDBCol>
             </div>)
 }

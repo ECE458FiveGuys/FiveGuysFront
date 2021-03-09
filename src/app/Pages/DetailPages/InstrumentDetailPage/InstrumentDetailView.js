@@ -46,7 +46,7 @@ export default class InstrumentDetailView extends Component {
                     <HTPNavBar user={user}
                                location={location}/>
                     <div style={{flex : 1, display : "flex", flexDirection : "column", justifyContent : 'space-evenly', alignItems : 'center', marginLeft : 100, marginRight : 100}}>
-                        <h1 style={{marginTop : 30, marginBottom : 40}}
+                        <h1 style={{marginTop : 30, marginBottom : 30}}
                             className={"h1-responsive"}>
                             Instrument Details
                         </h1>

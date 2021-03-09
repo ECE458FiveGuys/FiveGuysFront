@@ -57,9 +57,10 @@ export default class ModelDetailView extends Component {
         let {user, location, history, token} = this.props
         if (model) {
             return (
-                <div>
+                <div style={{height : "100%"}}>
                     <HTPNavBar user={user}
                                location={location}/>
+                    <div style={{height : "100%"}}>
                         <div style={{textAlign : 'center'}}>
                             <h1 style={{marginTop: 30, marginBottom: 40}}
                                 className={"h1-responsive"}>
@@ -73,48 +74,48 @@ export default class ModelDetailView extends Component {
                                     justifyContent: 'center',
                                     // alignItems: 'center',
                                     marginLeft: 100,
-                                    marginRight: 100
+                                    marginRight: 100,
+                            marginBottom : 50
                                 }}>
                             <div style={{flex: 1, display: "flex", flexDirection: "row", justifyContent: 'space-between'}}>
                                 <div style={{flex : 1, display : "flex", flexDirection : "column"}}>
                                     {ModelSection(model, "You are viewing the following model:", history, false)}
                                     {user.is_staff &&
-                                        <div style={{marginTop : 50}}>
-                                    <ActionSection token={token}
-                                                   hasText={false}
-                                                   hasLogo={false}
-                                                   subject={model}
-                                                   updatePageState={this.updatePageState}
-                                                   history={history}
-                                                   type={EquipmentModel.TYPE}
-                                                   deleteFunction={ModelRequests.deleteModel}/>
+                                        <div style={{marginTop : 50, marginBottom : 50}}>
+                                            <ActionSection token={token}
+                                                           hasText={false}
+                                                           hasLogo={false}
+                                                           subject={model}
+                                                           updatePageState={this.updatePageState}
+                                                           history={history}
+                                                           type={EquipmentModel.TYPE}
+                                                           deleteFunction={ModelRequests.deleteModel}/>
                                         </div>}
                                 </div>
                                 <Divider style={{marginRight: DIVIDER_MARGINS, marginLeft: DIVIDER_MARGINS, height : 300, marginTop : 100}}
                                          orientation={"vertical"}
                                          flexItem={true}/>
-                                <MDBCol size={7}>
-                                <div style={{marginLeft : 100, marginRight : 100, textAlign : 'center', marginTop : 0}}>
-                                    <h1 className={"h2-responsive"}>
-                                        Instances
-                                    </h1>
-                                    <h1 className={"h5-responsive"}>
-                                        Here are the instances of this model in circulation:
-                                    </h1>
-                                        <DataTable columns={MODEL_INSTRUMENT_TABLE_COLUMNS}
-                                                   token={token}
-                                                   rows={instrumentRows}/>
-                                        <UpdateInstrument token={token}
-                                                          updatePageState={this.updatePageState}
-                                                          history={history}
-                                                          existingFields={{model_number : model.model_number, vendor : model.vendor}}
-                                                          mode={UpdateInstrument.CREATE_MODE}/>
-                                </div>
-                                </MDBCol>
-                            </div>
-                            <div style={{display : 'flex', justifyContent : 'stretch'}}>
+                                {/*<MDBCol size={7}>*/}
+                                    <div style={{marginLeft : 100, marginRight : 100, marginBottom : 50, textAlign : 'center', flex : 1.2}}>
+                                        <h1 className={"h2-responsive"}>
+                                            Instances
+                                        </h1>
+                                        <h1 className={"h5-responsive"}>
+                                            Here are the instances of this model in circulation:
+                                        </h1>
+                                            <DataTable columns={MODEL_INSTRUMENT_TABLE_COLUMNS}
+                                                       token={token}
+                                                       rows={instrumentRows}/>
+                                            <UpdateInstrument token={token}
+                                                              updatePageState={this.updatePageState}
+                                                              history={history}
+                                                              existingFields={{model_number : model.model_number, vendor : model.vendor}}
+                                                              mode={UpdateInstrument.CREATE_MODE}/>
+                                    </div>
+                                {/*</MDBCol>*/}
                             </div>
                         </div>
+                    </div>
                 </div>
             )
         } else {
