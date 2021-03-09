@@ -32,12 +32,13 @@ export default class UpdateInstrument extends React.Component {
         if (asset_tag_number && (!isNumeric(asset_tag_number.toString()) || parseInt(asset_tag_number) > 999999 || parseInt(asset_tag_number) < 100000)) {
             fieldErrors.asset_tag_number = "Asset tag must be a 6 digit number"
         } else if (comment && comment.length > 2000) {
-           fieldErrors.comment = "Comment cannot be greater than 2000 characters"
+            fieldErrors.comment = "Comment cannot be greater than 2000 characters"
         }
+        return fieldErrors
     }
 
     render() {
-        let {token, instrument, history, updatePageState, mode} = this.props
+        let {token, instrument, history, updatePageState, mode, existingFields} = this.props
         return <UpdateInventory token={token}
                                 subject={instrument}
                                 updatePageState={updatePageState}
@@ -49,6 +50,7 @@ export default class UpdateInstrument extends React.Component {
                                 retrieveFunction={InstrumentRequests.retrieveInstrument}
                                 refreshFields={this.refreshFields}
                                 validateFields={this.validateFields}
+                                existingFields={existingFields}
         />
     }
 }
@@ -58,5 +60,6 @@ UpdateInstrument.propTypes = {
     updatePageState : PropTypes.func.isRequired,
     history : PropTypes.object.isRequired,
     mode : PropTypes.string.isRequired,
-    instrument : PropTypes.object.isRequired
+    existingFields : PropTypes.object
 }
+

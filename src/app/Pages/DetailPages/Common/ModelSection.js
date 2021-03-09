@@ -4,6 +4,7 @@ import HTPButton from "../../../Common/HTPButton";
 import {MDBBadge, MDBCol} from "mdbreact";
 import {EquipmentModel} from "../../../../utils/ModelEnums";
 import React from "react";
+import {handleNavClick} from "../../../utils";
 
 export default function ModelSection(model, subheading, history=undefined, displayNavButton=false) {
     return(<div style={{flex : 1, display : "flex", flexDirection : "column", justifyContent : 'center', alignItems : 'center'}}>
@@ -12,14 +13,15 @@ export default function ModelSection(model, subheading, history=undefined, displ
                             className={"h3-responsive"}>
                             {"Model Info"}
                         </h1>
-                        {displayNavButton && <HTPButton onSubmit={() => history.push('/models/' + model.pk)}
-                                   label={"Go to Model"}/>}
                     </div>
                     <h1 style={{textAlign : 'center'}}
                         className={"h5-responsive"}>
                         {subheading}
                     </h1>
-                    <div style={{flex : 1, display : "flex", flexDirection : "row", alignItems : 'center', justifyContent : 'space-between'}}>
+                    <a  onClick={(e)=> displayNavButton ? handleNavClick("/models/" + model.pk, history) : void(0)}
+                        style={{flex : 1, display : "flex", flexDirection : "row",
+                            alignItems : 'center', justifyContent : 'space-between',
+                            cursor : displayNavButton ? "pointer" : "default"}}>
                         {ModelDisplay(
                             ["Model Number", "Vendor", "Calibration Frequency", "Load Bank Wizard Supported?"],
                             [
@@ -28,7 +30,7 @@ export default function ModelSection(model, subheading, history=undefined, displ
                                 model[ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY],
                                 model[ModelFields.EquipmentModelFields.CALIBRATION_MODE] == ModelFields.CalibrationModes.LOAD_BANK ? "Yes" : "No"
                             ])}
-                    </div>
+                    </a>
                     <h1 style={{marginTop : 20}}
                         className={"h5-responsive"}>
                         Categories:

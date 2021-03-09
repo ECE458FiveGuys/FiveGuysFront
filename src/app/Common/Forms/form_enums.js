@@ -13,7 +13,7 @@ export class FormEnums {
         OPTIONAL_MULTIPLE : "Choose Multiple (optional)",
         COMMENT : "Share your thoughts (optional)",
         REQUIRED : 'Required',
-        ASSET_TAG : "Required (6 Digit Integer)"
+        ASSET_TAG : "Optional (6 Digit Integer)"
     }
 
     // Models:

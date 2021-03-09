@@ -45,7 +45,7 @@ export default class CalibrationSection extends React.Component {
                                 {FileUtils.getFileNameFromPath(calibrationCopy[ModelFields.CalibrationFields.AdditionalFile])}
                             </text>
                         </div>
-                    </a> : calibrationCopy[ModelFields.CalibrationFields.LoadBankFile] ? "Calibrated using the load bank wizard" : false
+                    </a> : calibrationCopy[ModelFields.CalibrationFields.LoadBankFile] ? "Calibrated using the load bank wizard (download certificate to view)" : false
             )
             return calibrationCopy
         })

@@ -20,9 +20,11 @@ export default class UpdateInventory extends React.Component {
     }
 
     makeRefreshState () {
-        let {mode, subject} = this.props
+        let {mode, subject, refreshFields, existingFields} = this.props
+        let refreshedFields = refreshFields(mode, subject)
+        if (existingFields) Object.assign(refreshedFields, existingFields)
         return {
-            fields: this.props.refreshFields(mode, subject),
+            fields: refreshedFields,
             generalError: undefined,
             fieldErrors : {},
             createdSubject: undefined
@@ -158,7 +160,7 @@ export default class UpdateInventory extends React.Component {
     render() {
         let {editModalShow, successModalShow, all_model_categories, all_instrument_categories, vendors, modelNumbers,
             generalError, fieldErrors, createdSubject} = this.state
-        let {token, subject, mode, history} = this.props
+        let {token, subject, mode, history, existingFields} = this.props
         return(
             <div>
                 <HTPButton variant="green"
@@ -182,6 +184,7 @@ export default class UpdateInventory extends React.Component {
                     modelNumbers={modelNumbers}
                     generalError={generalError}
                     fieldErrors={fieldErrors}
+                    fixedFields={existingFields}
                 />
                 <HTPPopup toggleModal={this.toggleSuccessModal}
                           message={`The ${this.getInventoryTypeName()} was ${mode == UpdateInventory.EDIT_MODE ? "edited" : "created"} successfully`}
@@ -208,5 +211,10 @@ UpdateInventory.propTypes = {
     retrieveFunction : PropTypes.func.isRequired,
     refreshFields : PropTypes.func.isRequired,
     validateFields : PropTypes.func.isRequired,
-    inventoryType : PropTypes.string.isRequired
+    inventoryType : PropTypes.string.isRequired,
+    existingFields : PropTypes.object
+}
+
+UpdateInventory.defaultProps = {
+    existingFields : {}
 }

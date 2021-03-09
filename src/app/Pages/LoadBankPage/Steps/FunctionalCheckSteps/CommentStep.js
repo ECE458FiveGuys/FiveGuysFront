@@ -2,6 +2,7 @@ import React from "react";
 import {Checkbox, StepContent} from "@material-ui/core";
 import PropTypes from "prop-types";
 import HTPInput from "../../../../Common/Inputs/HTPInput";
+import HTPMultiLineInput from "../../../../Common/Inputs/HTPMultiLineInput";
 
 export default class CommentStep extends React.Component {
 
@@ -17,7 +18,8 @@ export default class CommentStep extends React.Component {
         successCallBack()
     }
 
-    onChange = (value) => {
+    onChange = (event) => {
+        let value = event.target.value
         let {ready, error} = this.state
         this.props.updateStepperState({comment : value},
             () => {if (value.length > 2000 && ready) {
@@ -30,8 +32,7 @@ export default class CommentStep extends React.Component {
 
     render() {
         return (<div style={{flex: 1, display: "flex", flexDirection: "column", alignItems: "center", marginBottom : 30}}>
-            <HTPInput onChange={this.onChange}
-                      invalid={this.state.error}
+            <HTPMultiLineInput onChange={this.onChange}
                       label={"Any last comments?"}
                       placeholder={"Your thoughts"}/>
             {this.state.error? <text className={"text-danger"}>{"Comment must be under 2000 characters"}</text> : <div/>}
