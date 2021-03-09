@@ -151,7 +151,6 @@ class UserSettingsPage extends Component{
                                     type="password"
                                     name="old_pass"
                                     ref={el => this.currPwdRef = el}
-                                    // value={this.state.input.old_pass}
                                     onChange={this.handleInputChange}
                                     className="form-control"
                                     placeholder="Enter old password"
@@ -165,7 +164,6 @@ class UserSettingsPage extends Component{
                                     type="password"
                                     name="password"
                                     ref={el => this.newPwdRef = el}
-                                    // value={this.state.input.password}
                                     onChange={this.handleInputChange}
                                     className="form-control"
                                     placeholder="Enter new password"
@@ -178,7 +176,6 @@ class UserSettingsPage extends Component{
                                     ref={el => this.confPwdRef = el}
                                     type="password"
                                     name="confirm_password"
-                                    // value={this.state.input.confirm_password}
                                     onChange={this.handleInputChange}
                                     className="form-control"
                                     placeholder="Confirm new password"
