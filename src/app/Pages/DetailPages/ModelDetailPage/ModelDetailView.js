@@ -118,15 +118,17 @@ export default class ModelDetailView extends Component {
 }
 
 const MODEL_INSTRUMENT_TABLE_COLUMNS =
-    [{
-        label: 'Serial Number',
-        field: ModelFields.InstrumentFields.SERIAL_NUMBER,
-        sort: 'asc',
-        width: 100
-    },
+    [
         {
             label: 'Asset Tag Number',
             field: ModelFields.InstrumentFields.ASSET_TAG,
             sort: 'int',
             width: 100
-        }]
+        },
+        {
+            label: 'Serial Number',
+            field: ModelFields.InstrumentFields.SERIAL_NUMBER,
+            sort: 'asc',
+            width: 100
+        },
+    ]

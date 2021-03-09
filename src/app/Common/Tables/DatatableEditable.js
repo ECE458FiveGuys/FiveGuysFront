@@ -4,7 +4,7 @@ import DataTable from "./DataTable";
 import Checkbox from "./TableWidgets/Checkbox";
 import HTPInput from "../Inputs/HTPInput";
 import HTPButton from "../HTPButton";
-import {MDBBtn, MDBCol, MDBModal, MDBModalBody, MDBModalFooter, MDBModalHeader} from "mdbreact";
+import {MDBBtn, MDBCol, MDBContainer, MDBModal, MDBModalBody, MDBModalFooter, MDBModalHeader} from "mdbreact";
 import {ModalBody} from "react-bootstrap";
 import HTPPopup from "../HTPPopup";
 
@@ -211,20 +211,26 @@ export default class DatatableEditable extends Component {
     render() {
         let {columns, rows, selectedRow, EditableFields, successMessage, warningMessage, warningFunction, errorMessage} = this.state
         return(<div style={{marginTop : 30}}>
-                    <div style={{flexDirection : 'row', display: "flex", alignItems : "center"}}>
-                        {EditableFields}
-                        <HTPButton onSubmit={this.onSubmit}
-                                   disabled={selectedRow ? this.unChanged() : false}
-                                   label={selectedRow ? "Edit" : "Create"}/>
-                        {selectedRow ? <HTPButton onSubmit={this.onDelete}
-                                                  color={"red"}
-                                                  label="Delete"/> : <div/>}
-                        <HTPPopup isOpen={this.state.modal}
-                                  toggleModal={this.toggleModal}
-                                  className={successMessage ? "text-success" : "text-danger"}
-                                  title={successMessage ? "Success!" : warningMessage? "Warning!" : "Error!"}
-                                  message={successMessage ? successMessage : warningMessage? warningMessage : errorMessage}
-                                  additionalButtons={warningFunction? <MDBBtn color="red" onClick={warningFunction}>Proceed</MDBBtn> : <div/>}/>
+                    <div style={{marginLeft : -15}}>
+                        <header className={"h3-responsive"} style={{marginLeft : 15, marginBottom: 10}}>
+                            {`Manage Your ${this.props.tableName}`}
+                        </header>
+                        <text className={"h5-responsive text-default"} style={{marginTop : 30, marginLeft: 15}}>{selectedRow ? `Edit this entry` : "Create New Entry"}</text>
+                        <div style={{flexDirection : 'row', display: "flex", alignItems : "center", marginTop : 15}}>
+                            {EditableFields}
+                            <HTPButton onSubmit={this.onSubmit}
+                                       disabled={selectedRow ? this.unChanged() : false}
+                                       label={selectedRow ? "Submit Changes" : "Create"}/>
+                            {selectedRow ? <HTPButton onSubmit={this.onDelete}
+                                                      color={"red"}
+                                                      label="Delete"/> : <div/>}
+                            <HTPPopup isOpen={this.state.modal}
+                                      toggleModal={this.toggleModal}
+                                      className={successMessage ? "text-success" : "text-danger"}
+                                      title={successMessage ? "Success!" : warningMessage? "Warning!" : "Error!"}
+                                      message={successMessage ? successMessage : warningMessage? warningMessage : errorMessage}
+                                      additionalButtons={warningFunction? <MDBBtn color="red" onClick={warningFunction}>Proceed</MDBBtn> : <div/>}/>
+                        </div>
                     </div>
                     <DataTable columns={columns}
                                rows={rows}/>
@@ -240,5 +246,6 @@ DatatableEditable.propTypes = {
     editFunction : PropTypes.func.isRequired, // a shared library API function to be called when the edit button is selected
     createFunction : PropTypes.func.isRequired, // a shared library API function to be called when the create button is selected
     deleteFunction : PropTypes.func.isRequired, // a shared library API function to be called when the delete button is selected
-    validateDeleteFunction: PropTypes.func // optional function to confirm whether warning should be displayed on delete
+    validateDeleteFunction: PropTypes.func, // optional function to confirm whether warning should be displayed on delete
+    tableName: PropTypes.string
 }

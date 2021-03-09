@@ -127,7 +127,7 @@ export default class ActionHeader extends Component {
 
         return(
             <MDBContainer style={{marginLeft: -15, display: "inline"}}>
-                <header className={"h5-responsive"} style={{marginTop: 10, marginBottom: 10}}>
+                <header className={"h3-responsive"} style={{marginTop: 10, marginBottom: 10}}>
                     {`Search Your ${type}`}
                 </header>
                 <MDBRow>

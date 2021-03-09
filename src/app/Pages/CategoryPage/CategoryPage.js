@@ -50,6 +50,7 @@ export default class CategoryPage extends Component {
             <div style={{background: "white"}}>
                 <DatatableEditable  token={this.props.token}
                                     columns={this.props.columns}
+                                    tableName={"Categories"}
                                     rows={isModel ?
                                         this.state.model_categories : this.state.instrument_categories}
                                     editableColumns={this.props.columns}
