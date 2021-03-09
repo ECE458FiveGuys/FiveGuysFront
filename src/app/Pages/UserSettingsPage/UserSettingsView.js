@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {MDBContainer} from "mdbreact";
-import UserTablePage from "./Widgets/UserTablePage";
-import HTPNavBar from "../Common/HTPNavBar";
+import UserTablePage from "../UsersPage/UserTablePage";
+import HTPNavBar from "../../Common/HTPNavBar";
 import UserSettingsPage from "./UserSettingsPage";
 
 class UserSettingsView extends Component{

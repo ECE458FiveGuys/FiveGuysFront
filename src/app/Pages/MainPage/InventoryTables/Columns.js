@@ -124,6 +124,12 @@ export default class TableColumns {
 
     static USER_COLUMNS = [
         {
+            label: 'Username',
+            field: ModelFields.UserFields.USERNAME,
+            sort: 'asc',
+            width: 150
+        },
+        {
             label: 'Name',
             field: ModelFields.UserFields.NAME,
             sort: 'asc',
@@ -132,18 +138,6 @@ export default class TableColumns {
         {
             label: 'Email',
             field: ModelFields.UserFields.EMAIL,
-            sort: 'asc',
-            width: 50
-        },
-        {
-            label: 'ID',
-            field: ModelFields.UserFields.ID,
-            sort: 'asc',
-            width: 50
-        },
-        {
-            label: 'Active',
-            field: ModelFields.UserFields.ACTIVITY,
             sort: 'asc',
             width: 50
         },

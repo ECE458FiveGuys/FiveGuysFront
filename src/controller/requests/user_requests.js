@@ -1,6 +1,6 @@
 import RequestUtils from "./request_utils";
 import {AUTH_URLS, METHODS, URLS} from "../strings";
-import ErrorParser from "../../app/Pages/MainPage/CreateFunctions/ErrorParser";
+import ErrorParser from "../../app/Pages/CreateFunctions/ErrorParser";
 
 export default class UserRequests {
     static params;

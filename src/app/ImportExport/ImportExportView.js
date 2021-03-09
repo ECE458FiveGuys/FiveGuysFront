@@ -6,7 +6,7 @@ import {Gradient} from "react-gradient";
 import {MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn, MDBDropdown, MDBDropdownToggle, MDBDropdownMenu} from 'mdbreact';
 import CSV_Import from "./Widgets/CSV_Import";
 import HTPNavBar from "../Common/HTPNavBar";
-import UserTablePage from "../UserSettings/Widgets/UserTablePage";
+import UserTablePage from "../Pages/UsersPage/UserTablePage";
 
 
 const gradients = [

@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { MDBContainer, MDBRow, MDBCol, MDBBtn, MDBIcon} from 'mdbreact';
-import {METHODS, URLS} from "../../../../controller/strings";
-import {User} from "../../../../utils/dtos";
+import {METHODS, URLS} from "../../../controller/strings";
+import {User} from "../../../utils/dtos";
 import ErrorParser from "./ErrorParser";
-import HTPInput from "../../../Common/Inputs/HTPInput";
-import HTPAutoCompleteInput from "../../../Common/Inputs/HTPAutoCompleteInput";
-import MiscellaneousRequests from "../../../../controller/requests/miscellaneous_requests";
-import HTPButton from "../../../Common/HTPButton";
+import HTPInput from "../../Common/Inputs/HTPInput";
+import HTPAutoCompleteInput from "../../Common/Inputs/HTPAutoCompleteInput";
+import MiscellaneousRequests from "../../../controller/requests/miscellaneous_requests";
+import HTPButton from "../../Common/HTPButton";
 
 
 class CreateModel extends Component {

@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { MDBContainer, MDBRow, MDBCol, MDBBtn, MDBIcon} from 'mdbreact';
-import ModelFields from "../../../../utils/enums";
-import {User} from "../../../../utils/dtos";
-import NavBar from "../../../Common/HTPNavBar";
+import ModelFields from "../../../utils/enums";
+import {User} from "../../../utils/dtos";
+import NavBar from "../../Common/HTPNavBar";
 import ErrorParser from "./ErrorParser";
-import HTPInput from "../../../Common/Inputs/HTPInput";
-import {AUTH_URLS, URLS} from "../../../../controller/strings";
-import HTPPopup from "../../../Common/HTPPopup";
-import HTPButton from "../../../Common/HTPButton";
+import HTPInput from "../../Common/Inputs/HTPInput";
+import {AUTH_URLS, URLS} from "../../../controller/strings";
+import HTPPopup from "../../Common/HTPPopup";
+import HTPButton from "../../Common/HTPButton";
 
 
 class CreateModel extends Component {
@@ -33,7 +33,7 @@ class CreateModel extends Component {
         const { username, name, email, password } = this.state
         const requestOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization':token, 'Accept':'application/json'},
+            headers: { 'Content-Type': 'application/json', 'Authorization': token, 'Accept':'application/json'},
             body: JSON.stringify({username: username, name: name, email: email, password: password, is_active: true})
         };
 

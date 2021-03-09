@@ -1,10 +1,10 @@
 import React, {Component} from "react";
 import {MDBBtn, MDBCol, MDBContainer, MDBRow} from "mdbreact";
-import UserRequests from "../../controller/requests/user_requests";
+import UserRequests from "../../../controller/requests/user_requests";
 import {Gradient} from "react-gradient";
-import {gradients} from "../../utils/styling";
+import {gradients} from "../../../utils/styling";
 import {Divider} from "@material-ui/core";
-import HTPPopup from "../Common/HTPPopup";
+import HTPPopup from "../../Common/HTPPopup";
 
 class UserSettingsPage extends Component{
 

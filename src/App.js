@@ -13,12 +13,13 @@ import CategoryTabView from "./app/Pages/CategoryPage/CategoryTabView";
 import LoadBankMain from "./app/Pages/LoadBankPage/LoadBankMain";
 import OAuthRedirect from "./auth/OAuthRedirect";
 import ImportDocumentation from "./app/ImportExport/Widgets/ImportDocumentation";
-import UserSettingsView from "./app/UserSettings/UserSettingsView";
-import CreateModel from "./app/Pages/MainPage/CreateFunctions/CreateModel";
-import CreateInstrument from "./app/Pages/MainPage/CreateFunctions/CreateInstrument";
-import CreateUser from "./app/Pages/MainPage/CreateFunctions/CreateUser";
-import UserTablePage from "./app/UserSettings/Widgets/UserTablePage";
-import UserTester from "./app/Pages/MainPage/CreateFunctions/UserTester";
+import UserSettingsView from "./app/Pages/UserSettingsPage/UserSettingsView";
+import CreateModel from "./app/Pages/CreateFunctions/CreateModel";
+import CreateInstrument from "./app/Pages/CreateFunctions/CreateInstrument";
+import CreateUser from "./app/Pages/CreateFunctions/CreateUser";
+import UserTablePage from "./app/Pages/UsersPage/UserTablePage";
+import UserTester from "./app/Pages/CreateFunctions/UserTester";
+import UserTableView from "./app/Pages/UsersPage/UserTableView";
 
 class App extends Component {
 
@@ -112,14 +113,12 @@ class App extends Component {
                                                           user={this.state.user}
                                                           token={this.state.token}/>)}>
               </Route>
-              <Route path="/create-model/">
-                <CreateModel token={this.state.token}
-                             user={this.state.user}/>
+              <Route path="/users"
+                     render={(props) => (<UserTableView location={props.location}
+                                                           token={this.state.token}
+                                                           user={this.state.user}/>)}>
               </Route>
-              <Route path="/create-instrument/">
-                <CreateInstrument token={this.state.token}
-                                  user={this.state.user}/>
-              </Route>
+
               <Route path="/create-user/">
                 <CreateUser token={this.state.token}
                             user={this.state.user}/>
@@ -132,10 +131,6 @@ class App extends Component {
                      render={(props) => (<UserSettingsView location={props.location}
                                                           token={this.state.token}
                                                           user={this.state.user}/>)}>
-              </Route>
-              <Route path="/example-create-user/">
-                <UserTester token={this.state.token}
-                            user={this.state.user}/>
               </Route>
               <Route>
                 <NotFound/>

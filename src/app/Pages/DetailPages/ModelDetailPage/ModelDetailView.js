@@ -105,11 +105,12 @@ export default class ModelDetailView extends Component {
                                             <DataTable columns={MODEL_INSTRUMENT_TABLE_COLUMNS}
                                                        token={token}
                                                        rows={instrumentRows}/>
+                                        {user.is_staff &&
                                             <UpdateInstrument token={token}
                                                               updatePageState={this.updatePageState}
                                                               history={history}
                                                               existingFields={{model_number : model.model_number, vendor : model.vendor}}
-                                                              mode={UpdateInstrument.CREATE_MODE}/>
+                                                              mode={UpdateInstrument.CREATE_MODE}/>}
                                     </div>
                             </div>
                         </div>

@@ -88,7 +88,7 @@ export default class CalibrationSection extends React.Component {
     render() {
         let {token, instrument, user} = this.props
         let {calibrationModalShow, calibrationTableRows} = this.state
-        return(<div style={{marginLeft : 100, marginRight : 100, marginBottom : 50, textAlign : 'center', flex : 1.2}}>
+        return(<div style={{marginLeft : 50, marginRight : 50, marginBottom : 50, textAlign : 'center', flex : 1.8}}>
                             <h1 style={{alignSelf : 'center', justifySelf : 'center', textAlign : "center"}}
                                 className={"h2-responsive"}>
                                 Calibration
@@ -106,6 +106,7 @@ export default class CalibrationSection extends React.Component {
                         user={user}
                     />
                     <DataTable columns={TableColumns.CALIBRATION_COLUMNS}
+                               searching={false}
                                rows={calibrationTableRows}/>
                     <div>
                         {this.renderRecordCalibrationButtons()}

@@ -72,7 +72,7 @@ export default class InstrumentDetailView extends Component {
                                 <div style={{flex : 1, display : "flex", flexDirection : "column"}}>
                                     {InstrumentSection(instrument)}
                                     {user.is_staff &&
-                                    <div style={{marginTop : 40, marginBottom : 40}}>
+                                    <div style={{marginTop : 40}}>
                                         <ActionSection token={token}
                                                        hasText={false}
                                                        hasLogo={false}
@@ -83,17 +83,17 @@ export default class InstrumentDetailView extends Component {
                                                        deleteFunction={InstrumentRequests.deleteInstruments}/>
                                     </div>}
                                     <div style={{display : 'flex', flexDirection : "column", justifyContent : "center", alignItems : 'center'}}>
-                                        <text className={"h5-responsive"} style={{marginBottom : 20}}>
+                                        <text className={"h4-responsive"} style={{marginBottom : 20, marginTop : 50}}>
                                             Visit the model for this instance:
                                         </text>
                                         <HTPButton
-                                            onSubmit={() => handleNavClick("models/" + instrument.model.pk, history)}
+                                            onSubmit={() => handleNavClick("/models/" + instrument.model.pk , history)}
                                             color={"blue"}
                                             label={"Go to Model"}
                                             className={"form-control"}/>
                                     </div>
                                 </div>
-                                <Divider style={{marginRight: DIVIDER_MARGINS, marginLeft: DIVIDER_MARGINS, height : 300, marginTop : 100}}
+                                <Divider style={{marginRight: DIVIDER_MARGINS, marginLeft: DIVIDER_MARGINS, height : 400, marginTop : 100}}
                                          orientation={"vertical"}
                                          flexItem={true}/>
                                 {instrumentCalibratable(instrument) &&

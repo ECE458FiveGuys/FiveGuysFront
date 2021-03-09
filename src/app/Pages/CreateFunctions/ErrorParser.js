@@ -1,4 +1,4 @@
-import ModelFields from "../../../../utils/enums";
+import ModelFields from "../../../utils/enums";
 
 export default class ErrorParser {
 
