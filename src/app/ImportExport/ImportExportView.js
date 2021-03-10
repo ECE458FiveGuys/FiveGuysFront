@@ -40,7 +40,7 @@ render(){
                                   <a onClick={() => history.push("documentation/")}>
                                         <MDBIcon icon={"question-circle"}
                                                  style={{color : 'teal', marginTop : 15, marginBottom : 15}}
-                                                 size={'3x'}/>
+                                                 size={'2x'}/>
                                   </a>
                             <Step stepNumber={2}
                                   stepText={"Now, select your file:"}/>
