@@ -4,16 +4,12 @@ import UserRequests from "../../../controller/requests/user_requests";
 import TableColumns from "../MainPage/InventoryTables/Columns";
 import DataTable from "../../Common/Tables/DataTable";
 import HTPButton from "../../Common/HTPButton";
-import HTPPopup from "../../Common/HTPPopup";
-import {Divider} from "@material-ui/core";
 import CreateUserPopup from "./UserFunctions/CreateUserPopup";
 
 const ADMIN_NAME = 'Admin'
 
 class UserTablePage extends Component{
 
-
-    //ToDo: Make sure admin can't be deleted/edited
     constructor(props) {
         super(props);
         this.state = {
@@ -55,10 +51,13 @@ class UserTablePage extends Component{
     }
 
     userParse = (results) => {
+        let idToStaff = {}
         results.forEach(result => {
+            idToStaff[result['id']] = result['is_staff']
             result['is_staff'] = result['name'] === ADMIN_NAME ? <div style={{textAlign : 'center'}}>Permanent Admin</div>
-                                        : this.renderOptions(result)
+                                        : this.renderOptions(result, idToStaff)
         })
+        this.setState({idToStaff : idToStaff})
         return results
     }
 
