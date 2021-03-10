@@ -54,7 +54,7 @@ export default class InstrumentDetailView extends Component {
                                location={location}/>
                     <div style={{height : "100%"}}>
                         <div style={{textAlign : 'center'}}>
-                            <h1 style={{marginTop: 30, marginBottom: 40}}
+                            <h1 style={{marginTop: 30, marginBottom: 25}}
                                 className={"h1-responsive"}>
                                 Instrument Details
                             </h1>
@@ -72,7 +72,7 @@ export default class InstrumentDetailView extends Component {
                                 <div style={{flex : 1, display : "flex", flexDirection : "column"}}>
                                     {InstrumentSection(instrument)}
                                     {user.is_staff &&
-                                    <div style={{marginTop : 40}}>
+                                    <div style={{marginTop : 30}}>
                                         <ActionSection token={token}
                                                        hasText={false}
                                                        hasLogo={false}
@@ -83,7 +83,7 @@ export default class InstrumentDetailView extends Component {
                                                        deleteFunction={InstrumentRequests.deleteInstruments}/>
                                     </div>}
                                     <div style={{display : 'flex', flexDirection : "column", justifyContent : "center", alignItems : 'center'}}>
-                                        <text className={"h4-responsive"} style={{marginBottom : 20, marginTop : 50}}>
+                                        <text className={"h4-responsive"} style={{marginBottom : 20, marginTop : 30}}>
                                             Visit the model for this instance:
                                         </text>
                                         <HTPButton

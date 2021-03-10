@@ -13,19 +13,18 @@ class RecordCalibration extends Component {
         super(props);
         const today = new Date()
         this.state = {
-            date: this.parseDate(today),
-            fields : {}
+            fields : {date : this.parseDate(today)}
         }
     }
 
     validateSubmit = () => {
         let {date, comment, file} = this.state.fields
-        let extension = file.name.split(".").pop()
+        let extension = file ? file.name.split(".").pop() : undefined
         if (comment && comment.length > 2000) {
             throw new UserError("Comment cannot be greater than 2000 characters")
-        } else if (file.size > 32000000) {
+        } else if (file && file.size > 32000000) {
             throw new UserError("File cannot be more than 32MB")
-        } else if (!ALLOWED_EXTENSIONS.includes(extension)) {
+        } else if (extension && !ALLOWED_EXTENSIONS.includes(extension)) {
             throw new UserError("Extensions must be 'jpg', 'jpeg', 'png', 'gif', 'pdf', or 'xlsx'")
         }
     }
