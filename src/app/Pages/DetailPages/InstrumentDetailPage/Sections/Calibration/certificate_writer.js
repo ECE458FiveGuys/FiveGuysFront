@@ -67,13 +67,6 @@ function writeAdditionalEvidence (certificate, additionalEvidence) {
     })
 }
 
-var getImageFromUrl = function(url, callback) {
-    var img = new Image();
-    img.onError = function() {alert('Cannot load image: "'+url+'"')}
-    img.onload = function() {callback(img)}
-    img.src = url;
-}
-
 export function writeLoadBankSection (certificate, loadBankData) {
     certificate.autoTable(
             {
