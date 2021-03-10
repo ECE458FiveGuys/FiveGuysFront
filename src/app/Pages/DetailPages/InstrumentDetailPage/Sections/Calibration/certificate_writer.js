@@ -4,7 +4,7 @@ import {EquipmentModel, Instrument} from "../../../../../../utils/ModelEnums";
 import Logo from "../../../../../../assets/hpt_logo.png"
 import {IdealCurrents} from "../../../../LoadBankPage/Steps/LoadBankStepSteps/step_utils";
 import FileUtils from "../../../../../../utils/file_utils";
-import XLSX from "xlsx";
+// import XLSX from "xlsx";
 
 const LOGO_ASPECT_RATIO = 1.26
 const IMAGE_HEIGHT = 80

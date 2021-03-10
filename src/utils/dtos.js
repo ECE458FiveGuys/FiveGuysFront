@@ -16,11 +16,11 @@ export class User {
                         obj[ModelFields.UserFields.NAME],
                         obj[ModelFields.UserFields.EMAIL],
                         obj[ModelFields.UserFields.ACTIVITY],
-                obj[ModelFields.UserFields.IS_STAFF])
+                        obj[ModelFields.UserFields.IS_STAFF])
     }
 
     isNetIdUser() {
-        return this.email.endsWith("@duke.edu")
+        return this.username.endsWith("@duke.edu")
     }
 
     getFirstName() {

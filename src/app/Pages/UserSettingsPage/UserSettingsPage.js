@@ -124,13 +124,14 @@ class UserSettingsPage extends Component{
                 gradients={ gradients } // required
                 property="background"
                 duration={ 3000 }
+                style={{marginBottom : 100}}
                 angle="45deg"
             >
-            <MDBContainer fluid>
-                <MDBRow style={{display : 'flex', flex : 1, justifyContent: 'center', textAlign : 'center', alignItems: 'center', marginTop: 100}}>
+                <div style={{display : 'flex', flex : 1, justifyContent: 'center', textAlign : 'center', alignItems: 'center', marginBottom: -200}}>
                     <div>
                         <form onSubmit={this.handleSubmit}>
-                            <h2 className={"h1-responsive"}>
+                            <h2 style={{marginTop: 100}}
+                                className={"h1-responsive"}>
                                 Your Settings
                             </h2>
                             <h2 className={"h4-responsive"}>
@@ -195,8 +196,7 @@ class UserSettingsPage extends Component{
                                       message={successMessage ? successMessage : errorMessage}/>
                         </form>
                     </div>
-                </MDBRow>
-            </MDBContainer>
+                </div>
             </Gradient>
         )
     }

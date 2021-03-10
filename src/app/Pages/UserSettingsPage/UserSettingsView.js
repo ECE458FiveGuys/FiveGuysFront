@@ -11,11 +11,13 @@ class UserSettingsView extends Component{
     render() {
         return(
             <div>
-                <HTPNavBar
-                    navbarColor={"black"}
-                    user={this.props.user}
-                    location={this.props.location}
-                />
+                <div style={{position : 'absolute', zIndex : 1, width : '100%'}}>
+                    <HTPNavBar
+                        navbarColor={"black"}
+                        user={this.props.user}
+                        location={this.props.location}
+                    />
+                </div>
                 <UserSettingsPage
                     user={this.props.user}
                     token={this.props.token}
