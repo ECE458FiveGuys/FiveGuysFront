@@ -52,24 +52,20 @@ export default class InstrumentDetailView extends Component {
                 <div style={{height : "100%"}}>
                     <HTPNavBar user={user}
                                location={location}/>
-                    <div style={{height : "100%"}}>
+                    <div style={{flex: 1,
+                                display: "flex",
+                                flexDirection: "column",
+                                justifyContent: 'center',
+                                marginLeft: 100,
+                                marginRight: 100}}>
                         <div style={{textAlign : 'center'}}>
-                            <h1 style={{marginTop: 30, marginBottom: 25}}
+                            <h1 style={{marginTop: 30, marginBottom: 30}}
                                 className={"h1-responsive"}>
                                 Instrument Details
                             </h1>
                         </div>
-                        <div style={{
-                            flex: 1,
-                            display: "flex",
-                            flexDirection: "column",
-                            justifyContent: 'center',
-                            marginLeft: 100,
-                            marginRight: 100,
-                            marginBottom : 50
-                        }}>
                             <div style={{flex: 1, display: "flex", flexDirection: "row", justifyContent: 'space-between'}}>
-                                <div style={{flex : 1, display : "flex", flexDirection : "column"}}>
+                                <div style={{flex : 1, display : "flex", flexDirection : "column", justifyContent : 'flex-start'}}>
                                     {InstrumentSection(instrument)}
                                     {user.is_staff &&
                                     <div style={{marginTop : 30}}>
@@ -93,9 +89,10 @@ export default class InstrumentDetailView extends Component {
                                             className={"form-control"}/>
                                     </div>
                                 </div>
+                                {instrumentCalibratable(instrument) &&
                                 <Divider style={{marginRight: DIVIDER_MARGINS, marginLeft: DIVIDER_MARGINS, height : 400, marginTop : 100}}
                                          orientation={"vertical"}
-                                         flexItem={true}/>
+                                         flexItem={true}/>}
                                 {instrumentCalibratable(instrument) &&
                                 <CalibrationSection token={token}
                                                     user={user}
@@ -105,7 +102,6 @@ export default class InstrumentDetailView extends Component {
                                 />}
                             </div>
                         </div>
-                    </div>
                 </div>
             )
         } else {

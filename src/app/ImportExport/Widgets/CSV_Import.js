@@ -114,13 +114,13 @@ class CSV_Import extends Component{
         const {results, type} = this.state;
         return(
             <div style={{flex : 1, justifyContent : 'center', alignItems : 'center', display : 'flex', flexDirection : 'column'}}>
-                    <div style={{marginTop : 30, marginBottom : 30, width : 350}}>
+                    <div style={{marginTop : 20, marginBottom : 35, width : 350}}>
                         <HTPFileInput handleFileSelect={this.fileSelected}
                                       id={"input-file-now"}/>
                         <text className={"text-danger"} style={{marginTop : 20}}>{this.state.fileError}</text>
                     </div>
                     <Step stepText={"Finally, run your choice of import."} stepNumber={3}/>
-                    <div style={{marginTop : 30, marginBottom : 30, flexDirection : 'row', display : "flex"}}>
+                    <div style={{marginTop : 30, marginBottom : 40, flexDirection : 'row', display : "flex"}}>
                         <HTPButton
                                 disabled={!this.state.fileSelected || this.state.fileError}
                                 onSubmit={this.importTypeSelected(ModelFields.ModelTypes.EQUIPMENT_MODEL)}

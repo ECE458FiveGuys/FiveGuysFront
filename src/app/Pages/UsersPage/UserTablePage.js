@@ -80,7 +80,7 @@ class UserTablePage extends Component{
     render() {
         let {user, token} = this.props
         let {userList} = this.state
-            return(<div style={{marginTop : 30, marginLeft : 100, marginRight : 100}}>
+            return(<div style={{marginTop : 20, marginLeft : 100, marginRight : 100}}>
                     <div style={{display : "flex", flexDirection : "row", justifyContent : "space-between", alignItems : 'center'}}>
                         <div style={{marginLeft : -15}}>
                             <header className={"h2-responsive"} style={{marginLeft : 15, marginBottom: 10}}>
@@ -92,7 +92,7 @@ class UserTablePage extends Component{
                                                 updatePage = {this.getUserList}
                                                 token={token}/>}
                     </div>
-                        <div style={{marginTop : 20}}>
+                        <div style={{marginTop : 10}}>
                             <DataTable
                                 disableRetreatAfterSorting
                                 token={token}

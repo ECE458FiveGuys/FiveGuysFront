@@ -27,19 +27,19 @@ render(){
                     user={user}
                     location={location}
                 />
-                <div style={{flex : 1, display : "flex", flexDirection : 'column', justifyContent : 'center', alignItems :'center', textAlign: 'center', marginTop : 30}}>
+                <div style={{flex : 1, display : "flex", flexDirection : 'column', justifyContent : 'center', alignItems :'center', textAlign: 'center', marginTop : 25}}>
                     <h1 className={"h1-responsive"}>
                         {"Manage Imports"}
                     </h1>
                             <Divider horizontal={true} style={{width : 300, marginTop : 20, marginBottom : 20}}/>
-                            <h1 style={{marginTop : 10, marginBottom : 30}} className={"h3-responsive"}>
+                            <h1 style={{marginTop : 10, marginBottom : 25}} className={"h3-responsive"}>
                                 {`Hey, ${this.props.user.getFirstName()}.`}
                             </h1>
                             <Step stepNumber={1}
                                   stepText={"First, check out this guide on import format:"}/>
                                   <a onClick={() => history.push("documentation/")}>
                                         <MDBIcon icon={"question-circle"}
-                                                 style={{color : 'teal', marginTop : 20, marginBottom : 20}}
+                                                 style={{color : 'teal', marginTop : 15, marginBottom : 15}}
                                                  size={'3x'}/>
                                   </a>
                             <Step stepNumber={2}

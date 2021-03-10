@@ -60,7 +60,7 @@ class NavbarPage extends Component {
                             </MDBNavItem>
                             {Buttons}
                         </MDBNavbarNav>
-                        <text className={"white-text"} style={{position: "absolute", left: this.state.width / 2}}>
+                        <text className={"white-text"} style={{position: "absolute", left: (window.innerWidth - 140) / 2}}>
                             {`Welcome, ${user.getFirstName()}`}
                         </text>
                         <MDBNavbarNav right>

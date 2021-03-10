@@ -73,7 +73,7 @@ class InventoryTable extends Component {
         return (
             <div>
                 <div style={{display: 'flex', flexDirection : "row"}}>
-                    <div style={{display: 'flex', flexDirection : "column", flex : 1, marginTop : 10, marginBottom : 20}}>
+                    <div style={{display: 'flex', flexDirection : "column", flex : 1, marginTop : 10, marginBottom : 10}}>
                         <SearchHeader searchFields={searchFields}
                                       updateSearchFieldValues={this.updateSearchFieldValues}
                                       token={token}

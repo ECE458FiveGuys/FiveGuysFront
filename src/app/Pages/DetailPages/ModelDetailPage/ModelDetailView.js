@@ -72,10 +72,8 @@ export default class ModelDetailView extends Component {
                                     display: "flex",
                                     flexDirection: "column",
                                     justifyContent: 'center',
-                                    // alignItems: 'center',
                                     marginLeft: 100,
                                     marginRight: 100,
-                            marginBottom : 50
                                 }}>
                             <div style={{flex: 1, display: "flex", flexDirection: "row", justifyContent: 'space-between'}}>
                                 <div style={{flex : 1, display : "flex", flexDirection : "column"}}>
@@ -95,7 +93,7 @@ export default class ModelDetailView extends Component {
                                 <Divider style={{marginRight: DIVIDER_MARGINS, marginLeft: DIVIDER_MARGINS, height : 300, marginTop : 100}}
                                          orientation={"vertical"}
                                          flexItem={true}/>
-                                    <div style={{marginLeft : 100, marginRight : 100, marginBottom : 50, textAlign : 'center', flex : 1.2}}>
+                                    <div style={{marginLeft : 100, marginRight : 100, textAlign : 'center', flex : 1.2}}>
                                         <h1 className={"h2-responsive"}>
                                             Instances
                                         </h1>

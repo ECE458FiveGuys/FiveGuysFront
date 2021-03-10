@@ -9,9 +9,9 @@ export default class Step extends React.Component{
 
     render() {
         let {stepNumber, stepText} = this.props
-        return <div style={{display : 'flex', flexDirection : 'row', flex : 1, justifyContent : 'center', alignItems : 'center'}}>
-                    <div style={{display : "flex", width : 35, height : 35, marginRight : 20, borderRadius : "50%", background : "green", justifyContent : 'center', alignItems: 'center'}}>
-                        <b style={{color : "white", fontSize : 20}}>{stepNumber}</b>
+        return <div style={{display : 'flex', flexDirection : 'row', justifyContent : 'center', alignItems : 'center'}}>
+                    <div style={{display : "flex", width : 35, height : 35, marginRight : 15, borderRadius : "50%", background : "green", justifyContent : 'center', alignItems: 'center'}}>
+                        <b style={{color : "white", fontSize : 22}}>{stepNumber}</b>
                     </div>
                     <h1 className={"h5-responsive"}>
                         {stepText}

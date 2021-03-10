@@ -7,7 +7,7 @@ import React from "react";
 import {handleNavClick} from "../../../utils";
 
 export default function ModelSection(model, subheading, history=undefined, displayNavButton=false) {
-    return(<div style={{flex : 1, display : "flex", flexDirection : "column", justifyContent : 'center', alignItems : 'center', textAlign : 'center'}}>
+    return(<div style={{display : "flex", flexDirection : "column", justifyContent : 'center', alignItems : 'center', textAlign : 'center'}}>
                     <h1 style={{marginRight : 20}}
                             className={"h2-responsive"}>
                             {"Model Info"}

@@ -88,12 +88,12 @@ export default class CalibrationSection extends React.Component {
     render() {
         let {token, instrument, user} = this.props
         let {calibrationModalShow, calibrationTableRows} = this.state
-        return(<div style={{marginLeft : 50, marginRight : 50, marginBottom : 50, textAlign : 'center', flex : 1.8}}>
+        return(<div style={{marginLeft : 50, marginRight : 50, textAlign : 'center', flex : 1.8}}>
                             <h1 style={{alignSelf : 'center', justifySelf : 'center', textAlign : "center"}}
                                 className={"h2-responsive"}>
                                 Calibration
                             </h1>
-                            <h1 style={{alignSelf : 'center', justifySelf : 'center', textAlign : "center"}}
+                            <h1 style={{alignSelf : 'center', justifySelf : 'center', textAlign : "center", marginBottom : -35}}
                                 className={"h5-responsive"}>
                                 Calibrate your instrument here
                             </h1>

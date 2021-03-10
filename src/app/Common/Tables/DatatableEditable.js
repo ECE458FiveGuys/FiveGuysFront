@@ -210,7 +210,7 @@ export default class DatatableEditable extends Component {
 
     render() {
         let {columns, rows, selectedRow, EditableFields, successMessage, warningMessage, warningFunction, errorMessage} = this.state
-        return(<div style={{marginTop : 30}}>
+        return(<div style={{marginTop : 20}}>
                     <div style={{marginLeft : -15}}>
                         <header className={"h3-responsive"} style={{marginLeft : 15, marginBottom: 10}}>
                             {`Manage Your ${this.props.tableName}`}
