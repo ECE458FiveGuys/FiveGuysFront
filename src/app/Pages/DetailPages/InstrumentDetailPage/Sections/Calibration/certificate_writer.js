@@ -108,13 +108,14 @@ function writeAdditionalEvidence (certificate, additionalEvidence, instrument, t
     //             saveCertificate(certificate, instrument)
     //     })
     //     }
-    //     srcToFile(additionalEvidence, name, `image/${extension}`, callBack, token)
+    //     srcToFile(additionalEvidence, name, `image/${extension}`, callBack)
     // }
     else {
         certificate.autoTable({
             head: [['AdditionalEvidence']],
             body: [[additionalEvidence]]
         })
+        saveCertificate(certificate, instrument)
     }
 }
 
