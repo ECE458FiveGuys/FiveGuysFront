@@ -6,6 +6,7 @@ import {Instrument} from "../../../../../../utils/ModelEnums";
 import {handleFieldValueChange} from "../../../../../Common/Inputs/input_utils";
 import {UserError} from "../../../../../../controller/exceptions";
 
+const ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'pdf', 'xlsx']
 
 class RecordCalibration extends Component {
     constructor(props) {
@@ -20,13 +21,12 @@ class RecordCalibration extends Component {
     validateSubmit = () => {
         let {date, comment, file} = this.state.fields
         let extension = file.name.split(".").pop()
-        let allowedExtensions = ['jpg', 'png', 'gif', 'pdf', 'xlsx']
         if (comment && comment.length > 2000) {
             throw new UserError("Comment cannot be greater than 2000 characters")
         } else if (file.size > 32000000) {
             throw new UserError("File cannot be more than 32MB")
-        } else if (!allowedExtensions.includes(extension)) {
-            throw new UserError("Extensions must be 'jpg', 'png', 'gif', 'pdf', or 'xlsx'")
+        } else if (!ALLOWED_EXTENSIONS.includes(extension)) {
+            throw new UserError("Extensions must be 'jpg', 'jpeg', 'png', 'gif', 'pdf', or 'xlsx'")
         }
     }
 

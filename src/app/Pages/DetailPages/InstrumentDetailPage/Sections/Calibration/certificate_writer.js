@@ -8,10 +8,12 @@ const LOGO_ASPECT_RATIO = 1.26
 const IMAGE_HEIGHT = 80
 const DIVIDER_WIDTH = IMAGE_HEIGHT * LOGO_ASPECT_RATIO
 
+const INLINE_SUPPORT_EXTENSIONS = ["jpeg", "jpg", "gif", "png"]
+
 export function createCertificate (instrument, user, calibrationEvent) {
     let certificate = new jsPDF()
     const pageWidth = certificate.internal.pageSize.getWidth();
-    addImage(certificate, pageWidth)
+    addImage(certificate, Image)
     certificate.line((pageWidth - DIVIDER_WIDTH) / 2, IMAGE_HEIGHT, (pageWidth + DIVIDER_WIDTH) / 2, IMAGE_HEIGHT)
     writeInstrumentDetails(certificate, user, instrument, calibrationEvent, pageWidth)
     let additionalEvidence = calibrationEvent[ModelFields.CalibrationFields.AdditionalFile]
@@ -20,10 +22,11 @@ export function createCertificate (instrument, user, calibrationEvent) {
     certificate.save(`calibration_certificate_inst_${instrument[Instrument.FIELDS.ASSET_TAG]}.pdf`)
 }
 
-export function addImage(certificate, pageWidth) {
+export function addImage(certificate, image, marginTop=0) {
+    const pageWidth = certificate.internal.pageSize.getWidth();
     let imageHeight = IMAGE_HEIGHT
     let imageWidth = IMAGE_HEIGHT * LOGO_ASPECT_RATIO
-    certificate.addImage(Image, 'png', (pageWidth - imageWidth) / 2, 0, imageWidth, imageHeight)
+    certificate.addImage(image, 'png', (pageWidth - imageWidth) / 2, marginTop, imageWidth, imageHeight)
 }
 
 function writeInstrumentDetails (pdf, user, instrument, calibrationEvent, pageWidth) {
@@ -41,15 +44,34 @@ function writeInstrumentDetails (pdf, user, instrument, calibrationEvent, pageWi
                 ['Asset Number', instrument[ModelFields.InstrumentFields.ASSET_TAG]],
                 ['Most Recent Calibration', calibrationEvent[ModelFields.CalibrationFields.Date]],
                 ['Calibration Expiration Date', instrument[Instrument.FIELDS.EXPIRATION_DATE]],
-                ['Engineer', user.getFirstName()]]
+                ['Engineer', user.name]]
     })
 }
 
 function writeAdditionalEvidence (certificate, additionalEvidence) {
+    // const extension = additionalEvidence.split(".").pop()
+    // if (INLINE_SUPPORT_EXTENSIONS.includes(extension)) {
+    //     const pageWidth = certificate.internal.pageSize.getWidth();
+    //     certificate.text('ADDITIONAL EVIDENCE:', pageWidth / 2, 190, 'center');
+    //     addImage(certificate, additionalEvidence)
+    // }
+    // else {
+    //     certificate.autoTable({
+    //         head: [['AdditionalEvidence']],
+    //         body: [[additionalEvidence]]
+    //     })
+    // }
     certificate.autoTable({
         head: [['AdditionalEvidence']],
         body: [[additionalEvidence]]
     })
+}
+
+var getImageFromUrl = function(url, callback) {
+    var img = new Image();
+    img.onError = function() {alert('Cannot load image: "'+url+'"')}
+    img.onload = function() {callback(img)}
+    img.src = url;
 }
 
 export function writeLoadBankSection (certificate, loadBankData) {
