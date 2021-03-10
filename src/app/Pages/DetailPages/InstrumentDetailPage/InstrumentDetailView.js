@@ -59,7 +59,7 @@ export default class InstrumentDetailView extends Component {
                                 marginLeft: 100,
                                 marginRight: 100}}>
                         <div style={{textAlign : 'center'}}>
-                            <h1 style={{marginTop: 30, marginBottom: 30}}
+                            <h1 style={{marginTop: 25, marginBottom: 20}}
                                 className={"h1-responsive"}>
                                 Instrument Details
                             </h1>

@@ -1,10 +1,10 @@
 import {Component} from "react";
-import TableColumns from "./Columns";
+import TableColumns from "../../../Common/Tables/TableUtils/Columns";
 import InventoryTable from "./InventoryTable";
 import ModelFields from "../../../../utils/enums";
 import ModelRequests from "../../../../controller/requests/model_requests";
 import {handleNavClick} from "../../../utils";
-import TableUtils from "./TableUtils";
+import TableUtils from "../../../Common/Tables/TableUtils/table_utils";
 
 export default class ModelTable extends Component {
 

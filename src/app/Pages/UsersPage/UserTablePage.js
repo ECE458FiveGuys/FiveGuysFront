@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {MDBBtn, MDBCol, MDBContainer, MDBRow} from "mdbreact";
 import UserRequests from "../../../controller/requests/user_requests";
-import TableColumns from "../MainPage/InventoryTables/Columns";
+import TableColumns from "../../Common/Tables/TableUtils/Columns";
 import DataTable from "../../Common/Tables/DataTable";
 import HTPButton from "../../Common/HTPButton";
 import CreateUserPopup from "./UserFunctions/CreateUserPopup";

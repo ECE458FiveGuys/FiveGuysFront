@@ -126,9 +126,12 @@ export default class UpdateInventory extends React.Component {
 
         let callBack = (response) => {
             this.toggleSuccessModal()
-            retrieveFunction(token, response.pk, (json) => {
-                mode == UpdateInventory.EDIT_MODE ? updatePageState({[this.getInventoryTypeName()]: json}) : this.setState({createdSubject : json})
-            })
+            retrieveFunction(token, response.pk,
+                (json) => {
+                    updatePageState({[this.getInventoryTypeName()]: json})
+                    if (mode == UpdateInventory.CREATE_MODE) this.setState({createdSubject : json})
+                }
+            )
             if (this.state.fieldErrors) this.setState({fieldErrors : {}})
             if (this.state.generalError) this.setState({generalError : undefined})
             this.setEditModalShow(false)

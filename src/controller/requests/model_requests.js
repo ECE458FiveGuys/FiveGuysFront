@@ -3,7 +3,7 @@ import {METHODS, URLS} from "../strings";
 import ModelFields from "../../utils/enums";
 import {UserError} from "../exceptions";
 import {EquipmentModel} from "../../utils/ModelEnums";
-import {PaginatedResponseFields} from "../../app/Common/Tables/pagination_utils";
+import {PaginatedResponseFields} from "../../app/Common/Tables/TableUtils/pagination_utils";
 
 export default class ModelRequests {
 

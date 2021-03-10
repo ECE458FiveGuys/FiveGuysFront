@@ -1,6 +1,6 @@
 import RecordCalibration from "./RecordCalibration";
 import DataTable from "../../../../../Common/Tables/DataTable";
-import TableColumns from "../../../../MainPage/InventoryTables/Columns";
+import TableColumns from "../../../../../Common/Tables/TableUtils/Columns";
 import React from "react";
 import {EquipmentModel} from "../../../../../../utils/ModelEnums";
 import ModelFields from "../../../../../../utils/enums";
@@ -59,18 +59,20 @@ export default class CalibrationSection extends React.Component {
         let {instrument, history} = this.props
         let model = instrument.model
         return (
-            [instrumentCalibratable(instrument) && model[EquipmentModel.FIELDS.CALIBRATION_MODE] == ModelFields.CalibrationModes.LOAD_BANK ?
-                <HTPButton
-                    label={"Calibrate with Load Bank Wizard"}
-                    onSubmit={() => {
-                        handleNavClick("/load-bank/" + instrument.pk, history)
-                    }}/> : <div/>,
-                instrumentCalibratable(instrument) ?
+            <div>
+                {instrumentCalibratable(instrument) ?
                     <HTPButton
-                        label={"Record Simple Calibration"}
+                        label={"Calibrate"}
                         onSubmit={() => {
                             this.setCalibrationModalShow(true)
-                        }}/> : <div/>])
+                        }}/> : <></>}
+                {instrumentCalibratable(instrument) && model[EquipmentModel.FIELDS.CALIBRATION_MODE] == ModelFields.CalibrationModes.LOAD_BANK ?
+                    <HTPButton
+                        label={"Load Bank Wizard"}
+                        onSubmit={() => {
+                            handleNavClick("/load-bank/" + instrument.pk, history)
+                        }}/> : <></>}
+            </div>)
     }
 
     renderCalibrationCertificateButton = () => {
@@ -81,7 +83,7 @@ export default class CalibrationSection extends React.Component {
                 onClick={() => {
                         createCertificate(instrument, calibrations[0].user, calibrations[0], token)
                 }}>
-                Download Calibration Certificate
+                Download Certificate
             </Button> : <div></div>
     }
 
@@ -108,7 +110,7 @@ export default class CalibrationSection extends React.Component {
                     <DataTable columns={TableColumns.CALIBRATION_COLUMNS}
                                searching={false}
                                rows={calibrationTableRows}/>
-                    <div>
+                    <div style={{marginTop : -15, display : "flex", flexDirection : "row", justifyContent: "space-between"}}>
                         {this.renderRecordCalibrationButtons()}
                         {this.renderCalibrationCertificateButton()}
                     </div>

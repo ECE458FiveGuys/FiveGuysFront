@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import { MDBDataTable } from 'mdbreact';
 import PropTypes from "prop-types";
 import Loading from "../Images/Loading";
-import {PaginatedResponseFields} from "./pagination_utils";
+import {PaginatedResponseFields} from "./TableUtils/pagination_utils";
 import Paginator from "./TableWidgets/Paginator";
 import {EquipmentModel, Instrument} from "../../../utils/ModelEnums";
-import TableColumns from "../../Pages/MainPage/InventoryTables/Columns";
+import TableColumns from "./TableUtils/Columns";
 
 const PER_PAGE = 10
 const INCREASING = "increasing"

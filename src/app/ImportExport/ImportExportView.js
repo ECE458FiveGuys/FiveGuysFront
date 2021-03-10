@@ -8,14 +8,6 @@ import HTPNavBar from "../Common/HTPNavBar";
 import {Divider} from "@material-ui/core";
 import Step from "../Common/Text/Step";
 
-
-const gradients = [
-    ['#aabbf8', '#ffffff'],
-    ['#a2e2ef', '#25c668'],
-];
-
-
-
 class ImportExportView extends Component{
 
 
@@ -44,7 +36,8 @@ render(){
                                   </a>
                             <Step stepNumber={2}
                                   stepText={"Now, select your file:"}/>
-                            <CSV_Import token = {token}/>
+                            <CSV_Import token = {token}
+                                        history = {history}/>
                 </div>
             </div>
         );
