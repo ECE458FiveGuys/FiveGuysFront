@@ -4,8 +4,7 @@ import {EquipmentModel, Instrument} from "../../../../../../utils/ModelEnums";
 import Logo from "../../../../../../assets/hpt_logo.png"
 import {IdealCurrents} from "../../../../LoadBankPage/Steps/LoadBankStepSteps/step_utils";
 import FileUtils from "../../../../../../utils/file_utils";
-import readXlsxFile from 'read-excel-file'
-import RequestUtils from "../../../../../../controller/requests/request_utils";
+import XLSX from "xlsx";
 
 const LOGO_ASPECT_RATIO = 1.26
 const IMAGE_HEIGHT = 80
@@ -90,26 +89,31 @@ function writeAdditionalEvidence (certificate, additionalEvidence, instrument, t
         //srcToFile(additionalEvidence, name, `image/png`, addImageCallback)
         // addImage(certificate, additionalEvidence)
     }
-    // else if (extension == "xlsx") {
-    //     let callBack = (file) => {
-    //             readXlsxFile(file).then((rows) => {
-    //                 let table = {}
-    //                 let body = []
-    //                 rows.forEach(row => {
-    //                     if (Object.keys(table).length == 1) {
-    //                         table['head'] = [row]
-    //                     } else {
-    //                         body.push(row)
-    //                     }
-    //                 })
-    //             table['body'] = body
-    //             certificate.text('ADDITIONAL EVIDENCE:', pageWidth / 2, 190, 'center');
-    //             certificate.autoTable(table)
-    //             saveCertificate(certificate, instrument)
-    //     })
-    //     }
-    //     srcToFile(additionalEvidence, name, `image/${extension}`, callBack)
-    // }
+    else if (extension == "xlsx") {
+        let callBack = (file) => {
+                var workbook = XLSX.read(file, {
+                    type: 'array'
+                });
+                certificate.text('ADDITIONAL EVIDENCE:', pageWidth / 2, 190, 'center');
+                workbook.SheetNames.forEach(function (sheetName) {
+                    var XL_row_object = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+                    let table = {}
+                    let body = []
+                    XL_row_object.forEach((row) => {
+                        let rowAsArray = Object.values(row)
+                        if (Object.keys(table).length == 0) {
+                            table['head'] = [Object.values(row)]
+                        } else {
+                            body.push(Object.values(row))
+                        }
+                    })
+                    table['body'] = body
+                    certificate.autoTable(table)
+                })
+                saveCertificate(certificate, instrument)
+        }
+        srcToFile(additionalEvidence, name, `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`, callBack)
+    }
     else {
         certificate.autoTable({
             head: [['AdditionalEvidence']],
@@ -189,13 +193,13 @@ export function writeLoadBankSection (certificate, loadBankData) {
 }
 
 function srcToFile(src, fileName, mimeType, callBack, token) {
-    let init = {mode: 'no-cors',}
+    let init = {mode: 'cors',}
     return (fetch(src, init)
             .then(res => {
                 return res.arrayBuffer()
             })
-            .then(buf =>
-            {return new File([buf], fileName, {type:mimeType});})
+            // .then(buf =>
+            // {return new Blob([buf], fileName, {type:mimeType});})
             .then(file => callBack(file))
             .catch(error => {
                 alert(error)
