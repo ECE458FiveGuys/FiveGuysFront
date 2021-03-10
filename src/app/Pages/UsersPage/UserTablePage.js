@@ -81,26 +81,26 @@ class UserTablePage extends Component{
         let {user, token} = this.props
         let {userList} = this.state
             return(<div style={{marginTop : 20, marginLeft : 100, marginRight : 100}}>
-                    <div style={{display : "flex", flexDirection : "row", justifyContent : "space-between", alignItems : 'center'}}>
-                        <div style={{marginLeft : -15}}>
-                            <header className={"h2-responsive"} style={{marginLeft : 15, marginBottom: 10}}>
-                                {`Manage Users`}
-                            </header>
-                            <text className={"h5-responsive text-default"} style={{marginTop : 30, marginLeft: 15}}>{"Create users & modify permissions"}</text>
+                        <div style={{display : "flex", flexDirection : "row", justifyContent : "space-between", alignItems : 'center'}}>
+                            <div style={{marginLeft : -15}}>
+                                <header className={"h2-responsive"} style={{marginLeft : 15, marginBottom: 10}}>
+                                    {`Manage Users`}
+                                </header>
+                                <text className={"h5-responsive text-default"} style={{marginTop : 30, marginLeft: 15}}>{"Create users & modify permissions"}</text>
+                            </div>
+                            {user.is_staff && <CreateUserPopup
+                                                    updatePage = {this.getUserList}
+                                                    token={token}/>}
                         </div>
-                        {user.is_staff && <CreateUserPopup
-                                                updatePage = {this.getUserList}
-                                                token={token}/>}
-                    </div>
-                        <div style={{marginTop : 10}}>
-                            <DataTable
-                                disableRetreatAfterSorting
-                                token={token}
-                                columns={TableColumns.USER_COLUMNS}
-                                rows={userList}
-                            />
-                        </div>
-                    </div>)
+                            <div style={{marginTop : 10}}>
+                                <DataTable
+                                    disableRetreatAfterSorting
+                                    token={token}
+                                    columns={TableColumns.USER_COLUMNS}
+                                    rows={userList}
+                                />
+                            </div>
+                        </div>)
     }
 }
 

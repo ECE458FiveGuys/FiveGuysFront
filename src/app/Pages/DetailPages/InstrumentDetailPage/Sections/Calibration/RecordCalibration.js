@@ -54,7 +54,7 @@ class RecordCalibration extends Component {
     }
 
     handleDayClick = (day) => {
-        let fields = this.state
+        let fields = this.state.fields
         if (!fields) fields = {}
         fields.date = this.parseDate(day)
         this.setState({fields: fields})
@@ -62,7 +62,7 @@ class RecordCalibration extends Component {
 
     handleFileSelect = (e) => {
         let file = document.getElementById('additionalEvidence').files[0];
-        let fields = this.state
+        let fields = this.state.fields
         if (!fields) fields = {}
         fields.file = file
         this.setState({fields : fields})
