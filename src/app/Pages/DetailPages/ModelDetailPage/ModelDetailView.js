@@ -62,7 +62,7 @@ export default class ModelDetailView extends Component {
                                location={location}/>
                     <div style={{height : "100%"}}>
                         <div style={{textAlign : 'center'}}>
-                            <h1 style={{marginTop: 30, marginBottom: 40}}
+                            <h1 style={{marginTop: 30, marginBottom: 30}}
                                 className={"h1-responsive"}>
                                 Model Details
                             </h1>
@@ -104,11 +104,13 @@ export default class ModelDetailView extends Component {
                                                        token={token}
                                                        rows={instrumentRows}/>
                                         {user.is_staff &&
-                                            <UpdateInstrument token={token}
-                                                              updatePageState={this.updatePageState}
-                                                              history={history}
-                                                              existingFields={{model_number : model.model_number, vendor : model.vendor}}
-                                                              mode={UpdateInstrument.CREATE_MODE}/>}
+                                            <div style={{marginTop : -20}}>
+                                                <UpdateInstrument token={token}
+                                                                  updatePageState={this.updatePageState}
+                                                                  history={history}
+                                                                  existingFields={{model_number : model.model_number, vendor : model.vendor}}
+                                                                  mode={UpdateInstrument.CREATE_MODE}/>
+                                            </div>}
                                     </div>
                             </div>
                         </div>
