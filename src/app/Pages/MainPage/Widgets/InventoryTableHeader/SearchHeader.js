@@ -7,15 +7,10 @@ import HTPAutoCompleteInput from "../../../../Common/Inputs/HTPAutoCompleteInput
 import HTPInput from "../../../../Common/Inputs/HTPInput";
 import {EquipmentModel, Instrument, Models} from "../../../../../utils/ModelEnums";
 import {User} from "../../../../../utils/dtos";
-import UpdateInstrument from "../../../../Common/Forms/UpdateInstrument";
-import UpdateModel from "../../../../Common/Forms/UpdateModel";
-import {blue} from "@material-ui/core/colors";
-import ExportModel from "../../../../ImportExport/Widgets/ExportModel";
-import {Divider} from "@material-ui/core";
 
 let SEARCH_FIELD_COLS = 8
 
-export default class ActionHeader extends Component {
+export default class SearchHeader extends Component {
     
     constructor(props) {
         super(props)
@@ -116,13 +111,17 @@ export default class ActionHeader extends Component {
 }
 
 
-ActionHeader.propTypes = {
+SearchHeader.propTypes = {
     searchFields: PropTypes.object.isRequired,
-    updateSearchFieldValues: PropTypes.func.isRequired,
+    updateSearchFieldValues: PropTypes.func,
     token: PropTypes.string.isRequired,
     vendors: PropTypes.array.isRequired,
     modelCategories: PropTypes.array.isRequired,
     instrumentCategories: PropTypes.array,
     user : PropTypes.instanceOf(User),
     history : PropTypes.object.isRequired
+}
+
+SearchHeader.defaultProps = {
+    searchFields : {}
 }

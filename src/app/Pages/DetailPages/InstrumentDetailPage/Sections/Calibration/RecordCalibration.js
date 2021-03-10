@@ -39,7 +39,7 @@ class RecordCalibration extends Component {
             window.location.reload(false)
         }
         let calibrationError = (e) => {
-            this.setState({error : e})
+            this.setState({generalError : e})
         }
 
         try {

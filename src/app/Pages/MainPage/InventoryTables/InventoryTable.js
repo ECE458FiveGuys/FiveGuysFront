@@ -3,20 +3,12 @@ import PropTypes from "prop-types";
 import MiscellaneousRequests from "../../../../controller/requests/miscellaneous_requests";
 import ModelFields from "../../../../utils/enums";
 import {EquipmentModel, Instrument} from "../../../../utils/ModelEnums";
-import DataTable from "../../../Common/Tables/DataTable";
-import jsPDF from 'jspdf'
 import 'jspdf-autotable'
-import HTPButton from "../../../Common/HTPButton";
-import Image from "../../../../assets/hpt_logo.png"
 import BackendPaginatedDataTable from "../../../Common/Tables/BackendPaginatedDataTable";
-import ActionHeader from "../Widgets/ActionHeader/ActionHeader";
 import {User} from "../../../../utils/dtos";
-import {MDBContainer, MDBRow} from "mdbreact";
 import {Divider} from "@material-ui/core";
-import UpdateModel from "../../../Common/Forms/UpdateModel";
-import UpdateInstrument from "../../../Common/Forms/UpdateInstrument";
-import ExportModel from "../../../ImportExport/Widgets/ExportModel";
-import {AdminSection} from "../Widgets/ActionHeader/AdminSection";
+import SearchHeader from "../Widgets/InventoryTableHeader/SearchHeader";
+import {ActionHeader} from "../Widgets/InventoryTableHeader/ActionHeader";
 class InventoryTable extends Component {
 
     constructor(props) {
@@ -82,7 +74,7 @@ class InventoryTable extends Component {
             <div>
                 <div style={{display: 'flex', flexDirection : "row"}}>
                     <div style={{display: 'flex', flexDirection : "column", flex : 1, marginTop : 10, marginBottom : 20}}>
-                        <ActionHeader searchFields={searchFields}
+                        <SearchHeader searchFields={searchFields}
                                       updateSearchFieldValues={this.updateSearchFieldValues}
                                       token={token}
                                       vendors={this.state.vendors}
@@ -94,17 +86,16 @@ class InventoryTable extends Component {
                                       legend={this.props.children}
                         />
                     </div>
-                    {this.props.user.is_staff &&
                     <Divider orientation={'vertical'}
-                             flexItem={true}/>}
-                    {this.props.user.is_staff &&
+                             flexItem={true}/>
                     <div style={{flex : .1, display: 'flex', justifyContent : 'center', alignItems : 'center'}}>
-                        <AdminSection token={token}
+                        <ActionHeader token={token}
                                       updatePageState={this.updatePageState}
                                       history={history}
+                                      user={user}
                                       tableType={this.getTableType()}
                                       searchParams={searchFieldValues}/>
-                    </div>}
+                    </div>
                 </div>
                 <BackendPaginatedDataTable columns={columns}
                                            dataFetchFunction={searchRequestFunction}

@@ -97,6 +97,7 @@ class App extends Component {
               </Route>
               <Route path="/import-export"
                      render={(props) => (<ImportExportView location={props.location}
+                                                           history={props.history}
                                                            token={this.state.token}
                                                            user={this.state.user}/>)}>
               </Route>

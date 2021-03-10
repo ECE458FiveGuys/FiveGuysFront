@@ -4,10 +4,10 @@ import UpdateModel from "../../../../Common/Forms/UpdateModel";
 import UpdateInstrument from "../../../../Common/Forms/UpdateInstrument";
 import ExportModel from "../../../../ImportExport/Widgets/ExportModel";
 import PropTypes from "prop-types";
-import ActionHeader from "./ActionHeader";
 import ExportInstrument from "../../../../ImportExport/Widgets/ExportInstrument";
+import {User} from "../../../../../utils/dtos";
 
-export class AdminSection extends React.Component{
+export class ActionHeader extends React.Component{
 
     constructor(props) {
         super(props);
@@ -49,18 +49,19 @@ export class AdminSection extends React.Component{
     render() {
         return <div style={{display : 'flex', flex : 1, justifyContent : 'center', alignItems : 'center', flexDirection : 'column', textAlign : 'center'}}>
                     <h1 className={"h4-responsive"} style={{marginBottom : 20}}>
-                        Admin Actions
+                        Actions
                     </h1>
                         <div style={{display : 'flex', flexDirection : 'row'}}>
                             {this.renderExportButtons()}
-                            {this.renderCreateButtons()}
+                            {this.props.user.is_staff && this.renderCreateButtons()}
                         </div>
                 </div>
     }
 
 }
 
-AdminSection.propTypes = {
+ActionHeader.propTypes = {
+    user: PropTypes.instanceOf(User).isRequired,
     token: PropTypes.string.isRequired,
     updatePageState: PropTypes.func.isRequired,
     history : PropTypes.object.isRequired,

@@ -9,6 +9,7 @@ import {FormEnums} from "./form_enums";
 import PropTypes from "prop-types";
 import {User} from "../../../utils/dtos";
 import "react-day-picker/lib/style.css";
+import HTPFileInput from "../Inputs/HTPFileInput";
 
 class FormEntry extends Component {
 
@@ -77,24 +78,7 @@ class FormEntry extends Component {
             return (
                 <div>
                     Choose some additional evidence!
-                    <div className="input-group" style={{marginTop : 10}}>
-                        <div className="custom-file">
-                            <input
-                                type="file"
-                                className="custom-file-input"
-                                id="additionalEvidence"
-                                aria-describedby="additionalEvidenceAddon01"
-                                onChange={event => {
-                                    this.props.handleFileSelect(event)
-                                    let filename = FileUtils.getFileNameFromPath(event.target.value)
-                                    this.setState({fileSelected : filename})
-                                }}
-                            />
-                            <label className="custom-file-label" htmlFor="additionalEvidence">
-                                {this.state.fileSelected ? this.state.fileSelected : "Choose file"}
-                            </label>
-                        </div>
-                    </div>
+                    <HTPFileInput handleFileSelect={this.props.handleFileSelect} id={"additionalEvidence"}/>
                 </div>
             );
         }
