@@ -48,12 +48,6 @@ export default class TableColumns {
             width: 200
         },
         {
-            label: 'Serial Number',
-            field: ModelFields.InstrumentFields.SERIAL_NUMBER,
-            sort: 'asc',
-            width: 100
-        },
-        {
             label: 'Asset Tag Number',
             field: ModelFields.InstrumentFields.ASSET_TAG,
             sort: 'int',
@@ -62,6 +56,12 @@ export default class TableColumns {
         {
             label: 'Description',
             field: ModelFields.InstrumentSearchFields.Description,
+            sort: 'asc',
+            width: 100
+        },
+        {
+            label: 'Serial Number',
+            field: ModelFields.InstrumentFields.SERIAL_NUMBER,
             sort: 'asc',
             width: 100
         },
