@@ -25,7 +25,7 @@ export default class RequestUtils {
                         header={},
                         params=undefined,
                         data= undefined,
-                        expectedJson = true) {
+                        expectedJson = true, timeout=undefined) {
         if (data && (!(data instanceof FormData) || !expectedJson)) {
             header['Content-Type'] = 'application/json';
             header['Accept'] = 'application/json';
@@ -33,6 +33,12 @@ export default class RequestUtils {
         let init = {
             method: method,
             headers: header,
+        }
+        const controller = new AbortController();
+        const timeoutSetter = setTimeout(() => controller.abort(), timeout);
+        if (timeout) {
+            init.options = {timeout : timeout}
+            init.signal = controller.signal
         }
         if (data) {
             init.body =  data instanceof FormData?
@@ -48,29 +54,35 @@ export default class RequestUtils {
                                 else if (!expectedJson) {
                                     response.text()
                                         .then(text => {
+                                            if (timeout) clearTimeout(timeoutSetter)
                                             callBack(text) // callback is called on the returned json
                                         })
                                         .catch(error=> {
+                                            if (timeout) clearTimeout(timeoutSetter)
                                             errorMessageCallBack(error.message)
                                         })
                                 }
                                 else {
                                     response.json()
                                         .then(json => {
+                                            if (timeout) clearTimeout(timeoutSetter)
                                             callBack(json) // callback is called on the returned json
                                         })
                                         .catch(error=> {
+                                            if (timeout) clearTimeout(timeoutSetter)
                                             errorMessageCallBack(error.message)
                                         })
                                 }
                             } else if (response.status >= 500 && response.status < 600) {
                                 response.text()
                                     .then(errorText => {
+                                        if (timeout) clearTimeout(timeoutSetter)
                                         alert(new ServerError(errorText).message)
                                     })
                             } else {
                                 response.json()
                                     .then(error => {
+                                        if (timeout) clearTimeout(timeoutSetter)
                                         let errorMessage = RequestUtils.parseErrorMessage(error)
                                         errorMessageCallBack(errorMessage) // error message callback is called on the returned error message
                                     })
@@ -80,42 +92,16 @@ export default class RequestUtils {
                             try {
                                 error.text()
                                     .then(errorText => {
+                                        if (timeout) clearTimeout(timeoutSetter)
                                         alert(new ServerError(errorText).message)
                                     })
                             } catch (e) {
+                                if (timeout) clearTimeout(timeoutSetter)
                                 alert(new ServerError(error).message)
                             }
                             }
                         )
 
-    }
-
-    static async assisted_import_fetch(url, method, header={}, params=undefined, data= undefined, all_search_fields=false){
-        // header['Content-Type'] = 'multipart/form-data; boundary=--asdfwedfa3rfg87';
-        // header['Content-Disposition'] = 'attachment; filename='+name;
-        let init = {
-            method: method,
-            headers: header,
-        }
-
-        if (data) {
-            init.body = data;
-        }
-        let response = await fetch(url + RequestUtils.applyRequestParamSuffix(params, all_search_fields), init)
-        // .catch(response=>response.text())
-        // .then(responsetext =>{
-        //     return responsetext
-        // })
-        if (response.ok) {
-            return await response.json()
-        } else if (response.status >= 500 && response.status < 600) {
-            response.text().then(errorText => {
-                alert(new ServerError(errorText).message)
-            })
-        } else {
-            let json = await response.json()
-            alert(new UserError(RequestUtils.parseErrorMessage(json)))
-        }
     }
 
     static async assisted_simple_fetch(url, method, header={}, params=undefined, data= undefined, all_search_fields=false){

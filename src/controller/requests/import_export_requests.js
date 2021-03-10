@@ -2,6 +2,7 @@ import RequestUtils from "./request_utils";
 import {METHODS, URLS} from "../strings";
 import ModelFields from "../../utils/enums";
 
+const IMPORT_TIMEOUT = 900000
 
 export default class ImportExportRequests{
 
@@ -13,6 +14,6 @@ export default class ImportExportRequests{
         data.append('file', file);
         RequestUtils.assistedFetch(type == ModelFields.ModelTypes.INSTRUMENT ?
             URLS.IMPORT_INSTRUMENTS : URLS.IMPORT_MODELS,
-            METHODS.POST,  callBack, errorMessageCallBack, header, undefined, data)
+            METHODS.POST,  callBack, errorMessageCallBack, header, undefined, data, undefined, IMPORT_TIMEOUT)
     }
 }

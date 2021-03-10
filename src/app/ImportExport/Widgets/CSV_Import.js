@@ -88,7 +88,6 @@ class CSV_Import extends Component{
             results.forEach(result => {
                 let model = result[ModelFields.InstrumentFields.MODEL]
                 delete result[ModelFields.InstrumentFields.MODEL]
-                result[ModelFields.InstrumentFields.EXPIRATION_DATE] = this.calculateCalibrationExpirationElement(result)
                 if (!result[ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION]) {
                     result[ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION] = "Noncalibratable"
                 }
