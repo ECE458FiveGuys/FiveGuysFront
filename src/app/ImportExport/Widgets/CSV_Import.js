@@ -109,11 +109,13 @@ class CSV_Import extends Component{
                     </div>
                 <div style={{justifyContent: 'center', alignItems: 'center', xs: 2}}>
                     <Step stepNumber={4} stepText={"Results of import will be shown here:"}/>
-                    <DataTable
-                        columns = {type == ModelFields.ModelTypes.EQUIPMENT_MODEL ? TableColumns.MODEL_COLUMNS : TableColumns.INSTRUMENT_COLUMNS}
-                        rows={results}
-                        searching={false}
-                    />
+                    <div style={{marginTop : - 20}}>
+                        <DataTable
+                            columns = {type == ModelFields.ModelTypes.EQUIPMENT_MODEL ? TableColumns.MODEL_COLUMNS : TableColumns.INSTRUMENT_COLUMNS}
+                            rows={results}
+                            searching={false}
+                        />
+                    </div>
                 </div>
                 <HTPPopup toggleModal={this.toggleModal}
                           message={this.state.errorMessage}

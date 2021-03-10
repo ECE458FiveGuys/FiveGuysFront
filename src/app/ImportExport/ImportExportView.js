@@ -24,7 +24,7 @@ render(){
                         {"Manage Imports"}
                     </h1>
                             <Divider horizontal={true} style={{width : 300, marginTop : 20, marginBottom : 20}}/>
-                            <h1 style={{marginTop : 10, marginBottom : 25}} className={"h3-responsive"}>
+                            <h1 style={{marginTop : 5, marginBottom : 25}} className={"h3-responsive"}>
                                 {`Hey, ${this.props.user.getFirstName()}.`}
                             </h1>
                             <Step stepNumber={1}

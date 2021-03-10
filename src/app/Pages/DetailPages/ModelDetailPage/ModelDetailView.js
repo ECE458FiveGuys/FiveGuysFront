@@ -71,7 +71,7 @@ export default class ModelDetailView extends Component {
                                location={location}/>
                     <div style={{height : "100%"}}>
                         <div style={{textAlign : 'center'}}>
-                            <h1 style={{marginTop: 30, marginBottom: 30}}
+                            <h1 style={{marginTop: 30, marginBottom: 15}}
                                 className={"h1-responsive"}>
                                 Model Details
                             </h1>
