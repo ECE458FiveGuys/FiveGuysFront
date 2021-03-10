@@ -1,32 +1,60 @@
 import jsPDF from "jspdf";
 import ModelFields from "../../../../../../utils/enums";
 import {EquipmentModel, Instrument} from "../../../../../../utils/ModelEnums";
-import Image from "../../../../../../assets/hpt_logo.png"
+import Logo from "../../../../../../assets/hpt_logo.png"
 import {IdealCurrents} from "../../../../LoadBankPage/Steps/LoadBankStepSteps/step_utils";
+import FileUtils from "../../../../../../utils/file_utils";
+import readXlsxFile from 'read-excel-file'
+import RequestUtils from "../../../../../../controller/requests/request_utils";
 
 const LOGO_ASPECT_RATIO = 1.26
 const IMAGE_HEIGHT = 80
 const DIVIDER_WIDTH = IMAGE_HEIGHT * LOGO_ASPECT_RATIO
 
-const INLINE_SUPPORT_EXTENSIONS = ["jpeg", "jpg", "gif", "png"]
+const INLINE_IMAGE_EXTENSIONS = ["jpeg", "jpg", "gif", "png"]
 
-export function createCertificate (instrument, user, calibrationEvent) {
+export async function createCertificate (instrument, user, calibrationEvent, token) {
     let certificate = new jsPDF()
     const pageWidth = certificate.internal.pageSize.getWidth();
-    addImage(certificate, Image)
+    await addImage(certificate, Logo, 'png')
     certificate.line((pageWidth - DIVIDER_WIDTH) / 2, IMAGE_HEIGHT, (pageWidth + DIVIDER_WIDTH) / 2, IMAGE_HEIGHT)
     writeInstrumentDetails(certificate, user, instrument, calibrationEvent, pageWidth)
     let additionalEvidence = calibrationEvent[ModelFields.CalibrationFields.AdditionalFile]
     let loadBankData = calibrationEvent[ModelFields.CalibrationFields.LoadBankFile] ? JSON.parse(calibrationEvent[ModelFields.CalibrationFields.LoadBankFile]) : undefined
-    additionalEvidence ? writeAdditionalEvidence(certificate, additionalEvidence) : loadBankData ? writeLoadBankSection(certificate, loadBankData) : console.log()
+    additionalEvidence ? writeAdditionalEvidence(certificate, additionalEvidence, instrument, token) : loadBankData ? writeLoadBankSection(certificate, loadBankData) : console.log()
+    if (!additionalEvidence) saveCertificate(certificate, instrument)
+}
+
+let saveCertificate = (certificate, instrument) => {
     certificate.save(`calibration_certificate_inst_${instrument[Instrument.FIELDS.ASSET_TAG]}.pdf`)
 }
 
-export function addImage(certificate, image, marginTop=0) {
+export function addImage(certificate, image, extension, marginTop=0) {
     const pageWidth = certificate.internal.pageSize.getWidth();
     let imageHeight = IMAGE_HEIGHT
     let imageWidth = IMAGE_HEIGHT * LOGO_ASPECT_RATIO
-    certificate.addImage(image, 'png', (pageWidth - imageWidth) / 2, marginTop, imageWidth, imageHeight)
+    certificate.addImage(image, extension, (pageWidth - imageWidth) / 2, marginTop, imageWidth, imageHeight)
+}
+
+function convertImgToBase64URL(url, callback, mimetype){
+    var img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.onload = function(){
+        var canvas = document.createElement('CANVAS'),
+            ctx = canvas.getContext('2d'), dataURL;
+        canvas.height = img.height;
+        canvas.width = img.width;
+        ctx.drawImage(img, 0, 0);
+        dataURL = canvas.toDataURL(mimetype);
+        callback(dataURL);
+        canvas = null;
+    };
+    img.onerror = (error, error2, error3) => {
+        let messag = ""
+        alert(error2)
+    }
+    img.onabort = (error) => alert(error.target.value)
+    img.src = url;
 }
 
 function writeInstrumentDetails (pdf, user, instrument, calibrationEvent, pageWidth) {
@@ -48,23 +76,46 @@ function writeInstrumentDetails (pdf, user, instrument, calibrationEvent, pageWi
     })
 }
 
-function writeAdditionalEvidence (certificate, additionalEvidence) {
-    // const extension = additionalEvidence.split(".").pop()
-    // if (INLINE_SUPPORT_EXTENSIONS.includes(extension)) {
-    //     const pageWidth = certificate.internal.pageSize.getWidth();
-    //     certificate.text('ADDITIONAL EVIDENCE:', pageWidth / 2, 190, 'center');
-    //     addImage(certificate, additionalEvidence)
-    // }
-    // else {
-    //     certificate.autoTable({
-    //         head: [['AdditionalEvidence']],
-    //         body: [[additionalEvidence]]
+function writeAdditionalEvidence (certificate, additionalEvidence, instrument, token) {
+    const extension = additionalEvidence.split(".").pop()
+    const name = FileUtils.getFileNameFromPath(additionalEvidence)
+    const pageWidth = certificate.internal.pageSize.getWidth();
+    if (INLINE_IMAGE_EXTENSIONS.includes(extension)) {
+        let addImageCallback = (image) => {
+            certificate.text('ADDITIONAL EVIDENCE:', pageWidth / 2, 190, 'center');
+            addImage(certificate, image, extension, 195)
+            saveCertificate(certificate, instrument)
+        }
+        convertImgToBase64URL(additionalEvidence, addImageCallback, `image/${extension}`)
+        //srcToFile(additionalEvidence, name, `image/png`, addImageCallback)
+        // addImage(certificate, additionalEvidence)
+    }
+    // else if (extension == "xlsx") {
+    //     let callBack = (file) => {
+    //             readXlsxFile(file).then((rows) => {
+    //                 let table = {}
+    //                 let body = []
+    //                 rows.forEach(row => {
+    //                     if (Object.keys(table).length == 1) {
+    //                         table['head'] = [row]
+    //                     } else {
+    //                         body.push(row)
+    //                     }
+    //                 })
+    //             table['body'] = body
+    //             certificate.text('ADDITIONAL EVIDENCE:', pageWidth / 2, 190, 'center');
+    //             certificate.autoTable(table)
+    //             saveCertificate(certificate, instrument)
     //     })
+    //     }
+    //     srcToFile(additionalEvidence, name, `image/${extension}`, callBack, token)
     // }
-    certificate.autoTable({
-        head: [['AdditionalEvidence']],
-        body: [[additionalEvidence]]
-    })
+    else {
+        certificate.autoTable({
+            head: [['AdditionalEvidence']],
+            body: [[additionalEvidence]]
+        })
+    }
 }
 
 export function writeLoadBankSection (certificate, loadBankData) {
@@ -134,4 +185,19 @@ export function writeLoadBankSection (certificate, loadBankData) {
                     ['Printer ok', 'y']]
             }
     )
+}
+
+function srcToFile(src, fileName, mimeType, callBack, token) {
+    let init = {mode: 'no-cors',}
+    return (fetch(src, init)
+            .then(res => {
+                return res.arrayBuffer()
+            })
+            .then(buf =>
+            {return new File([buf], fileName, {type:mimeType});})
+            .then(file => callBack(file))
+            .catch(error => {
+                alert(error)
+            })
+    );
 }
