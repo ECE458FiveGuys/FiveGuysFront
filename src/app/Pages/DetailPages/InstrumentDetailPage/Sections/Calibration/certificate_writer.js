@@ -89,31 +89,31 @@ function writeAdditionalEvidence (certificate, additionalEvidence, instrument, t
         //srcToFile(additionalEvidence, name, `image/png`, addImageCallback)
         // addImage(certificate, additionalEvidence)
     }
-    else if (extension == "xlsx") {
-        let callBack = (file) => {
-                var workbook = XLSX.read(file, {
-                    type: 'array'
-                });
-                certificate.text('ADDITIONAL EVIDENCE:', pageWidth / 2, 190, 'center');
-                workbook.SheetNames.forEach(function (sheetName) {
-                    var XL_row_object = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
-                    let table = {}
-                    let body = []
-                    XL_row_object.forEach((row) => {
-                        let rowAsArray = Object.values(row)
-                        if (Object.keys(table).length == 0) {
-                            table['head'] = [Object.values(row)]
-                        } else {
-                            body.push(Object.values(row))
-                        }
-                    })
-                    table['body'] = body
-                    certificate.autoTable(table)
-                })
-                saveCertificate(certificate, instrument)
-        }
-        srcToFile(additionalEvidence, name, `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`, callBack)
-    }
+    // else if (extension == "xlsx") {
+    //     let callBack = (file) => {
+    //             var workbook = XLSX.read(file, {
+    //                 type: 'array'
+    //             });
+    //             certificate.text('ADDITIONAL EVIDENCE:', pageWidth / 2, 190, 'center');
+    //             workbook.SheetNames.forEach(function (sheetName) {
+    //                 var XL_row_object = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+    //                 let table = {}
+    //                 let body = []
+    //                 XL_row_object.forEach((row) => {
+    //                     let rowAsArray = Object.values(row)
+    //                     if (Object.keys(table).length == 0) {
+    //                         table['head'] = [Object.values(row)]
+    //                     } else {
+    //                         body.push(Object.values(row))
+    //                     }
+    //                 })
+    //                 table['body'] = body
+    //                 certificate.autoTable(table)
+    //             })
+    //             saveCertificate(certificate, instrument)
+    //     }
+    //     srcToFile(additionalEvidence, name, `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`, callBack)
+    // }
     else {
         certificate.autoTable({
             head: [['AdditionalEvidence']],
