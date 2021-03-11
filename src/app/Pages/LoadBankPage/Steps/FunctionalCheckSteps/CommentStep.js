@@ -38,7 +38,6 @@ export default class CommentStep extends React.Component {
             {this.state.error? <text className={"text-danger"}>{"Comment must be under 2000 characters"}</text> : <div/>}
         </div>)
     }
-
 }
 
 CommentStep.propTypes = {
