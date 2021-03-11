@@ -1,9 +1,9 @@
 import React, {Component} from "react";
-import ImportExportRequests from "../../../controller/requests/import_export_requests";
+import ImportExportRequests from "../../../../controller/requests/import_export_requests";
 import {CSVLink} from "react-csv"
-import HTPButton from "../../Common/HTPButton";
-import ModelRequests from "../../../controller/requests/model_requests";
-import InstrumentRequests from "../../../controller/requests/instrument_requests";
+import HTPButton from "../../../Common/HTPButton";
+import ModelRequests from "../../../../controller/requests/model_requests";
+import InstrumentRequests from "../../../../controller/requests/instrument_requests";
 class ExportInstrument extends Component{
 
     constructor(props) {
@@ -35,11 +35,11 @@ class ExportInstrument extends Component{
     render(){
         const { data, loading } = this.state;
         return (
-            <div>
+            <div style={{width : 200}}>
                 <HTPButton
                     onSubmit={this.downloadInstruments}
                     color={"blue"}
-                    label={loading ? "Downloading..." : "Export"}
+                    label={loading ? "Downloading..." : "Export Table"}
                     disabled={loading}
                 >
                 </HTPButton>

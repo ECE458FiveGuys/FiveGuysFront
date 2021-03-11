@@ -47,19 +47,17 @@ export default class CategoryPage extends Component {
         return (!this.state.model_categories && !this.state.instrument_categories) ?
         <Loading/>
         :
-            <div style={{background: "white"}}>
-                <DatatableEditable  token={this.props.token}
-                                    columns={this.props.columns}
-                                    tableName={"Categories"}
-                                    rows={isModel ?
-                                        this.state.model_categories : this.state.instrument_categories}
-                                    editableColumns={this.props.columns}
-                                    createFunction={isModel ? CategoryRequests.createModelCategory : CategoryRequests.createInstrumentCategory}
-                                    editFunction={isModel ? CategoryRequests.editModelCategory : CategoryRequests.editInstrumentCategory}
-                                    deleteFunction={isModel ? CategoryRequests.deleteModelCategory : CategoryRequests.deleteInstrumentCategory}
-                                    validateDeleteFunction={isModel ? ModelRequests.getModelsByCategory : InstrumentRequests.getInstrumentsByCategory}
-                                    />
-            </div>
+        <DatatableEditable  token={this.props.token}
+                            columns={this.props.columns}
+                            tableName={"Categories"}
+                            rows={isModel ?
+                                this.state.model_categories : this.state.instrument_categories}
+                            editableColumns={this.props.columns}
+                            createFunction={isModel ? CategoryRequests.createModelCategory : CategoryRequests.createInstrumentCategory}
+                            editFunction={isModel ? CategoryRequests.editModelCategory : CategoryRequests.editInstrumentCategory}
+                            deleteFunction={isModel ? CategoryRequests.deleteModelCategory : CategoryRequests.deleteInstrumentCategory}
+                            validateDeleteFunction={isModel ? ModelRequests.getModelsByCategory : InstrumentRequests.getInstrumentsByCategory}
+                            />
     }
 }
 

@@ -6,6 +6,7 @@ import {PaginatedResponseFields} from "./TableUtils/pagination_utils";
 import Paginator from "./TableWidgets/Paginator";
 import {EquipmentModel, Instrument} from "../../../utils/ModelEnums";
 import TableColumns from "./TableUtils/Columns";
+import {act} from "@testing-library/react";
 
 const PER_PAGE = 10
 const INCREASING = "increasing"
@@ -41,8 +42,11 @@ export default class BackendPaginatedDataTable extends Component {
     }
 
     onSort = ({column, direction}) => {
-        if (column == EquipmentModel.FIELDS.MODEL_CATEGORIES || column == Instrument.FIELDS.INSTRUMENT_CATEGORIES) return undefined
         let {activePage, sortBy} = this.state
+        if (column == EquipmentModel.FIELDS.MODEL_CATEGORIES || column == Instrument.FIELDS.INSTRUMENT_CATEGORIES) {
+            this.handleFetch(activePage)
+            return
+        }
         let newSortBy = column
 
         if (sortBy && (sortBy == column || sortBy.substring(1) == column)) {

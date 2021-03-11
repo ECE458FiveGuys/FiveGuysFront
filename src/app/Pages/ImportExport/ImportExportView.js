@@ -4,9 +4,9 @@ import {
     MDBIcon
 } from 'mdbreact';
 import CSV_Import from "./Widgets/CSV_Import";
-import HTPNavBar from "../Common/HTPNavBar";
+import HTPNavBar from "../../Common/HTPNavBar";
 import {Divider} from "@material-ui/core";
-import Step from "../Common/Text/Step";
+import Step from "../../Common/Text/Step";
 
 class ImportExportView extends Component{
 
