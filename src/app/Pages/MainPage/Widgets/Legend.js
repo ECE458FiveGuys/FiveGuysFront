@@ -8,7 +8,7 @@ export class LegendElement extends Component {
         super(props)
     }
     render() {
-        return(<div style={{marginRight: 30, marginTop: 10, justifyContent : "space-between", alignItems : "center", display: "inline-block"}}>
+        return(<div style={{marginRight: 30, marginTop: 10, justifyContent : "center", textAlign : "center", alignItems : "center", display: "flex"}}>
                 <MDBIcon style={{marginRight : 10, color: this.props.color}}
                          size={"2x"}
                          icon={dateIcons[this.props.color]}/>
