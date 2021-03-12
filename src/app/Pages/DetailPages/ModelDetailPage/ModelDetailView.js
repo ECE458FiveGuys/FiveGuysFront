@@ -109,9 +109,11 @@ export default class ModelDetailView extends Component {
                                         <h1 className={"h5-responsive"}>
                                             Here are the instances of this model in circulation:
                                         </h1>
+                                        <div style={{cursor : "pointer"}}>
                                             <DataTable columns={MODEL_INSTRUMENT_TABLE_COLUMNS}
                                                        token={token}
                                                        rows={instrumentRows}/>
+                                        </div>
                                         {user.is_staff &&
                                             <div style={{marginTop : -20}}>
                                                 <UpdateInstrument token={token}

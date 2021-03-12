@@ -7,7 +7,7 @@ import FileUtils from "../../../../../../utils/file_utils";
 // import XLSX from "xlsx";
 
 const LOGO_ASPECT_RATIO = 1.26
-const IMAGE_HEIGHT = 80
+const IMAGE_HEIGHT = 80 + 10
 const DIVIDER_WIDTH = IMAGE_HEIGHT * LOGO_ASPECT_RATIO
 
 const INLINE_IMAGE_EXTENSIONS = ["jpeg", "jpg", "gif", "png"]
@@ -15,8 +15,8 @@ const INLINE_IMAGE_EXTENSIONS = ["jpeg", "jpg", "gif", "png"]
 export async function createCertificate (instrument, user, calibrationEvent, token) {
     let certificate = new jsPDF()
     const pageWidth = certificate.internal.pageSize.getWidth();
-    await addImage(certificate, Logo, 'png')
-    certificate.line((pageWidth - DIVIDER_WIDTH) / 2, IMAGE_HEIGHT, (pageWidth + DIVIDER_WIDTH) / 2, IMAGE_HEIGHT)
+    await addImage(certificate, Logo, 'png', 10)
+    certificate.line((pageWidth - DIVIDER_WIDTH) / 2, IMAGE_HEIGHT + 10, (pageWidth + DIVIDER_WIDTH) / 2, IMAGE_HEIGHT + 10)
     writeInstrumentDetails(certificate, user, instrument, calibrationEvent, pageWidth)
     let additionalEvidence = calibrationEvent[ModelFields.CalibrationFields.AdditionalFile]
     let loadBankData = calibrationEvent[ModelFields.CalibrationFields.LoadBankFile] ? JSON.parse(calibrationEvent[ModelFields.CalibrationFields.LoadBankFile]) : undefined
@@ -60,10 +60,10 @@ function writeInstrumentDetails (pdf, user, instrument, calibrationEvent, pageWi
     pdf.setFont("helvetica")
     pdf.setFontSize(30)
     pdf.setTextColor(0, 100, 0);
-    pdf.text('CALIBRATION CERTIFICATE', pageWidth / 2, IMAGE_HEIGHT + 15, 'center');
+    pdf.text('CALIBRATION CERTIFICATE', pageWidth / 2, IMAGE_HEIGHT + 25, 'center');
     pdf.autoTable({
         head: [['Calibration Info', '']],
-        margin: { top: IMAGE_HEIGHT + 25 },
+        margin: { top: IMAGE_HEIGHT + 35 },
         body: [['Model Number', instrument.model.model_number],
                 ['Vendor', instrument.model.vendor],
                 ['Short Description', instrument.model.description],
@@ -81,8 +81,8 @@ function writeAdditionalEvidence (certificate, additionalEvidence, instrument, t
     const pageWidth = certificate.internal.pageSize.getWidth();
     if (INLINE_IMAGE_EXTENSIONS.includes(extension)) {
         let addImageCallback = (image) => {
-            certificate.text('ADDITIONAL EVIDENCE:', pageWidth / 2, 190, 'center');
-            addImage(certificate, image, extension, 195)
+            certificate.text('ADDITIONAL EVIDENCE:', pageWidth / 2, 205, 'center');
+            addImage(certificate, image, extension, 210)
             saveCertificate(certificate, instrument)
         }
         convertImgToBase64URL(additionalEvidence, addImageCallback, `image/${extension}`)

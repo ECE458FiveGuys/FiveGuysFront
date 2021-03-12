@@ -3,7 +3,7 @@ import {Form} from "react-bootstrap";
 import {Typeahead} from "react-bootstrap-typeahead";
 import React, {Component} from "react";
 import PropTypes from "prop-types";
-
+import "./Input.css"
 // http://ericgio.github.io/react-bootstrap-typeahead/
 
 export default class HTPAutoCompleteInput extends Component {
@@ -16,7 +16,7 @@ export default class HTPAutoCompleteInput extends Component {
         let {options, onChange, label, placeholder, size, disabled, multiple, value, selected, defaultValue, isValid, error}= this.props
         return(
         <MDBCol size={size}>
-                <label className="grey-text form-label">{label}</label>
+                <label className="dark-grey-text form-label">{label}</label>
                     <Typeahead
                         defaultSelected={defaultValue ? multiple ? defaultValue : [defaultValue] : undefined}
                         id="basic-typeahead-single"

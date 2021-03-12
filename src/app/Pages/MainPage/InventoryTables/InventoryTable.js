@@ -97,7 +97,7 @@ class InventoryTable extends Component {
                                       searchParams={searchFieldValues}/>
                     </div>
                 </div>
-                <div style={{marginBottom : -15}}>
+                <div style={{marginBottom : -15, cursor: "pointer"}}>
                     <BackendPaginatedDataTable columns={columns}
                                                dataFetchFunction={searchRequestFunction}
                                                dataFetchFunctionParser={parseSearchResultsFunction}

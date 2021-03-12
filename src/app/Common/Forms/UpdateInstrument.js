@@ -5,6 +5,7 @@ import {isNumeric} from "../../Pages/LoadBankPage/utils";
 import ModelFields from "../../../utils/enums";
 import InstrumentRequests from "../../../controller/requests/instrument_requests";
 import * as PropTypes from "prop-types";
+import {Instrument} from "../../../utils/ModelEnums";
 
 export default class UpdateInstrument extends React.Component {
 
@@ -39,6 +40,10 @@ export default class UpdateInstrument extends React.Component {
 
     render() {
         let {token, instrument, history, updatePageState, mode, existingFields} = this.props
+        // if edit mode, make asset tag field fixed and disabled
+        let fullExistingFields = mode === UpdateInventory.EDIT_MODE ?
+            {...existingFields, ...{[Instrument.FIELDS.ASSET_TAG] : instrument[Instrument.FIELDS.ASSET_TAG]}} :
+            {...existingFields}
         return <UpdateInventory token={token}
                                 subject={instrument}
                                 updatePageState={updatePageState}
@@ -50,7 +55,7 @@ export default class UpdateInstrument extends React.Component {
                                 retrieveFunction={InstrumentRequests.retrieveInstrument}
                                 refreshFields={this.refreshFields}
                                 validateFields={this.validateFields}
-                                existingFields={existingFields}
+                                existingFields={fullExistingFields}
         />
     }
 }

@@ -1,16 +1,19 @@
-import {MDBIcon} from "mdbreact";
+import {MDBBadge, MDBIcon} from "mdbreact";
 import {dateIcons, handleNavClick, parseDate} from "../../../utils";
 import ModelFields from "../../../../utils/enums";
 import React from "react";
 
 export default class TableUtils {
 
-    static categoriesToString(categories) {
-        let categoryStr = ""
+    static categoriesToElement(categories) {
+        let categoryElement = []
         categories.forEach(category => {
-            categoryStr += category[ModelFields.CategoryFields.NAME] + ", "
+            categoryElement.push(<MDBBadge color={"green"}
+                                     pill>
+                {category[ModelFields.CategoryFields.NAME]}
+            </MDBBadge>)
         })
-        return categoryStr === "" ? undefined : categoryStr.slice(0, -2);
+        return categoryElement
     }
 
     static parseInstrumentTableRows = (results, history) => {
@@ -22,7 +25,7 @@ export default class TableUtils {
             delete result[ModelFields.InstrumentFields.MODEL]
             delete model[ModelFields.EquipmentModelFields.PK] // remove pk of model so it doesnt override instrument's
             model[ModelFields.EquipmentModelFields.MODEL_CATEGORIES] =
-                TableUtils.categoriesToString(model[ModelFields.EquipmentModelFields.MODEL_CATEGORIES])
+                TableUtils.categoriesToElement(model[ModelFields.EquipmentModelFields.MODEL_CATEGORIES])
             Object.assign(result, model)
 
             // replace instrument model fields with their respective model__ header so they can be searched for more easily:
@@ -44,7 +47,7 @@ export default class TableUtils {
 
             let instrument_pk = result[ModelFields.InstrumentFields.PK]
             result[ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES] =
-                TableUtils.categoriesToString(result[ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES])
+                TableUtils.categoriesToElement(result[ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES])
 
             // make rows clickable:
 
@@ -55,10 +58,10 @@ export default class TableUtils {
 }
 
 function createCalibrationExpirationElement(dateString, color) {
-    return (<div style={{flex: 1, flexDirection: "row", display: "inline-block"}}>
+    return (<div style={{flex: 1, flexDirection: "row", justifyContent : 'center', alignItems : 'center', display: "inline-block"}}>
         <text>{dateString}</text>
         <MDBIcon style={{marginLeft: 20, color: color}}
-                 size={"2x"}
+                 size={"1x"}
                  icon={dateIcons[color]}/>
     </div>)
 }

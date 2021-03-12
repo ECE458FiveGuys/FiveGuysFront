@@ -249,7 +249,7 @@ export default class RequestUtils {
     static buildCreateInstrumentData(model_pk, serial_number, comment, asset_tag, instrument_categories) {
         let fields = new FormData()
         if (model_pk) fields.append(ModelFields.InstrumentFields.MODEL, model_pk)
-        if (serial_number) fields.append(ModelFields.InstrumentFields.SERIAL_NUMBER, serial_number)
+        fields.append(ModelFields.InstrumentFields.SERIAL_NUMBER, serial_number)
         if (comment) fields.append(ModelFields.InstrumentFields.COMMENT, comment)
         if (asset_tag) fields.append(ModelFields.InstrumentFields.ASSET_TAG, asset_tag)
         if (instrument_categories) {

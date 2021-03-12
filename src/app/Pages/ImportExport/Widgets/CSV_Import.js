@@ -73,7 +73,7 @@ class CSV_Import extends Component{
                     result[ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY].split(" ")[0]
 
             result[ModelFields.EquipmentModelFields.MODEL_CATEGORIES] =
-                TableUtils.categoriesToString(result[ModelFields.EquipmentModelFields.MODEL_CATEGORIES])
+                TableUtils.categoriesToElement(result[ModelFields.EquipmentModelFields.MODEL_CATEGORIES])
             result.clickEvent = () => {handleNavClick("/models/" + result["pk"], this.props.history)}
         })
         return results
@@ -109,8 +109,9 @@ class CSV_Import extends Component{
                     </div>
                 <div style={{justifyContent: 'center', alignItems: 'center', xs: 2}}>
                     <Step stepNumber={4} stepText={"Results of import will be shown here:"}/>
-                    <div style={{marginTop : - 20}}>
+                    <div style={{marginTop : 30, cursor: "pointer"}}>
                         <DataTable
+                            displayEntries={false}
                             columns = {type == ModelFields.ModelTypes.EQUIPMENT_MODEL ? TableColumns.MODEL_COLUMNS : TableColumns.INSTRUMENT_COLUMNS}
                             rows={results}
                             searching={false}

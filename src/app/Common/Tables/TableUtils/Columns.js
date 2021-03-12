@@ -142,8 +142,14 @@ export default class TableColumns {
             width: 50
         },
         {
-            label: 'Options',
+            label: 'Permissions',
             field: ModelFields.UserFields.IS_STAFF,
+            sort: 'asc',
+            width: 50
+        },
+        {
+            label: 'Options',
+            field: 'options',
             sort: 'asc',
             width: 50
         },

@@ -40,9 +40,9 @@ class UserTablePage extends Component{
         return (<MDBRow style={{justifyContent: 'center', alignItems: 'center', marginTop: 0, xs: 2}}>
                     <HTPButton size="sm"
                                disabled={!result['is_active']}
-                               color={result['is_staff'] ? "orange" : "green"}
+                               color={result['is_staff'] == "admin" ? "orange" : "green"}
                                onSubmit={()=>this.changeAdminState(result['id'], this.state.idToStaff[result['id']] ? 'False' : 'True')}
-                               label = {result['is_staff'] ? "Revoke Admin Status" : "Grant Admin Status"}/>
+                               label = {result['is_staff'] == "admin" ? "Revoke Admin Status" : "Grant Admin Status"}/>
                     <HTPButton color="red"
                                disabled={!result['is_active']}
                                size="sm" onSubmit={()=>this.deactivateUser(result['id'])}
@@ -54,7 +54,8 @@ class UserTablePage extends Component{
         let idToStaff = {}
         results.forEach(result => {
             idToStaff[result['id']] = result['is_staff']
-            result['is_staff'] = result['name'] === ADMIN_NAME ? <div style={{textAlign : 'center'}}>Permanent Admin</div>
+            result["is_staff"] = result["is_staff"] ? "admin" : "default"
+            result['options'] = result['name'] === ADMIN_NAME ? <div style={{textAlign : 'center'}}>Permanent Admin</div>
                                         : this.renderOptions(result, idToStaff)
         })
         this.setState({idToStaff : idToStaff})

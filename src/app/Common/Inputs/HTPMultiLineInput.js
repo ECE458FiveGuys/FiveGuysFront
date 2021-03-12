@@ -23,7 +23,7 @@ export default class HTPMultiLineInput extends Component {
         return(
             <div>
                 <label
-                    className="grey-text"
+                    className="dark-grey-text"
                     htmlFor="exampleFormControlTextarea1">
                     {label}
                 </label>

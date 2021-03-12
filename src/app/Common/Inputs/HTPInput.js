@@ -1,7 +1,7 @@
 import {MDBCol} from "mdbreact";
 import React, {Component} from "react";
 import PropTypes from "prop-types";
-
+import "./Input.css"
 
 export default class HTPInput extends Component {
 
@@ -22,13 +22,13 @@ export default class HTPInput extends Component {
         let {onChange, label, placeholder, type, defaultValue, style, invalid}= this.props
         return(
             <div style={style}>
-                <label htmlFor="defaultFormLoginEmailEx" className="grey-text">
+                <label htmlFor="defaultFormLoginEmailEx" className="dark-grey-text">
                     {label}
                 </label>
                 <input type={type}
                        aria-invalid={invalid}
+                       className={"form-control"}
                        placeholder={placeholder}
-                       className="form-control"
                        defaultValue={defaultValue}
                        ref={el => this.inputRef = el}
                        contentEditable={true}

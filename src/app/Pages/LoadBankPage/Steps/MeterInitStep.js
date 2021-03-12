@@ -82,14 +82,12 @@ export default class MeterInitStep extends React.Component {
 
     shouldEnableSubmit = () => {
         let {voltmeter, shuntMeter} = this.props.stepperState.meters
-        let voltmeterModelNum = voltmeter ? voltmeter[EquipmentModel.FIELDS.MODEL_NUMBER] : undefined
-        let shuntMeterModelNum = shuntMeter ? shuntMeter[EquipmentModel.FIELDS.MODEL_NUMBER] : undefined
         let voltmeterAssetTag = voltmeter ? voltmeter[Instrument.FIELDS.ASSET_TAG] : undefined
         let shuntMeterAssetTag = shuntMeter ? shuntMeter[Instrument.FIELDS.ASSET_TAG] : undefined
         let {ready} = this.state
-        if (voltmeterModelNum && voltmeterAssetTag && shuntMeterModelNum && shuntMeterAssetTag && !ready) {
+        if (voltmeterAssetTag && shuntMeterAssetTag && !ready) {
             this.setState({ready : true}, this.props.markReadyToSubmit)
-        } else if ((!voltmeterModelNum || !voltmeterAssetTag || !shuntMeterModelNum || !shuntMeterAssetTag) && ready) {
+        } else if ((!voltmeterAssetTag || !shuntMeterAssetTag) && ready) {
             this.setState({ready : false}, this.props.markReadyToSubmit)
         }
     }
@@ -109,10 +107,6 @@ export default class MeterInitStep extends React.Component {
                             style={{marginTop : 20, marginBottom: 30, justifyContent: "center", alignItems: 'center'}}>
                             Locate a valid voltmeter:
                         </p>
-                        <HTPInput
-                                  label={"Voltmeter Model Number"}
-                                  onChange={(value) => this.handleChange(MeterInitStep.VOLTMETER, ModelFields.EquipmentModelFields.MODEL_NUMBER, value)}
-                                  placeholder={"Model Number"}/>
                         <HTPInput label={"Voltmeter Asset Tag"}
                                   onChange={(value) => this.handleChange(MeterInitStep.VOLTMETER, ModelFields.InstrumentFields.ASSET_TAG, value)}
                                   placeholder={"Asset Tag"}/>
@@ -123,9 +117,6 @@ export default class MeterInitStep extends React.Component {
                             style={{marginTop : 20, marginBottom: 30, justifyContent: "center", alignItems: 'center'}}>
                             Locate a valid shunt meter:
                         </p>
-                        <HTPInput label={"Shunt Meter Model Number"}
-                                  onChange={(value) => this.handleChange(MeterInitStep.SHUNT_METER, ModelFields.EquipmentModelFields.MODEL_NUMBER, value)}
-                                  placeholder={"Model Number"}/>
                         <HTPInput label={"Shunt Meter Asset Tag"}
                                   onChange={(value) => this.handleChange(MeterInitStep.SHUNT_METER, ModelFields.InstrumentFields.ASSET_TAG, value)}
                                   placeholder={"Asset Tag"}/>

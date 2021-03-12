@@ -7,6 +7,7 @@ import HTPButton from "../HTPButton";
 import {MDBBtn, MDBCol, MDBContainer, MDBModal, MDBModalBody, MDBModalFooter, MDBModalHeader} from "mdbreact";
 import {ModalBody} from "react-bootstrap";
 import HTPPopup from "../HTPPopup";
+import {act} from "@testing-library/react";
 
 const SELECT = "Select"
 const DELETE = "Delete"
@@ -19,43 +20,67 @@ export default class DatatableEditable extends Component {
         this.updateSelectedRow = this.updateSelectedRow.bind(this)
         this.state = {
             pkToRow: new Map(),
+            pkToParsedRow : {},
             fieldMap: {},  // object of column fields to current input values
             modal: false
         }
 
         Object.assign(this.state, {
-            columns: this.appendEditableFeatures(this.props.columns),
-            rows: this.addEditFunctions(this.props.rows, this.state.pkToRow),
+            parsedRows: this.parseRows(this.props.rows, this.state.pkToRow, this.state.pkToParsedRow),
             selectedRow: undefined
         })
 
         Object.assign(this.state, this.createEditableFields())
     }
 
-    addEditFunctions(propRows, pkToRow) {
-        let rows = []
-        propRows.forEach(propRow => {
-            let row = {}
-            Object.assign(row, propRow)
-            let checkBoxRef = React.createRef()
-            row[SELECT] = <Checkbox correspondingPK={row.pk ? row.pk : row.id}
-                                    updateSelectedRow={this.updateSelectedRow}
-                                    ref={checkBoxRef}
-            />
-            row[CHECK_BOX_REF] = checkBoxRef
-            pkToRow.set(row.pk ? row.pk : row.id, row)
-            row.clickEvent = () => {checkBoxRef.current.check()} // if you click anywhere in row, will check the box
-            rows.push(row)
+    highlightRow(rowPk) {
+        this.highlightRowHelper(rowPk, false)
+    }
+
+    unHighlightRow(rowPk) {
+        this.highlightRowHelper(rowPk, true)
+    }
+
+    highlightRowHelper(rowPk, unhighlight = false) {
+        let parsedRow = this.state.pkToParsedRow[rowPk]
+        Object.keys(parsedRow).forEach(rowFieldKey => {
+            if (rowFieldKey != "clickEvent" && rowFieldKey != "pk") {
+                let actualFieldValue = this.state.pkToRow.get(rowPk)[rowFieldKey]
+                parsedRow[rowFieldKey] = unhighlight ? actualFieldValue :
+                    <div style={{
+                        display: "flex",
+                        alignItems: "center",
+                        flex: 1,
+                        height: 40,
+                        marginTop: -10,
+                        marginBottom: -10,
+                        marginLeft: -5,
+                        marginRight: -5,
+                        overflow: true,
+                        background: "lightgray"
+                    }}>
+                        <text style={{marginLeft: 5}}>{actualFieldValue}</text>
+                    </div>
+                this.state.pkToParsedRow[rowPk] = parsedRow
+                this.setState({parsedRows: this.state.parsedRows})
+            }
         })
-        return rows
     }
 
-    appendEditableFeatures(propColumns) {
-        let columns = [...propColumns]
-        columns.unshift({label : SELECT, field : SELECT})
-        return columns
+    parseRows(propRows, pkToRow, pkToParsedRow) {
+        let parsedRows = []
+        propRows.forEach(propRow => {
+            let row = {...propRow}
+            pkToRow.set(row.pk ? row.pk : row.id, {...row})
+            row.clickEvent = () => {
+                this.updateSelectedRow(row.pk)
+            }
+            pkToParsedRow[row.pk ? row.pk : row.id] = {...row}
+            // highlights row on click
+            parsedRows.push(row)
+        })
+        return parsedRows
     }
-
 
     createEditableFields() {
         let {editableColumns} = this.props
@@ -91,22 +116,18 @@ export default class DatatableEditable extends Component {
     }
 
     updateSelectedRow(pk, callBack= () => {}) {
-        // if row already selected, remove that check, then update the one selected
+        // if row already selected, unselect row, then update the one selected
         let selectedRow = this.state.selectedRow
-        if (selectedRow && selectedRow.pk && selectedRow.pk != pk) {
-            this.state.pkToRow.get(selectedRow.pk)[CHECK_BOX_REF].current.forceUncheck()
-        }
         let updatedSelectedRow = undefined
-        if (pk) {
-            this.state.rows.every(row => {
-                if (row.pk == pk) {
-                    updatedSelectedRow = row
-                    return false
-                }
-                else {
-                    return true
-                }
-            })
+        if (selectedRow && selectedRow.pk && pk) {
+            this.unHighlightRow(selectedRow.pk)
+            if (pk != selectedRow.pk) {
+                this.highlightRow(pk)
+                updatedSelectedRow = this.state.pkToRow.get(pk)
+            }
+        } else if (pk) {
+            updatedSelectedRow = this.state.pkToRow.get(pk)
+            this.highlightRow(pk)
         }
         this.setState({selectedRow: updatedSelectedRow,
                 successMessage: undefined,
@@ -122,7 +143,7 @@ export default class DatatableEditable extends Component {
     }
 
     onSubmit = () => {
-        let {rows, selectedRow, fieldMap} = this.state
+        let {selectedRow, pkToParsedRow, fieldMap} = this.state
         let {token, editFunction, createFunction} = this.props
         selectedRow ?
         editFunction(token,
@@ -130,6 +151,7 @@ export default class DatatableEditable extends Component {
             (json) => {Object.keys(json).forEach(key =>
                 selectedRow[key] = json[key])
                 this.setState({selectedRow : selectedRow, successMessage : "Successfully edited"})
+                this.highlightRow(selectedRow.pk)
                 this.toggleModal()
             },
             (errorMessage) => this.handleErrorMessage(errorMessage),
@@ -137,9 +159,9 @@ export default class DatatableEditable extends Component {
         :
         createFunction(token,
             (json) => {
-                rows.push(json)
-                this.setState({rows: this.addEditFunctions(rows, this.state.pkToRow)})
-                this.setState({selectedRow : selectedRow, successMessage : "Successfully created"})
+                pkToParsedRow[json.pk] = json
+                //this.setState({rows: this.addEditFunctions(rows, this.state.pkToRow)})
+                this.setState({selectedRow : selectedRow, pkToParsedRow : pkToParsedRow, successMessage : "Successfully created"})
                 this.toggleModal()
             },
             (errorMessage) => this.handleErrorMessage(errorMessage),
@@ -167,19 +189,11 @@ export default class DatatableEditable extends Component {
 
     delete = () => {
         let {token, deleteFunction} = this.props
-        let {selectedRow, rows} = this.state
+        let {selectedRow, pkToParsedRow} = this.state
         deleteFunction(token,
             selectedRow.pk,
             (json) => {
-                let indexToRemove = 0
-                for (let i = 0; i < rows.length; i++) {
-                    let row = rows[i]
-                    if (row.pk == selectedRow.pk) {
-                        indexToRemove = i
-                        break
-                    }
-                }
-                rows.splice(indexToRemove, 1);
+                delete pkToParsedRow[selectedRow.pk]
                 this.updateSelectedRow(undefined,
                     () => {
                         this.setState({successMessage : "Successfully deleted"})
@@ -209,7 +223,8 @@ export default class DatatableEditable extends Component {
     }
 
     render() {
-        let {columns, rows, selectedRow, EditableFields, successMessage, warningMessage, warningFunction, errorMessage} = this.state
+        let {columns} = this.props
+        let {parsedRows, selectedRow, EditableFields, successMessage, warningMessage, warningFunction, errorMessage} = this.state
         return(<div style={{marginTop : 20}}>
                     <div style={{marginLeft : -15}}>
                         <header className={"h3-responsive"} style={{marginLeft : 15, marginBottom: 10}}>
@@ -232,9 +247,10 @@ export default class DatatableEditable extends Component {
                                       additionalButtons={warningFunction? <MDBBtn color="red" onClick={warningFunction}>Proceed</MDBBtn> : <div/>}/>
                         </div>
                     </div>
-                    <div style={{marginTop : -10, marginBottom : -20}}>
-                        <DataTable columns={columns}
-                                   rows={rows}/>
+                    <div style={{marginTop : -10, marginBottom : -20, cursor: "pointer"}}>
+                        <DataTable  disableRetreatAfterSorting={true}
+                                    columns={columns}
+                                   rows={Object.values(this.state.pkToParsedRow)}/>
                     </div>
                 </div>)
     }

@@ -152,7 +152,7 @@ class FormEntry extends Component {
                             {this.renderAlternateInputs(fieldKey)}
                         </div>
                         : <div className="form-outline" style={{marginTop : 10}}>
-                                <label htmlFor="validationServer01" className="grey-text form-label">{formFields[fieldKey]}</label>
+                                <label htmlFor="validationServer01" className="dark-grey-text form-label">{formFields[fieldKey]}</label>
                                 <input
                                     type="text"
                                     className={fieldErrors[fieldKey] ? "form-control is-invalid" : "form-control"}

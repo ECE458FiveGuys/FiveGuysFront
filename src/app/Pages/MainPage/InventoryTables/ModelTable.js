@@ -22,7 +22,7 @@ export default class ModelTable extends Component {
                 result[ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY].split(" ")[0]
 
             result[ModelFields.EquipmentModelFields.MODEL_CATEGORIES] =
-                TableUtils.categoriesToString(result[ModelFields.EquipmentModelFields.MODEL_CATEGORIES])
+                TableUtils.categoriesToElement(result[ModelFields.EquipmentModelFields.MODEL_CATEGORIES])
             result.clickEvent = () => {handleNavClick("/models/" + model_pk, this.props.history)}
         })
         return results

@@ -14,5 +14,5 @@ export default function InstrumentDisplay(instrument) {
         instrument[ModelFields.InstrumentFields.ASSET_TAG],
         mostRecentCalbrationDate,
         instrument[Instrument.FIELDS.EXPIRATION_DATE]
-    ], ['green', 'green', 'green', 'green', 'green', parseDate(instrument[Instrument.FIELDS.EXPIRATION_DATE])])
+    ])
 }
