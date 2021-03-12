@@ -219,7 +219,7 @@ export default class DatatableEditable extends Component {
                         <div style={{flexDirection : 'row', display: "flex", alignItems : "center", marginTop : 15}}>
                             {EditableFields}
                             <HTPButton onSubmit={this.onSubmit}
-                                       disabled={selectedRow ? this.unChanged() : false}
+                                       //disabled={selectedRow ? this.unChanged() : false}
                                        label={selectedRow ? "Submit Changes" : "Create"}/>
                             {selectedRow ? <HTPButton onSubmit={this.onDelete}
                                                       color={"red"}
@@ -232,8 +232,10 @@ export default class DatatableEditable extends Component {
                                       additionalButtons={warningFunction? <MDBBtn color="red" onClick={warningFunction}>Proceed</MDBBtn> : <div/>}/>
                         </div>
                     </div>
-                    <DataTable columns={columns}
-                               rows={rows}/>
+                    <div style={{marginTop : -10, marginBottom : -20}}>
+                        <DataTable columns={columns}
+                                   rows={rows}/>
+                    </div>
                 </div>)
     }
 }

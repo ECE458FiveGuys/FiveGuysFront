@@ -4,7 +4,7 @@ import ModelFields from "../../utils/enums";
 import {UserError} from "../exceptions";
 import {METHODS, URLS} from "../strings";
 import {EquipmentModel, Instrument} from "../../utils/ModelEnums";
-import {PaginatedResponseFields} from "../../app/Common/Tables/pagination_utils";
+import {PaginatedResponseFields} from "../../app/Common/Tables/TableUtils/pagination_utils";
 import {User} from "../../utils/dtos";
 import ModelRequests from "./model_requests";
 

@@ -4,17 +4,9 @@ import {
     MDBIcon
 } from 'mdbreact';
 import CSV_Import from "./Widgets/CSV_Import";
-import HTPNavBar from "../Common/HTPNavBar";
+import HTPNavBar from "../../Common/HTPNavBar";
 import {Divider} from "@material-ui/core";
-import Step from "../Common/Text/Step";
-
-
-const gradients = [
-    ['#aabbf8', '#ffffff'],
-    ['#a2e2ef', '#25c668'],
-];
-
-
+import Step from "../../Common/Text/Step";
 
 class ImportExportView extends Component{
 
@@ -32,7 +24,7 @@ render(){
                         {"Manage Imports"}
                     </h1>
                             <Divider horizontal={true} style={{width : 300, marginTop : 20, marginBottom : 20}}/>
-                            <h1 style={{marginTop : 10, marginBottom : 25}} className={"h3-responsive"}>
+                            <h1 style={{marginTop : 5, marginBottom : 25}} className={"h3-responsive"}>
                                 {`Hey, ${this.props.user.getFirstName()}.`}
                             </h1>
                             <Step stepNumber={1}
@@ -44,7 +36,8 @@ render(){
                                   </a>
                             <Step stepNumber={2}
                                   stepText={"Now, select your file:"}/>
-                            <CSV_Import token = {token}/>
+                            <CSV_Import token = {token}
+                                        history = {history}/>
                 </div>
             </div>
         );

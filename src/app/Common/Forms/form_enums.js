@@ -1,6 +1,7 @@
 import ModelFields from "../../../utils/enums";
 
-export class FormEnums {
+export class
+FormEnums {
 
     static FieldRequirementTypes = {
         OPTIONAL : "optional",
@@ -51,8 +52,8 @@ export class FormEnums {
     // Instruments:
 
     static InstrumentFieldNames = {
-        [ModelFields.EquipmentModelFields.MODEL_NUMBER] : "Model Number",
         [ModelFields.EquipmentModelFields.VENDOR] : "Vendor",
+        [ModelFields.EquipmentModelFields.MODEL_NUMBER] : "Model Number",
         [ModelFields.InstrumentFields.SERIAL_NUMBER] : "Serial Number",
         [ModelFields.InstrumentFields.ASSET_TAG] : "Asset Tag",
         [ModelFields.InstrumentFields.COMMENT] : "Comment",

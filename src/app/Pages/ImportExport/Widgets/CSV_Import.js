@@ -9,19 +9,19 @@ import {
     MDBRow,
     MDBTable
 } from "mdbreact";
-import ImportExportRequests from "../../../controller/requests/import_export_requests";
-import DataTable_NoGIF from "../../Common/Tables/DataTable_NoGIF";
-import TableColumns from "../../Pages/MainPage/InventoryTables/Columns";
-import ModelFields from "../../../utils/enums";
-import TableUtils from "../../Pages/MainPage/InventoryTables/TableUtils";
-import {handleNavClick} from "../../utils";
-import HTPButton from "../../Common/HTPButton";
-import DatatableEditable from "../../Common/Tables/DatatableEditable";
-import DataTable from "../../Common/Tables/DataTable";
-import Step from "../../Common/Text/Step";
-import HTPFileInput from "../../Common/Inputs/HTPFileInput";
-import HTPPopup from "../../Common/HTPPopup";
-import FileUtils from "../../../utils/file_utils";
+import ImportExportRequests from "../../../../controller/requests/import_export_requests";
+import DataTable_NoGIF from "../../../Common/Tables/DataTable_NoGIF";
+import TableColumns from "../../../Common/Tables/TableUtils/Columns";
+import ModelFields from "../../../../utils/enums";
+import {handleNavClick} from "../../../utils";
+import HTPButton from "../../../Common/HTPButton";
+import DatatableEditable from "../../../Common/Tables/DatatableEditable";
+import DataTable from "../../../Common/Tables/DataTable";
+import Step from "../../../Common/Text/Step";
+import HTPFileInput from "../../../Common/Inputs/HTPFileInput";
+import HTPPopup from "../../../Common/HTPPopup";
+import FileUtils from "../../../../utils/file_utils";
+import TableUtils from "../../../Common/Tables/TableUtils/table_utils";
 
 let fileSize = 32000000
 let sizeError = "File Size Exceeds 32 MB"
@@ -57,7 +57,7 @@ class CSV_Import extends Component{
             this.toggleModal()
         }
         let successCallBack = (result) => {
-            result = type == ModelFields.ModelTypes.INSTRUMENT ? this.instrParse(result) : this.modParse(result)
+            result = type == ModelFields.ModelTypes.INSTRUMENT ? TableUtils.parseInstrumentTableRows(result, this.props.history) : this.modParse(result)
             this.setState({results: result, type : type})
         }
         ImportExportRequests.import(this.props.token, this.state.file, type, successCallBack, errorCallBack);
@@ -65,42 +65,18 @@ class CSV_Import extends Component{
     }
 
     modParse = (results) => {
-        if(results != undefined) {
-            results.forEach(result => {
-                result[ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY] =
-                    result[ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY] === "00:00:00" ?
-                        "Noncalibratable"
-                        :
-                        result[ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY].split(" ")[0]
+        results.forEach(result => {
+            result[ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY] =
+                result[ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY] === "00:00:00" ?
+                    "Noncalibratable"
+                    :
+                    result[ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY].split(" ")[0]
 
-                result[ModelFields.EquipmentModelFields.MODEL_CATEGORIES] =
-                    TableUtils.categoriesToString(result[ModelFields.EquipmentModelFields.MODEL_CATEGORIES])
-            })
-            return results
-        }
-        else {
-            return [];
-        }
-    }
-
-    instrParse = (results) => {
-        if (results != undefined) {
-            results.forEach(result => {
-                let model = result[ModelFields.InstrumentFields.MODEL]
-                delete result[ModelFields.InstrumentFields.MODEL]
-                if (!result[ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION]) {
-                    result[ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION] = "Noncalibratable"
-                }
-                result[ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES] =
-                    TableUtils.categoriesToString(result[ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES])
-                model[ModelFields.EquipmentModelFields.MODEL_CATEGORIES] =
-                    TableUtils.categoriesToString(model[ModelFields.EquipmentModelFields.MODEL_CATEGORIES])
-                Object.assign(result, model)
-            })
-            return results
-        } else {
-            return [];
-        }
+            result[ModelFields.EquipmentModelFields.MODEL_CATEGORIES] =
+                TableUtils.categoriesToString(result[ModelFields.EquipmentModelFields.MODEL_CATEGORIES])
+            result.clickEvent = () => {handleNavClick("/models/" + result["pk"], this.props.history)}
+        })
+        return results
     }
 
     toggleModal = () => {
@@ -133,11 +109,13 @@ class CSV_Import extends Component{
                     </div>
                 <div style={{justifyContent: 'center', alignItems: 'center', xs: 2}}>
                     <Step stepNumber={4} stepText={"Results of import will be shown here:"}/>
-                    <DataTable
-                        columns = {type == ModelFields.ModelTypes.EQUIPMENT_MODEL ? TableColumns.MODEL_COLUMNS : TableColumns.INSTRUMENT_COLUMNS}
-                        rows={results}
-                        searching={false}
-                    />
+                    <div style={{marginTop : - 20}}>
+                        <DataTable
+                            columns = {type == ModelFields.ModelTypes.EQUIPMENT_MODEL ? TableColumns.MODEL_COLUMNS : TableColumns.INSTRUMENT_COLUMNS}
+                            rows={results}
+                            searching={false}
+                        />
+                    </div>
                 </div>
                 <HTPPopup toggleModal={this.toggleModal}
                           message={this.state.errorMessage}

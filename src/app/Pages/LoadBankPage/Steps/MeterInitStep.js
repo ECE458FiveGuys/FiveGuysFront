@@ -8,7 +8,7 @@ import {dateColors, parseDate} from "../../../utils";
 import {UserError} from "../../../../controller/exceptions";
 import {EquipmentModel, Instrument} from "../../../../utils/ModelEnums";
 import {isNumeric} from "../utils";
-import {PaginatedResponseFields} from "../../../Common/Tables/pagination_utils";
+import {PaginatedResponseFields} from "../../../Common/Tables/TableUtils/pagination_utils";
 
 
 export default class MeterInitStep extends React.Component {

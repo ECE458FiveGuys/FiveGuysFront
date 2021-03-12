@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import ModelRequests from "../../../../controller/requests/model_requests";
 
 import ModelFields from "../../../../utils/enums";
-import TableColumns from "../../MainPage/InventoryTables/Columns";
+import TableColumns from "../../../Common/Tables/TableUtils/Columns";
 import DataTable from "../../../Common/Tables/DataTable";
 import {EquipmentModel, Instrument} from "../../../../utils/ModelEnums";
 import InstrumentRequests from "../../../../controller/requests/instrument_requests";
@@ -10,7 +10,6 @@ import HTPNavBar from "../../../Common/HTPNavBar";
 import {Divider, Link} from "@material-ui/core";
 import ModelSection from "../Common/ModelSection";
 import ActionSection from "../Common/ActionSection";
-import TableUtils from "../../MainPage/InventoryTables/TableUtils";
 import {handleNavClick} from "../../../utils";
 import {MDBCol} from "mdbreact";
 import UpdateInstrument from "../../../Common/Forms/UpdateInstrument";
@@ -26,6 +25,10 @@ export default class ModelDetailView extends Component {
     }
 
     componentDidMount() {
+        this.retrieveModel()
+    }
+
+    retrieveModel = () => {
         let {token, id} = this.props
         let retrieveModelCallback = (model) => {
             model = this.fixCalibrationFrequency(model)
@@ -47,9 +50,15 @@ export default class ModelDetailView extends Component {
         return model
     }
 
-    updatePageState = (model) => {
-        model.model = this.fixCalibrationFrequency(model.model)
-        this.setState(model)
+    updatePageState = (modelOrInstrument) => {
+        // if instances were updated with new instrument, refresh model to get new instance
+        // else if model was edited, update the model in page
+        if (Object.keys(modelOrInstrument).includes(ModelFields.ModelTypes.INSTRUMENT)) {
+            this.retrieveModel()
+        } else {
+            modelOrInstrument.model = this.fixCalibrationFrequency(modelOrInstrument.model)
+            this.setState(modelOrInstrument)
+        }
     }
 
     render() {
@@ -62,7 +71,7 @@ export default class ModelDetailView extends Component {
                                location={location}/>
                     <div style={{height : "100%"}}>
                         <div style={{textAlign : 'center'}}>
-                            <h1 style={{marginTop: 30, marginBottom: 30}}
+                            <h1 style={{marginTop: 30, marginBottom: 15}}
                                 className={"h1-responsive"}>
                                 Model Details
                             </h1>

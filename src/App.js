@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import './App.css';
-import ImportExportView from './app/ImportExport/ImportExportView'
+import ImportExportView from './app/Pages/ImportExport/ImportExportView'
 import MainView from './app/Pages/MainPage/MainView';
 import Login from "./auth/Login";
 import NotFound from "./auth/NotFound";
@@ -12,7 +12,7 @@ import InstrumentDetailView from "./app/Pages/DetailPages/InstrumentDetailPage/I
 import CategoryTabView from "./app/Pages/CategoryPage/CategoryTabView";
 import LoadBankMain from "./app/Pages/LoadBankPage/LoadBankMain";
 import OAuthRedirect from "./auth/OAuthRedirect";
-import ImportDocumentation from "./app/ImportExport/Widgets/ImportDocumentation";
+import ImportDocumentation from "./app/Pages/ImportExport/Widgets/ImportDocumentation";
 import UserSettingsView from "./app/Pages/UserSettingsPage/UserSettingsView";
 import CreateModel from "./app/Pages/CreateFunctions/CreateModel";
 import CreateInstrument from "./app/Pages/CreateFunctions/CreateInstrument";

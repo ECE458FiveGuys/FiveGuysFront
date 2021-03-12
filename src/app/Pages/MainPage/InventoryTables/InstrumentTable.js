@@ -1,13 +1,13 @@
 import React, {Component} from "react";
-import TableColumns from "./Columns";
+import TableColumns from "../../../Common/Tables/TableUtils/Columns";
 import InventoryTable from "./InventoryTable";
 import ModelFields from "../../../../utils/enums";
 import ModelRequests from "../../../../controller/requests/model_requests";
 import InstrumentRequests from "../../../../controller/requests/instrument_requests";
 import {dateColors, dateIcons, handleNavClick, parseDate} from "../../../utils";
 import {InstrumentTableLegend} from "../Widgets/Legend";
-import TableUtils from "./TableUtils";
 import {MDBIcon} from "mdbreact";
+import TableUtils from "../../../Common/Tables/TableUtils/table_utils";
 
 export default class InstrumentTable extends Component {
 
@@ -34,43 +34,7 @@ export default class InstrumentTable extends Component {
     }
 
     parseSearchResults = (results) => {
-        results.forEach(result => {
-
-            // raise nested model fields up to the level of instrument fields so table can read them:
-
-            let model = result[ModelFields.InstrumentFields.MODEL]
-            delete result[ModelFields.InstrumentFields.MODEL]
-            delete model[ModelFields.EquipmentModelFields.PK] // remove pk of model so it doesnt override instrument's
-            model[ModelFields.EquipmentModelFields.MODEL_CATEGORIES] =
-                TableUtils.categoriesToString(model[ModelFields.EquipmentModelFields.MODEL_CATEGORIES])
-            Object.assign(result, model)
-
-            // replace instrument model fields with their respective model__ header so they can be searched for more easily:
-
-            result[ModelFields.InstrumentSearchFields.Vendor] = result[ModelFields.EquipmentModelFields.VENDOR]
-            result[ModelFields.InstrumentSearchFields["Model Number"]] = result[ModelFields.EquipmentModelFields.MODEL_NUMBER]
-            result[ModelFields.InstrumentSearchFields.Description] = result[ModelFields.EquipmentModelFields.DESCRIPTION]
-            delete result[ModelFields.EquipmentModelFields.VENDOR]
-            delete result[ModelFields.EquipmentModelFields.MODEL_NUMBER]
-            delete result[ModelFields.EquipmentModelFields.DESCRIPTION]
-
-            // render calibration symbols:
-
-            result[ModelFields.InstrumentFields.EXPIRATION_DATE] = this.calculateCalibrationExpirationElement(result)
-            if (!result[ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION]) {
-                result[ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION] = "Noncalibratable"
-            }
-            // parse categories:
-
-            let instrument_pk = result[ModelFields.InstrumentFields.PK]
-            result[ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES] =
-                TableUtils.categoriesToString(result[ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES])
-
-            // make rows clickable:
-
-            result.clickEvent = () => handleNavClick("/instruments/" + instrument_pk, this.props.history)
-        })
-        return results
+        return TableUtils.parseInstrumentTableRows(results, this.props.history)
     }
 
     render() {

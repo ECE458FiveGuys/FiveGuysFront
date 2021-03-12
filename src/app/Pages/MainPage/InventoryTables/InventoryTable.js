@@ -54,7 +54,7 @@ class InventoryTable extends Component {
      */
 
     updateSearchFieldValues = (searchFieldValues) => {
-        this.setState({searchFieldValues : searchFieldValues},
+        this.setState({searchFieldValues : {...searchFieldValues}},
             this.tableRef.current.forceSearch
         )
     }
@@ -97,13 +97,15 @@ class InventoryTable extends Component {
                                       searchParams={searchFieldValues}/>
                     </div>
                 </div>
-                <BackendPaginatedDataTable columns={columns}
-                                           dataFetchFunction={searchRequestFunction}
-                                           dataFetchFunctionParser={parseSearchResultsFunction}
-                                           searchParams={searchFieldValues}
-                                           token={token}
-                                           ref={this.tableRef}
-                />
+                <div style={{marginBottom : -15}}>
+                    <BackendPaginatedDataTable columns={columns}
+                                               dataFetchFunction={searchRequestFunction}
+                                               dataFetchFunctionParser={parseSearchResultsFunction}
+                                               searchParams={searchFieldValues}
+                                               token={token}
+                                               ref={this.tableRef}
+                    />
+                </div>
             </div>);
     }
 }

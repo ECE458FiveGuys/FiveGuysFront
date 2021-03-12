@@ -5,7 +5,7 @@ import CategoryPage from "./CategoryPage";
 import ModelFields from "../../../utils/enums";
 import TabView from "../MainPage/TabView";
 import {User} from "../../../utils/dtos";
-import TableColumns from "../MainPage/InventoryTables/Columns";
+import TableColumns from "../../Common/Tables/TableUtils/Columns";
 
 
 const gradients = [
