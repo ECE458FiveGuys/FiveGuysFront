@@ -58,6 +58,20 @@ export default class InstrumentRequests {
             errorMessageCallBack, pageNum, ordering, exportMode)
     }
 
+    static async getAllInstruments(token,
+                                    callBack = (json) => json,
+                                    errorMessageCallBack = (errorMessage) => errorMessage) {
+        let header = RequestUtils.buildTokenHeader(token)
+        RequestUtils.assistedFetch(URLS.INSTRUMENTS_ALL, METHODS.GET, callBack, errorMessageCallBack, header)
+    }
+
+    static async getInstrumentsByPK(token,
+                                   callBack = (json) => json,
+                                   errorMessageCallBack = (errorMessage) => errorMessage) {
+        let header = RequestUtils.buildTokenHeader(token)
+        RequestUtils.assistedFetch(URLS.INSTRUMENTS_ALL, METHODS.GET, callBack, errorMessageCallBack, header)
+    }
+
     static async retrieveInstrument(token, pk,
                                     callBack = (json) => json,
                                     errorMessageCallBack = (errorMessage) => errorMessage) {

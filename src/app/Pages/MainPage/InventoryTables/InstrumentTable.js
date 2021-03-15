@@ -15,24 +15,6 @@ export default class InstrumentTable extends Component {
         super(props)
     }
 
-    createCalibrationExpirationElement(dateString, color) {
-        return (<div style={{flex: 1, flexDirection: "row", display: "inline-block"}}>
-                    <text>{dateString}</text>
-                    <MDBIcon style={{marginLeft: 20, color: color}}
-                             size={"2x"}
-                             icon={dateIcons[color]}/>
-                </div>)
-    }
-
-    calculateCalibrationExpirationElement(result) {
-        let expirationDateString = result[ModelFields.InstrumentFields.EXPIRATION_DATE]
-        if (expirationDateString == undefined) {
-            return "Noncalibratable"
-        }
-        let color = parseDate(expirationDateString)
-        return this.createCalibrationExpirationElement(expirationDateString, color)
-    }
-
     parseSearchResults = (results) => {
         return TableUtils.parseInstrumentTableRows(results, this.props.history)
     }
@@ -43,6 +25,7 @@ export default class InstrumentTable extends Component {
                             searchFields={ModelFields.InstrumentSearchFields}
                             token={this.props.token}
                             searchRequestFunction={InstrumentRequests.getInstrumentsWithSearchParams}
+                            getAllFunction={InstrumentRequests.getAllInstruments}
                             parseSearchResultsFunction={this.parseSearchResults}
                             user={this.props.user}
                             history={this.props.history}

@@ -29,7 +29,7 @@ export default class TableColumns {
         {
             label: 'Categories',
             field: ModelFields.EquipmentModelFields.MODEL_CATEGORIES,
-            sortNone: () => {},
+            sort: 'disabled',
             width: 100
         },
     ]
@@ -80,13 +80,13 @@ export default class TableColumns {
         {
             label: 'Model Categories',
             field: ModelFields.EquipmentModelFields.MODEL_CATEGORIES,
-            sort: 'asc',
+            sort: 'disabled',
             width: 100
         },
         {
             label: 'Instrument Categories',
             field: ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES,
-            sort: 'asc',
+            sort: 'disabled',
             width: 100
         },
 

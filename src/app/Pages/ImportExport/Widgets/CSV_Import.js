@@ -10,7 +10,6 @@ import {
     MDBTable
 } from "mdbreact";
 import ImportExportRequests from "../../../../controller/requests/import_export_requests";
-import DataTable_NoGIF from "../../../Common/Tables/DataTable_NoGIF";
 import TableColumns from "../../../Common/Tables/TableUtils/Columns";
 import ModelFields from "../../../../utils/enums";
 import {handleNavClick} from "../../../utils";

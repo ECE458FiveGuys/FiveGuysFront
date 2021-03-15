@@ -10,18 +10,20 @@ export default class Checkbox extends Component {
         }
     }
 
-    handleSelect(isChecked) {
-        let {updateSelectedRow, correspondingPK} = this.props
-        isChecked ? updateSelectedRow(correspondingPK) : updateSelectedRow(undefined)
+    getId() {
+        return this.state.ref.current.id
     }
 
     check() {
-        this.state.ref.current.checked = !this.state.ref.current.checked
-        this.handleSelect(this.state.ref.current.checked)
+        this.state.ref.current.checked = true
     }
 
     forceUncheck() {
         this.state.ref.current.checked = false
+    }
+
+    isChecked() {
+        return this.state.ref.current.checked
     }
 
     render () {
@@ -31,16 +33,20 @@ export default class Checkbox extends Component {
                     <input type="checkbox"
                            className="custom-control-input"
                            ref={this.state.ref}
-                           id={this.props.correspondingPK}
-                           unselectable={true}
+                           id={this.props.id}
+                           defaultChecked={this.props.defaultChecked}
+                           onChange={() => this.props.handleSelect(this.props.id)}
+                           disabled={false}
                         />
-                        <label className="custom-control-label" htmlFor={this.props.correspondingPK}></label>
+                        <label className="custom-control-label" htmlFor={this.props.id}></label>
                 </div>
             </div>)
     }
 }
 
 Checkbox.propTypes = {
-    correspondingPK: PropTypes.string.isRequired,
-    updateSelectedRow : PropTypes.func.isRequired
+    handleSelect : PropTypes.func.isRequired,
+    id : PropTypes.string.isRequired,
+    defaultChecked : PropTypes.bool
+    //updateSelectedRow : PropTypes.func.isRequired
 }

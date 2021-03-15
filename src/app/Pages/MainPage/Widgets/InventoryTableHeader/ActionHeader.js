@@ -6,6 +6,7 @@ import ExportModel from "../../../ImportExport/Widgets/ExportModel";
 import PropTypes from "prop-types";
 import ExportInstrument from "../../../ImportExport/Widgets/ExportInstrument";
 import {User} from "../../../../../utils/dtos";
+import HTPButton from "../../../../Common/HTPButton";
 
 export class ActionHeader extends React.Component{
 
@@ -45,15 +46,22 @@ export class ActionHeader extends React.Component{
     }
 
     render() {
+        let {updatePageState, selectMode, user, tableType, resetSelect} = this.props
         return <div style={{display : 'flex', flex : 1, justifyContent : 'center', alignItems : 'center',
             flexDirection : 'column', textAlign : 'center', marginTop : 20, marginBottom : 20}}>
                     <h1 className={"h4-responsive"} style={{marginBottom : 10}}>
                         {"Actions"}
                     </h1>
-                        {/*<div style={{flexDirection : 'row', width : "100%"}}>*/}
-                            {this.props.user.is_staff && this.renderCreateButtons()}
-                            {this.renderExportButtons()}
-                        {/*</div>*/}
+                        {user.is_staff && this.renderCreateButtons()}
+                        {this.renderExportButtons()}
+                        {tableType == ModelFields.ModelTypes.INSTRUMENT &&
+                            <div style={{marginTop : 10}}>
+                                <HTPButton label={selectMode ? "Unselect" : "Select"}
+                                           onSubmit={() => {
+                                               updatePageState({selectMode : !selectMode})
+                                               resetSelect()
+                                           }}/>
+                            </div>}
                 </div>
     }
 
@@ -65,5 +73,11 @@ ActionHeader.propTypes = {
     updatePageState: PropTypes.func.isRequired,
     history : PropTypes.object.isRequired,
     tableType : PropTypes.string.isRequired,
-    searchParams : PropTypes.object.isRequired
+    searchParams : PropTypes.object.isRequired,
+    selectMode : PropTypes.bool,
+    resetSelect : PropTypes.func
+}
+
+ActionHeader.defaultProps = {
+    selectMode : false
 }

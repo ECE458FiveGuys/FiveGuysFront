@@ -2,13 +2,14 @@ import {MDBBadge, MDBIcon} from "mdbreact";
 import {dateIcons, handleNavClick, parseDate} from "../../../utils";
 import ModelFields from "../../../../utils/enums";
 import React from "react";
+import Checkbox from "../TableWidgets/Checkbox";
 
 export default class TableUtils {
 
     static categoriesToElement(categories) {
         let categoryElement = []
         categories.forEach(category => {
-            categoryElement.push(<MDBBadge color={"green"}
+            categoryElement.push(<MDBBadge style = {{marginRight : 5}} color={"green"}
                                      pill>
                 {category[ModelFields.CategoryFields.NAME]}
             </MDBBadge>)
@@ -58,11 +59,12 @@ export default class TableUtils {
 }
 
 function createCalibrationExpirationElement(dateString, color) {
-    return (<div style={{flex: 1, flexDirection: "row", justifyContent : 'center', alignItems : 'center', display: "inline-block"}}>
+    return (<div style={{flex: 1, flexDirection: "row", justifyContent : 'space-between', alignItems : 'center', display: "flex"}}>
         <text>{dateString}</text>
-        <MDBIcon style={{marginLeft: 20, color: color}}
+        <MDBIcon style={{color: color, marginRight : 75}}
                  size={"1x"}
-                 icon={dateIcons[color]}/>
+                 icon={dateIcons[color]}
+        />
     </div>)
 }
 
