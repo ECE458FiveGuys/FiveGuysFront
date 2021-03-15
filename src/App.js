@@ -14,6 +14,7 @@ import LoadBankMain from "./app/Pages/LoadBankPage/LoadBankMain";
 import OAuthRedirect from "./auth/OAuthRedirect";
 import ImportDocumentation from "./app/Pages/ImportExport/Widgets/ImportDocumentation";
 import UserSettingsView from "./app/Pages/UserSettingsPage/UserSettingsView";
+import RestoreBackUpLoginView from "./app/Pages/RestoreBackUpPage/RestoreBackUpLoginView";
 import CreateModel from "./app/Pages/CreateFunctions/CreateModel";
 import CreateInstrument from "./app/Pages/CreateFunctions/CreateInstrument";
 import CreateUser from "./app/Pages/CreateFunctions/CreateUser";
@@ -132,6 +133,16 @@ class App extends Component {
                      render={(props) => (<UserSettingsView location={props.location}
                                                           token={this.state.token}
                                                           user={this.state.user}/>)}>
+              </Route>
+              <Route path="/user-settings"
+                     render={(props) => (<UserSettingsView location={props.location}
+                                                           token={this.state.token}
+                                                           user={this.state.user}/>)}>
+              </Route>
+              <Route path="/restore-backup"
+                     render={(props) => (<RestoreBackUpLoginView location={props.location}
+                                                           token={this.state.token}
+                                                           user={this.state.user}/>)}>
               </Route>
               <Route>
                 <NotFound/>

@@ -78,6 +78,7 @@ class NavbarPage extends Component {
                                             Logout
                                         </MDBDropdownItem>
                                         {!user.isNetIdUser() && <MDBDropdownItem href="/user-settings">User Settings</MDBDropdownItem>}
+                                        {!user.isNetIdUser() && <MDBDropdownItem href="/restore-backup">Restore Backup</MDBDropdownItem>}
                                     </MDBDropdownMenu>
                                 </MDBDropdown>
                             </MDBNavItem>

@@ -53,6 +53,7 @@ class UserTablePage extends Component{
     userParse = (results) => {
         let idToStaff = {}
         results.forEach(result => {
+            console.log(result)
             idToStaff[result['id']] = result['is_staff']
             result["is_staff"] = result["is_staff"] ? "admin" : "default"
             result['options'] = result['name'] === ADMIN_NAME ? <div style={{textAlign : 'center'}}>Permanent Admin</div>
