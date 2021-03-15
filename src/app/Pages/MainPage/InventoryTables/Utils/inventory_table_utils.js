@@ -7,12 +7,13 @@ export default class InventoryTableUtils {
 
     // for getting all the instruments selected in the table in select mode
 
-    static getAllSelected = (token, selectAllCheckboxRef, pkToEntriesSelected, searchRequestFunction) =>
+    static getAllSelected = (token, searchRequestFunction, getAllFunction, searchFieldValues, selectAllCheckboxRef, pkToEntriesSelected) =>
         (getAllSelectedCallBack) => {
+            let allSelected = selectAllCheckboxRef.current.isChecked()
 
             let searchAllPagesCallBack = (allSearchedEntries) => {
                 let selectedEntries;
-                if (selectAllCheckboxRef.current.isChecked()) {
+                if (allSelected) {
                     pkToEntriesSelected.forEach((isEntrySelected, pk) => {
                         if (!isEntrySelected) delete allSearchedEntries[pk]
                     })
@@ -38,6 +39,11 @@ export default class InventoryTableUtils {
                     searchAllPagesCallBack(allEntries)
                 }
             }
-            searchRequestFunction(token, this.state.searchFieldValues, paginatorCallBack, (errorMessage) => alert(errorMessage))
+
+            if (allSelected && searchFieldValues != {}) {
+                searchRequestFunction(token, searchFieldValues, paginatorCallBack, (errorMessage) => alert(errorMessage), undefined, undefined, undefined, 100)
+            } else {
+                getAllFunction(token, searchAllPagesCallBack, (errorMessage) => alert(errorMessage))
+            }
         }
 }

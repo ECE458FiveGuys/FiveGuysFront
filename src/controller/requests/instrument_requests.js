@@ -53,9 +53,10 @@ export default class InstrumentRequests {
                                                 errorMessageCallBack = (errorMessage) => errorMessage,
                                                 pageNum,
                                                 ordering,
-                                                exportMode) {
+                                                exportMode,
+                                                pageSize=undefined) {
         RequestUtils.getWithSearchParams(ModelFields.ModelTypes.INSTRUMENT, token, searchParams, callBack,
-            errorMessageCallBack, pageNum, ordering, exportMode)
+            errorMessageCallBack, pageNum, ordering, exportMode, pageSize)
     }
 
     static async getAllInstruments(token,

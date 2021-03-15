@@ -129,17 +129,23 @@ class InventoryTable extends Component {
     addCheckBoxes = (results) => {
         this.state.pkToCheckBoxRefs.clear()
         let parsedResults = results.map(result => {
-            delete result.clickEvent
             let rowID = result.pk
+            result.clickEvent = () => {
+                let checkBoxRef = this.state.pkToCheckBoxRefs.get(rowID).current
+                checkBoxRef.isChecked() ? checkBoxRef.forceUncheck() : checkBoxRef.check()
+                this.onRowSelect(result.pk)
+            }
             let checkBoxRef = React.createRef()
             // unless case has been overridden by manual select, inherit the state of the select all checkbox
             let checked = this.rowCurrentlyChecked(rowID)
-            result.SELECT =  <Checkbox
+            result.SELECT =  <div style={{pointerEvents : "none"}}>
+                                <Checkbox
                                     key={`${Math.random()}`}        // the new key forces a re-render so that the default checked value can be used
                                     ref={checkBoxRef}
                                     id={rowID}
                                     defaultChecked={checked}
                                     handleSelect={this.onRowSelect}/>
+                            </div>
             this.state.pkToCheckBoxRefs.set(rowID, checkBoxRef)
             return result
         })
@@ -176,7 +182,7 @@ class InventoryTable extends Component {
     }
 
     render() {
-        let {searchRequestFunction, parseSearchResultsFunction, token, columns, searchFields, user, history} = this.props
+        let {searchRequestFunction, parseSearchResultsFunction, token, columns, searchFields, user, history, getAllFunction} = this.props
         let {searchFieldValues, pkToEntriesSelected} = this.state
         return (
             <div>
@@ -224,8 +230,8 @@ class InventoryTable extends Component {
                 </div>
                 {this.state.selectMode && this.getTableType() == ModelFields.ModelTypes.INSTRUMENT &&
                     <InstrumentSelectFooter instrumentCount={this.state.numSelected}
-                                            getAllFunction={InventoryTableUtils.getAllSelected(token,
-                                                this.selectAllCheckboxRef, pkToEntriesSelected, searchRequestFunction)}/>
+                                            getAllFunction={InventoryTableUtils.getAllSelected(token, searchRequestFunction,
+                                                getAllFunction, searchFieldValues, this.selectAllCheckboxRef, pkToEntriesSelected)}/>
                     }
             </div>);
     }

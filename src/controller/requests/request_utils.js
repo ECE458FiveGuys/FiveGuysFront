@@ -137,12 +137,14 @@ export default class RequestUtils {
                                 errorMessageCallBack = (errorMessage) => errorMessage,
                                 pageNum= undefined,
                                 ordering = undefined,
-                                exportMode = false) {
+                                exportMode = false,
+                                pageSize = undefined) {
             let header = RequestUtils.buildTokenHeader(token)
             searchParams = RequestUtils.removeEmptyFields(searchParams)
             let urlSuffix = RequestUtils.applySearchParams(searchParams, type)
             urlSuffix = RequestUtils.appendToUrlSuffix(urlSuffix, 'page', pageNum)
             urlSuffix = RequestUtils.appendToUrlSuffix(urlSuffix, 'ordering', ordering)
+            urlSuffix = RequestUtils.appendToUrlSuffix(urlSuffix, 'pageSize', pageSize)
             let url = undefined
             if (type == ModelFields.ModelTypes.EQUIPMENT_MODEL) {
                 url = exportMode ? URLS.EXPORT_MODELS : URLS.MODELS
