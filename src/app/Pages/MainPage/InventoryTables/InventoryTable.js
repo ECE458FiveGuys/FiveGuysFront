@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
+import PropTypes, {any} from "prop-types";
 import MiscellaneousRequests from "../../../../controller/requests/miscellaneous_requests";
 import ModelFields from "../../../../utils/enums";
 import {EquipmentModel, Instrument} from "../../../../utils/ModelEnums";
@@ -10,14 +10,9 @@ import {Divider} from "@material-ui/core";
 import SearchHeader from "../Widgets/InventoryTableHeader/SearchHeader";
 import {ActionHeader} from "../Widgets/InventoryTableHeader/ActionHeader";
 import Checkbox from "../../../Common/Tables/TableWidgets/Checkbox";
-import Footer from "../../../Common/Tables/TableWidgets/StickyFooter";
-import HTPButton from "../../../Common/HTPButton";
 import InstrumentSelectFooter from "../../../Common/Tables/TableWidgets/InstrumentSelectFooter";
-import {unmountComponentAtNode} from "react-dom";
-import {PaginatedResponseFields} from "../../../Common/Tables/TableUtils/pagination_utils";
-import RequestUtils from "../../../../controller/requests/request_utils";
-import {METHODS} from "../../../../controller/strings";
 import InventoryTableUtils from "./Utils/inventory_table_utils";
+import {handleNavClick} from "../../../utils";
 
 class InventoryTable extends Component {
 
@@ -73,7 +68,7 @@ class InventoryTable extends Component {
     updateSearchFieldValues = (searchFieldValues) => {
         this.setState({searchFieldValues : {...searchFieldValues}},
             () => {
-                if (this.state.selectMode) {
+                if (this.inSelectMode()) {
                     this.setState({pkToCheckBoxRefs: new Map(), pkToEntriesSelected: new Map()}, () => {
                         this.setState({numSelected : this.calculateNumberSelected()})
                     })
@@ -86,7 +81,7 @@ class InventoryTable extends Component {
 
     updatePageState = (state) => {
         this.setState(state, () => {
-            if (state.selectMode) this.tableRef.current.forceParseData()
+            if (this.inSelectMode()) this.tableRef.current.forceParseData()
         })
     }
 
@@ -110,10 +105,12 @@ class InventoryTable extends Component {
 
     renderSelectAllCheckBox = () => {
         return {
-            label : <Checkbox
-                        id={"Select All"}
-                        ref = {this.selectAllCheckboxRef}
-                        handleSelect={this.selectAllCheckBoxes}/>,
+            label : <div style={{justifyContent : "center", alignItems : 'center', display : "flex", marginLeft : 5, marginRight : -5}}>
+                        <Checkbox
+                            id={"Select All"}
+                            ref = {this.selectAllCheckboxRef}
+                            handleSelect={this.selectAllCheckBoxes}/>
+                    </div>,
             field : "SELECT",
             sort: 'disabled'
         }
@@ -127,29 +124,57 @@ class InventoryTable extends Component {
     }
 
     addCheckBoxes = (results) => {
-        this.state.pkToCheckBoxRefs.clear()
+        let {pkToCheckBoxRefs} = this.state
+        pkToCheckBoxRefs.clear()
         let parsedResults = results.map(result => {
             let rowID = result.pk
-            result.clickEvent = () => {
-                let checkBoxRef = this.state.pkToCheckBoxRefs.get(rowID).current
-                checkBoxRef.isChecked() ? checkBoxRef.forceUncheck() : checkBoxRef.check()
-                this.onRowSelect(result.pk)
+            result.clickEvent = async () => {
+                if (this.state.justClicked) {
+                    this.setState({justClicked : false})
+                    return
+                }
+                this.setState({justClicked : true})
+                let newTab = window.event.ctrlKey
+                await this.sleep(100)
+                if (!this.state.checkBoxEvent) {
+                    handleNavClick("/instruments/" + rowID, this.props.history, newTab)
+                } else if (!this.state.checkBoxEvent) {
+                    let checkBoxRef = pkToCheckBoxRefs.get(rowID).current
+                    checkBoxRef.isChecked() ? checkBoxRef.forceUncheck() : checkBoxRef.check()
+                    this.onRowSelect(result.pk)
+                }
+                this.setState({checkBoxEvent : false, justClicked : false})
             }
             let checkBoxRef = React.createRef()
             // unless case has been overridden by manual select, inherit the state of the select all checkbox
             let checked = this.rowCurrentlyChecked(rowID)
-            result.SELECT =  <div style={{pointerEvents : "none"}}>
-                                <Checkbox
-                                    key={`${Math.random()}`}        // the new key forces a re-render so that the default checked value can be used
-                                    ref={checkBoxRef}
-                                    id={rowID}
-                                    defaultChecked={checked}
-                                    handleSelect={this.onRowSelect}/>
+            result.SELECT = <div    style={{height: 40, flex : 1, justifyContent : "center", alignItems : 'center', display : "flex",
+                                            marginTop: -10, marginBottom: -10, marginLeft: -5, marginRight: -5}}
+                                    onClick={() => !this.state.checkBoxEvent ?
+                                                            this.setState({checkBoxEvent : true}) :
+                                                            void(0)}>
+                                <div style={{marginLeft : 5}}>
+                                    <Checkbox
+                                        key={`${Math.random()}`}        // the new key forces a re-render so that the default checked value can be used
+                                        ref={checkBoxRef}
+                                        id={rowID}
+                                        defaultChecked={checked}
+                                        handleSelect={this.onRowSelect}/>
+                                </div>
                             </div>
-            this.state.pkToCheckBoxRefs.set(rowID, checkBoxRef)
+            pkToCheckBoxRefs.set(rowID, checkBoxRef)
             return result
         })
         return parsedResults
+    }
+
+    inSelectMode = () => {
+        if (this.selectAllCheckboxRef.current && this.selectAllCheckboxRef.current.isChecked()) return true
+        let anyChecked = false
+        this.state.pkToCheckBoxRefs.forEach((ref, pk) => {
+            if (ref.current && ref.current.isChecked()) anyChecked = true
+        })
+        return anyChecked
     }
 
     calculateNumberSelected = () => {
@@ -181,6 +206,10 @@ class InventoryTable extends Component {
         })
     }
 
+    sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
     render() {
         let {searchRequestFunction, parseSearchResultsFunction, token, columns, searchFields, user, history, getAllFunction} = this.props
         let {searchFieldValues, pkToEntriesSelected} = this.state
@@ -208,17 +237,17 @@ class InventoryTable extends Component {
                                       history={history}
                                       user={user}
                                       tableType={this.getTableType()}
-                                      selectMode={this.state.selectMode}
+                                      selectMode={this.inSelectMode()}
                                       resetSelect={this.resetSelect}
                                       searchParams={searchFieldValues}/>
                     </div>
                 </div>
-                <div style={{marginBottom : this.state.selectMode ? 25 : -15, cursor: "pointer"}}>
-                    <BackendPaginatedDataTable columns={this.state.selectMode ? this.state.selectColumns : this.props.columns}
+                <div style={{marginBottom : this.inSelectMode() ? 25 : -15, cursor: "pointer"}}>
+                    <BackendPaginatedDataTable columns={this.getTableType() == Instrument.TYPE ? this.state.selectColumns : this.props.columns}
                                                dataFetchFunction={searchRequestFunction}
                                                dataFetchFunctionParser={(data) => {
                                                    data = parseSearchResultsFunction(data)
-                                                   return this.state.selectMode ?
+                                                   return this.getTableType() == Instrument.TYPE ?
                                                        this.addCheckBoxes(data) :
                                                        data
                                                 }
@@ -228,7 +257,7 @@ class InventoryTable extends Component {
                                                ref={this.tableRef}
                     />
                 </div>
-                {this.state.selectMode && this.getTableType() == ModelFields.ModelTypes.INSTRUMENT &&
+                {this.inSelectMode() && this.getTableType() == ModelFields.ModelTypes.INSTRUMENT &&
                     <InstrumentSelectFooter instrumentCount={this.state.numSelected}
                                             getAllFunction={InventoryTableUtils.getAllSelected(token, searchRequestFunction,
                                                 getAllFunction, searchFieldValues, this.selectAllCheckboxRef, pkToEntriesSelected)}/>

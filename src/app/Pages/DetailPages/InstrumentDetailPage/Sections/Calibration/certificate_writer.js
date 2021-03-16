@@ -6,9 +6,13 @@ import {IdealCurrents} from "../../../../LoadBankPage/Steps/LoadBankStepSteps/st
 import FileUtils from "../../../../../../utils/file_utils";
 // import XLSX from "xlsx";
 
+import * as XLSX from 'xlsx';
+
 const LOGO_ASPECT_RATIO = 1.26
 const IMAGE_HEIGHT = 80 + 10
 const DIVIDER_WIDTH = IMAGE_HEIGHT * LOGO_ASPECT_RATIO
+const TOP_MARGIN = 15
+const SUBHEADING_FONT_SIZE = 20
 
 const INLINE_IMAGE_EXTENSIONS = ["jpeg", "jpg", "gif", "png"]
 
@@ -79,6 +83,8 @@ function writeAdditionalEvidence (certificate, additionalEvidence, instrument, t
     const extension = additionalEvidence.split(".").pop()
     const name = FileUtils.getFileNameFromPath(additionalEvidence)
     const pageWidth = certificate.internal.pageSize.getWidth();
+    // start new page
+    certificate.addPage()
     if (INLINE_IMAGE_EXTENSIONS.includes(extension)) {
         let addImageCallback = (image) => {
             certificate.text('ADDITIONAL EVIDENCE:', pageWidth / 2, 205, 'center');
@@ -89,31 +95,63 @@ function writeAdditionalEvidence (certificate, additionalEvidence, instrument, t
         //srcToFile(additionalEvidence, name, `image/png`, addImageCallback)
         // addImage(certificate, additionalEvidence)
     }
-    // else if (extension == "xlsx") {
-    //     let callBack = (file) => {
-    //             var workbook = XLSX.read(file, {
-    //                 type: 'array'
-    //             });
-    //             certificate.text('ADDITIONAL EVIDENCE:', pageWidth / 2, 190, 'center');
-    //             workbook.SheetNames.forEach(function (sheetName) {
-    //                 var XL_row_object = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
-    //                 let table = {}
-    //                 let body = []
-    //                 XL_row_object.forEach((row) => {
-    //                     let rowAsArray = Object.values(row)
-    //                     if (Object.keys(table).length == 0) {
-    //                         table['head'] = [Object.values(row)]
-    //                     } else {
-    //                         body.push(Object.values(row))
-    //                     }
-    //                 })
-    //                 table['body'] = body
-    //                 certificate.autoTable(table)
-    //             })
-    //             saveCertificate(certificate, instrument)
-    //     }
-    //     srcToFile(additionalEvidence, name, `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`, callBack)
-    // }
+    else if (extension == "xlsx") {
+        let callBack = (file) => {
+            // var csv_table = xlsxToTable(file)
+            certificate.setFontSize(SUBHEADING_FONT_SIZE)
+            certificate.text('XLSX DATA FROM \n'+name+':\n', pageWidth / 2, TOP_MARGIN, 'center');
+                var workbook = XLSX.read(file, {
+                    type: 'array'
+                });
+                // certificate.text('XLSX DATA FROM '+name+':', pageWidth / 2, 190, 'center');
+                // workbook.SheetNames.forEach(function (sheetName) {
+                    var sheetName = workbook.SheetNames[0];
+                    var XL_row_object = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+                    // var XL_csv_object = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName]);
+                    let table = {}
+                    // let head = []
+                    let body = []
+                    table['margin'] = { top: 25 }
+                    var count = -1
+                    // head = ['XSLX File Data']
+                    XL_row_object.forEach((row) => {
+                        if(row.__rowNum__ != count+1){
+                            if(Object.keys(table).length != 0) {
+                                table['body'] = body
+                                certificate.autoTable(table)
+                                body = []
+                            }
+                            table['head'] = [Object.values(row)]
+                        } else {
+                            body.push(Object.values(row))
+                        // let rowAsArray = Object.values(row)
+                        // if (Object.keys(table).length == 0) {
+                        //     table['head'] = [Object.values(row)]
+                        }
+                        count = row.__rowNum__
+                            // body.push(Object.values(row))
+                            // while(rowAsArray.length > head.length){
+                            //     head.push('')
+                            // }
+
+                    }
+                    )
+                    // let _head = []
+                    // _head.push(head)
+                    // table['head'] = _head
+                    // table['body'] = body
+                    // certificate.autoTable(table)
+                // })
+                saveCertificate(certificate, instrument)
+        }
+        srcToFile(additionalEvidence, name, `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`, callBack)
+    }
+    else if(extension == "pdf") {
+        // let callBack = (file) => {
+        //     // var csv_table = xlsxToTable(file)
+        //     certificate.setFontSize(SUBHEADING_FONT_SIZE)
+        //     certificate.text('XLSX DATA FROM \n'+name+':\n', pageWidth / 2, TOP_MARGIN, 'center');
+    }
     else {
         certificate.autoTable({
             head: [['AdditionalEvidence']],
@@ -205,4 +243,23 @@ function srcToFile(src, fileName, mimeType, callBack, token) {
                 alert(error)
             })
     );
+}
+
+function xlsxToTable(file) {
+    var name = file.name;
+    const reader = new FileReader();
+    // reader.onload = (evt) => { // evt = on_file_select event
+        /* Parse data */
+    // const bstr = evt.target.result;
+    const wb = XLSX.read(file, {type:'array'});
+    /* Get first worksheet */
+    const wsname = wb.SheetNames[0];
+    const ws = wb.Sheets[wsname];
+    /* Convert array of arrays */
+    const data = XLSX.utils.sheet_to_csv(ws, {header:1});
+    /* Update state */
+    console.log("Data>>>"+data);
+    return data
+    // };
+    // reader.readAsBinaryString(file);
 }

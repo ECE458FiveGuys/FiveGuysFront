@@ -54,14 +54,14 @@ export class ActionHeader extends React.Component{
                     </h1>
                         {user.is_staff && this.renderCreateButtons()}
                         {this.renderExportButtons()}
-                        {tableType == ModelFields.ModelTypes.INSTRUMENT &&
-                            <div style={{marginTop : 10}}>
-                                <HTPButton label={selectMode ? "Unselect" : "Select"}
-                                           onSubmit={() => {
-                                               updatePageState({selectMode : !selectMode})
-                                               resetSelect()
-                                           }}/>
-                            </div>}
+                        {/*{tableType == ModelFields.ModelTypes.INSTRUMENT &&*/}
+                        {/*    <div style={{marginTop : 10}}>*/}
+                        {/*        <HTPButton label={selectMode ? "Unselect" : "Select"}*/}
+                        {/*                   onSubmit={() => {*/}
+                        {/*                       updatePageState({selectMode : !selectMode})*/}
+                        {/*                       resetSelect()*/}
+                        {/*                   }}/>*/}
+                        {/*    </div>}*/}
                 </div>
     }
 

@@ -2,6 +2,7 @@ import HTPButton from "../../HTPButton";
 import React from "react";
 import Footer from "./StickyFooter";
 import * as PropTypes from "prop-types";
+import {generateLabels} from "../../../Pages/MainPage/InventoryTables/Utils/LabelGenerator";
 
 export default class InstrumentSelectFooter extends React.Component {
 
@@ -35,7 +36,7 @@ export default class InstrumentSelectFooter extends React.Component {
                        onSubmit={() => {
                            this.setState({printButtonEnabled : false})
                            let getAllFunctionCallBack = (instruments) => {
-                               // TODO: print asset tags
+                               generateLabels(instruments)
                                this.setState({printButtonEnabled : true})
                            }
                            this.props.getAllFunction(getAllFunctionCallBack)
