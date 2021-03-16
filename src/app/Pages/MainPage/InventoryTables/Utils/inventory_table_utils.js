@@ -2,6 +2,7 @@ import {PaginatedResponseFields} from "../../../../Common/Tables/TableUtils/pagi
 import RequestUtils from "../../../../../controller/requests/request_utils";
 import {METHODS} from "../../../../../controller/strings";
 
+const MAX_PAGE_SIZE = 1000
 
 export default class InventoryTableUtils {
 
@@ -41,7 +42,7 @@ export default class InventoryTableUtils {
             }
 
             if (allSelected && searchFieldValues != {}) {
-                searchRequestFunction(token, searchFieldValues, paginatorCallBack, (errorMessage) => alert(errorMessage), undefined, undefined, undefined, 100)
+                searchRequestFunction(token, searchFieldValues, paginatorCallBack, (errorMessage) => alert(errorMessage), undefined, undefined, undefined, MAX_PAGE_SIZE)
             } else {
                 getAllFunction(token, searchAllPagesCallBack, (errorMessage) => alert(errorMessage))
             }

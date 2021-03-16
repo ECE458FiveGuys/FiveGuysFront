@@ -35,6 +35,7 @@ export default class InstrumentSelectFooter extends React.Component {
                        onSubmit={() => {
                            this.setState({printButtonEnabled : false})
                            let getAllFunctionCallBack = (instruments) => {
+                               // TODO: print asset tags
                                this.setState({printButtonEnabled : true})
                            }
                            this.props.getAllFunction(getAllFunctionCallBack)
