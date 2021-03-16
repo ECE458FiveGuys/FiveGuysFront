@@ -29,7 +29,7 @@ jobs:
         run: ssh dev_server 'sudo systemctl stop nginx'
 
       - name: Check out the source
-        run: ssh dev_server 'cd group-six-react.colab.duke.edu && git pull'
+        run: ssh dev_server 'cd group-six-react.colab.duke.edu && git stash && git pull'
 
       - name: Install dependencies
         run: ssh dev_server 'cd group-six-react.colab.duke.edu && npm install && npm update'
