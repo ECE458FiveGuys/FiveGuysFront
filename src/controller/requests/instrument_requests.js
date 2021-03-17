@@ -122,7 +122,7 @@ export default class InstrumentRequests {
 
         InstrumentRequests.updateInstrument(token, "put", URLS.INSTRUMENTS + instrument_pk + "/",
             callBack, errorMessageCallBack, fields.model_number, fields.vendor, fields.serial_number,
-            fields.comment, fields[Instrument.FIELDS.ASSET_TAG], fields.instrument_categories)
+            fields.comment, fields[Instrument.FIELDS.ASSET_TAG], fields.instrument_categories, true)
     }
 
 
@@ -139,7 +139,7 @@ export default class InstrumentRequests {
                                   callBack = (json) => json,
                                   errorMessageCallBack = (errorMessage) => errorMessage,
                                   model_number=undefined, vendor=undefined, serial_number=undefined, comment=undefined,
-                                  asset_tag = undefined, instrument_categories = undefined) {
+                                  asset_tag = undefined, instrument_categories = undefined, editMode = undefined) {
 
         if (!vendor || !model_number) {
             errorMessageCallBack("Vendor and model number are required fields")
@@ -153,7 +153,7 @@ export default class InstrumentRequests {
             }
             let model_pk = results[0].pk
             let header = RequestUtils.buildTokenHeader(token)
-            let fields = RequestUtils.buildCreateInstrumentData(model_pk, serial_number, comment, asset_tag, instrument_categories)
+            let fields = RequestUtils.buildCreateInstrumentData(model_pk, serial_number, comment, asset_tag, instrument_categories, editMode)
             RequestUtils.assistedFetch(full_url, method,
                 callBack, errorMessageCallBack,
                 header, undefined, fields)

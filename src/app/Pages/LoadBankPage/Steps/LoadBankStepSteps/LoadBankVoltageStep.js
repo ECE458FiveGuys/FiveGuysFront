@@ -38,7 +38,7 @@ export default class LoadBankVoltageStep extends React.Component {
         }
         error.length == 0 ?
             successCallBack() :
-            errorCallBack(error, reset)
+            errorCallBack(error)
     }
 
     /*

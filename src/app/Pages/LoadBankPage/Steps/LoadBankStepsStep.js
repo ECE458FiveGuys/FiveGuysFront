@@ -121,6 +121,7 @@ export default class LoadBankStepsStep extends React.Component {
                         onStepSubmit={this.buildStepSubmitFunctions()}
                         stepNames={stepNames}
                         orientation={'vertical'}
+                        resetOptionOnError={true}
                         onAllStepsComplete={this.props.markReadyToSubmit} //when the last load current step is complete, mark ready to proceed to the next step
                         updateMasterState={(stepperState) => {
                                 this.props.updateStepperState(stepperState)  // when all currents have been recorded in this step, add them all to the outer stepper state

@@ -89,7 +89,7 @@ export default class HTPStepper extends React.Component {
 
     handleReset = () => {
         this.setActiveStep(0);
-        this.setState({completed : {}, stepperState: {reset : true}, readyToSubmit : false},
+        this.setState({completed : {}, errorMessage : false, stepperState: {reset : true}, readyToSubmit : false},
             () => this.setState({stepperState : {...this.state.stepperState, ...{reset : false}}}))
     };
 
@@ -114,7 +114,7 @@ export default class HTPStepper extends React.Component {
     }
 
     renderStepContent = () => {
-        let {completeButtonLabel, finishButtonLabel} = this.props
+        let {completeButtonLabel, finishButtonLabel, resetOptionOnError} = this.props
         let {activeStep} = this.state
         return(<div style={{flex : 1}}>
             {this.allStepsCompleted() ? (
@@ -143,7 +143,11 @@ export default class HTPStepper extends React.Component {
                                       message={this.state.errorMessage}
                                       className={"text-danger"}
                                       title={"Error!"}
-                                      isOpen={this.state.modal}/>
+                                      isOpen={this.state.modal}
+                                      additionalButtons={resetOptionOnError && <HTPButton label={"Reset All Steps"}
+                                                                                          color={"red"}
+                                                                                          onSubmit={this.handleReset}/>}
+                            />
                             :
                             <div/>}
                     </div>
@@ -194,11 +198,13 @@ HTPStepper.propTypes = {
     updateMasterState : PropTypes.func, // a method to be called to update the parent state
     onAllStepsComplete : PropTypes.func.isRequired,
     completeButtonLabel : PropTypes.string,
-    finishButtonLabel : PropTypes.string
+    finishButtonLabel : PropTypes.string,
+    resetOptionOnError : PropTypes.bool
 }
 
 HTPStepper.defaultProps = {
     orientation : 'horizontal',
     completeButtonLabel : "Complete Step",
-    finishButtonLabel : "Finish"
+    finishButtonLabel : "Finish",
+    resetOptionOnError : false
 }

@@ -43,7 +43,7 @@ export default class LoadBankCurrentStep extends React.Component {
         }
         error.length == 0 ?
             successCallBack() :
-            errorCallBack(error, true)
+            errorCallBack(error)
     }
 
     /*

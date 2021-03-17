@@ -41,8 +41,12 @@ export default class TableUtils {
             // render calibration symbols:
 
             result[ModelFields.InstrumentFields.EXPIRATION_DATE] = calculateCalibrationExpirationElement(result)
-            if (!result[ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION]) {
+            if (result[ModelFields.EquipmentModelFields.CALIBRATION_MODE] == ModelFields.CalibrationModes.NOT_CALIBRATABLE) {
                 result[ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION] = "Noncalibratable"
+                result[ModelFields.InstrumentFields.EXPIRATION_DATE] = "Noncalibratable"
+            } else if (!result[ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION] || !result[ModelFields.InstrumentFields.EXPIRATION_DATE]) {
+                result[ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION] = "Not yet calibrated!"
+                result[ModelFields.InstrumentFields.EXPIRATION_DATE] = "Not yet calibrated!"
             }
             // parse categories:
 
