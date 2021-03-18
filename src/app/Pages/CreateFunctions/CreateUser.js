@@ -9,15 +9,19 @@ import HTPInput from "../../Common/Inputs/HTPInput";
 import {AUTH_URLS, URLS} from "../../../controller/strings";
 import HTPPopup from "../../Common/HTPPopup";
 import HTPButton from "../../Common/HTPButton";
+import Dropdown from 'react-dropdown';
+import 'react-dropdown/style.css';
 
 
 class CreateModel extends Component {
 
     constructor(props) {
         super(props)
-        this.state = { vendor:'', model_number:'', description:'', comment:'',calibration_frequency:'',
-            modal : false, displayMessage: [], requestStatus:'', resultingColor:'red'}
+        let dropdown = ""
+        this.state = { vendor:'', model_number:'', description:'', comment:'',calibration_frequency:'', groups:[],
+            dropdown:"unprivileged", modal : false, displayMessage: [], requestStatus:'', resultingColor:'red'}
         this.handleChange = this.handleChange.bind(this)
+        this.dropDownChanged = this.dropDownChanged.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
     }
 
@@ -29,12 +33,15 @@ class CreateModel extends Component {
     }
 
     async handleSubmit(event){
+        console.log("submit")
+        console.log("priveledge:");
+        console.log(this.state.dropdown);
         let token = 'Token ' + this.props.token
         const { username, name, email, password } = this.state
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': token, 'Accept':'application/json'},
-            body: JSON.stringify({username: username, name: name, email: email, password: password, is_active: true})
+            body: JSON.stringify({username: username, name: name, email: email, password: password, groups: [this.state.dropdown], is_active: true})
         };
 
         const response = await fetch(AUTH_URLS.USERS, requestOptions)
@@ -107,6 +114,14 @@ class CreateModel extends Component {
                 </div> : <></>
     }
 
+    dropDownChanged=(name)=>(value)=>{
+        if (value.hasOwnProperty("value")) {
+            let newState = {}
+            newState["dropdown"] = value["value"]
+            this.setState(newState)
+        }
+    }
+
     // Return a controlled form i.e. values of the
     // input field not stored in DOM values are exist
     // in react component itself as state
@@ -121,8 +136,9 @@ class CreateModel extends Component {
                                 <HTPInput label={'Username'} onChange={this.handleChange('username')} placeholder={'required'}></HTPInput>
                                 <HTPInput label={'Email'} onChange={this.handleChange('email')} placeholder={'required'}></HTPInput>
                                 <HTPInput label={'Password'} type = 'Password' onChange={this.handleChange('password')} placeholder={'required'} type="password"></HTPInput>
-
-                                <HTPButton label={'Create User'} onSubmit={this.handleSubmit}></HTPButton>
+                            User Permissions
+                            <Dropdown label={"User Permissions"} options={["unprivileged","instrument_management", "model_management", "calibration", "administrator"]} onChange={this.dropDownChanged("dropdown")} value={"unprivileged"} placeholder="Select an option" />
+                            <HTPButton label={'Create User'} onSubmit={this.handleSubmit}></HTPButton>
                                 <br/>
                                 <text style={{ color: this.state.responseColor }}>{this.getDisplayMessage()}</text>
                         </MDBCol>
@@ -131,7 +147,11 @@ class CreateModel extends Component {
             </div>
         )
     }
+
+    doNothing() {
+    }
 }
+//unprivileged, intrument_management, model_management, calibration, administrator
 
 CreateModel.propTypes = {
     token: PropTypes.string.isRequired, // the token obtained through login
