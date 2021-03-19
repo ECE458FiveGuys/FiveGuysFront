@@ -6,7 +6,7 @@ export const HOSTS = {
 
 let ROOT_URL = window.location.host === HOSTS.PROD ? "https://group-six-prod.colab.duke.edu/api/" : "https://group-six-dev.colab.duke.edu/api/"
 
-let ROOT_URL_AUTH = window.location.host === HOSTS.PROD ? "https://group-six-prod.colab.duke.edu/auth/" : "https://group-six-dev.colab.duke.edu/api/auth/"
+let ROOT_URL_AUTH = window.location.host === HOSTS.PROD ? "https://group-six-prod.colab.duke.edu/api/auth/" : "https://group-six-dev.colab.duke.edu/api/auth/"
 
 
 let OAUTH_URL = `https://oauth.oit.duke.edu/oidc/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=code`
