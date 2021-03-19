@@ -253,7 +253,7 @@ export default class RequestUtils {
         if (model_pk) fields.append(ModelFields.InstrumentFields.MODEL, model_pk)
         if (serial_number && serial_number != null) fields.append(ModelFields.InstrumentFields.SERIAL_NUMBER, serial_number)
         if ((!serial_number || serial_number == null) && editMode) {
-            fields.append(ModelFields.InstrumentFields.SERIAL_NUMBER, '')
+            fields.append(ModelFields.InstrumentFields.SERIAL_NUMBER, 'U')
         }
         if (comment) fields.append(ModelFields.InstrumentFields.COMMENT, comment)
         if (asset_tag && !editMode) fields.append(ModelFields.InstrumentFields.ASSET_TAG, asset_tag)

@@ -4,9 +4,14 @@ export const HOSTS = {
     LOCAL : "localhost:3000"
 }
 
-let ROOT_URL = window.location.host === HOSTS.PROD ? "https://group-six-prod.colab.duke.edu/api/" : "https://group-six-test.colab.duke.edu/api/"
+let ROOT_URL = window.location.host === HOSTS.PROD ? "https://group-six-prod.colab.duke.edu/api/" : "https://group-six-dev.colab.duke.edu/api/"
 
-let ROOT_URL_AUTH = window.location.host === HOSTS.PROD ? "https://group-six-prod.colab.duke.edu/auth/" : "https://group-six-test.colab.duke.edu/auth/"
+let ROOT_URL_AUTH = window.location.host === HOSTS.PROD ? "https://group-six-prod.colab.duke.edu/auth/" : "https://group-six-dev.colab.duke.edu/api/auth/"
+
+
+// let ROOT_URL = window.location.host === HOSTS.PROD ? "https://group-six-prod.colab.duke.edu/api/" : "https://group-six-test.colab.duke.edu/api/"
+//
+// let ROOT_URL_AUTH = window.location.host === HOSTS.PROD ? "https://group-six-prod.colab.duke.edu/auth/" : "https://group-six-test.colab.duke.edu/auth/"
 
 let OAUTH_URL = `https://oauth.oit.duke.edu/oidc/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=code`
 
