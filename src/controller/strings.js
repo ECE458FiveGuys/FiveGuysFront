@@ -1,6 +1,6 @@
 export const HOSTS = {
-    DEV : "group-six-react.colab.duke.edu",
-    PROD : "group-six-react-prod.colab.duke.edu",
+    DEV : "group-six-dev.colab.duke.edu",
+    PROD : "group-six-prod.colab.duke.edu",
     LOCAL : "localhost:3000"
 }
 
