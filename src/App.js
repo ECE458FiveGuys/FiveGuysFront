@@ -90,7 +90,7 @@ class App extends Component {
                                                           user={this.state.user}/>)} >
               </Route>
               <Route  path="/instruments/:id"
-                      render={(props) => (<InstrumentDetailView id={props.match.params.id}
+                      render={(props) => (<InstrumentRoute id={props.match.params.id}
                                                                 location={props.location}
                                                                 history={props.history}
                                                                token={this.state.token}
@@ -108,20 +108,20 @@ class App extends Component {
                                                           user={this.state.user}/>)}>
               </Route>
 
-              <Route path="/load-bank/:id"
-                     render = {(props) => (<LoadBankMain  instrumentId={props.match.params.id}
-                                                          location={props.location}
-                                                          history={props.history}
-                                                          user={this.state.user}
-                                                          token={this.state.token}/>)}>
-              </Route>
-              <Route path="/klufe-wizard/:id"
-                     render = {(props) => (<KlufeWizardMain instrumentId={props.match.params.id}
-                                                          location={props.location}
-                                                          history={props.history}
-                                                          user={this.state.user}
-                                                          token={this.state.token}/>)}>
-              </Route>
+              {/*<Route path="/load-bank/:id"*/}
+              {/*       render = {(props) => (<LoadBankMain  instrumentId={props.match.params.id}*/}
+              {/*                                            location={props.location}*/}
+              {/*                                            history={props.history}*/}
+              {/*                                            user={this.state.user}*/}
+              {/*                                            token={this.state.token}/>)}>*/}
+              {/*</Route>*/}
+              {/*<Route path="/klufe-wizard/:id"*/}
+              {/*       render = {(props) => (<KlufeWizardMain instrumentId={props.match.params.id}*/}
+              {/*                                            location={props.location}*/}
+              {/*                                            history={props.history}*/}
+              {/*                                            user={this.state.user}*/}
+              {/*                                            token={this.state.token}/>)}>*/}
+              {/*</Route>*/}
               <Route path="/users"
                      render={(props) => (<UserTableView location={props.location}
                                                            token={this.state.token}
@@ -152,3 +152,44 @@ class App extends Component {
 }
 
 export default App;
+
+
+
+class InstrumentRoute extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  addToParentPath(id, path) {
+      return `/instruments/${id}/${path}`
+  }
+
+  render() {
+    let {id, location, history, token, user} = this.props
+    return <Switch>
+              <Route exact path={"/instruments/" + id}>
+                <InstrumentDetailView id={id}
+                                 location={location}
+                                 history={history}
+                                 token={token}
+                                 user={user}/>
+              </Route>
+              <Route path={this.addToParentPath(id, "load-bank/")}>
+                <LoadBankMain  instrumentId={id}
+                               location={location}
+                               history={history}
+                               user={user}
+                               token={token}/>
+              </Route>
+              <Route path={this.addToParentPath(id, "klufe-wizard/")}>
+                <KlufeWizardMain  instrumentId={id}
+                               location={location}
+                               history={history}
+                               user={user}
+                               token={token}/>
+            </Route>
+
+    </Switch>
+  }
+
+}

@@ -42,8 +42,8 @@ export default class TableUtils {
 
             result[ModelFields.InstrumentFields.EXPIRATION_DATE] = calculateCalibrationExpirationElement(result)
             if (result[ModelFields.EquipmentModelFields.CALIBRATION_MODE] == ModelFields.CalibrationModes.NOT_CALIBRATABLE) {
-                result[ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION] = "Noncalibratable"
-                result[ModelFields.InstrumentFields.EXPIRATION_DATE] = "Noncalibratable"
+                result[ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION] = "Not Calibratable"
+                result[ModelFields.InstrumentFields.EXPIRATION_DATE] = "Not Calibratable"
             } else if (!result[ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION] || !result[ModelFields.InstrumentFields.EXPIRATION_DATE]) {
                 result[ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION] = "Not yet calibrated!"
                 result[ModelFields.InstrumentFields.EXPIRATION_DATE] = "Not yet calibrated!"
@@ -75,7 +75,7 @@ function createCalibrationExpirationElement(dateString, color) {
 function calculateCalibrationExpirationElement(result) {
     let expirationDateString = result[ModelFields.InstrumentFields.EXPIRATION_DATE]
     if (expirationDateString == undefined) {
-        return "Noncalibratable"
+        return "Not Calibratable"
     }
     let color = parseDate(expirationDateString)
     return createCalibrationExpirationElement(expirationDateString, color)

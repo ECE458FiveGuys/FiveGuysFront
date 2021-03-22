@@ -17,7 +17,7 @@ export default class ModelTable extends Component {
             let model_pk = result[ModelFields.EquipmentModelFields.PK]
             result[ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY] =
                 result[ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY] === "00:00:00" ?
-                "Noncalibratable"
+                "Not Calibratable"
                 :
                 result[ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY].split(" ")[0]
 

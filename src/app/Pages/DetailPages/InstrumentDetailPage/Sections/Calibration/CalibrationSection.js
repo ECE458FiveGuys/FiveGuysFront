@@ -56,7 +56,7 @@ export default class CalibrationSection extends React.Component {
     }
 
     supportsHardwareCalibration(instrument) {
-        return instrument[Instrument.FIELDS.MODEL][EquipmentModel.FIELDS.VENDOR] == "Fluke 87"
+        return instrument[Instrument.FIELDS.MODEL][EquipmentModel.FIELDS.CALIBRATION_MODE] == ModelFields.CalibrationModes.GUIDED_HARDWARE
     }
 
     renderRecordCalibrationButtons = () => {

@@ -67,7 +67,7 @@ class CSV_Import extends Component{
         results.forEach(result => {
             result[ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY] =
                 result[ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY] === "00:00:00" ?
-                    "Noncalibratable"
+                    "Not Calibratable"
                     :
                     result[ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY].split(" ")[0]
 
