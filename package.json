@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@popperjs/core": "^2.9.1",
+    "@syncfusion/ej2-react-dropdowns": "^18.4.48",
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^12.7.1",
@@ -61,6 +62,7 @@
     "bs-stepper": "^1.7.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "multiselect-react-dropdown": "^1.6.11",
     "papa": "0.0.0",
     "papaparse": "^5.3.0",
     "prop-types": "^15.7.2",

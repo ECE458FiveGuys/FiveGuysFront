@@ -54,8 +54,15 @@ class UserTablePage extends Component{
         let idToStaff = {}
         results.forEach(result => {
             console.log(result)
-            idToStaff[result['id']] = result['is_staff']
-            result["is_staff"] = result["is_staff"] ? "admin" : "default"
+            if (result.hasOwnProperty("groups")) {
+                let array = result["groups"]
+                console.log(array)
+                let stringPermission = array[0]
+                console.log(stringPermission)
+                result["is_staff"] = stringPermission
+            }
+            //idToStaff[result['id']] = result['is_staff']
+            //result["is_staff"] = result["is_staff"] ? "admin" : "default"
             result['options'] = result['name'] === ADMIN_NAME ? <div style={{textAlign : 'center'}}>Permanent Admin</div>
                                         : this.renderOptions(result, idToStaff)
         })

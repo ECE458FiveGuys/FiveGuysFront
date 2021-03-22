@@ -10,7 +10,35 @@ import {AUTH_URLS, URLS} from "../../../controller/strings";
 import HTPPopup from "../../Common/HTPPopup";
 import HTPButton from "../../Common/HTPButton";
 import Dropdown from 'react-dropdown';
+import { Multiselect } from 'multiselect-react-dropdown';
 import 'react-dropdown/style.css';
+
+export const PERMISSIONS =
+    [
+        { value: 'unprivileged', label: 'Unprivileged (Can view models, instruments, and categories)' },
+        { value: 'instrument_management', label: 'Instrument Management (Allows all Instruments functions excluding calibrations)' },
+        { value: 'model_management', label: 'Model Management (Allows all Models and Instruments functions excluding calibrations)' },
+        { value: 'calibration', label: 'Calibration (Allows all Models and Instruments functions including calibrations)' },
+        { value: 'administrator', label: "Administrator (Allows all functions above including changing other user's abilities" },
+    ]
+
+export const LABELS =
+    [
+        'Unprivileged (Can view models, instruments, and categories)',
+        'Instrument Management (Allows all Instruments functions excluding calibrations)',
+        'Model Management (Allows all Models and Instruments functions excluding calibrations)',
+        'Calibration (Allows all Models and Instruments functions including calibrations)',
+        "Administrator (Allows all functions above including changing other user's abilities",
+    ]
+
+export const SHORTEN_LABELS =
+    [
+        'Unprivileged',
+        'Instrument Management',
+        'Model Management',
+        'Calibration',
+        'Administrator',
+    ]
 
 
 class CreateModel extends Component {
@@ -19,10 +47,12 @@ class CreateModel extends Component {
         super(props)
         let dropdown = ""
         this.state = { vendor:'', model_number:'', description:'', comment:'',calibration_frequency:'', groups:[],
-            dropdown:"unprivileged", modal : false, displayMessage: [], requestStatus:'', resultingColor:'red'}
+            dropdown:[], modal : false, displayMessage: [], requestStatus:'', resultingColor:'red'}
         this.handleChange = this.handleChange.bind(this)
         this.dropDownChanged = this.dropDownChanged.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
+        this.onSelect = this.onSelect.bind(this)
+        this.onRemove = this.onRemove.bind(this)
     }
 
 
@@ -34,7 +64,6 @@ class CreateModel extends Component {
 
     async handleSubmit(event){
         console.log("submit")
-        console.log("priveledge:");
         console.log(this.state.dropdown);
         let token = 'Token ' + this.props.token
         const { username, name, email, password } = this.state
@@ -122,10 +151,29 @@ class CreateModel extends Component {
         }
     }
 
+    onSelect(selectedList, selectedItem) {
+        let newState = {}
+        newState["dropdown"] = selectedList
+        this.setState(newState)
+    }
+
+    onRemove(selectedList, removedItem) {
+        let newState = {}
+        newState["dropdown"] = selectedList
+        this.setState(newState)
+    }
+
     // Return a controlled form i.e. values of the
     // input field not stored in DOM values are exist
     // in react component itself as state
     render(){
+        const options = [
+            { value: 'unprivileged', label: 'Unprivileged (Can view models, instruments, and categories)' },
+            { value: 'instrument_management', label: 'Instrument Management (Allows all Instruments functions excluding calibrations)' },
+            { value: 'model_management', label: 'Model Management (Allows all Models and Instruments functions excluding calibrations)' },
+            { value: 'calibration', label: 'Calibration (Allows all Models and Instruments functions including calibrations)' },
+            { value: 'administrator', label: "Administrator (Allows all functions above including changing other user's abilities" },
+            ]
         return(
             <div>
                 <MDBContainer>
@@ -137,7 +185,7 @@ class CreateModel extends Component {
                                 <HTPInput label={'Email'} onChange={this.handleChange('email')} placeholder={'required'}></HTPInput>
                                 <HTPInput label={'Password'} type = 'Password' onChange={this.handleChange('password')} placeholder={'required'} type="password"></HTPInput>
                             User Permissions
-                            <Dropdown label={"User Permissions"} options={["unprivileged","instrument_management", "model_management", "calibration", "administrator"]} onChange={this.dropDownChanged("dropdown")} value={"unprivileged"} placeholder="Select an option" />
+                            <Multiselect options={LABELS} onSelect={this.onSelect} onRemove={this.onRemove} showCheckbox={true} isObject={false} />
                             <HTPButton label={'Create User'} onSubmit={this.handleSubmit}></HTPButton>
                                 <br/>
                                 <text style={{ color: this.state.responseColor }}>{this.getDisplayMessage()}</text>
