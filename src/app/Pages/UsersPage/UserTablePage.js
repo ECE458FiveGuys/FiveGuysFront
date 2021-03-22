@@ -53,10 +53,16 @@ class UserTablePage extends Component{
     userParse = (results) => {
         let idToStaff = {}
         results.forEach(result => {
-            idToStaff[result['id']] = result['is_staff']
-            result["is_staff"] = result["is_staff"] ? "admin" : "default"
+            console.log(result)
+            if (result.hasOwnProperty("groups")) {
+                let array = result["groups"]
+                console.log(array)
+                let stringPermission = array.toString()
+                console.log(stringPermission)
+                result["is_staff"] = stringPermission
+            }
             result['options'] = result['name'] === ADMIN_NAME ? <div style={{textAlign : 'center'}}>Permanent Admin</div>
-                                        : this.renderOptions(result, idToStaff)
+                : this.renderOptions(result, idToStaff)
         })
         this.setState({idToStaff : idToStaff})
         return results
