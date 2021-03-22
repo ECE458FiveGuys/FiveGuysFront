@@ -2,7 +2,7 @@ import RecordCalibration from "./RecordCalibration";
 import DataTable from "../../../../../Common/Tables/DataTable";
 import TableColumns from "../../../../../Common/Tables/TableUtils/Columns";
 import React from "react";
-import {EquipmentModel} from "../../../../../../utils/ModelEnums";
+import {EquipmentModel, Instrument} from "../../../../../../utils/ModelEnums";
 import ModelFields from "../../../../../../utils/enums";
 import HTPButton from "../../../../../Common/HTPButton";
 import {handleNavClick} from "../../../../../utils";
@@ -55,6 +55,10 @@ export default class CalibrationSection extends React.Component {
         this.setState({calibrationModalShow : boolean})
     }
 
+    supportsHardwareCalibration(instrument) {
+        return instrument[Instrument.FIELDS.MODEL][EquipmentModel.FIELDS.VENDOR] == "Fluke 87"
+    }
+
     renderRecordCalibrationButtons = () => {
         let {instrument, history} = this.props
         let model = instrument.model
@@ -71,6 +75,12 @@ export default class CalibrationSection extends React.Component {
                         label={"Load Bank Wizard"}
                         onSubmit={() => {
                             handleNavClick("/load-bank/" + instrument.pk, history)
+                        }}/> : <></>}
+                {instrumentCalibratable(instrument) && this.supportsHardwareCalibration(instrument) ?
+                    <HTPButton
+                        label={"Klufe K5700 Calibration"}
+                        onSubmit={() => {
+                            handleNavClick("/klufe-wizard/" + instrument.pk, history)
                         }}/> : <></>}
             </div>)
     }

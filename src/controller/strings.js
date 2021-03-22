@@ -23,7 +23,7 @@ export const URLS =
         INSTRUMENTS_ALL : ROOT_URL + "instruments/all/",
         MODELS : ROOT_URL + "models/",
         INSTRUMENTS : ROOT_URL + "instruments/",
-        VENDORS : ROOT_URL + "models/vendors/",
+        VENDOR : ROOT_URL + "models/vendors/",
         MODEL_CATEGORIES : ROOT_URL + "model-categories/",
         INSTRUMENT_CATEGORIES: ROOT_URL + "instrument-categories/",
         OAUTH_URL : OAUTH_URL,

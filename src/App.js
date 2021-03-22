@@ -20,6 +20,7 @@ import CreateUser from "./app/Pages/CreateFunctions/CreateUser";
 import UserTablePage from "./app/Pages/UsersPage/UserTablePage";
 import UserTester from "./app/Pages/CreateFunctions/UserTester";
 import UserTableView from "./app/Pages/UsersPage/UserTableView";
+import KlufeWizardMain from "./app/Pages/KlufeWizardPage/KlufeWizardMain";
 
 class App extends Component {
 
@@ -109,6 +110,13 @@ class App extends Component {
 
               <Route path="/load-bank/:id"
                      render = {(props) => (<LoadBankMain  instrumentId={props.match.params.id}
+                                                          location={props.location}
+                                                          history={props.history}
+                                                          user={this.state.user}
+                                                          token={this.state.token}/>)}>
+              </Route>
+              <Route path="/klufe-wizard/:id"
+                     render = {(props) => (<KlufeWizardMain instrumentId={props.match.params.id}
                                                           location={props.location}
                                                           history={props.history}
                                                           user={this.state.user}
