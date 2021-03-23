@@ -18,13 +18,18 @@ export default function InstrumentSection(instrument) {
                 <div style={{flex : 1, display : "flex", flexDirection : "row",
                         alignItems : 'center', justifyContent : 'space-between',marginTop : 20, textAlign : 'center'}}>
                     {ModelDisplay(
-                        ["Model Number", "Vendor", "Asset Tag Number", "Serial Number", "Load Bank Wizard Supported?"],
+                        ["Model Number", "Vendor", "Asset Tag Number", "Serial Number", "Calibration Mode"],
                         [
                             instrument.model[ModelFields.EquipmentModelFields.MODEL_NUMBER],
                             instrument.model[ModelFields.EquipmentModelFields.VENDOR],
                             instrument[Instrument.FIELDS.ASSET_TAG],
                             instrument[Instrument.FIELDS.SERIAL_NUMBER],
-                            instrument.model[ModelFields.EquipmentModelFields.CALIBRATION_MODE] == ModelFields.CalibrationModes.LOAD_BANK ? "Yes" : "No"
+                            instrument.model[ModelFields.EquipmentModelFields.CALIBRATION_MODE] == ModelFields.CalibrationModes.NOT_CALIBRATABLE ? "Not Calibratable" :
+                                (instrument.model[ModelFields.EquipmentModelFields.CALIBRATION_MODE] == ModelFields.CalibrationModes.LOAD_BANK ?
+                                    "Load Bank" :
+                                    instrument.model[ModelFields.EquipmentModelFields.CALIBRATION_MODE] == ModelFields.CalibrationModes.GUIDED_HARDWARE ?
+                                        "Guided Hardware" :
+                                        "Simple")
                         ])}
                 </div>
                 <h1 style={{marginTop : 20}}

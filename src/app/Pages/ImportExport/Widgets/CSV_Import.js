@@ -32,8 +32,10 @@ class CSV_Import extends Component{
         this.state = {
             fileSelected : false,
             results: [],
-            modal : false
+            modal : false,
         }
+        this.state.modifiedInstrumentTableColumns = [...TableColumns.INSTRUMENT_COLUMNS]
+        this.state.modifiedInstrumentTableColumns.splice(5, 2)  // remove date columns
     }
 
     fileSelected = (event) => {
@@ -56,7 +58,7 @@ class CSV_Import extends Component{
             this.toggleModal()
         }
         let successCallBack = (result) => {
-            result = type == ModelFields.ModelTypes.INSTRUMENT ? TableUtils.parseInstrumentTableRows(result, this.props.history) : this.modParse(result)
+            result = type == ModelFields.ModelTypes.INSTRUMENT ? TableUtils.parseInstrumentTableRows(result, this.props.history, true) : this.modParse(result)
             this.setState({results: result, type : type})
         }
         ImportExportRequests.import(this.props.token, this.state.file, type, successCallBack, errorCallBack);
@@ -67,7 +69,7 @@ class CSV_Import extends Component{
         results.forEach(result => {
             result[ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY] =
                 result[ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY] === "00:00:00" ?
-                    "Noncalibratable"
+                    "Not Calibratable"
                     :
                     result[ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY].split(" ")[0]
 
@@ -85,7 +87,7 @@ class CSV_Import extends Component{
     }
 
     render(){
-        const {results, type} = this.state;
+        const {results, type, modifiedInstrumentTableColumns} = this.state;
         return(
             <div style={{flex : 1, justifyContent : 'center', alignItems : 'center', display : 'flex', flexDirection : 'column'}}>
                     <div style={{marginTop : 20, marginBottom : 35, width : 350}}>
@@ -111,7 +113,7 @@ class CSV_Import extends Component{
                     <div style={{marginTop : 30, cursor: "pointer"}}>
                         <DataTable
                             displayEntries={false}
-                            columns = {type == ModelFields.ModelTypes.EQUIPMENT_MODEL ? TableColumns.MODEL_COLUMNS : TableColumns.INSTRUMENT_COLUMNS}
+                            columns = {type == ModelFields.ModelTypes.EQUIPMENT_MODEL ? TableColumns.MODEL_COLUMNS : modifiedInstrumentTableColumns}
                             rows={results}
                             searching={false}
                         />

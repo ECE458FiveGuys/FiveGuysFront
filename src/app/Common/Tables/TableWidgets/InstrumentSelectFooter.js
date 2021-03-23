@@ -3,6 +3,7 @@ import React from "react";
 import Footer from "./StickyFooter";
 import * as PropTypes from "prop-types";
 import {generateLabels} from "../../../Pages/MainPage/InventoryTables/Utils/LabelGenerator";
+import Loading from "../../Images/Loading";
 
 const DOWNLOADING_LABELS_TEXT = "downloading labels ...";
 const PRINT_LABELS_TEXT = "Print Asset Tags";
@@ -34,8 +35,7 @@ export default class InstrumentSelectFooter extends React.Component {
                 <text>{`Instruments Selected`}</text>
             </div>
             <HTPButton style={{marginLeft : 30}}
-                       // label={"Print Asset Tags"}
-                       label={this.state.printButtonLabel}
+                       label={this.state.printButtonEnabled ? "Print Asset Tags" : "Downloading . . ."}
                        size={"sm"}
                        disabled={!this.state.printButtonEnabled}
                        onSubmit={() => {

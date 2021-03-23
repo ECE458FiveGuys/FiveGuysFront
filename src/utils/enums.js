@@ -83,6 +83,7 @@ export default class ModelFields {
     static CalibrationModes = {
         NOT_CALIBRATABLE : "NOT_CALIBRATABLE",
         DEFAULT : "DEFAULT",
-        LOAD_BANK : "LOAD_BANK"
+        LOAD_BANK : "LOAD_BANK",
+        GUIDED_HARDWARE : "GUIDED_HARDWARE"
     }
 }

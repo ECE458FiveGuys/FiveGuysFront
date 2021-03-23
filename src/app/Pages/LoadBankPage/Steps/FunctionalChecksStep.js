@@ -1,13 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
-import HTPStepper from "../../../Common/HTPStepper";
+import HTPStepper from "../../../Common/Stepper/HTPStepper";
 import {
     AllFunctionCheckStepNames,
     FunctionCheckDescriptions,
     FunctionCheckStepNames
 } from "./FunctionalCheckSteps/step_utils";
-import FunctionalCheckStep from "./FunctionalCheckSteps/FunctionalCheckStep";
-import CommentStep from "./FunctionalCheckSteps/CommentStep";
+import FunctionalCheckStep from "../../../Common/Stepper/FunctionalCheckSteps/FunctionalCheckStep";
+import CommentStep from "../../../Common/Stepper/FunctionalCheckSteps/CommentStep";
 
 export default class FunctionalChecksStep extends React.Component {
 

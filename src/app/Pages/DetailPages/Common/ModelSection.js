@@ -21,12 +21,17 @@ export default function ModelSection(model, subheading, history=undefined, displ
                             alignItems : 'center', justifyContent : 'space-between',marginTop : 20, textAlign : 'center',
                             cursor : displayNavButton ? "pointer" : "default"}}>
                         {ModelDisplay(
-                            ["Model Number", "Vendor", "Calibration Frequency", "Load Bank Wizard Supported?"],
+                            ["Model Number", "Vendor", "Calibration Frequency", "Calibration Mode"],
                             [
                                 model[ModelFields.EquipmentModelFields.MODEL_NUMBER],
                                 model[ModelFields.EquipmentModelFields.VENDOR],
                                 model[ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY],
-                                model[ModelFields.EquipmentModelFields.CALIBRATION_MODE] == ModelFields.CalibrationModes.LOAD_BANK ? "Yes" : "No"
+                                model[ModelFields.EquipmentModelFields.CALIBRATION_MODE] == ModelFields.CalibrationModes.NOT_CALIBRATABLE ? "Not Calibratable" :
+                                    (model[ModelFields.EquipmentModelFields.CALIBRATION_MODE] == ModelFields.CalibrationModes.LOAD_BANK ?
+                                    "Load Bank" :
+                                    model[ModelFields.EquipmentModelFields.CALIBRATION_MODE] == ModelFields.CalibrationModes.GUIDED_HARDWARE ?
+                                        "Guided Hardware" :
+                                            "Simple")
                             ])}
                     </a>
                     <h1 style={{marginTop : 20}}
