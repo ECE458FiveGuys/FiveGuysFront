@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import HTPStepper from "../../../Common/HTPStepper";
+import HTPStepper from "../../../Common/Stepper/HTPStepper";
 import {User} from "../../../../utils/dtos";
 import {CurrentStepNames, IdealCurrents, StepNames} from "./LoadBankStepSteps/step_utils";
 import LoadBankCurrentStep from "./LoadBankStepSteps/LoadBankCurrentStep";

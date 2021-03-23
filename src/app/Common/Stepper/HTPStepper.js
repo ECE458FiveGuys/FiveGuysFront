@@ -1,11 +1,11 @@
 
 import React from "react";
 import {Button, Step, StepButton, StepContent, StepIcon, StepLabel, Stepper} from "@material-ui/core";
-import HTPButton from "./HTPButton";
+import HTPButton from "../HTPButton";
 import PropTypes from "prop-types";
-import {User} from "../../utils/dtos";
-import HTPPopup from "./HTPPopup";
-import {StepNames} from "../Pages/LoadBankPage/Steps/step_enums";
+import {User} from "../../../utils/dtos";
+import HTPPopup from "../HTPPopup";
+import {StepNames} from "../../Pages/LoadBankPage/Steps/step_enums";
 
 export default class HTPStepper extends React.Component {
 
