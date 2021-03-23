@@ -5,12 +5,16 @@ import * as PropTypes from "prop-types";
 import {generateLabels} from "../../../Pages/MainPage/InventoryTables/Utils/LabelGenerator";
 import Loading from "../../Images/Loading";
 
+const DOWNLOADING_LABELS_TEXT = "downloading labels ...";
+const PRINT_LABELS_TEXT = "Print Asset Tags";
+
 export default class InstrumentSelectFooter extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            printButtonEnabled : false
+            printButtonEnabled : false,
+            printButtonLabel : PRINT_LABELS_TEXT
         }
     }
 
@@ -35,10 +39,11 @@ export default class InstrumentSelectFooter extends React.Component {
                        size={"sm"}
                        disabled={!this.state.printButtonEnabled}
                        onSubmit={() => {
-                           this.setState({printButtonEnabled : false})
+                           this.setState({printButtonEnabled : false, printButtonLabel: DOWNLOADING_LABELS_TEXT})
+
                            let getAllFunctionCallBack = (instruments) => {
                                generateLabels(instruments)
-                               this.setState({printButtonEnabled : true})
+                               this.setState({printButtonEnabled : true, printButtonLabel: PRINT_LABELS_TEXT})
                            }
                            this.props.getAllFunction(getAllFunctionCallBack)
                        }}/>

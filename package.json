@@ -60,6 +60,7 @@
     "bs-stepper": "^1.7.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "multiselect-react-dropdown": "^1.6.11",
     "papa": "0.0.0",
     "papaparse": "^5.3.0",
     "prop-types": "^15.7.2",
