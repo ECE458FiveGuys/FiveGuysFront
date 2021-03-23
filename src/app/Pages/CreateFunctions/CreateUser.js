@@ -29,6 +29,15 @@ export const SHORTEN_LABELS =
         'administrator',
     ]
 
+export const DISPLAYABLE_LABELS =
+    [
+        'Unprivileged',
+        'Instrument Management',
+        'Model Management',
+        'Calibration',
+        'Administrator',
+    ]
+
 
 class CreateUser extends Component {
 
@@ -108,20 +117,19 @@ class CreateUser extends Component {
 
     manageGroupsInput = () =>{
         let newState = {}
-        let newArrayBackEndReadable = []
+        let newArrayBackEndReadable = [] //first turns the imput into readable backend
         for (let i=0; i<this.state.dropdown.length; i++){
             let num = LABELS.indexOf(this.state.dropdown[i])
             newArrayBackEndReadable.push(SHORTEN_LABELS[num])
-        }
-        if (newArrayBackEndReadable.includes(SHORTEN_LABELS[4])){
+        }  //then performs logic on the inputs
+        if (newArrayBackEndReadable.includes(SHORTEN_LABELS[4])){ //if admin, then keep only admin
             newArrayBackEndReadable = []
             newArrayBackEndReadable.push(SHORTEN_LABELS[4])
         }
-        if (newArrayBackEndReadable.includes(SHORTEN_LABELS[2]) && !newArrayBackEndReadable.includes(SHORTEN_LABELS[1])){
+        if (newArrayBackEndReadable.includes(SHORTEN_LABELS[2]) && !newArrayBackEndReadable.includes(SHORTEN_LABELS[1])){ //if model, remove intrument
             newArrayBackEndReadable.push(SHORTEN_LABELS[1])
         }
-        if (newArrayBackEndReadable.includes(SHORTEN_LABELS[0]) && newArrayBackEndReadable.length>1){
-            console.log("remove unpriveledged")
+        if (newArrayBackEndReadable.includes(SHORTEN_LABELS[0]) && newArrayBackEndReadable.length>1){ //if unpriveledged with tohers, delete
             let index = newArrayBackEndReadable.indexOf(SHORTEN_LABELS[0])
             newArrayBackEndReadable.splice(index, 1);
         }

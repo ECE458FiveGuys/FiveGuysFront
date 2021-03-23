@@ -5,6 +5,7 @@ import TableColumns from "../../Common/Tables/TableUtils/Columns";
 import DataTable from "../../Common/Tables/DataTable";
 import HTPButton from "../../Common/HTPButton";
 import CreateUserPopup from "./UserFunctions/CreateUserPopup";
+import {DISPLAYABLE_LABELS, SHORTEN_LABELS} from "../CreateFunctions/CreateUser";
 
 const ADMIN_NAME = 'Admin'
 
@@ -56,9 +57,12 @@ class UserTablePage extends Component{
             console.log(result)
             if (result.hasOwnProperty("groups")) {
                 let array = result["groups"]
-                console.log(array)
-                let stringPermission = array.toString()
-                console.log(stringPermission)
+                let newArray = []
+                for (let i=0; i<array.length; i++){
+                    let index = SHORTEN_LABELS.indexOf(array[i])
+                    newArray.push(DISPLAYABLE_LABELS[i])
+                }
+                let stringPermission = newArray.toString()
                 result["is_staff"] = stringPermission
             }
             result['options'] = result['name'] === ADMIN_NAME ? <div style={{textAlign : 'center'}}>Permanent Admin</div>
