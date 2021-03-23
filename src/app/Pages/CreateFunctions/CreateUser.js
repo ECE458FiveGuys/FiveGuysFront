@@ -9,7 +9,7 @@ import HTPInput from "../../Common/Inputs/HTPInput";
 import {AUTH_URLS, URLS} from "../../../controller/strings";
 import HTPPopup from "../../Common/HTPPopup";
 import HTPButton from "../../Common/HTPButton";
-import { Multiselect } from 'multiselect-react-dropdown';
+//import { Multiselect } from 'multiselect-react-dropdown';
 
 export const LABELS =
     [
@@ -193,7 +193,7 @@ class CreateUser extends Component {
                             <HTPInput label={'Email'} onChange={this.handleChange('email')} placeholder={'required'}></HTPInput>
                             <HTPInput label={'Password'} type = 'Password' onChange={this.handleChange('password')} placeholder={'required'} type="password"></HTPInput>
                             User Permissions
-                            <Multiselect options={LABELS} onSelect={this.onSelect} onRemove={this.onRemove} showCheckbox={true} isObject={false} />
+                            {/*<Multiselect options={LABELS} onSelect={this.onSelect} onRemove={this.onRemove} showCheckbox={true} isObject={false} />*/}
                             <HTPButton label={'Create User'} onSubmit={this.handleSubmit}></HTPButton>
                             <br/>
                             <text style={{ color: this.state.responseColor }}>{this.getDisplayMessage()}</text>
