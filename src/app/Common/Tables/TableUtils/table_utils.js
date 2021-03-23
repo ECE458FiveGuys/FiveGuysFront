@@ -17,7 +17,7 @@ export default class TableUtils {
         return categoryElement
     }
 
-    static parseInstrumentTableRows = (results, history) => {
+    static parseInstrumentTableRows = (results, history, importMode = false) => {
         results.forEach(result => {
 
             // raise nested model fields up to the level of instrument fields so table can read them:
@@ -40,14 +40,17 @@ export default class TableUtils {
 
             // render calibration symbols:
 
-            result[ModelFields.InstrumentFields.EXPIRATION_DATE] = calculateCalibrationExpirationElement(result)
-            if (result[ModelFields.EquipmentModelFields.CALIBRATION_MODE] == ModelFields.CalibrationModes.NOT_CALIBRATABLE) {
-                result[ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION] = "Noncalibratable"
-                result[ModelFields.InstrumentFields.EXPIRATION_DATE] = "Noncalibratable"
-            } else if (!result[ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION] || !result[ModelFields.InstrumentFields.EXPIRATION_DATE]) {
-                result[ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION] = "Not yet calibrated!"
-                result[ModelFields.InstrumentFields.EXPIRATION_DATE] = "Not yet calibrated!"
+            if (!importMode) {
+                result[ModelFields.InstrumentFields.EXPIRATION_DATE] = calculateCalibrationExpirationElement(result)
+                if (result[ModelFields.EquipmentModelFields.CALIBRATION_MODE] == ModelFields.CalibrationModes.NOT_CALIBRATABLE) {
+                    result[ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION] = "Not Calibratable"
+                    result[ModelFields.InstrumentFields.EXPIRATION_DATE] = "Not Calibratable"
+                } else if (!result[ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION] || !result[ModelFields.InstrumentFields.EXPIRATION_DATE]) {
+                    result[ModelFields.InstrumentFields.MOST_RECENT_CALIBRATION] = "Not yet calibrated!"
+                    result[ModelFields.InstrumentFields.EXPIRATION_DATE] = "Not yet calibrated!"
+                }
             }
+
             // parse categories:
 
             let instrument_pk = result[ModelFields.InstrumentFields.PK]
@@ -64,18 +67,18 @@ export default class TableUtils {
 
 function createCalibrationExpirationElement(dateString, color) {
     return (<div style={{flex: 1, flexDirection: "row", justifyContent : 'space-between', alignItems : 'center', display: "flex"}}>
-        <text>{dateString}</text>
-        <MDBIcon style={{color: color, marginRight : 75}}
-                 size={"1x"}
-                 icon={dateIcons[color]}
-        />
-    </div>)
+                <text>{dateString}</text>
+                <MDBIcon style={{color: color, marginRight : 75}}
+                         size={"1x"}
+                         icon={dateIcons[color]}
+                />
+            </div>)
 }
 
 function calculateCalibrationExpirationElement(result) {
     let expirationDateString = result[ModelFields.InstrumentFields.EXPIRATION_DATE]
     if (expirationDateString == undefined) {
-        return "Noncalibratable"
+        return "Not Calibratable"
     }
     let color = parseDate(expirationDateString)
     return createCalibrationExpirationElement(expirationDateString, color)

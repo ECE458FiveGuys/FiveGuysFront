@@ -7,6 +7,7 @@ import FileUtils from "../../../../../../utils/file_utils";
 // import XLSX from "xlsx";
 
 import * as XLSX from 'xlsx';
+import {VoltageTestErrorMargins, VoltageTestInputVoltages} from "../../../../KlufeWizardPage/step_utils";
 
 const LOGO_ASPECT_RATIO = 1.26
 const IMAGE_HEIGHT = 80 + 10
@@ -24,7 +25,11 @@ export async function createCertificate (instrument, user, calibrationEvent, tok
     writeInstrumentDetails(certificate, user, instrument, calibrationEvent, pageWidth)
     let additionalEvidence = calibrationEvent[ModelFields.CalibrationFields.AdditionalFile]
     let loadBankData = calibrationEvent[ModelFields.CalibrationFields.LoadBankFile] ? JSON.parse(calibrationEvent[ModelFields.CalibrationFields.LoadBankFile]) : undefined
-    additionalEvidence ? writeAdditionalEvidence(certificate, additionalEvidence, instrument, token) : loadBankData ? writeLoadBankSection(certificate, loadBankData) : console.log()
+    let flukeData = calibrationEvent[ModelFields.CalibrationFields.HardwareCalibrationFile] ? JSON.parse(calibrationEvent[ModelFields.CalibrationFields.HardwareCalibrationFile]) : undefined
+    additionalEvidence ? writeAdditionalEvidence(certificate, additionalEvidence, instrument, token) :
+        loadBankData ? writeLoadBankSection(certificate, loadBankData) :
+            flukeData ? writeHardwareCalibrationSection(certificate, flukeData) :
+                void(0)
     if (!additionalEvidence) saveCertificate(certificate, instrument)
 }
 
@@ -177,7 +182,6 @@ export function writeLoadBankSection (certificate, loadBankData) {
                 body: [['Voltmeter to be used', voltmeter[EquipmentModel.FIELDS.MODEL_NUMBER], voltmeter[Instrument.FIELDS.ASSET_TAG]],
                     ['Shunt Meter to be used', shuntMeter[EquipmentModel.FIELDS.MODEL_NUMBER], shuntMeter[Instrument.FIELDS.ASSET_TAG]]
                 ]
-
             })
     let recordedCurrents = loadBankData.recordedCurrents
     certificate.autoTable(
@@ -228,6 +232,30 @@ export function writeLoadBankSection (certificate, loadBankData) {
                     ['Printer ok', 'y']]
             }
     )
+}
+
+export function writeHardwareCalibrationSection(certificate, flukeData) {
+    buildFlukeVoltageTestTable(certificate, flukeData.DCreadings, "DC")
+    buildFlukeVoltageTestTable(certificate, flukeData.ACreadings, "AC")
+}
+
+function buildFlukeVoltageTestTable(certificate, readings, type) {
+    certificate.autoTable(
+        {
+            head: [[`${type} Test Inputs (Klufe K5700)`,
+                'Corresponding Voltage (Fluke 87)',
+                'Accepted Error Margin',
+                'ok?'
+            ]],
+            columnStyles: {3: {fillColor: [0, 250, 0]}},
+            body: Object.keys(readings).map(testVoltageStepKey => {
+                let recordedVoltage = readings[testVoltageStepKey]
+                return [VoltageTestInputVoltages[testVoltageStepKey].toString() + " V",
+                    recordedVoltage + " V",
+                    "\u00B1" + VoltageTestErrorMargins[testVoltageStepKey].toString() + " V",
+                    'ok']
+            })
+        })
 }
 
 function srcToFile(src, fileName, mimeType, callBack, token) {

@@ -2,7 +2,7 @@ import RecordCalibration from "./RecordCalibration";
 import DataTable from "../../../../../Common/Tables/DataTable";
 import TableColumns from "../../../../../Common/Tables/TableUtils/Columns";
 import React from "react";
-import {EquipmentModel} from "../../../../../../utils/ModelEnums";
+import {EquipmentModel, Instrument} from "../../../../../../utils/ModelEnums";
 import ModelFields from "../../../../../../utils/enums";
 import HTPButton from "../../../../../Common/HTPButton";
 import {handleNavClick} from "../../../../../utils";
@@ -45,7 +45,9 @@ export default class CalibrationSection extends React.Component {
                                 {FileUtils.getFileNameFromPath(calibrationCopy[ModelFields.CalibrationFields.AdditionalFile])}
                             </text>
                         </div>
-                    </a> : calibrationCopy[ModelFields.CalibrationFields.LoadBankFile] ? "Calibrated using the load bank wizard (download certificate to view)" : false
+                    </a> : calibrationCopy[ModelFields.CalibrationFields.LoadBankFile] || calibrationCopy[ModelFields.CalibrationFields.HardwareCalibrationFile] ?
+                        `Calibrated using the ${calibrationCopy[ModelFields.CalibrationFields.LoadBankFile] ? "load bank" : "guided hardware calibration"} 
+                        wizard (download certificate to view)` : false
             )
             return calibrationCopy
         })
@@ -53,6 +55,10 @@ export default class CalibrationSection extends React.Component {
 
     setCalibrationModalShow(boolean) {
         this.setState({calibrationModalShow : boolean})
+    }
+
+    supportsHardwareCalibration(instrument) {
+        return instrument[Instrument.FIELDS.MODEL][EquipmentModel.FIELDS.CALIBRATION_MODE] == ModelFields.CalibrationModes.GUIDED_HARDWARE
     }
 
     renderRecordCalibrationButtons = () => {
@@ -70,7 +76,13 @@ export default class CalibrationSection extends React.Component {
                     <HTPButton
                         label={"Load Bank Wizard"}
                         onSubmit={() => {
-                            handleNavClick("/load-bank/" + instrument.pk, history)
+                            handleNavClick("/instruments/" + instrument.pk + "/load-bank/", history)
+                        }}/> : <></>}
+                {instrumentCalibratable(instrument) && this.supportsHardwareCalibration(instrument) ?
+                    <HTPButton
+                        label={"Klufe K5700 Calibration"}
+                        onSubmit={() => {
+                            handleNavClick("/instruments/" + instrument.pk + "/klufe-wizard/", history)
                         }}/> : <></>}
             </div>)
     }

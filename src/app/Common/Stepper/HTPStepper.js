@@ -1,11 +1,11 @@
 
 import React from "react";
 import {Button, Step, StepButton, StepContent, StepIcon, StepLabel, Stepper} from "@material-ui/core";
-import HTPButton from "./HTPButton";
+import HTPButton from "../HTPButton";
 import PropTypes from "prop-types";
-import {User} from "../../utils/dtos";
-import HTPPopup from "./HTPPopup";
-import {StepNames} from "../Pages/LoadBankPage/Steps/step_enums";
+import {User} from "../../../utils/dtos";
+import HTPPopup from "../HTPPopup";
+import {StepNames} from "../../Pages/LoadBankPage/Steps/step_enums";
 
 export default class HTPStepper extends React.Component {
 
@@ -64,7 +64,7 @@ export default class HTPStepper extends React.Component {
     handleNext = () => {
         //if the steps were just completed update the master state with the cumulative state of the stepper
         if (this.allStepsCompleted()) {
-            this.props.updateMasterState(this.state.stepperState)
+            if (this.props.updateMasterState) this.props.updateMasterState(this.state.stepperState)
             this.props.onAllStepsComplete()
         }
         const newActiveStep =

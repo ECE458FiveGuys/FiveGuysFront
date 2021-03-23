@@ -12,7 +12,7 @@ export default class MiscellaneousRequests{
         let params = {model_number : modelNumberSubstring}
         RequestUtils.removeEmptyFields(params)
         let header = RequestUtils.buildTokenHeader(token)
-        RequestUtils.assistedFetch(URLS.VENDORS,
+        RequestUtils.assistedFetch(URLS.VENDOR,
             METHODS.GET, callBack, errorMessageCallBack, header, params)
     }
 

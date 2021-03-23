@@ -35,8 +35,8 @@ export default class MeterInitStep extends React.Component {
                     throw new UserError(`No such ${meterType} exists.`)
                 }
                 let mostRecentCalibration = json[0][ModelFields.InstrumentFields.EXPIRATION_DATE]
-                if (mostRecentCalibration === "Noncalibratable") {
-                    throw new UserError(`This ${meterType} is marked as noncalibratable.`)
+                if (mostRecentCalibration === "Not Calibratable") {
+                    throw new UserError(`This ${meterType} is marked as not calibratable.`)
                 }
                 if (parseDate(mostRecentCalibration) == dateColors.RED) {
                     throw new UserError(`The calibration for this ${meterType} has expired.`)

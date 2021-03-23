@@ -39,8 +39,9 @@ export default class UpdateModel extends React.Component {
             fieldErrors.description = "Description cannot be greater than 100 characters"
         } else if (comment && comment.length > 2000) {
             fieldErrors.comment = "Comment cannot be greater than 2000 characters"
-        } else if (!calibration_frequency && calibration_mode == ModelFields.CalibrationModes.LOAD_BANK) {
-            fieldErrors.calibration_mode = "If the load bank wizard is enabled, the model must have a calibration frequency"
+        } else if (!calibration_frequency &&
+            (calibration_mode == ModelFields.CalibrationModes.LOAD_BANK || calibration_mode == ModelFields.CalibrationModes.GUIDED_HARDWARE)) {
+            fieldErrors.calibration_mode = "If an advanced calibration mode is set, the model must have a calibration frequency"
         }
         return fieldErrors
     }

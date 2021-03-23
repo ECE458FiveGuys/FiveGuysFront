@@ -45,19 +45,21 @@ class FormEntry extends Component {
 
         if (fieldName === ModelFields.EquipmentModelFields.CALIBRATION_MODE) {
             return (
-                <div className="custom-control custom-checkbox" style={{display : 'flex', flexDirection : 'column'}}>
-                    <input type="checkbox"
-                           className="custom-control-input"
-                           id="defaultUnchecked"
-                           onChange={(event) => {
-                               this.props.handleInputChange(fieldName)(event.target.checked ?
-                                   ModelFields.CalibrationModes.LOAD_BANK : ModelFields.CalibrationModes.DEFAULT)
-                           }}
-                           defaultChecked={this.props.isEdit && this.props.subject[ModelFields.EquipmentModelFields.CALIBRATION_MODE] == ModelFields.CalibrationModes.LOAD_BANK}
-                    />
-                        <label className="custom-control-label" htmlFor="defaultUnchecked">
-                            Load Bank Supported?
-                        </label>
+                <div>
+                    <label  style={{marginBottom : 10}}
+                            htmlFor={"calibration_mode_selector"}>
+                        Advanced Calibration Modes
+                    </label>
+                    <select
+                        onChange={(event) => {
+                                           this.props.handleInputChange(fieldName)(event.target.value)
+                                       }}
+                        id = "calibration_mode_selector"
+                        className="browser-default custom-select">
+                        <option value={undefined}>None (Simple Calibration Only)</option>
+                        <option value={ModelFields.CalibrationModes.LOAD_BANK}>Load Bank</option>
+                        <option value={ModelFields.CalibrationModes.GUIDED_HARDWARE}>Guided Hardware (Klufe 5700)</option>
+                    </select>
                     {this.props.fieldErrors[fieldName] && <text style={{fontSize : 13}} className="text-danger">{this.props.fieldErrors[fieldName]}</text>}
                 </div>
             )

@@ -1,5 +1,5 @@
 import ModelFields from "../../utils/enums";
-import {METHODS, URLS} from "../strings";
+import {HOSTS, METHODS, URLS} from "../strings";
 import {ServerError, UserError} from "../exceptions"
 import {EquipmentModel, Instrument} from "../../utils/ModelEnums";
 
@@ -253,7 +253,7 @@ export default class RequestUtils {
         if (model_pk) fields.append(ModelFields.InstrumentFields.MODEL, model_pk)
         if (serial_number && serial_number != null) fields.append(ModelFields.InstrumentFields.SERIAL_NUMBER, serial_number)
         if ((!serial_number || serial_number == null) && editMode) {
-            fields.append(ModelFields.InstrumentFields.SERIAL_NUMBER, '')
+            fields.append(ModelFields.InstrumentFields.SERIAL_NUMBER, 'U')
         }
         if (comment) fields.append(ModelFields.InstrumentFields.COMMENT, comment)
         if (asset_tag && !editMode) fields.append(ModelFields.InstrumentFields.ASSET_TAG, asset_tag)

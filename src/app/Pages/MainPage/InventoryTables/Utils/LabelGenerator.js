@@ -67,5 +67,5 @@ export function generateLabels(instruments) {
         label_num++;
     })
 
-    labelPage.save(`labels.pdf`) // Consider adding filters here in file descriptor
+    labelPage.save(`asset_labels.pdf`) // Consider adding filters here in file descriptor
 }

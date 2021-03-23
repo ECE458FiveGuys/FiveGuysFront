@@ -1,5 +1,5 @@
 import React from "react";
-import HTPStepper from "../../Common/HTPStepper";
+import HTPStepper from "../../Common/Stepper/HTPStepper";
 import {StepNameList, StepNames} from "./Steps/step_enums";
 import PropTypes from "prop-types";
 import {User} from "../../../utils/dtos";
@@ -48,7 +48,9 @@ export default class LoadBankMain extends React.Component {
                                                                                               instrumentId={instrumentId}
                                                                                                 stepperState={stepperState}
                                                                                                 updateStepperState={updateStepperState}
-                                                                                                markReadyToSubmit={markReadyToSubmit}/>,
+                                                                                                markReadyToSubmit={markReadyToSubmit}
+                                                                                                instrumentType={"load bank"}
+                                                                                                />,
                             (stepperState, updateStepperState, markReadyToSubmit) => <MeterInitStep user={user}
                                                                                                     token={token}
                                                                                                     stepperState={stepperState}
@@ -70,9 +72,7 @@ export default class LoadBankMain extends React.Component {
                             (stepperState, successCallBack, errorMessageCallBack) =>
                                 {MeterInitStep.onSubmit(stepperState, token, successCallBack, errorMessageCallBack)},
                             (stepperState, successCallBack) => {successCallBack()},
-                             (stepperState, successCallBack, errorCallBack) => {
-                                this.onCalibrationSuccess(stepperState, errorCallBack)
-                             }
+                             (stepperState, successCallBack, errorCallBack) => this.onCalibrationSuccess(stepperState, errorCallBack)
                              ]
         return (
             <div>
@@ -81,7 +81,7 @@ export default class LoadBankMain extends React.Component {
                         user={user}/>
                 <Header className={"h1-responsive"}
                         style={{display: 'flex', justifyContent : 'center', marginTop: 50, marginBottom: 10}}>
-                    Load Bank
+                    Load Bank Wizard
                 </Header>
             <HTPStepper token={token}
                         user={user}

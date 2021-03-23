@@ -34,7 +34,6 @@ export default class InstrumentRequests {
                                      errorMessageCallBack) {
         let params = {}
         params[ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES + "__name"] = categoryObj.name
-
         let fullCallBack = (json) => {
             if (json[PaginatedResponseFields.RESULTS].length > 0) {
                 throw new UserError("Instances using this category exist")
@@ -66,11 +65,14 @@ export default class InstrumentRequests {
         RequestUtils.assistedFetch(URLS.INSTRUMENTS_ALL, METHODS.GET, callBack, errorMessageCallBack, header)
     }
 
-    static async getInstrumentsByPK(token,
+    static async getAssetTagsByPK(token,
+                                   pkArray,
                                    callBack = (json) => json,
                                    errorMessageCallBack = (errorMessage) => errorMessage) {
         let header = RequestUtils.buildTokenHeader(token)
-        RequestUtils.assistedFetch(URLS.INSTRUMENTS_ALL, METHODS.GET, callBack, errorMessageCallBack, header)
+        let data = new FormData()
+        data.append("pks", pkArray)
+        RequestUtils.assistedFetch(URLS.ASSET_TAGS_BY_PKS, METHODS.GET, callBack, errorMessageCallBack, header, undefined, data)
     }
 
     static async retrieveInstrument(token, pk,

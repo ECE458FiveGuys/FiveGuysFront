@@ -1,12 +1,13 @@
 export const HOSTS = {
-    DEV : "group-six-react.colab.duke.edu",
-    PROD : "group-six-react-prod.colab.duke.edu",
+    DEV : "group-six-dev.colab.duke.edu",
+    PROD : "group-six-prod.colab.duke.edu",
     LOCAL : "localhost:3000"
 }
 
-let ROOT_URL = window.location.host === HOSTS.PROD ? "https://group-six-prod.colab.duke.edu/api/" : "https://group-six-test.colab.duke.edu/api/"
+let ROOT_URL = window.location.host === HOSTS.PROD ? "https://group-six-prod.colab.duke.edu/api/" : "https://group-six-dev.colab.duke.edu/api/"
 
-let ROOT_URL_AUTH = window.location.host === HOSTS.PROD ? "https://group-six-prod.colab.duke.edu/auth/" : "https://group-six-test.colab.duke.edu/auth/"
+let ROOT_URL_AUTH = window.location.host === HOSTS.PROD ? "https://group-six-prod.colab.duke.edu/api/auth/" : "https://group-six-dev.colab.duke.edu/api/auth/"
+
 
 let OAUTH_URL = `https://oauth.oit.duke.edu/oidc/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=code`
 
@@ -20,9 +21,10 @@ export const URLS =
         IMPORT_INSTRUMENTS : ROOT_URL + "import-instruments/",
         MODELS_ALL : ROOT_URL + "models/all",
         INSTRUMENTS_ALL : ROOT_URL + "instruments/all/",
+        ASSET_TAGS_BY_PKS : ROOT_URL + "instruments/asset_tag_numbers/",
         MODELS : ROOT_URL + "models/",
         INSTRUMENTS : ROOT_URL + "instruments/",
-        VENDORS : ROOT_URL + "models/vendors/",
+        VENDOR : ROOT_URL + "models/vendors/",
         MODEL_CATEGORIES : ROOT_URL + "model-categories/",
         INSTRUMENT_CATEGORIES: ROOT_URL + "instrument-categories/",
         OAUTH_URL : OAUTH_URL,
