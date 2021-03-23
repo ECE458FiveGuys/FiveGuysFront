@@ -11,7 +11,14 @@ import {act} from "@testing-library/react";
 
 const SELECT = "Select"
 const DELETE = "Delete"
-const CHECK_BOX_REF = "CheckboxRef"
+const
+
+
+
+
+
+
+    CHECK_BOX_REF = "CheckboxRef"
 
 export default class DatatableEditable extends Component {
 
