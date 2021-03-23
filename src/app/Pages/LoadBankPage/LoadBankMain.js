@@ -72,9 +72,7 @@ export default class LoadBankMain extends React.Component {
                             (stepperState, successCallBack, errorMessageCallBack) =>
                                 {MeterInitStep.onSubmit(stepperState, token, successCallBack, errorMessageCallBack)},
                             (stepperState, successCallBack) => {successCallBack()},
-                             (stepperState, successCallBack, errorCallBack) => {
-                                this.onCalibrationSuccess(stepperState, errorCallBack)
-                             }
+                             (stepperState, successCallBack, errorCallBack) => this.onCalibrationSuccess(stepperState, errorCallBack)
                              ]
         return (
             <div>

@@ -5,8 +5,10 @@ import {User} from "../../../../utils/dtos";
 import FunctionalCheckStep from "../../../Common/Stepper/FunctionalCheckSteps/FunctionalCheckStep";
 import FlukeConnect from "../../../../assets/FlukeConnect.png"
 import FlukeDC from "../../../../assets/FlukeDC.png"
-import {DC_STEP_NAMES} from "./StepEnums/DC_step_enums";
+import {DC_STEP_NAMES} from "./StepEnums/dc_step_enums";
 import DescriptionWithIcon from "./StepComponents/DescriptionWithIcon";
+import TestVoltageSubStep from "./StepComponents/TestVoltageSubStep";
+import {TestVoltageStepKeys} from "../step_utils";
 
 /*
 A stepper within a stepper
@@ -35,15 +37,14 @@ export default class DCStep extends React.Component {
              (stepperState, updateStepperState, markReadyToSubmit) =>
                  <FunctionalCheckStep functionDescription={DescriptionWithIcon(FlukeConnect, "Connect the Klufe K5700 to the Model 87 ", " and COM inputs.", "flukeConnect", 60)}
                                       markReadyToSubmit={markReadyToSubmit}/>,
-             // (stepperState, updateStepperState, markReadyToSubmit) =>
-             //     <FunctionalCheckStep functionDescription={"The system will now set the VDC of the Klufe K5700 to 0. Proceed?"}
-             //                          markReadyToSubmit={markReadyToSubmit}/>,
-
-
+             (stepperState, updateStepperState, markReadyToSubmit) =>
+                 <TestVoltageSubStep  testVoltageStepKey = {TestVoltageStepKeys[0]}
+                                      stepperState = {stepperState}
+                                      stepType={"DC"}
+                                      updateStepperState = {updateStepperState}
+                                      markReadyToSubmit={markReadyToSubmit}/>
         ]
     }
-
-
 
     buildStepSubmitFunctions = () => {
         return [
@@ -53,14 +54,11 @@ export default class DCStep extends React.Component {
                 successCallBack()
             },
             (stepperState, successCallBack) => {successCallBack()},
-            (stepperState, successCallBack) => {
-                //function.turnOnKlufe()  TODO
-                //function.setDCVoltage(0) TODO
-                successCallBack()
-            }
+            (stepperState, successCallBack) => {successCallBack()},
+            (stepperState, successCallBack, errorMessageCallBack) =>
+                TestVoltageSubStep.onSubmit(stepperState, this.props.token, successCallBack, errorMessageCallBack, DC_STEP_NAMES.TEST_VOLTAGE)
         ]
     }
-
 
     toggleModal = () => {
         this.setState({
@@ -72,29 +70,28 @@ export default class DCStep extends React.Component {
         let {user, token} = this.props
         let stepNames = Object.values(DC_STEP_NAMES)
         return (<div style={{display: "flex", flex: 1, flexDirection: "column", width : "100%", alignItems: "center", justifyContent: 'center', marginBottom : 30}}>
-            <h1 className={"h2-responsive"}>{`Now, let's test with DC voltage.`}</h1>
-            <HTPStepper user={user}
-                        token={token}
-                        ref={el => this.internalStepperRef = el}
-                        stepContent={this.renderSteps()}
-                        onStepSubmit={this.buildStepSubmitFunctions()}
-                        stepNames={stepNames}
-                        orientation={'vertical'}
-                        resetOptionOnError={true}
-                        onAllStepsComplete={this.props.markReadyToSubmit} //when the last load current step is complete, mark ready to proceed to the next step
-                        updateMasterState={(stepperState) => {
-                            this.props.updateStepperState(stepperState)  // when all currents have been recorded in this step, add them all to the outer stepper state
-                        }}
-                        completeButtonLabel={"Proceed"}
-                        finishButtonLabel={"Conclude DC Calibration"}
-            />
-        </div>)
+                    <h1 className={"h2-responsive"}>{`Now, let's test with DC voltage.`}</h1>
+                    <HTPStepper user={user}
+                                token={token}
+                                ref={el => this.internalStepperRef = el}
+                                stepContent={this.renderSteps()}
+                                onStepSubmit={this.buildStepSubmitFunctions()}
+                                stepNames={stepNames}
+                                orientation={'vertical'}
+                                resetOptionOnError={true}
+                                onAllStepsComplete={this.props.markReadyToSubmit} //when the last load current step is complete, mark ready to proceed to the next step
+                                updateMasterState={(stepperState) => {
+                                    this.props.updateStepperState(stepperState)  // when all voltages have been recorded in this step, add them all to the outer stepper state
+                                }}
+                                completeButtonLabel={"Proceed"}
+                                finishButtonLabel={"Conclude DC Calibration"}
+                    />
+                </div>)
     }
 
 }
 
 DCStep.propTypes = {
-    instrument : PropTypes.object.isRequired,
     markReadyToSubmit : PropTypes.func.isRequired,
     token : PropTypes.string.isRequired,
     user : PropTypes.instanceOf(User).isRequired,

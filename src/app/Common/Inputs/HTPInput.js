@@ -19,7 +19,7 @@ export default class HTPInput extends Component {
 
 
     render() {
-        let {onChange, label, placeholder, type, defaultValue, style, invalid}= this.props
+        let {onChange, label, placeholder, type, defaultValue, style, invalid, disabled}= this.props
         return(
             <div style={style}>
                 <label htmlFor="defaultFormLoginEmailEx" className="dark-grey-text">
@@ -27,6 +27,7 @@ export default class HTPInput extends Component {
                 </label>
                 <input type={type}
                        aria-invalid={invalid}
+                       disabled={disabled}
                        className={"form-control"}
                        placeholder={placeholder}
                        defaultValue={defaultValue}
@@ -46,10 +47,12 @@ HTPInput.propTypes = {
     type : PropTypes.string,
     value : PropTypes.string,
     defaultValue : PropTypes.string,
-    invalid : PropTypes.bool
+    invalid : PropTypes.bool,
+    disabled : PropTypes.bool
 }
 
 HTPInput.defaultProps = {
     invalid : false,
-    type : 'text'
+    type : 'text',
+    disabled : false,
 }

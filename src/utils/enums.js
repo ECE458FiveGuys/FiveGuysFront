@@ -71,7 +71,8 @@ export default class ModelFields {
         "Date" : "date",
         "Comment" : "comment",
         "LoadBankFile" : "load_bank_data",
-        "AdditionalFile" : "additional_evidence"
+        "AdditionalFile" : "additional_evidence",
+        "HardwareCalibrationFile" : "guided_hardware_data"
     }
 
     static CalibrationFormFields = {

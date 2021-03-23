@@ -64,7 +64,7 @@ export default class HTPStepper extends React.Component {
     handleNext = () => {
         //if the steps were just completed update the master state with the cumulative state of the stepper
         if (this.allStepsCompleted()) {
-            this.props.updateMasterState(this.state.stepperState)
+            if (this.props.updateMasterState) this.props.updateMasterState(this.state.stepperState)
             this.props.onAllStepsComplete()
         }
         const newActiveStep =

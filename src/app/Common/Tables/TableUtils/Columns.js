@@ -99,7 +99,7 @@ export default class TableColumns {
             sort: 'asc',
             width: 270
         }
-        ]
+    ]
 
     static CALIBRATION_COLUMNS = [
         {
