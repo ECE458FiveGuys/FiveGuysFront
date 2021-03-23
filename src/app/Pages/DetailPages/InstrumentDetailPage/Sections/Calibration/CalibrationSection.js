@@ -74,13 +74,13 @@ export default class CalibrationSection extends React.Component {
                     <HTPButton
                         label={"Load Bank Wizard"}
                         onSubmit={() => {
-                            handleNavClick("/load-bank/" + instrument.pk, history)
+                            handleNavClick("/instruments/" + instrument.pk + "/load-bank/", history)
                         }}/> : <></>}
                 {instrumentCalibratable(instrument) && this.supportsHardwareCalibration(instrument) ?
                     <HTPButton
                         label={"Klufe K5700 Calibration"}
                         onSubmit={() => {
-                            handleNavClick("/klufe-wizard/" + instrument.pk, history)
+                            handleNavClick("/instruments/" + instrument.pk + "/klufe-wizard/", history)
                         }}/> : <></>}
             </div>)
     }

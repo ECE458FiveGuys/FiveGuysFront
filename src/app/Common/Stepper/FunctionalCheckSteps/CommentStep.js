@@ -1,8 +1,8 @@
 import React from "react";
 import {Checkbox, StepContent} from "@material-ui/core";
 import PropTypes from "prop-types";
-import HTPInput from "../../../../Common/Inputs/HTPInput";
-import HTPMultiLineInput from "../../../../Common/Inputs/HTPMultiLineInput";
+import HTPInput from "../../Inputs/HTPInput";
+import HTPMultiLineInput from "../../Inputs/HTPMultiLineInput";
 
 export default class CommentStep extends React.Component {
 
