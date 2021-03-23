@@ -21,6 +21,7 @@ export const URLS =
         IMPORT_INSTRUMENTS : ROOT_URL + "import-instruments/",
         MODELS_ALL : ROOT_URL + "models/all",
         INSTRUMENTS_ALL : ROOT_URL + "instruments/all/",
+        ASSET_TAGS_BY_PKS : ROOT_URL + "instruments/asset_tag_numbers/",
         MODELS : ROOT_URL + "models/",
         INSTRUMENTS : ROOT_URL + "instruments/",
         VENDOR : ROOT_URL + "models/vendors/",
