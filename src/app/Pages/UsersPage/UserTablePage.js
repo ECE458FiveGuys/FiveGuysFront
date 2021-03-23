@@ -5,6 +5,7 @@ import TableColumns from "../../Common/Tables/TableUtils/Columns";
 import DataTable from "../../Common/Tables/DataTable";
 import HTPButton from "../../Common/HTPButton";
 import CreateUserPopup from "./UserFunctions/CreateUserPopup";
+import {DISPLAYABLE_LABELS, SHORTEN_LABELS} from "../CreateFunctions/CreateUser";
 
 const ADMIN_NAME = 'Admin'
 
@@ -53,10 +54,19 @@ class UserTablePage extends Component{
     userParse = (results) => {
         let idToStaff = {}
         results.forEach(result => {
-            idToStaff[result['id']] = result['is_staff']
-            result["is_staff"] = result["is_staff"] ? "admin" : "default"
+            console.log(result)
+            if (result.hasOwnProperty("groups")) {
+                let array = result["groups"]
+                let newArray = []
+                for (let i=0; i<array.length; i++){
+                    let index = SHORTEN_LABELS.indexOf(array[i])
+                    newArray.push(DISPLAYABLE_LABELS[i])
+                }
+                let stringPermission = newArray.toString()
+                result["is_staff"] = stringPermission
+            }
             result['options'] = result['name'] === ADMIN_NAME ? <div style={{textAlign : 'center'}}>Permanent Admin</div>
-                                        : this.renderOptions(result, idToStaff)
+                : this.renderOptions(result, idToStaff)
         })
         this.setState({idToStaff : idToStaff})
         return results
