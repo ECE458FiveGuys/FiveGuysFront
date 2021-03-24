@@ -5,7 +5,7 @@ import TableColumns from "../../Common/Tables/TableUtils/Columns";
 import DataTable from "../../Common/Tables/DataTable";
 import HTPButton from "../../Common/HTPButton";
 import CreateUserPopup from "./UserFunctions/CreateUserPopup";
-import {DISPLAYABLE_LABELS, SHORTEN_LABELS} from "../CreateFunctions/CreateUser";
+import {DISPLAYABLE_LABELS, LABELS, SHORTEN_LABELS} from "../CreateFunctions/CreateUser";
 
 const ADMIN_NAME = 'Admin'
 
@@ -48,6 +48,10 @@ class UserTablePage extends Component{
                                disabled={!result['is_active']}
                                size="sm" onSubmit={()=>this.deactivateUser(result['id'])}
                                label={result['is_active'] ? 'Remove user' : 'User deleted'}/>
+                    <HTPButton color="red"
+                               disabled={false}
+                               size="sm" onSubmit={()=>this.permissionsChanged(result['id'])}
+                               label={'tester'}/>
                 </MDBRow>)
     }
 
@@ -59,8 +63,21 @@ class UserTablePage extends Component{
                 let array = result["groups"]
                 let newArray = []
                 for (let i=0; i<array.length; i++){
-                    let index = SHORTEN_LABELS.indexOf(array[i])
-                    newArray.push(DISPLAYABLE_LABELS[i])
+                    if (array[i]==SHORTEN_LABELS.UNPRIVILEGED){
+                        newArray.push(DISPLAYABLE_LABELS.UNPRIVILEGED)
+                    }
+                    if (array[i]==SHORTEN_LABELS.INSTRUMENT_MANAGEMENT){
+                        newArray.push(DISPLAYABLE_LABELS.INSTRUMENT_MANAGEMENT)
+                    }
+                    if (array[i]==SHORTEN_LABELS.MODEL_MANAGEMENT){
+                        newArray.push(DISPLAYABLE_LABELS.MODEL_MANAGEMENT)
+                    }
+                    if (array[i]==SHORTEN_LABELS.CALIBRATION){
+                        newArray.push(DISPLAYABLE_LABELS.CALIBRATION)
+                    }
+                    if (array[i]==SHORTEN_LABELS.ADMINISTRATOR){
+                        newArray.push(DISPLAYABLE_LABELS.ADMINISTRATOR)
+                    }
                 }
                 let stringPermission = newArray.toString()
                 result["is_staff"] = stringPermission
@@ -84,6 +101,12 @@ class UserTablePage extends Component{
 
     deactivateUser = async(pk) =>{
         let result = await UserRequests.deactivateUser(this.props.token, pk);
+        await this.getUserList()
+        return result
+    }
+
+    permissionsChanged = async(pk) =>{
+        let result = await UserRequests.permissionsChanged(this.props.token, pk);
         await this.getUserList()
         return result
     }

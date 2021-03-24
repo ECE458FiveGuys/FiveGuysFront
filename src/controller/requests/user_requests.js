@@ -98,4 +98,18 @@ export default class UserRequests {
             data)
     }
 
+    static async changeAdminStatus(token, pk, adminBool)
+    { //patch
+
+        let header = RequestUtils.buildTokenHeader(token)
+        //let params = {}
+        //header['Content-Type'] = 'application/json'
+        let data = adminBool
+        return await RequestUtils.assisted_simple_fetch(AUTH_URLS.USERS + pk + '/update_admin_status/',
+            METHODS.PATCH,
+            header,
+            {},
+            data)
+    }
+
 }

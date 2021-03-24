@@ -47,5 +47,6 @@ export const METHODS =
         POST : 'POST',
         GET : 'GET',
         PUT : 'PUT',
-        DELETE : "DELETE"
+        DELETE : "DELETE",
+            PATCH : 'PATCH'
     }
