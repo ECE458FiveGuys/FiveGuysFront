@@ -48,21 +48,25 @@ class UserTablePage extends Component{
                                disabled={!result['is_active']}
                                size="sm" onSubmit={()=>this.deactivateUser(result['id'])}
                                label={result['is_active'] ? 'Remove user' : 'User deleted'}/>
+                    <HTPButton color="orange"
+                               disabled={!result['is_active']}
+                               size="sm" onSubmit={()=>this.changeGroups(result['id'], ["calibration"])}
+                               label={'Add Calibration'}/>
                 </MDBRow>)
     }
 
     userParse = (results) => {
         let idToStaff = {}
         results.forEach(result => {
-            console.log(result)
             if (result.hasOwnProperty("groups")) {
                 let array = result["groups"]
                 let newArray = []
                 for (let i=0; i<array.length; i++){
                     let index = SHORTEN_LABELS.indexOf(array[i])
-                    newArray.push(DISPLAYABLE_LABELS[i])
+                    newArray.push(DISPLAYABLE_LABELS[index])
                 }
-                let stringPermission = newArray.toString()
+                let finalArray = this.determineWhichGroupsToDisplay(newArray)
+                let stringPermission = finalArray.toString()
                 result["is_staff"] = stringPermission
             }
             result['options'] = result['name'] === ADMIN_NAME ? <div style={{textAlign : 'center'}}>Permanent Admin</div>
@@ -70,6 +74,10 @@ class UserTablePage extends Component{
         })
         this.setState({idToStaff : idToStaff})
         return results
+    }
+
+    determineWhichGroupsToDisplay = (array) => {
+        return array
     }
 
     changeAdminState = async(pk, bool) =>{
@@ -84,6 +92,20 @@ class UserTablePage extends Component{
 
     deactivateUser = async(pk) =>{
         let result = await UserRequests.deactivateUser(this.props.token, pk);
+        await this.getUserList()
+        return result
+    }
+
+    changeGroups = async(pk, groupChanged) =>{
+        let oldGroups = []
+        let results = await UserRequests.getAllUsers(this.props.token)
+        console.log(results)
+        results.forEach(result => {
+            if (result["id"]==pk) {
+                console.log(result["groups"])
+            }
+        })
+        let result = await UserRequests.changeGroups(this.props.token, pk, groupChanged);
         await this.getUserList()
         return result
     }
