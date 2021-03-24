@@ -44,10 +44,6 @@ class UserTablePage extends Component{
                     {/*           color={result['is_staff'] == "admin" ? "orange" : "green"}*/}
                     {/*           onSubmit={()=>this.changeAdminState(result['id'], this.state.idToStaff[result['id']] ? 'False' : 'True')}*/}
                     {/*           label = {result['is_staff'] == "admin" ? "Revoke Admin Status" : "Grant Admin Status"}/>*/}
-                    <HTPButton color="yellow"
-                               disabled={!result['is_active']}
-                               size="sm" onSubmit={()=>this.changeGroups(result['id'], ["unprivileged"])}
-                               label={'Add Unprivileged'}/>
                     <HTPButton color="orange"
                                disabled={!result['is_active']}
                                size="sm" onSubmit={()=>this.changeGroups(result['id'], ["instrument_management"])}
@@ -143,8 +139,17 @@ class UserTablePage extends Component{
             })
         }
         if (oldGroups.length==0){
-            oldGroups.push("unprivileged")
+            oldGroups.push(SHORTEN_LABELS.UNPRIVILEGED)
         }
+        if (oldGroups.length>1 && oldGroups.includes(SHORTEN_LABELS.UNPRIVILEGED)){
+            oldGroups = oldGroups.filter(function(item) {
+                return item !== SHORTEN_LABELS.UNPRIVILEGED
+            })
+        }
+        if (oldGroups.includes(SHORTEN_LABELS.MODEL_MANAGEMENT) && !oldGroups.includes(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT)){
+            oldGroups.push(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT)
+        }
+
         console.log(oldGroups)
         let result = await UserRequests.changeGroups(this.props.token, pk, oldGroups);
         await this.getUserList()
