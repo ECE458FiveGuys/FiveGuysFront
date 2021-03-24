@@ -39,19 +39,35 @@ class UserTablePage extends Component{
 
     renderOptions = (result) => {
         return (<MDBRow style={{justifyContent: 'center', alignItems: 'center', marginTop: 0, xs: 2}}>
-                    <HTPButton size="sm"
+                    {/*<HTPButton size="sm"*/}
+                    {/*           disabled={!result['is_active']}*/}
+                    {/*           color={result['is_staff'] == "admin" ? "orange" : "green"}*/}
+                    {/*           onSubmit={()=>this.changeAdminState(result['id'], this.state.idToStaff[result['id']] ? 'False' : 'True')}*/}
+                    {/*           label = {result['is_staff'] == "admin" ? "Revoke Admin Status" : "Grant Admin Status"}/>*/}
+                    <HTPButton color="yellow"
                                disabled={!result['is_active']}
-                               color={result['is_staff'] == "admin" ? "orange" : "green"}
-                               onSubmit={()=>this.changeAdminState(result['id'], this.state.idToStaff[result['id']] ? 'False' : 'True')}
-                               label = {result['is_staff'] == "admin" ? "Revoke Admin Status" : "Grant Admin Status"}/>
+                               size="sm" onSubmit={()=>this.changeGroups(result['id'], ["unprivileged"])}
+                               label={'Add Unprivileged'}/>
+                    <HTPButton color="orange"
+                               disabled={!result['is_active']}
+                               size="sm" onSubmit={()=>this.changeGroups(result['id'], ["instrument_management"])}
+                               label={'Add Instrument Management'}/>
+                    <HTPButton color="green"
+                               disabled={!result['is_active']}
+                               size="sm" onSubmit={()=>this.changeGroups(result['id'], ["model_management"])}
+                               label={'Add Model Management'}/>
+                    <HTPButton color="blue"
+                               disabled={!result['is_active']}
+                               size="sm" onSubmit={()=>this.changeGroups(result['id'], ["calibration"])}
+                               label={'Add Calibration'}/>
+                    <HTPButton color="purple"
+                               disabled={!result['is_active']}
+                               size="sm" onSubmit={()=>this.changeGroups(result['id'], ["administrator"])}
+                               label={'Add Administrator'}/>
                     <HTPButton color="red"
                                disabled={!result['is_active']}
                                size="sm" onSubmit={()=>this.deactivateUser(result['id'])}
                                label={result['is_active'] ? 'Remove user' : 'User deleted'}/>
-                    <HTPButton color="orange"
-                               disabled={!result['is_active']}
-                               size="sm" onSubmit={()=>this.changeGroups(result['id'], ["calibration"])}
-                               label={'Add Calibration'}/>
                 </MDBRow>)
     }
 
@@ -99,13 +115,22 @@ class UserTablePage extends Component{
     changeGroups = async(pk, groupChanged) =>{
         let oldGroups = []
         let results = await UserRequests.getAllUsers(this.props.token)
-        console.log(results)
         results.forEach(result => {
             if (result["id"]==pk) {
-                console.log(result["groups"])
+                oldGroups = result["groups"]
             }
         })
-        let result = await UserRequests.changeGroups(this.props.token, pk, groupChanged);
+        console.log(oldGroups)
+        if (!oldGroups.includes(groupChanged[0])){
+            oldGroups.push(groupChanged[0])
+        }
+        else {
+            oldGroups = oldGroups.filter(function(item) {
+                return item !== groupChanged[0]
+            })
+        }
+        console.log(oldGroups)
+        let result = await UserRequests.changeGroups(this.props.token, pk, oldGroups);
         await this.getUserList()
         return result
     }

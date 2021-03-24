@@ -104,8 +104,7 @@ export default class UserRequests {
         header['Content-Type'] = 'application/json'
         let data = {
             "groups":
-                groupChanged
-            ,
+                groupChanged,
             "pk": pk,
         }
         JSON.stringify(data)
