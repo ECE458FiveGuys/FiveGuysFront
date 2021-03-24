@@ -47,19 +47,19 @@ class UserTablePage extends Component{
                     <HTPButton color="orange"
                                disabled={!result['is_active']}
                                size="sm" onSubmit={()=>this.changeGroups(result['id'], ["instrument_management"])}
-                               label={'Add Instrument Management'}/>
+                               label={'Change Instrument Management'}/>
                     <HTPButton color="green"
                                disabled={!result['is_active']}
                                size="sm" onSubmit={()=>this.changeGroups(result['id'], ["model_management"])}
-                               label={'Add Model Management'}/>
+                               label={'Change Model Management'}/>
                     <HTPButton color="blue"
                                disabled={!result['is_active']}
                                size="sm" onSubmit={()=>this.changeGroups(result['id'], ["calibration"])}
-                               label={'Add Calibration'}/>
+                               label={'Change Calibration'}/>
                     <HTPButton color="purple"
                                disabled={!result['is_active']}
                                size="sm" onSubmit={()=>this.changeGroups(result['id'], ["administrator"])}
-                               label={'Add Administrator'}/>
+                               label={'Change Administrator'}/>
                     <HTPButton color="red"
                                disabled={!result['is_active']}
                                size="sm" onSubmit={()=>this.deactivateUser(result['id'])}
