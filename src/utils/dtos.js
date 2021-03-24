@@ -1,13 +1,14 @@
 import ModelFields from "./enums";
 
 export class User {
-    constructor(id, username, name, email, isActive, isStaff) {
+    constructor(id, username, name, email, isActive, isStaff, groups) {
         this.id = id
         this.username = username
         this.name = name
         this.email = email
         this.is_active = isActive
         this.is_staff = isStaff
+        this.groups = groups
     }
 
     static fromJson(obj) {
@@ -16,7 +17,8 @@ export class User {
                         obj[ModelFields.UserFields.NAME],
                         obj[ModelFields.UserFields.EMAIL],
                         obj[ModelFields.UserFields.ACTIVITY],
-                        obj[ModelFields.UserFields.IS_STAFF])
+                        obj[ModelFields.UserFields.IS_STAFF],
+                        obj[ModelFields.UserFields.GROUPS])
     }
 
     isNetIdUser() {
