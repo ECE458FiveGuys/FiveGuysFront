@@ -32,7 +32,7 @@ jobs:
         run: ssh dev_server 'cd group-six-dev.colab.duke.edu && git stash && git pull'
 
       - name: Install dependencies
-        run: ssh dev_server 'cd group-six-dev.colab.duke.edu && npm install --global yarn && yarn'
+        run: ssh dev_server 'cd group-six-dev.colab.duke.edu && npm install yarn && yarn'
 
       - name: Build App
         run: ssh dev_server 'cd group-six-dev.colab.duke.edu && npm run build'
