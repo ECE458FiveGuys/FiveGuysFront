@@ -78,8 +78,21 @@ class UserTablePage extends Component{
                 let array = result["groups"]
                 let newArray = []
                 for (let i=0; i<array.length; i++){
-                    let index = SHORTEN_LABELS.indexOf(array[i])
-                    newArray.push(DISPLAYABLE_LABELS[index])
+                    if (array[i]==SHORTEN_LABELS.UNPRIVILEGED){
+                        newArray.push(DISPLAYABLE_LABELS.UNPRIVILEGED)
+                    }
+                    if (array[i]==SHORTEN_LABELS.INSTRUMENT_MANAGEMENT){
+                        newArray.push(DISPLAYABLE_LABELS.INSTRUMENT_MANAGEMENT)
+                    }
+                    if (array[i]==SHORTEN_LABELS.MODEL_MANAGEMENT){
+                        newArray.push(DISPLAYABLE_LABELS.MODEL_MANAGEMENT)
+                    }
+                    if (array[i]==SHORTEN_LABELS.CALIBRATION){
+                        newArray.push(DISPLAYABLE_LABELS.CALIBRATION)
+                    }
+                    if (array[i]==SHORTEN_LABELS.ADMINISTRATOR){
+                        newArray.push(DISPLAYABLE_LABELS.ADMINISTRATOR)
+                    }
                 }
                 let finalArray = this.determineWhichGroupsToDisplay(newArray)
                 let stringPermission = finalArray.toString()
@@ -128,6 +141,9 @@ class UserTablePage extends Component{
             oldGroups = oldGroups.filter(function(item) {
                 return item !== groupChanged[0]
             })
+        }
+        if (oldGroups.length==0){
+            oldGroups.push("unprivileged")
         }
         console.log(oldGroups)
         let result = await UserRequests.changeGroups(this.props.token, pk, oldGroups);
