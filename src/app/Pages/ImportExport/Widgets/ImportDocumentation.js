@@ -1,12 +1,15 @@
 import React, {Component} from "react";
-import {MDBContainer} from "mdbreact";
+import {MDBContainer, MDBIcon} from "mdbreact";
 import filetab_image from "../../../../assets/sheets_filetab_screenshot.png"
 import csvtab_image from "../../../../assets/sheets_csvtab_screenshot.png"
 import excel_save_image from "../../../../assets/excel_save_screenshot.png"
 import "./ImportDoc.css";
 import {Accordion, Button, Card} from "react-bootstrap";
+import {Divider} from "@material-ui/core";
+import HTPNavBar from "../../../Common/HTPNavBar";
 
 class ImportDocumentation extends Component{
+
 
     MODEL_FIELDS = {
         Vendor: "Vendor (Required)",
@@ -116,109 +119,131 @@ class ImportDocumentation extends Component{
 
 
     render(){
+        let {user, location} = this.props
         return(
-            
-            <MDBContainer>
-                <h1>Import Documentation</h1>
-                <div>
-                    <body>
-                    <p>
-                        <h2>File Format</h2>
-                        The imported file has to be in UTF-8 RFC4180 .csv format.<br/>
+            <div>
+            {/*<HTPNavBar*/}
+            {/*    user={user}*/}
+            {/*    location={location}*/}
+            {/*/>*/}
+            <div>
+                <MDBContainer>
+                    <h1>Import Documentation</h1>
+                    <Divider horizontal={true} style={{width : 375, marginTop : 20, marginBottom : 20}}/>
+                    <div>
+                        <body>
+                        {/*<p>*/}
+                            <h2>File Format</h2>
+                            <p>
+                            The imported file has to be in UTF-8 RFC4180 .csv format.<br/>
+                            To download a .csv using Google Sheets:<br/>
+                                <li>Click File->Download->Comma-separated values (.csv, current sheet):</li>
+                                <div>
+                                    <img src={filetab_image}
+                                         // className = "image"
+                                         // style={{}}
+                                    />
+                                    <img src={csvtab_image}
+                                         // className = "image"
+                                         // style={{margin:"50px 50px"}}
+                                    />
+                                </div>
 
-                        To download a .csv using Google Sheets:<br/>
-                            <li>Click File->Download->Comma-separated values (.csv, current sheet):</li>
+                            To download a .csv using Microsoft Excel:<br/>
+                            <li>Click File->Save As then select CSV UTF-8 as the File Format</li>
                             <div>
-                                <img src={filetab_image}
+                                <img src={excel_save_image}
                                      className = "image"
-                                     // style={{}}
-                                />
-                                <img src={csvtab_image}
-                                     className = "image"
-                                     // style={{margin:"50px 50px"}}
                                 />
                             </div>
-
-                        To download a .csv using Microsoft Excel:<br/>
-                        <li>Click File->Save As then select CSV UTF-8 as the File Format</li>
-                        <div>
-                            <img src={excel_save_image}
-                                 className = "image"
-                            />
-                        </div>
-                        <li>Click Save</li>
+                            <li>Click Save</li>
 
 
-                    </p>
+                        </p>
 
-                    <p>
-                        <h2>General Structure Guidelines</h2>
-                        <li>Empty rows are allowed.</li>
-                        <li>All data must be within a single line with the exception of the comment column in a
-                            Models file, the comment column in an MODELs file, and the calibration-comment
-                            column in an MODELs file.</li>
-                        <li>Data is case sensitive (ie. “Vendor A” and “vendor a” as two different vendors).</li>
-                    </p>
+                        {/*<p>*/}
+                            <h2>General Structure Guidelines</h2>
+                            <p>
+                            <li>Empty rows are allowed.</li>
+                            <li>All data must be within a single line with the exception of the comment column in a
+                                Models file, the comment column in an MODELs file, and the calibration-comment
+                                column in an MODELs file.</li>
+                            <li>Data is case sensitive (ie. “Vendor A” and “vendor a” as two different vendors).</li>
+                        </p>
 
-                    <p>
-                        <h2>Model File Format</h2>
-                        <li>Table MUST include each of the following 7 columns with its specified case sensitive name
-                            in the following order (left to right): “Vendor”, ”Model-Number”, ”Short-Description”,
-                             ”Comment”, “Model-Categories”, ”Load-Ban k-Support”, ”Calibration-Frequency”
-                        </li>
-                        <h4>Data Format Rules</h4>
-                        <Accordion>
-                            {Object.keys(this.MODEL_FIELDS).map((key,index) =>
+                        {/*<p>*/}
+                            <h2>Model File Format</h2>
+                            <p>
+                            <li>Table MUST include each of the following 7 columns with its specified case sensitive name
+                                in the following order (left to right): “Vendor”, ”Model-Number”, ”Short-Description”,
+                                 ”Comment”, “Model-Categories”, ”Load-Ban k-Support”, ”Calibration-Frequency”
+                            </li>
+                        </p>
+                            <h4>Data Format Rules</h4>
+                        <p>
+                            <Accordion>
+                                {Object.keys(this.MODEL_FIELDS).map((key,index) =>
+                                        <Card>
+                                            <Card.Header>
+                                                {this.MODEL_FIELDS[key]}
+                                                <Accordion.Toggle as={Button} variant="link" eventKey={key}>
+                                                    <MDBIcon icon={"plus"}
+                                                             className="icon"
+                                                             size={'lg'}/>
+                                                </Accordion.Toggle>
+                                            </Card.Header>
+                                            <Accordion.Collapse eventKey={key}>
+                                                <Card.Body>{this.MODEL_RULES[key]}</Card.Body>
+                                            </Accordion.Collapse>
+                                        </Card>
+                                )
+                                }
+                            </Accordion>
+                        </p>
+                        {/*<p>*/}
+                            <h2>Instruments File Format</h2>
+                        <p>
+                            <li> Table MUST include each of the following 8 columns with its specified case sensitive name
+                                in the following order (left to right): “Vendor”, “Model-Number”, “Serial-Number”,
+                                “Asset-Tag-Number”, ”Comment”, ”Instrument-Categories” , ”Calibration-Date”,
+                                 ”Calibration-Comment”
+                            </li>
+                            <li>The combination of model number, vendor, and serial number must be unique for each
+                                instrument
+                            </li>
+                            <li>
+                                Models identified by model number in conjunction with vendor must already exist
+                                in the database.
+                            </li>
+                            <h4>Data Format Rules</h4>
+                        </p>
+                        <p>
+                            <Accordion>
+                                {Object.keys(this.INSTRUMENT_FIELDS).map((key,index) =>
                                     <Card>
-                                        <Card.Header>
-                                            {this.MODEL_FIELDS[key]}
+                                        <Card.Header style={{position:'relative'}}>
+                                            {this.INSTRUMENT_FIELDS[key]}
                                             <Accordion.Toggle as={Button} variant="link" eventKey={key}>
-                                                Click Here!
+                                                <MDBIcon
+                                                         icon={"plus"}
+                                                         className='icon'
+                                                         size={'lg'}
+                                                         />
                                             </Accordion.Toggle>
                                         </Card.Header>
                                         <Accordion.Collapse eventKey={key}>
-                                            <Card.Body>{this.MODEL_RULES[key]}</Card.Body>
+                                            <Card.Body>{this.INSTRUMENT_RULES[key]}</Card.Body>
                                         </Accordion.Collapse>
                                     </Card>
-                            )
-                            }
-                        </Accordion>
-                    </p>
-                    <p>
-                        <h2>Instruments File Format</h2>
-                        <li> Table MUST include each of the following 8 columns with its specified case sensitive name
-                            in the following order (left to right): “Vendor”, “Model-Number”, “Serial-Number”,
-                            “Asset-Tag-Number”, ”Comment”, ”Instrument-Categories” , ”Calibration-Date”,
-                             ”Calibration-Comment”
-                        </li>
-                        <li>The combination of model number, vendor, and serial number must be unique for each
-                            instrument
-                        </li>
-                        <li>
-                            Models identified by model number in conjunction with vendor must already exist
-                            in the database.
-                        </li>
-                        <h4>Data Format Rules</h4>
-                        <Accordion>
-                            {Object.keys(this.INSTRUMENT_FIELDS).map((key,index) =>
-                                <Card>
-                                    <Card.Header>
-                                        {this.INSTRUMENT_FIELDS[key]}
-                                        <Accordion.Toggle as={Button} variant="link" eventKey={key}>
-                                            Click Here!
-                                        </Accordion.Toggle>
-                                    </Card.Header>
-                                    <Accordion.Collapse eventKey={key}>
-                                        <Card.Body>{this.INSTRUMENT_RULES[key]}</Card.Body>
-                                    </Accordion.Collapse>
-                                </Card>
-                            )
-                            }
-                        </Accordion>
-                    </p>
-                    </body>
-                </div>
-            </MDBContainer>
+                                )
+                                }
+                            </Accordion>
+                        </p>
+                        </body>
+                    </div>
+                </MDBContainer>
+            </div>
+            </div>
         )
 
     }
