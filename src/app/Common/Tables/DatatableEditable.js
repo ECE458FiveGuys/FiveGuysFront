@@ -8,6 +8,8 @@ import {MDBBtn, MDBCol, MDBContainer, MDBModal, MDBModalBody, MDBModalFooter, MD
 import {ModalBody} from "react-bootstrap";
 import HTPPopup from "../HTPPopup";
 import {act} from "@testing-library/react";
+import {User} from "../../../utils/dtos";
+import {SHORTEN_LABELS} from "../../Pages/CreateFunctions/CreateUser";
 
 const SELECT = "Select"
 const DELETE = "Delete"
@@ -51,6 +53,7 @@ export default class DatatableEditable extends Component {
     highlightRowHelper(rowPk, unhighlight = false) {
         let parsedRow = this.state.pkToParsedRow[rowPk]
         Object.keys(parsedRow).forEach(rowFieldKey => {
+            //this.props.user.groups.includes(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT)
             if (rowFieldKey != "clickEvent" && rowFieldKey != "pk") {
                 let actualFieldValue = this.state.pkToRow.get(rowPk)[rowFieldKey]
                 parsedRow[rowFieldKey] = unhighlight ? actualFieldValue :
@@ -265,6 +268,7 @@ export default class DatatableEditable extends Component {
 
 DatatableEditable.propTypes = {
     token : PropTypes.string.isRequired,
+    user : PropTypes.instanceOf(User).isRequired,
     columns: PropTypes.array.isRequired, // the columns of the datatable
     rows : PropTypes.array.isRequired,
     editableColumns : PropTypes.array.isRequired, // a subset of columns whose fields you want to have inputs for

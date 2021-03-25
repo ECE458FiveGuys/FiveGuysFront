@@ -16,6 +16,7 @@ import {EquipmentModel, Instrument} from "../../../../utils/ModelEnums";
 import HTPButton from "../../../Common/HTPButton";
 import {handleNavClick} from "../../../utils";
 import {MDBCol} from "mdbreact";
+import {SHORTEN_LABELS} from "../../CreateFunctions/CreateUser";
 
 const DIVIDER_MARGINS = 100
 
@@ -64,7 +65,7 @@ export default class InstrumentDetailView extends Component {
                             <div style={{flex: 1, display: "flex", flexDirection: "row", justifyContent: 'space-between'}}>
                                 <div style={{flex : 1, display : "flex", flexDirection : "column", justifyContent : 'flex-start'}}>
                                     {InstrumentSection(instrument)}
-                                    {user.is_staff &&
+                                    {user.groups.includes(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT) &&
                                     <div style={{marginTop : 30}}>
                                         <ActionSection token={token}
                                                        hasText={false}

@@ -98,4 +98,21 @@ export default class UserRequests {
             data)
     }
 
+    static async changeGroups(token, pk, groupChanged)
+    {
+        let header = RequestUtils.buildTokenHeader(token)
+        header['Content-Type'] = 'application/json'
+        let data = {
+            "groups":
+                groupChanged,
+            "pk": pk,
+        }
+        JSON.stringify(data)
+        return await RequestUtils.assisted_simple_fetch(AUTH_URLS.USERS + pk + "/",
+            METHODS.PATCH,
+            header,
+            {},
+            JSON.stringify(data))
+    }
+
 }

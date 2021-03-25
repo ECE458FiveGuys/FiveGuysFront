@@ -39,11 +39,27 @@ class UserTablePage extends Component{
 
     renderOptions = (result) => {
         return (<MDBRow style={{justifyContent: 'center', alignItems: 'center', marginTop: 0, xs: 2}}>
-                    <HTPButton size="sm"
+                    {/*<HTPButton size="sm"*/}
+                    {/*           disabled={!result['is_active']}*/}
+                    {/*           color={result['is_staff'] == "admin" ? "orange" : "green"}*/}
+                    {/*           onSubmit={()=>this.changeAdminState(result['id'], this.state.idToStaff[result['id']] ? 'False' : 'True')}*/}
+                    {/*           label = {result['is_staff'] == "admin" ? "Revoke Admin Status" : "Grant Admin Status"}/>*/}
+                    <HTPButton color="orange"
                                disabled={!result['is_active']}
-                               color={result['is_staff'] == "admin" ? "orange" : "green"}
-                               onSubmit={()=>this.changeAdminState(result['id'], this.state.idToStaff[result['id']] ? 'False' : 'True')}
-                               label = {result['is_staff'] == "admin" ? "Revoke Admin Status" : "Grant Admin Status"}/>
+                               size="sm" onSubmit={()=>this.changeGroups(result['id'], ["instrument_management"])}
+                               label={'Change Instrument Management'}/>
+                    <HTPButton color="green"
+                               disabled={!result['is_active']}
+                               size="sm" onSubmit={()=>this.changeGroups(result['id'], ["model_management"])}
+                               label={'Change Model Management'}/>
+                    <HTPButton color="blue"
+                               disabled={!result['is_active']}
+                               size="sm" onSubmit={()=>this.changeGroups(result['id'], ["calibration"])}
+                               label={'Change Calibration'}/>
+                    <HTPButton color="purple"
+                               disabled={!result['is_active']}
+                               size="sm" onSubmit={()=>this.changeGroups(result['id'], ["administrator"])}
+                               label={'Change Administrator'}/>
                     <HTPButton color="red"
                                disabled={!result['is_active']}
                                size="sm" onSubmit={()=>this.deactivateUser(result['id'])}
@@ -54,15 +70,28 @@ class UserTablePage extends Component{
     userParse = (results) => {
         let idToStaff = {}
         results.forEach(result => {
-            console.log(result)
             if (result.hasOwnProperty("groups")) {
                 let array = result["groups"]
                 let newArray = []
                 for (let i=0; i<array.length; i++){
-                    let index = SHORTEN_LABELS.indexOf(array[i])
-                    newArray.push(DISPLAYABLE_LABELS[i])
+                    if (array[i]==SHORTEN_LABELS.UNPRIVILEGED){
+                        newArray.push(DISPLAYABLE_LABELS.UNPRIVILEGED)
+                    }
+                    if (array[i]==SHORTEN_LABELS.INSTRUMENT_MANAGEMENT){
+                        newArray.push(DISPLAYABLE_LABELS.INSTRUMENT_MANAGEMENT)
+                    }
+                    if (array[i]==SHORTEN_LABELS.MODEL_MANAGEMENT){
+                        newArray.push(DISPLAYABLE_LABELS.MODEL_MANAGEMENT)
+                    }
+                    if (array[i]==SHORTEN_LABELS.CALIBRATION){
+                        newArray.push(DISPLAYABLE_LABELS.CALIBRATION)
+                    }
+                    if (array[i]==SHORTEN_LABELS.ADMINISTRATOR){
+                        newArray.push(DISPLAYABLE_LABELS.ADMINISTRATOR)
+                    }
                 }
-                let stringPermission = newArray.toString()
+                let finalArray = this.determineWhichGroupsToDisplay(newArray)
+                let stringPermission = finalArray.toString()
                 result["is_staff"] = stringPermission
             }
             result['options'] = result['name'] === ADMIN_NAME ? <div style={{textAlign : 'center'}}>Permanent Admin</div>
@@ -70,6 +99,10 @@ class UserTablePage extends Component{
         })
         this.setState({idToStaff : idToStaff})
         return results
+    }
+
+    determineWhichGroupsToDisplay = (array) => {
+        return array
     }
 
     changeAdminState = async(pk, bool) =>{
@@ -84,6 +117,41 @@ class UserTablePage extends Component{
 
     deactivateUser = async(pk) =>{
         let result = await UserRequests.deactivateUser(this.props.token, pk);
+        await this.getUserList()
+        return result
+    }
+
+    changeGroups = async(pk, groupChanged) =>{
+        let oldGroups = []
+        let results = await UserRequests.getAllUsers(this.props.token)
+        results.forEach(result => {
+            if (result["id"]==pk) {
+                oldGroups = result["groups"]
+            }
+        })
+        console.log(oldGroups)
+        if (!oldGroups.includes(groupChanged[0])){
+            oldGroups.push(groupChanged[0])
+        }
+        else {
+            oldGroups = oldGroups.filter(function(item) {
+                return item !== groupChanged[0]
+            })
+        }
+        if (oldGroups.length==0){
+            oldGroups.push(SHORTEN_LABELS.UNPRIVILEGED)
+        }
+        if (oldGroups.length>1 && oldGroups.includes(SHORTEN_LABELS.UNPRIVILEGED)){
+            oldGroups = oldGroups.filter(function(item) {
+                return item !== SHORTEN_LABELS.UNPRIVILEGED
+            })
+        }
+        if (oldGroups.includes(SHORTEN_LABELS.MODEL_MANAGEMENT) && !oldGroups.includes(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT)){
+            oldGroups.push(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT)
+        }
+
+        console.log(oldGroups)
+        let result = await UserRequests.changeGroups(this.props.token, pk, oldGroups);
         await this.getUserList()
         return result
     }

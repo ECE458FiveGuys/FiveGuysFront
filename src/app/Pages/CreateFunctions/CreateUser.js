@@ -21,22 +21,22 @@ export const LABELS =
     ]
 
 export const SHORTEN_LABELS =
-    [
-        'unprivileged',
-        'instrument_management',
-        'model_management',
-        'calibration',
-        'administrator',
-    ]
+    {
+        UNPRIVILEGED : 'unprivileged',
+        INSTRUMENT_MANAGEMENT : 'instrument_management',
+        MODEL_MANAGEMENT : 'model_management',
+        CALIBRATION : 'calibration',
+        ADMINISTRATOR : 'administrator',
+    }
 
 export const DISPLAYABLE_LABELS =
-    [
-        'Unprivileged',
-        'Instrument Management',
-        'Model Management',
-        'Calibration',
-        'Administrator',
-    ]
+    {
+        UNPRIVILEGED : 'Unprivileged',
+        INSTRUMENT_MANAGEMENT : 'Instrument Management',
+        MODEL_MANAGEMENT : 'Model Management',
+        CALIBRATION : 'Calibration',
+        ADMINISTRATOR : 'Administrator',
+    }
 
 
 class CreateUser extends Component {
@@ -120,18 +120,21 @@ class CreateUser extends Component {
         let newArrayBackEndReadable = [] //first turns the imput into readable backend
         for (let i=0; i<this.state.dropdown.length; i++){
             let num = LABELS.indexOf(this.state.dropdown[i])
-            newArrayBackEndReadable.push(SHORTEN_LABELS[num])
-        }  //then performs logic on the inputs
-        if (newArrayBackEndReadable.includes(SHORTEN_LABELS[4])){ //if admin, then keep only admin
-            newArrayBackEndReadable = []
-            newArrayBackEndReadable.push(SHORTEN_LABELS[4])
-        }
-        if (newArrayBackEndReadable.includes(SHORTEN_LABELS[2]) && !newArrayBackEndReadable.includes(SHORTEN_LABELS[1])){ //if model, remove intrument
-            newArrayBackEndReadable.push(SHORTEN_LABELS[1])
-        }
-        if (newArrayBackEndReadable.includes(SHORTEN_LABELS[0]) && newArrayBackEndReadable.length>1){ //if unpriveledged with tohers, delete
-            let index = newArrayBackEndReadable.indexOf(SHORTEN_LABELS[0])
-            newArrayBackEndReadable.splice(index, 1);
+            if (num==0){
+                newArrayBackEndReadable.push(SHORTEN_LABELS.UNPRIVILEGED)
+            }
+            if (num==1){
+                newArrayBackEndReadable.push(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT)
+            }
+            if (num==2){
+                newArrayBackEndReadable.push(SHORTEN_LABELS.MODEL_MANAGEMENT)
+            }
+            if (num==3){
+                newArrayBackEndReadable.push(SHORTEN_LABELS.CALIBRATION)
+            }
+            if (num==4){
+                newArrayBackEndReadable.push(SHORTEN_LABELS.ADMINISTRATOR)
+            }
         }
         newState["dropdown"] = newArrayBackEndReadable
         this.setState(newState)
@@ -207,7 +210,6 @@ class CreateUser extends Component {
     doNothing() {
     }
 }
-//unprivileged, intrument_management, model_management, calibration, administrator
 
 CreateUser.propTypes = {
     token: PropTypes.string.isRequired, // the token obtained through login
