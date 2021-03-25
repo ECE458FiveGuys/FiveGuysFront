@@ -37,11 +37,10 @@ class NavbarPage extends Component {
     render() {
         let {user, location, navbarColor} = this.props
         let Buttons = []
-        //if (user.is_staff) {
+        Buttons.push(<MDBNavItem active={location.pathname == "/categories"}>
+            <MDBNavLink to="/categories">Categories</MDBNavLink>
+        </MDBNavItem>)
         if (user.groups.includes(SHORTEN_LABELS.ADMINISTRATOR)) {
-            Buttons.push(<MDBNavItem active={location.pathname == "/categories"}>
-                            <MDBNavLink to="/categories">Categories</MDBNavLink>
-                        </MDBNavItem>)
             Buttons.push(<MDBNavItem active={location.pathname == "/users"}>
                 <MDBNavLink to="/users">Users</MDBNavLink>
             </MDBNavItem>)

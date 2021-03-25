@@ -23,10 +23,12 @@ class MainView extends Component {
                 <TabView token={this.props.token}
                          user={this.props.user}
                          modelPage={<CategoryPage token={this.props.token}
+                                                  user={this.props.user}
                                                   columns={TableColumns.CATEGORY_COLUMNS}
                                                  categoryType = {ModelFields.EquipmentModelFields.MODEL_CATEGORIES}
                                                   modelType={ModelFields.ModelTypes.EQUIPMENT_MODEL}/>}
                          instrumentPage={<CategoryPage token={this.props.token}
+                                                       user={this.props.user}
                                                        categoryType = {ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES}
                                                        columns={TableColumns.CATEGORY_COLUMNS}
                                                        modelType={ModelFields.ModelTypes.INSTRUMENT}/>}
