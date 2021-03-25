@@ -128,7 +128,7 @@ class ImportDocumentation extends Component{
             {/*/>*/}
             <div>
                 <MDBContainer>
-                    <h1>Import Documentation</h1>
+                    <h1>Import Guide</h1>
                     <Divider horizontal={true} style={{width : 375, marginTop : 20, marginBottom : 20}}/>
                     <div>
                         <body>
@@ -179,12 +179,12 @@ class ImportDocumentation extends Component{
                                  ”Comment”, “Model-Categories”, ”Load-Ban k-Support”, ”Calibration-Frequency”
                             </li>
                         </p>
-                            <h4>Data Format Rules</h4>
+                            <h4>Data Format Rules:</h4>
                         <p>
                             <Accordion>
                                 {Object.keys(this.MODEL_FIELDS).map((key,index) =>
                                         <Card>
-                                            <Card.Header>
+                                            <Card.Header style={{position:'relative'}}>
                                                 {this.MODEL_FIELDS[key]}
                                                 <Accordion.Toggle as={Button} variant="link" eventKey={key}>
                                                     <MDBIcon icon={"plus"}
