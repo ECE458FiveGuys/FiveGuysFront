@@ -5,6 +5,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import {StorageKeys} from "../../utils/enums";
 import PropTypes from "prop-types";
 import {User} from "../../utils/dtos";
+import {SHORTEN_LABELS} from "../../app/Pages/CreateFunctions/CreateUser";
 
 class NavbarPage extends Component {
 
@@ -36,7 +37,8 @@ class NavbarPage extends Component {
     render() {
         let {user, location, navbarColor} = this.props
         let Buttons = []
-        if (user.is_staff) {
+        //if (user.is_staff) {
+        if (user.groups.includes(SHORTEN_LABELS.ADMINISTRATOR)) {
             Buttons.push(<MDBNavItem active={location.pathname == "/categories"}>
                             <MDBNavLink to="/categories">Categories</MDBNavLink>
                         </MDBNavItem>)

@@ -210,7 +210,6 @@ class CreateUser extends Component {
     doNothing() {
     }
 }
-//unprivileged, intrument_management, model_management, calibration, administrator
 
 CreateUser.propTypes = {
     token: PropTypes.string.isRequired, // the token obtained through login
