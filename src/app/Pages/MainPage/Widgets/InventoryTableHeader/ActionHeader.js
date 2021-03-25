@@ -7,6 +7,8 @@ import PropTypes from "prop-types";
 import ExportInstrument from "../../../ImportExport/Widgets/ExportInstrument";
 import {User} from "../../../../../utils/dtos";
 import HTPButton from "../../../../Common/HTPButton";
+import {SHORTEN_LABELS} from "../../../CreateFunctions/CreateUser";
+import {EquipmentModel, Instrument} from "../../../../../utils/ModelEnums";
 
 export class ActionHeader extends React.Component{
 
@@ -52,7 +54,8 @@ export class ActionHeader extends React.Component{
                     <h1 className={"h4-responsive"} style={{marginBottom : 10}}>
                         {"Actions"}
                     </h1>
-                        {user.is_staff && this.renderCreateButtons()}
+                        {this.props.tableType == Instrument.TYPE && user.groups.includes(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT) && this.renderCreateButtons()}
+                        {this.props.tableType == EquipmentModel.TYPE && user.groups.includes(SHORTEN_LABELS.MODEL_MANAGEMENT) && this.renderCreateButtons()}
                         {this.renderExportButtons()}
                         {/*{tableType == ModelFields.ModelTypes.INSTRUMENT &&*/}
                         {/*    <div style={{marginTop : 10}}>*/}

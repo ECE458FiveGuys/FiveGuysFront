@@ -13,6 +13,7 @@ import ActionSection from "../Common/ActionSection";
 import {handleNavClick} from "../../../utils";
 import {MDBCol} from "mdbreact";
 import UpdateInstrument from "../../../Common/Forms/UpdateInstrument";
+import {SHORTEN_LABELS} from "../../CreateFunctions/CreateUser";
 
 
 const DIVIDER_MARGINS = 0
@@ -87,7 +88,7 @@ export default class ModelDetailView extends Component {
                             <div style={{flex: 1, display: "flex", flexDirection: "row", justifyContent: 'space-between'}}>
                                 <div style={{flex : 1, display : "flex", flexDirection : "column"}}>
                                     {ModelSection(model, "You are viewing the following model:", history, false)}
-                                    {user.is_staff &&
+                                    {user.groups.includes(SHORTEN_LABELS.MODEL_MANAGEMENT) &&
                                         <div style={{marginTop : 50, marginBottom : 50}}>
                                             <ActionSection token={token}
                                                            hasText={false}
