@@ -3,7 +3,7 @@ import {MDBContainer, MDBIcon} from "mdbreact";
 import filetab_image from "../../../../assets/sheets_filetab_screenshot.png"
 import csvtab_image from "../../../../assets/sheets_csvtab_screenshot.png"
 import excel_save_image from "../../../../assets/excel_save_screenshot.png"
-import "./ImportDoc.css";
+// import "./ImportDoc.css";
 import {Accordion, Button, Card} from "react-bootstrap";
 import {Divider} from "@material-ui/core";
 import HTPNavBar from "../../../Common/HTPNavBar";
