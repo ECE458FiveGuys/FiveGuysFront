@@ -52,7 +52,7 @@ export default class CategoryPage extends Component {
 
     renderEditableDataTable = () => {
         let isModel = this.props.modelType == ModelFields.ModelTypes.EQUIPMENT_MODEL
-        return (<div style={{display: "flex", marginTop : 10, alignItems: "center", justifyContent: "center"}}>
+        return (
             <DatatableEditable  token={this.props.token}
                                 user={this.props.user}
                                 columns={this.props.columns}
@@ -65,12 +65,12 @@ export default class CategoryPage extends Component {
                                 deleteFunction={isModel ? CategoryRequests.deleteModelCategory : CategoryRequests.deleteInstrumentCategory}
                                 validateDeleteFunction={isModel ? ModelRequests.getModelsByCategory : InstrumentRequests.getInstrumentsByCategory}
             />
-        </div>)
+    )
     }
 
     renderDataTable = () => {
         let isModel = this.props.modelType == ModelFields.ModelTypes.EQUIPMENT_MODEL
-        return (<div style={{display: "flex", marginTop : 10, alignItems: "center", justifyContent: "center"}}>
+        return (
             <DataTable  token={this.props.token}
                                 user={this.props.user}
                                 columns={this.props.columns}
@@ -83,8 +83,7 @@ export default class CategoryPage extends Component {
                                 deleteFunction={isModel ? CategoryRequests.deleteModelCategory : CategoryRequests.deleteInstrumentCategory}
                                 validateDeleteFunction={isModel ? ModelRequests.getModelsByCategory : InstrumentRequests.getInstrumentsByCategory}
             />
-        </div>)
-    }
+        )}
 
     render() {
         let isModel = this.props.modelType == ModelFields.ModelTypes.EQUIPMENT_MODEL
@@ -92,10 +91,10 @@ export default class CategoryPage extends Component {
         return (!this.state.model_categories && !this.state.instrument_categories) ?
         <Loading/>
         :
-            <div style={{display: "flex"}}>
+            <h4>
             {this.props.user.groups.includes(SHORTEN_LABELS.MODEL_MANAGEMENT) && this.renderEditableDataTable()}
             {!this.props.user.groups.includes(SHORTEN_LABELS.MODEL_MANAGEMENT) && this.renderDataTable()}
-            </div>
+            </h4>
     }
 }
 
