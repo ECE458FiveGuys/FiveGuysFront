@@ -71,7 +71,7 @@ export default class CategoryPage extends Component {
     renderDataTable = () => {
         let isModel = this.props.modelType == ModelFields.ModelTypes.EQUIPMENT_MODEL
         return (<div style={{display: "flex", marginTop : 10, alignItems: "center", justifyContent: "center"}}>
-            <DatatableEditable  token={this.props.token}
+            <DataTable  token={this.props.token}
                                 user={this.props.user}
                                 columns={this.props.columns}
                                 tableName={"Categories"}
@@ -92,7 +92,7 @@ export default class CategoryPage extends Component {
         return (!this.state.model_categories && !this.state.instrument_categories) ?
         <Loading/>
         :
-            <div style={{display: "flex", marginTop : 10}}>
+            <div style={{display: "flex"}}>
             {this.props.user.groups.includes(SHORTEN_LABELS.MODEL_MANAGEMENT) && this.renderEditableDataTable()}
             {!this.props.user.groups.includes(SHORTEN_LABELS.MODEL_MANAGEMENT) && this.renderDataTable()}
             </div>
