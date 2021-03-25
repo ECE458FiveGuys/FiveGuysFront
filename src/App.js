@@ -133,7 +133,8 @@ class App extends Component {
                             user={this.state.user}/>
               </Route>
               <Route path="/documentation">
-                <ImportDocumentation token={this.state.token}
+                <ImportDocumentation
+                                  token={this.state.token}
                                   user={this.state.user}/>
               </Route>
               <Route path="/user-settings"

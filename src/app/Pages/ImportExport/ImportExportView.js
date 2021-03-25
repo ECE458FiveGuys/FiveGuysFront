@@ -30,8 +30,10 @@ render(){
                             <Step stepNumber={1}
                                   stepText={"First, check out this guide on import format:"}/>
                                   <a onClick={() => history.push("documentation/")}>
+                                      <text style={{color : 'teal'}}>Import Guide</text>
                                         <MDBIcon icon={"question-circle"}
-                                                 style={{color : 'teal', marginTop : 15, marginBottom : 15}}
+                                                 style={{color : 'teal', marginTop : 15, marginBottom : 15,
+                                                 verticalAlign : 'middle', marginLeft : 10}}
                                                  size={'2x'}/>
                                   </a>
                             <Step stepNumber={2}
