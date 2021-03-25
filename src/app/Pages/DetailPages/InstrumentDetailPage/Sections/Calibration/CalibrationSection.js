@@ -15,6 +15,7 @@ import {MDBIcon} from "mdbreact";
 import {instrumentCalibratable} from "../../utils";
 import {Divider} from "@material-ui/core";
 import FileUtils from "../../../../../../utils/file_utils";
+import {SHORTEN_LABELS} from "../../../../CreateFunctions/CreateUser";
 
 export default class CalibrationSection extends React.Component {
 
@@ -123,7 +124,7 @@ export default class CalibrationSection extends React.Component {
                                searching={false}
                                rows={calibrationTableRows}/>
                     <div style={{marginTop : -15, display : "flex", flexDirection : "row", justifyContent: "space-between"}}>
-                        {this.renderRecordCalibrationButtons()}
+                        {this.props.user.groups.includes(SHORTEN_LABELS.CALIBRATION) && this.renderRecordCalibrationButtons()}
                         {this.renderCalibrationCertificateButton()}
                     </div>
                 </div>)
