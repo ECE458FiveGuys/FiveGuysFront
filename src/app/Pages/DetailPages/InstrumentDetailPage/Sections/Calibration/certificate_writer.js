@@ -7,7 +7,11 @@ import FileUtils from "../../../../../../utils/file_utils";
 // import XLSX from "xlsx";
 
 import * as XLSX from 'xlsx';
-import {VoltageTestErrorMargins, VoltageTestInputVoltages} from "../../../../KlufeWizardPage/step_utils";
+import {
+    VoltageTestErrorMargins,
+    VoltageTestInputFrequencies,
+    VoltageTestInputVoltages
+} from "../../../../KlufeWizardPage/step_utils";
 
 const LOGO_ASPECT_RATIO = 1.26
 const IMAGE_HEIGHT = 80 + 10
@@ -250,7 +254,7 @@ function buildFlukeVoltageTestTable(certificate, readings, type) {
             columnStyles: {3: {fillColor: [0, 250, 0]}},
             body: Object.keys(readings).map(testVoltageStepKey => {
                 let recordedVoltage = readings[testVoltageStepKey]
-                return [VoltageTestInputVoltages[testVoltageStepKey].toString() + " V",
+                return [VoltageTestInputVoltages[testVoltageStepKey].toString() + " V" + (type == "AC" ? " @ " + VoltageTestInputFrequencies[testVoltageStepKey] : ""),
                     recordedVoltage + " V",
                     "\u00B1" + VoltageTestErrorMargins[testVoltageStepKey].toString() + " V",
                     'ok']
