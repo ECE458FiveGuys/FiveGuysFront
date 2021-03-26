@@ -41,7 +41,7 @@ export default class RequestUtils {
             }
         }
 
-        RequestUtils.performFetch(AUTH_URLS.SELF, METHODS.GET, getMeCallBack, () => {}, RequestUtils.buildTokenHeader(getToken()))
+        RequestUtils.performFetch(AUTH_URLS.SELF, METHODS.GET, getMeCallBack, logout, RequestUtils.buildTokenHeader(getToken()))
 
     }
 
@@ -104,6 +104,7 @@ export default class RequestUtils {
                     response.text()
                         .then(errorText => {
                             if (timeout) clearTimeout(timeoutSetter)
+                            if (errorText == "Invalid token") logout()
                             alert(new ServerError(errorText).message)
                         })
                 } else {
@@ -120,6 +121,7 @@ export default class RequestUtils {
                         error.text()
                             .then(errorText => {
                                 if (timeout) clearTimeout(timeoutSetter)
+                                if (errorText == "Invalid token") logout()
                                 alert(new ServerError(errorText).message)
                             })
                     } catch (e) {
