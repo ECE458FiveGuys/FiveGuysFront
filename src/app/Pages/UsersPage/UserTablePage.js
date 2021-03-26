@@ -45,7 +45,7 @@ class UserTablePage extends Component{
 
     renderOptions = (result) => {
         return (<MDBRow style={{justifyContent: 'center', alignItems: 'center', marginTop: 0, xs: 2}}>
-                    <HTPAutoCompleteInput multiple = {true} options = {[DISPLAYABLE_LABELS.UNPRIVILEGED, DISPLAYABLE_LABELS.INSTRUMENT_MANAGEMENT, DISPLAYABLE_LABELS.MODEL_MANAGEMENT, DISPLAYABLE_LABELS.CALIBRATION, DISPLAYABLE_LABELS.ADMINISTRATOR,]} size = {10} onChange={this.handleChange('dropdown')} placeholder={'options'}/>
+                    <HTPAutoCompleteInput multiple = {true} options = {[DISPLAYABLE_LABELS.UNPRIVILEGED, DISPLAYABLE_LABELS.INSTRUMENT_MANAGEMENT, DISPLAYABLE_LABELS.MODEL_MANAGEMENT, DISPLAYABLE_LABELS.CALIBRATION, DISPLAYABLE_LABELS.ADMINISTRATOR,]} size = {10} onChange={this.handleChange('dropdown')} placeholder={'Options...'}/>
                     <HTPButton color="green"
                                disabled={!result['is_active']}
                                size="sm" onSubmit={()=>this.permissionSubmitted(result['id'])}
@@ -106,7 +106,6 @@ class UserTablePage extends Component{
     userParse = (results) => {
         let newResults = []
         results.forEach(result => {
-            console.log(result)
             if (result.is_active) {
                 newResults.push(result)
             }
@@ -118,9 +117,6 @@ class UserTablePage extends Component{
                 let array = result["groups"]
                 let newArray = []
                 for (let i=0; i<array.length; i++){
-                    if (array[i]==SHORTEN_LABELS.UNPRIVILEGED){
-                        newArray.push(DISPLAYABLE_LABELS.UNPRIVILEGED)
-                    }
                     if (array[i]==SHORTEN_LABELS.INSTRUMENT_MANAGEMENT){
                         newArray.push(DISPLAYABLE_LABELS.INSTRUMENT_MANAGEMENT)
                     }
@@ -190,6 +186,9 @@ class UserTablePage extends Component{
 
 
     determineWhichGroupsToDisplay = (array) => {
+        if (array.includes(DISPLAYABLE_LABELS.ADMINISTRATOR)){
+            return [DISPLAYABLE_LABELS.ADMINISTRATOR]
+        }
         return array
     }
 
