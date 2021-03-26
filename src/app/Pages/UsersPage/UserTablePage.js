@@ -45,7 +45,7 @@ class UserTablePage extends Component{
 
     renderOptions = (result) => {
         return (<MDBRow style={{justifyContent: 'center', alignItems: 'center', marginTop: 0, xs: 2}}>
-                    <HTPAutoCompleteInput multiple = {true} options = {[DISPLAYABLE_LABELS.UNPRIVILEGED, DISPLAYABLE_LABELS.INSTRUMENT_MANAGEMENT, DISPLAYABLE_LABELS.MODEL_MANAGEMENT, DISPLAYABLE_LABELS.CALIBRATION, DISPLAYABLE_LABELS.ADMINISTRATOR,]} size = {10} onChange={this.handleChange('dropdown')} placeholder={'Reassign user permissions'}/>
+                    <HTPAutoCompleteInput multiple = {true} options = {[DISPLAYABLE_LABELS.UNPRIVILEGED, DISPLAYABLE_LABELS.INSTRUMENT_MANAGEMENT, DISPLAYABLE_LABELS.MODEL_MANAGEMENT, DISPLAYABLE_LABELS.CALIBRATION, DISPLAYABLE_LABELS.ADMINISTRATOR,]} size = {10} onChange={this.handleChange('dropdown')} placeholder={'Change user permissions'}/>
                     <HTPButton color="green"
                                disabled={!result['is_active']}
                                size="sm" onSubmit={()=>this.permissionSubmitted(result['id'])}
@@ -54,10 +54,6 @@ class UserTablePage extends Component{
                                disabled={!result['is_active']}
                                size="sm" onSubmit={()=>this.toggleModal2()}
                                label={'User Permission Descriptions'}/>
-                    <HTPButton color="red"
-                               disabled={!result['is_active']}
-                               size="sm" onSubmit={()=>this.deactivateUser(result['id'])}
-                               label={result['is_active'] ? 'Remove user' : 'User deleted'}/>
                 </MDBRow>)
     }
 
@@ -144,6 +140,11 @@ class UserTablePage extends Component{
 
                 result["is_staff"] = stringPermission
             }
+            result['delete'] = true == true ? <HTPButton color="red"
+                                                         disabled={!result['is_active']}
+                                                         size="sm" onSubmit={()=>this.deactivateUser(result['id'])}
+                                                         label={"X"}/>
+                : this.renderOptions(result, idToStaff)
 
             result['options'] = result['name'] === ADMIN_NAME ? <div style={{textAlign : 'center'}}>Permanent Admin</div>
                 : this.renderOptions(result, idToStaff)

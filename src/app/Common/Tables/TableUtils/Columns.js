@@ -153,6 +153,12 @@ export default class TableColumns {
             sort: 'asc',
             width: 50
         },
+        {
+            label: 'Delete',
+            field: 'delete',
+            sort: 'asc',
+            width: 10
+        },
     ]
 
     static USER_COLUMNS_EDITABLE = [
