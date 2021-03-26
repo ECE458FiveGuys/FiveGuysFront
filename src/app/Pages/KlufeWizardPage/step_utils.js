@@ -26,6 +26,14 @@ export const VoltageTestInputFrequencies = {
     VAC_35_10kHz : "10 kHz",
 }
 
+export const VoltageTestInputFrequencyValues = {
+    VDC_3pt5 : undefined,
+    VAC_3pt513_50HZ : 50,
+    VAC_100_20kHz : 20000,
+    VAC_3pt5_10kHz : 10000,
+    VAC_35_10kHz : 10000
+}
+
 export const VoltageTestExpectedReadings = {
     VDC_3pt5 : 3.5,
     VAC_3pt513_50HZ : 3.5,
