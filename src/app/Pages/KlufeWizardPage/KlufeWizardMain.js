@@ -12,6 +12,8 @@ import DCStep from "./Steps/DCStep";
 import ACStep from "./Steps/ACStep";
 import CommentStep from "../../Common/Stepper/FunctionalCheckSteps/CommentStep";
 import HTPButton from "../../Common/HTPButton";
+import KlufeRequests from "../../../controller/requests/klufe_requests";
+import {getToken} from "../../../auth/auth_utils";
 
 export default class KlufeWizardMain extends React.Component {
 
@@ -84,7 +86,10 @@ export default class KlufeWizardMain extends React.Component {
                     <div style={{marginRight : 20, marginTop : 20}}>
                         <HTPButton label={"Exit"}
                                    color={"red"}
-                                   onSubmit={() => {handleNavClick("/instruments/" + instrumentId, this.props.history)}}/>
+                                   onSubmit={() => {
+                                       handleNavClick("/instruments/" + instrumentId, this.props.history)
+                                       KlufeRequests.off(getToken())
+                                   }}/>
                     </div>
                 </div>
                 <HTPStepper token={token}
