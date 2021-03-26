@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import {
     VoltageTestErrorMargins,
     VoltageTestErrorMessages,
-    VoltageTestExpectedReadings, VoltageTestInputFrequencies, VoltageTestInputVoltages,
+    VoltageTestExpectedReadings, VoltageTestInputFrequencies, VoltageTestInputFrequencyValues, VoltageTestInputVoltages,
     VoltageTestStepNamesToKeys
 } from "../../step_utils";
 import {percentErrorGreaterThan} from "../../../LoadBankPage/Steps/LoadBankStepSteps/step_utils";
@@ -72,7 +72,7 @@ export default class TestVoltageSubStep extends React.Component {
     onVoltageSet = () => {
         let {stepType, testVoltageStepKey} = this.props
         let inputVoltage = VoltageTestInputVoltages[testVoltageStepKey]
-        let inputFrequency = VoltageTestInputFrequencies[testVoltageStepKey]
+        let inputFrequency = VoltageTestInputFrequencyValues[testVoltageStepKey]
         if (!this.state.readingReady) {
             KlufeRequests.on(getToken())
             stepType == "DC" ? KlufeRequests.setDC(getToken(), inputVoltage) : KlufeRequests.setAC(getToken(), inputVoltage, inputFrequency)
