@@ -2,10 +2,9 @@ import ModelFields from "../../utils/enums";
 import {AUTH_URLS, HOSTS, METHODS, URLS} from "../strings";
 import {ServerError, UserError} from "../exceptions"
 import {EquipmentModel, Instrument} from "../../utils/ModelEnums";
-import {getToken, getUser, getUserCallBack, loginErrorCallBack, logout} from "../../auth/auth_utils";
+import {getToken, getUser, Logout, UpdateUser} from "../../auth/auth_utils";
 import {User} from "../../utils/dtos";
 import {arraysEqual} from "../../app/utils";
-import {StorageKeys} from "../../utils/UserEnums";
 
 export const ParamNames = {
     SEARCH : "search",
@@ -30,18 +29,19 @@ export default class RequestUtils {
                         params=undefined,
                         data= undefined,
                         expectedJson = true, timeout=undefined) {
+
         let getMeCallBack = (json) => {
             const user = User.fromJson(json)
             const cookieUser = User.fromJson(getUser())
 
             if (!arraysEqual(cookieUser.groups, user.groups)) {
-                localStorage.setItem(StorageKeys.USER, JSON.stringify(user))
+                UpdateUser(user)
             } else {
                 RequestUtils.performFetch(url, method, callBack, errorMessageCallBack, header, params, data, expectedJson)
             }
         }
 
-        RequestUtils.performFetch(AUTH_URLS.SELF, METHODS.GET, getMeCallBack, logout, RequestUtils.buildTokenHeader(getToken()))
+        RequestUtils.performFetch(AUTH_URLS.SELF, METHODS.GET, getMeCallBack, Logout, RequestUtils.buildTokenHeader(getToken()))
 
     }
 
@@ -104,7 +104,7 @@ export default class RequestUtils {
                     response.text()
                         .then(errorText => {
                             if (timeout) clearTimeout(timeoutSetter)
-                            if (errorText == "Invalid token") logout()
+                            if (errorText == "Invalid token") Logout()
                             alert(new ServerError(errorText).message)
                         })
                 } else {
@@ -121,10 +121,10 @@ export default class RequestUtils {
                         error.text()
                             .then(errorText => {
                                 if (timeout) clearTimeout(timeoutSetter)
-                                if (errorText == "Invalid token") logout()
                                 alert(new ServerError(errorText).message)
                             })
                     } catch (e) {
+                        if (error == "TypeError: Failed to fetch") return
                         if (timeout) clearTimeout(timeoutSetter)
                         alert(new ServerError(error).message)
                     }

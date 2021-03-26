@@ -4,7 +4,7 @@ import {gradients} from "../utils/styling";
 import {Link} from "react-router-dom";
 import Image from "../assets/hpt_logo.png";
 
-export default class NotFound extends React.Component {
+export default class MessagePage extends React.Component {
 
     constructor(props) {
         super(props)
@@ -21,7 +21,7 @@ export default class NotFound extends React.Component {
         >
             <div className={"flex-center"}
                  style={{flexDirection:"column"}}>
-            <text className={"h1-responsive"}>Sorry, this page no longer exists.</text>
+            <text className={"h1-responsive"}>{this.props.text}</text>
                 <img alt="logo"
                      style={{textAlign: 'center', width: 300, margin: 50}}
                      src={Image}/>

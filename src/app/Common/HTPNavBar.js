@@ -6,7 +6,7 @@ import {StorageKeys} from "../../utils/enums";
 import PropTypes from "prop-types";
 import {User} from "../../utils/dtos";
 import {SHORTEN_LABELS} from "../../app/Pages/CreateFunctions/CreateUser";
-import {logout} from "../../auth/auth_utils";
+import {Logout} from "../../auth/auth_utils";
 
 class NavbarPage extends Component {
 
@@ -74,7 +74,7 @@ class NavbarPage extends Component {
                                     </MDBDropdownToggle>
                                     <MDBDropdownMenu className="dropdown-menu">
                                         <MDBDropdownItem href="/"
-                                                         onClick={logout}>
+                                                         onClick={Logout}>
                                             Logout
                                         </MDBDropdownItem>
                                         {!user.isNetIdUser() && <MDBDropdownItem href="/user-settings">User Settings</MDBDropdownItem>}

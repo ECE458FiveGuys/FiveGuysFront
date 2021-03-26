@@ -4,9 +4,8 @@ import './App.css';
 import ImportExportView from './app/Pages/ImportExport/ImportExportView'
 import MainView from './app/Pages/MainPage/MainView';
 import Login from "./auth/Login";
-import NotFound from "./auth/NotFound";
+import MessagePage from "./auth/MessagePage";
 import {StorageKeys} from "./utils/enums";
-import {User} from "./utils/dtos";
 import ModelDetailView from "./app/Pages/DetailPages/ModelDetailPage/ModelDetailView";
 import InstrumentDetailView from "./app/Pages/DetailPages/InstrumentDetailPage/InstrumentDetailView";
 import CategoryTabView from "./app/Pages/CategoryPage/CategoryTabView";
@@ -17,9 +16,10 @@ import UserSettingsView from "./app/Pages/UserSettingsPage/UserSettingsView";
 import CreateUser from "./app/Pages/CreateFunctions/CreateUser";
 import UserTableView from "./app/Pages/UsersPage/UserTableView";
 import KlufeWizardMain from "./app/Pages/KlufeWizardPage/KlufeWizardMain";
-import {getToken, getUser, logout} from "./auth/auth_utils";
+import {getToken, getUser, Logout} from "./auth/auth_utils";
 import {AUTH_URLS, METHODS} from "./controller/strings";
 import RequestUtils from "./controller/requests/request_utils";
+import history from "./auth/history";
 
 class App extends Component {
 
@@ -29,12 +29,17 @@ class App extends Component {
       token: getToken(),
       user: getUser()
     }
-    RequestUtils.performFetch(AUTH_URLS.SELF, METHODS.GET, () => {}, this.invalidateToken, RequestUtils.buildTokenHeader(this.state.token))
+    if (this.state.token) this.removeTokenIfInvalid()
     this.saveToken = this.saveToken.bind(this)
   }
 
-  invalidateToken = () => {
-      this.setState({token : undefined, user : undefined}, logout)
+  removeTokenIfInvalid = () => {
+      RequestUtils.performFetch(AUTH_URLS.SELF, METHODS.GET, () => {},
+          () => {this.setState({token : undefined, user : undefined},
+              () => {
+              Logout()
+              })},
+          RequestUtils.buildTokenHeader(this.state.token))
   }
 
   saveToken = userToken => {
@@ -47,7 +52,7 @@ class App extends Component {
     this.setState({user: user})
   };
 
-  render() {
+    render() {
     if (!this.state.token || !this.state.user) {
       return <BrowserRouter>
                 <Switch>
@@ -68,7 +73,7 @@ class App extends Component {
     }
     return (
         <div className="wrapper">
-          <BrowserRouter>
+          <BrowserRouter history={"history"}>
             <Switch>
               <Route exact path="/"
                     render={(props) => <MainView history={props.history}
@@ -101,21 +106,6 @@ class App extends Component {
                                                           token={this.state.token}
                                                           user={this.state.user}/>)}>
               </Route>
-
-              {/*<Route path="/load-bank/:id"*/}
-              {/*       render = {(props) => (<LoadBankMain  instrumentId={props.match.params.id}*/}
-              {/*                                            location={props.location}*/}
-              {/*                                            history={props.history}*/}
-              {/*                                            user={this.state.user}*/}
-              {/*                                            token={this.state.token}/>)}>*/}
-              {/*</Route>*/}
-              {/*<Route path="/klufe-wizard/:id"*/}
-              {/*       render = {(props) => (<KlufeWizardMain instrumentId={props.match.params.id}*/}
-              {/*                                            location={props.location}*/}
-              {/*                                            history={props.history}*/}
-              {/*                                            user={this.state.user}*/}
-              {/*                                            token={this.state.token}/>)}>*/}
-              {/*</Route>*/}
               <Route path="/users"
                      render={(props) => (<UserTableView location={props.location}
                                                            token={this.state.token}
@@ -136,8 +126,11 @@ class App extends Component {
                                                           token={this.state.token}
                                                           user={this.state.user}/>)}>
               </Route>
+                <Route path={"/permission-change"}>
+                    <MessagePage text={"Hmm, looks like your permissions have changed. Let's head back to the main page."}/>
+                </Route>
               <Route>
-                <NotFound/>
+                <MessagePage text={"Sorry, this page does not exist."}/>
               </Route>
             </Switch>
           </BrowserRouter>
