@@ -201,9 +201,16 @@ export default class RequestUtils {
         }
         let suffix = "?"
         Object.keys(paramObj).forEach(key => {
-            suffix+=key+"="+paramObj[key]+"&"
+            let paramVal = paramObj[key]
+            suffix+=key+"="+(Array.isArray(paramVal) ? this.writeArrayParameter(paramVal) : paramVal) +"&"
         })
         return suffix.slice(0, -1) // removes last &
+    }
+
+    static writeArrayParameter(array) {
+        let suffix = ""
+        array.forEach(entry => suffix += entry + ",")
+        return suffix.slice(0, -1) //removes last comma
     }
 
     static applySearchParams(paramObj, ModelType) {

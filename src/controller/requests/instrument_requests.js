@@ -70,9 +70,7 @@ export default class InstrumentRequests {
                                    callBack = (json) => json,
                                    errorMessageCallBack = (errorMessage) => errorMessage) {
         let header = RequestUtils.buildTokenHeader(token)
-        let data = new FormData()
-        data.append("pks", pkArray)
-        RequestUtils.assistedFetch(URLS.ASSET_TAGS_BY_PKS, METHODS.GET, callBack, errorMessageCallBack, header, undefined, data)
+        RequestUtils.assistedFetch(URLS.ASSET_TAGS_BY_PKS, METHODS.GET, callBack, errorMessageCallBack, header, {pks : pkArray})
     }
 
     static async retrieveInstrument(token, pk,

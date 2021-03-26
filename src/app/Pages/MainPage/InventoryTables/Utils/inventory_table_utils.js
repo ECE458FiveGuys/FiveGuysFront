@@ -1,6 +1,8 @@
 import {PaginatedResponseFields} from "../../../../Common/Tables/TableUtils/pagination_utils";
 import RequestUtils from "../../../../../controller/requests/request_utils";
 import {METHODS} from "../../../../../controller/strings";
+import {Instrument} from "../../../../../utils/ModelEnums";
+import InstrumentRequests from "../../../../../controller/requests/instrument_requests";
 
 const MAX_PAGE_SIZE = 1000
 
@@ -41,8 +43,17 @@ export default class InventoryTableUtils {
                 }
             }
 
+            let getAssetsByPkCallBack = (assetNums) => {
+                let instruments = assetNums.map(assetNum => {
+                    return {[Instrument.FIELDS.ASSET_TAG] : assetNum}
+                })
+                getAllSelectedCallBack(instruments)
+            }
+
             if (allSelected && searchFieldValues != {}) {
                 searchRequestFunction(token, searchFieldValues, paginatorCallBack, (errorMessage) => alert(errorMessage), undefined, undefined, undefined, MAX_PAGE_SIZE)
+            } else if (!allSelected) {
+                InstrumentRequests.getAssetTagsByPK(token, Array.from(pkToEntriesSelected.keys()), getAssetsByPkCallBack, (errorMessage) => alert(errorMessage))
             } else {
                 getAllFunction(token, searchAllPagesCallBack, (errorMessage) => alert(errorMessage))
             }

@@ -8,6 +8,8 @@ let ROOT_URL = window.location.host === HOSTS.PROD ? "https://group-six-prod.col
 
 let ROOT_URL_AUTH = window.location.host === HOSTS.PROD ? "https://group-six-prod.colab.duke.edu/api/auth/" : "https://group-six-dev.colab.duke.edu/api/auth/"
 
+let KLUFE_URL = ROOT_URL + "klufe/"
+
 
 let OAUTH_URL = `https://oauth.oit.duke.edu/oidc/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=code`
 
@@ -31,6 +33,14 @@ export const URLS =
         MODEL_NUMBERS : ROOT_URL + "models/model_numbers/",
         CALIBRATIONS : ROOT_URL + "calibration-events/"
     }
+
+export const KLUFE_URLS = {
+    ON : KLUFE_URL + "on/",
+    OFF : KLUFE_URL + "off/",
+    SET_AC : KLUFE_URL + "set/AC/",
+    SET_DC : KLUFE_URL + "set/DC/"
+}
+
 
 export const AUTH_URLS =
     {
