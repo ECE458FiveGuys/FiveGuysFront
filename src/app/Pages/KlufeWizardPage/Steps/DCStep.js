@@ -9,6 +9,8 @@ import {DC_STEP_NAMES} from "./StepEnums/dc_step_enums";
 import DescriptionWithIcon from "./StepComponents/DescriptionWithIcon";
 import TestVoltageSubStep from "./StepComponents/TestVoltageSubStep";
 import {TestVoltageStepKeys} from "../step_utils";
+import KlufeRequests from "../../../../controller/requests/klufe_requests";
+import {getToken} from "../../../../auth/auth_utils";
 
 /*
 A stepper within a stepper
@@ -49,8 +51,8 @@ export default class DCStep extends React.Component {
     buildStepSubmitFunctions = () => {
         return [
             (stepperState, successCallBack) => {
-                //function.turnOnKlufe()  TODO
-                //function.setDCVoltage(0) TODO
+                KlufeRequests.on(getToken())
+                KlufeRequests.setDC(getToken(), 0)
                 successCallBack()
             },
             (stepperState, successCallBack) => {successCallBack()},

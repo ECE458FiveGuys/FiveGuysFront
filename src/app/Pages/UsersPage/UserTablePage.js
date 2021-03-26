@@ -173,7 +173,7 @@ class UserTablePage extends Component{
                         </div>
                             <div style={{marginTop : 10}}>
                                 <DataTable
-                                    disableRetreatAfterSorting
+                                    disableRetreatAfterSorting={true}
                                     token={token}
                                     columns={TableColumns.USER_COLUMNS}
                                     rows={userList}

@@ -12,6 +12,8 @@ import HTPInput from "../../../../Common/Inputs/HTPInput";
 import HTPButton from "../../../../Common/HTPButton";
 import Step from "../../../../Common/Text/Step";
 import {DC_STEP_NAMES} from "../StepEnums/dc_step_enums";
+import KlufeRequests from "../../../../../controller/requests/klufe_requests";
+import {getToken} from "../../../../../auth/auth_utils";
 
 export default class TestVoltageSubStep extends React.Component {
 
@@ -36,9 +38,10 @@ export default class TestVoltageSubStep extends React.Component {
         if (percentErrorGreaterThan(VoltageTestErrorMargins[testVoltageStepKey]/idealVoltage, idealVoltage, reading)) {
             error.push(VoltageTestErrorMessages[testVoltageStepKey])
         }
-        error.length == 0 ?
-            successCallBack() :
-            errorCallBack(error)
+        if (error.length == 0) {
+            KlufeRequests.off(getToken())
+            successCallBack()
+        } else errorCallBack(error)
     }
 
     /*
@@ -67,14 +70,18 @@ export default class TestVoltageSubStep extends React.Component {
     }
 
     onVoltageSet = () => {
-        !this.state.readingReady ?
-            // TODO: function.turnOnVoltage()
-            // TODO: function.setVoltage(stepType, inputVoltage)
-            this.setState({readingReady : true})
-            :
-            // TODO: function.setVoltage(stepType, 0)
-            // TODO: function.turnOffVoltage()
-            this.setState({readingReady : false})
+        let {stepType, testVoltageStepKey} = this.props
+        let inputVoltage = VoltageTestInputVoltages[testVoltageStepKey]
+        let inputFrequency = VoltageTestInputFrequencies[testVoltageStepKey]
+        if (!this.state.readingReady) {
+            KlufeRequests.on(getToken())
+            stepType == "DC" ? KlufeRequests.setDC(getToken(), inputVoltage) : KlufeRequests.setAC(getToken(), inputVoltage, inputFrequency)
+            this.setState({readingReady: true})
+        } else {
+            stepType == "DC" ? KlufeRequests.setDC(getToken(), 0) : KlufeRequests.setAC(getToken(), 0,0)
+            KlufeRequests.off(getToken())
+            this.setState({readingReady: false})
+        }
     }
 
     render() {

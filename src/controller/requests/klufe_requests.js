@@ -1,17 +1,30 @@
 import RequestUtils from "./request_utils";
 import {KLUFE_URLS, METHODS} from "../strings";
 
-class KlufeRequests {
+export default class KlufeRequests {
 
-    on() {
-        RequestUtils.performFetch(KLUFE_URLS.ON, METHODS.POST, () => {}, (error) => alert(error))
+    static on(token) {
+        let header = RequestUtils.buildTokenHeader(token)
+        RequestUtils.assistedFetch(KLUFE_URLS.ON, METHODS.POST, () => {}, (error) => alert(error), header)
     }
 
-    off() {
-        RequestUtils.performFetch(KLUFE_URLS.OFF, METHODS.POST, () => {}, (error) => alert(error))
+    static off(token) {
+        let header = RequestUtils.buildTokenHeader(token)
+        RequestUtils.assistedFetch(KLUFE_URLS.OFF, METHODS.POST, () => {}, (error) => alert(error), header)
     }
 
-    setDC() {
-        RequestUtils.performFetch(KLUFE_URLS.SET_DC, METHODS.POST, () => {}, (error) => alert(error), )
+    static setDC(token, volts) {
+        let header = RequestUtils.buildTokenHeader(token)
+        let data = new FormData()
+        data.append("volts", volts)
+        RequestUtils.assistedFetch(KLUFE_URLS.SET_DC, METHODS.POST, () => {}, (error) => alert(error), header, undefined, data)
+    }
+
+    static setAC(token, volts, frequency) {
+        let header = RequestUtils.buildTokenHeader(token)
+        let data = new FormData()
+        data.append("volts", volts)
+        data.append("frequency", frequency)
+        RequestUtils.assistedFetch(KLUFE_URLS.SET_AC, METHODS.POST, () => {}, (error) => alert(error), header, undefined, data)
     }
 }
