@@ -108,9 +108,16 @@ class UserTablePage extends Component{
 
 
     userParse = (results) => {
+        let newResults = []
+        results.forEach(result => {
+            if (result.is_active) {
+                newResults.push(result)
+            }
+        })
+        results = newResults
         let idToStaff = {}
         results.forEach(result => {
-            if (result.hasOwnProperty("groups")) {
+            if (result.hasOwnProperty("groups") && result.is_active) {
                 let array = result["groups"]
                 let newArray = []
                 for (let i=0; i<array.length; i++){
@@ -208,7 +215,6 @@ class UserTablePage extends Component{
                 oldGroups = result["groups"]
             }
         })
-        console.log(oldGroups)
         if (!oldGroups.includes(groupChanged[0])){
             oldGroups.push(groupChanged[0])
         }
@@ -228,8 +234,6 @@ class UserTablePage extends Component{
         if (oldGroups.includes(SHORTEN_LABELS.MODEL_MANAGEMENT) && !oldGroups.includes(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT)){
             oldGroups.push(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT)
         }
-
-        console.log(oldGroups)
         let result = await UserRequests.changeGroups(this.props.token, pk, oldGroups);
         await this.getUserList()
         return result
