@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import LoginRequests from "../controller/requests/login_requests";
 import Loading from "../app/Common/Images/Loading";
-import {loginCallBack} from "./utils";
+import {loginCallBack} from "./auth_utils";
 import {gradients} from "../utils/styling";
 import {Gradient} from "react-gradient";
 

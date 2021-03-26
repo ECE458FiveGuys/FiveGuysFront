@@ -2,17 +2,12 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import MiscellaneousRequests from "../../../controller/requests/miscellaneous_requests";
 import DatatableEditable from "../../Common/Tables/DatatableEditable";
-import DataTable from "../../Common/Tables/DataTable";
 import ModelFields from "../../../utils/enums";
 import Loading from "../../Common/Images/Loading";
 import CategoryRequests from "../../../controller/requests/category_requests";
 import ModelRequests from "../../../controller/requests/model_requests";
 import InstrumentRequests from "../../../controller/requests/instrument_requests";
 import {User} from "../../../utils/dtos";
-import UpdateModel from "../../Common/Forms/UpdateModel";
-import UpdateInstrument from "../../Common/Forms/UpdateInstrument";
-import {EquipmentModel} from "../../../utils/ModelEnums";
-import {SHORTEN_LABELS} from "../CreateFunctions/CreateUser";
 
 export default class CategoryPage extends Component {
 
@@ -50,51 +45,24 @@ export default class CategoryPage extends Component {
         )
     }
 
-    renderEditableDataTable = () => {
-        let isModel = this.props.modelType == ModelFields.ModelTypes.EQUIPMENT_MODEL
-        return (
-            <DatatableEditable  token={this.props.token}
-                                user={this.props.user}
-                                columns={this.props.columns}
-                                tableName={"Categories"}
-                                rows={isModel ?
-                                    this.state.model_categories : this.state.instrument_categories}
-                                editableColumns={this.props.columns}
-                                createFunction={isModel ? CategoryRequests.createModelCategory : CategoryRequests.createInstrumentCategory}
-                                editFunction={isModel ? CategoryRequests.editModelCategory : CategoryRequests.editInstrumentCategory}
-                                deleteFunction={isModel ? CategoryRequests.deleteModelCategory : CategoryRequests.deleteInstrumentCategory}
-                                validateDeleteFunction={isModel ? ModelRequests.getModelsByCategory : InstrumentRequests.getInstrumentsByCategory}
-            />
-    )
-    }
-
-    renderDataTable = () => {
-        let isModel = this.props.modelType == ModelFields.ModelTypes.EQUIPMENT_MODEL
-        return (
-            <DataTable  token={this.props.token}
-                                user={this.props.user}
-                                columns={this.props.columns}
-                                tableName={"Categories"}
-                                rows={isModel ?
-                                    this.state.model_categories : this.state.instrument_categories}
-                                editableColumns={this.props.columns}
-                                createFunction={isModel ? CategoryRequests.createModelCategory : CategoryRequests.createInstrumentCategory}
-                                editFunction={isModel ? CategoryRequests.editModelCategory : CategoryRequests.editInstrumentCategory}
-                                deleteFunction={isModel ? CategoryRequests.deleteModelCategory : CategoryRequests.deleteInstrumentCategory}
-                                validateDeleteFunction={isModel ? ModelRequests.getModelsByCategory : InstrumentRequests.getInstrumentsByCategory}
-            />
-        )}
-
     render() {
         let isModel = this.props.modelType == ModelFields.ModelTypes.EQUIPMENT_MODEL
-        let {user} = this.props
         return (!this.state.model_categories && !this.state.instrument_categories) ?
         <Loading/>
         :
-            <h4>
-            {this.props.user.groups.includes(SHORTEN_LABELS.MODEL_MANAGEMENT) && this.renderEditableDataTable()}
-            {!this.props.user.groups.includes(SHORTEN_LABELS.MODEL_MANAGEMENT) && this.renderDataTable()}
-            </h4>
+            <div style={{background: "white"}}>
+                <DatatableEditable  token={this.props.token}
+                                    columns={this.props.columns}
+                                    tableName={"Categories"}
+                                    rows={isModel ?
+                                        this.state.model_categories : this.state.instrument_categories}
+                                    editableColumns={this.props.columns}
+                                    createFunction={isModel ? CategoryRequests.createModelCategory : CategoryRequests.createInstrumentCategory}
+                                    editFunction={isModel ? CategoryRequests.editModelCategory : CategoryRequests.editInstrumentCategory}
+                                    deleteFunction={isModel ? CategoryRequests.deleteModelCategory : CategoryRequests.deleteInstrumentCategory}
+                                    validateDeleteFunction={isModel ? ModelRequests.getModelsByCategory : InstrumentRequests.getInstrumentsByCategory}
+                                    />
+            </div>
     }
 }
 

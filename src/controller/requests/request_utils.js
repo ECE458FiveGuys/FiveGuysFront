@@ -1,7 +1,11 @@
 import ModelFields from "../../utils/enums";
-import {HOSTS, METHODS, URLS} from "../strings";
+import {AUTH_URLS, HOSTS, METHODS, URLS} from "../strings";
 import {ServerError, UserError} from "../exceptions"
 import {EquipmentModel, Instrument} from "../../utils/ModelEnums";
+import {getToken, getUser, getUserCallBack, loginErrorCallBack, logout} from "../../auth/auth_utils";
+import {User} from "../../utils/dtos";
+import {arraysEqual} from "../../app/utils";
+import {StorageKeys} from "../../utils/UserEnums";
 
 export const ParamNames = {
     SEARCH : "search",
@@ -26,6 +30,29 @@ export default class RequestUtils {
                         params=undefined,
                         data= undefined,
                         expectedJson = true, timeout=undefined) {
+        let getMeCallBack = (json) => {
+            const user = User.fromJson(json)
+            const cookieUser = User.fromJson(getUser())
+
+            if (!arraysEqual(cookieUser.groups, user.groups)) {
+                localStorage.setItem(StorageKeys.USER, JSON.stringify(user))
+            } else {
+                RequestUtils.performFetch(url, method, callBack, errorMessageCallBack, header, params, data, expectedJson)
+            }
+        }
+
+        RequestUtils.performFetch(AUTH_URLS.SELF, METHODS.GET, getMeCallBack, () => {}, RequestUtils.buildTokenHeader(getToken()))
+
+    }
+
+    static performFetch(url,
+                          method,
+                          callBack = (json) => json,
+                          errorMessageCallBack = (errorMessage) => errorMessage,
+                          header={},
+                          params=undefined,
+                          data= undefined,
+                          expectedJson = true, timeout=undefined) {
         if (data && (!(data instanceof FormData) || !expectedJson)) {
             header['Content-Type'] = 'application/json';
             header['Accept'] = 'application/json';
@@ -47,62 +74,64 @@ export default class RequestUtils {
         }
 
         fetch(url + RequestUtils.applyRequestParamSuffix(params), init)
-                        .then(response => {
-                            if (response.ok) {
-                                if (response.status == 204)  // if no content response
-                                    callBack()
-                                else if (!expectedJson) {
-                                    response.text()
-                                        .then(text => {
-                                            if (timeout) clearTimeout(timeoutSetter)
-                                            callBack(text) // callback is called on the returned json
-                                        })
-                                        .catch(error=> {
-                                            if (timeout) clearTimeout(timeoutSetter)
-                                            errorMessageCallBack(error.message)
-                                        })
-                                }
-                                else {
-                                    response.json()
-                                        .then(json => {
-                                            if (timeout) clearTimeout(timeoutSetter)
-                                            callBack(json) // callback is called on the returned json
-                                        })
-                                        .catch(error=> {
-                                            if (timeout) clearTimeout(timeoutSetter)
-                                            errorMessageCallBack(error.message)
-                                        })
-                                }
-                            } else if (response.status >= 500 && response.status < 600) {
-                                response.text()
-                                    .then(errorText => {
-                                        if (timeout) clearTimeout(timeoutSetter)
-                                        alert(new ServerError(errorText).message)
-                                    })
-                            } else {
-                                response.json()
-                                    .then(error => {
-                                        if (timeout) clearTimeout(timeoutSetter)
-                                        let errorMessage = RequestUtils.parseErrorMessage(error)
-                                        errorMessageCallBack(errorMessage) // error message callback is called on the returned error message
-                                    })
-                            }
-                        })
-                        .catch(error => {
-                            try {
-                                error.text()
-                                    .then(errorText => {
-                                        if (timeout) clearTimeout(timeoutSetter)
-                                        alert(new ServerError(errorText).message)
-                                    })
-                            } catch (e) {
+            .then(response => {
+                if (response.ok) {
+                    if (response.status == 204)  // if no content response
+                        callBack()
+                    else if (!expectedJson) {
+                        response.text()
+                            .then(text => {
                                 if (timeout) clearTimeout(timeoutSetter)
-                                alert(new ServerError(error).message)
-                            }
-                            }
-                        )
+                                callBack(text) // callback is called on the returned json
+                            })
+                            .catch(error=> {
+                                if (timeout) clearTimeout(timeoutSetter)
+                                errorMessageCallBack(error.message)
+                            })
+                    }
+                    else {
+                        response.json()
+                            .then(json => {
+                                if (timeout) clearTimeout(timeoutSetter)
+                                callBack(json) // callback is called on the returned json
+                            })
+                            .catch(error=> {
+                                if (timeout) clearTimeout(timeoutSetter)
+                                errorMessageCallBack(error.message)
+                            })
+                    }
+                } else if (response.status >= 500 && response.status < 600) {
+                    response.text()
+                        .then(errorText => {
+                            if (timeout) clearTimeout(timeoutSetter)
+                            alert(new ServerError(errorText).message)
+                        })
+                } else {
+                    response.json()
+                        .then(error => {
+                            if (timeout) clearTimeout(timeoutSetter)
+                            let errorMessage = RequestUtils.parseErrorMessage(error)
+                            errorMessageCallBack(errorMessage) // error message callback is called on the returned error message
+                        })
+                }
+            })
+            .catch(error => {
+                    try {
+                        error.text()
+                            .then(errorText => {
+                                if (timeout) clearTimeout(timeoutSetter)
+                                alert(new ServerError(errorText).message)
+                            })
+                    } catch (e) {
+                        if (timeout) clearTimeout(timeoutSetter)
+                        alert(new ServerError(error).message)
+                    }
+                }
+            )
 
     }
+
+
 
     static async assisted_simple_fetch(url, method, header={}, params=undefined, data= undefined, all_search_fields=false){
         let init = {

@@ -1,26 +1,11 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import DataTable from "./DataTable";
-import Checkbox from "./TableWidgets/Checkbox";
 import HTPInput from "../Inputs/HTPInput";
 import HTPButton from "../HTPButton";
-import {MDBBtn, MDBCol, MDBContainer, MDBModal, MDBModalBody, MDBModalFooter, MDBModalHeader} from "mdbreact";
-import {ModalBody} from "react-bootstrap";
+import {MDBBtn, MDBCol} from "mdbreact";
 import HTPPopup from "../HTPPopup";
-import {act} from "@testing-library/react";
 import {User} from "../../../utils/dtos";
-import {SHORTEN_LABELS} from "../../Pages/CreateFunctions/CreateUser";
-
-const SELECT = "Select"
-const DELETE = "Delete"
-const
-
-
-
-
-
-
-    CHECK_BOX_REF = "CheckboxRef"
 
 export default class DatatableEditable extends Component {
 
@@ -237,7 +222,7 @@ export default class DatatableEditable extends Component {
         let {selectedRow, EditableFields, successMessage, warningMessage, warningFunction, errorMessage} = this.state
         return(<div style={{marginTop : 20}}>
                     <div style={{marginLeft : -15}}>
-                        <header className={"h3-responsive"} style={{marginLeft : 15, marginBottom: 10}}>
+                        <header className={"h2-responsive"} style={{marginLeft : 15, marginBottom: 10}}>
                             {`Manage Your ${this.props.tableName}`}
                         </header>
                         <text className={"h5-responsive text-default"} style={{marginTop : 30, marginLeft: 15}}>{selectedRow ? `Edit this entry` : "Create New Entry"}</text>

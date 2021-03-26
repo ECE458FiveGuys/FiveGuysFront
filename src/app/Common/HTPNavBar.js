@@ -6,6 +6,7 @@ import {StorageKeys} from "../../utils/enums";
 import PropTypes from "prop-types";
 import {User} from "../../utils/dtos";
 import {SHORTEN_LABELS} from "../../app/Pages/CreateFunctions/CreateUser";
+import {logout} from "../../auth/auth_utils";
 
 class NavbarPage extends Component {
 
@@ -37,6 +38,7 @@ class NavbarPage extends Component {
     render() {
         let {user, location, navbarColor} = this.props
         let Buttons = []
+        if (user.groups.includes(SHORTEN_LABELS.ADMINISTRATOR) || user.groups.includes(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT) || user.groups.includes(SHORTEN_LABELS.MODEL_MANAGEMENT))
         Buttons.push(<MDBNavItem active={location.pathname == "/categories"}>
             <MDBNavLink to="/categories">Categories</MDBNavLink>
         </MDBNavItem>)
@@ -72,10 +74,7 @@ class NavbarPage extends Component {
                                     </MDBDropdownToggle>
                                     <MDBDropdownMenu className="dropdown-menu">
                                         <MDBDropdownItem href="/"
-                                                         onClick={()=> {
-                                                             localStorage.removeItem(StorageKeys.TOKEN)
-                                                             localStorage.removeItem(StorageKeys.USER)
-                                                         }}>
+                                                         onClick={logout}>
                                             Logout
                                         </MDBDropdownItem>
                                         {!user.isNetIdUser() && <MDBDropdownItem href="/user-settings">User Settings</MDBDropdownItem>}

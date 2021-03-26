@@ -13,7 +13,7 @@ export default class LoginRequests {
                   (window.location.host === HOSTS.LOCAL) ? "local" : undefined
         }
 
-        RequestUtils.assistedFetch(AUTH_URLS.GET_OAUTH_TOKEN,
+        RequestUtils.performFetch(AUTH_URLS.GET_OAUTH_TOKEN,
             METHODS.POST,
             callBack,
             errorMessageCallBack,

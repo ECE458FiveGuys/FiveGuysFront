@@ -2,6 +2,7 @@ import {User} from "../utils/dtos";
 import UserRequests from "../controller/requests/user_requests";
 import RequestUtils from "../controller/requests/request_utils";
 import {AUTH_URLS, METHODS} from "../controller/strings";
+import {StorageKeys} from "../utils/enums";
 
 export let getUserCallBack = (context) => (json) => {
     let user = User.fromJson(json)
@@ -11,10 +12,25 @@ export let getUserCallBack = (context) => (json) => {
 
 export let loginCallBack = (context) => (json) => {
     const tokenVal = json["auth_token"]
-    RequestUtils.assistedFetch(AUTH_URLS.SELF, METHODS.GET, getUserCallBack(context), loginErrorCallBack(context), RequestUtils.buildTokenHeader(tokenVal))
+    RequestUtils.performFetch(AUTH_URLS.SELF, METHODS.GET, getUserCallBack(context), loginErrorCallBack(context), RequestUtils.buildTokenHeader(tokenVal))
     context.props.setToken(tokenVal);
 }
 export let loginErrorCallBack = (context) => (errorMessage) => {
     let newState = {error: errorMessage}
     context.setState(newState)
+}
+
+export const getToken = () => {
+    const tokenString = localStorage.getItem(StorageKeys.TOKEN);
+    return JSON.parse(tokenString);
+};
+
+export const getUser = () => {
+    const userString = localStorage.getItem(StorageKeys.USER);
+    return userString ? User.fromJson(JSON.parse(userString)) : undefined
+};
+
+export const logout = () => {
+    localStorage.removeItem(StorageKeys.TOKEN)
+    localStorage.removeItem(StorageKeys.USER)
 }

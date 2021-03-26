@@ -14,38 +14,32 @@ import LoadBankMain from "./app/Pages/LoadBankPage/LoadBankMain";
 import OAuthRedirect from "./auth/OAuthRedirect";
 import ImportDocumentation from "./app/Pages/ImportExport/Widgets/ImportDocumentation";
 import UserSettingsView from "./app/Pages/UserSettingsPage/UserSettingsView";
-import CreateModel from "./app/Pages/CreateFunctions/CreateModel";
-import CreateInstrument from "./app/Pages/CreateFunctions/CreateInstrument";
 import CreateUser from "./app/Pages/CreateFunctions/CreateUser";
-import UserTablePage from "./app/Pages/UsersPage/UserTablePage";
-import UserTester from "./app/Pages/CreateFunctions/UserTester";
 import UserTableView from "./app/Pages/UsersPage/UserTableView";
 import KlufeWizardMain from "./app/Pages/KlufeWizardPage/KlufeWizardMain";
+import {getToken, getUser, logout} from "./auth/auth_utils";
+import {AUTH_URLS, METHODS} from "./controller/strings";
+import RequestUtils from "./controller/requests/request_utils";
 
 class App extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      token: this.getToken(),
-      user: this.getUser()
+      token: getToken(),
+      user: getUser()
     }
+    RequestUtils.performFetch(AUTH_URLS.SELF, METHODS.GET, () => {}, this.invalidateToken, RequestUtils.buildTokenHeader(this.state.token))
     this.saveToken = this.saveToken.bind(this)
   }
 
-  getToken = () => {
-    const tokenString = localStorage.getItem(StorageKeys.TOKEN);
-    return JSON.parse(tokenString);
-  };
+  invalidateToken = () => {
+      this.setState({token : undefined, user : undefined}, logout)
+  }
 
   saveToken = userToken => {
     localStorage.setItem(StorageKeys.TOKEN, JSON.stringify(userToken));
     this.setState({token: userToken})
-  };
-
-  getUser = () => {
-    const userString = localStorage.getItem(StorageKeys.USER);
-    return userString ? User.fromJson(JSON.parse(userString)) : undefined
   };
 
   saveUser = user => {

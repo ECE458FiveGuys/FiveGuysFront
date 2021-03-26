@@ -7,10 +7,10 @@ import Image from "../assets/hpt_logo.png"
 import {Gradient} from "react-gradient"
 import RequestUtils from "../controller/requests/request_utils";
 import {Divider} from "@material-ui/core";
-import {loginCallBack, loginErrorCallBack} from "./utils";
+import {loginCallBack, loginErrorCallBack} from "./auth_utils";
 
 async function loginUser(credentials, callBack, errorMessageCallBack) {
-    RequestUtils.assistedFetch(AUTH_URLS.LOGIN, METHODS.POST, callBack, errorMessageCallBack, {}, {}, credentials)
+    RequestUtils.performFetch(AUTH_URLS.LOGIN, METHODS.POST, callBack, errorMessageCallBack, {}, {}, credentials)
 }
 
 const gradients = [

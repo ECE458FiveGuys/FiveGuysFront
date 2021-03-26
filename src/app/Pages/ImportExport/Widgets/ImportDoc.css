@@ -1,38 +1,38 @@
-img {
-    height: 150px;
-    margin-left: 150px;
-    margin-bottom: 30px;
-    margin-top: 30px;
-}
+/*img {*/
+/*    height: 150px;*/
+/*    margin-left: 150px;*/
+/*    margin-bottom: 30px;*/
+/*    margin-top: 30px;*/
+/*}*/
 
-.icon {
-    color: teal;
-    position: absolute;
-    margin-top: -5px;
-    right: 15px;
-    top: 50%;
-}
+/*.icon {*/
+/*    color: teal;*/
+/*    position: absolute;*/
+/*    margin-top: -5px;*/
+/*    right: 15px;*/
+/*    top: 50%;*/
+/*}*/
 
-.card {
-    width: 400px;
-}
+/*.card {*/
+/*    width: 400px;*/
+/*}*/
 
-p {
-    line-height: 30px;
-}
+/*p {*/
+/*    line-height: 30px;*/
+/*}*/
 
-li {
-    list-style-position: inside;
-    text-indent: -1em;
-    margin-left: 50px;
-}
+/*li {*/
+/*    list-style-position: inside;*/
+/*    text-indent: -1em;*/
+/*    margin-left: 50px;*/
+/*}*/
 
-h1 {
-    margin-top: 20px;
-    color: forestgreen;
-}
+/*h1 {*/
+/*    margin-top: 20px;*/
+/*    color: forestgreen;*/
+/*}*/
 
-h4 {
-    font-size: large;
-}
+/*h4 {*/
+/*    font-size: large;*/
+/*}*/
 
