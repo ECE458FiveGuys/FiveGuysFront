@@ -10,6 +10,7 @@ import {AUTH_URLS, URLS} from "../../../controller/strings";
 import HTPPopup from "../../Common/HTPPopup";
 import HTPButton from "../../Common/HTPButton";
 import { Multiselect } from 'multiselect-react-dropdown';
+import HTPAutoCompleteInput from "../../Common/Inputs/HTPAutoCompleteInput";
 
 export const LABELS =
     [
@@ -61,9 +62,6 @@ class CreateUser extends Component {
 
     async handleSubmit(event){
         await this.manageGroupsInput()
-        console.log("submit")
-        console.log("priveledge:");
-        console.log(this.state.dropdown);
         let token = 'Token ' + this.props.token
         const { username, name, email, password, dropdown} = this.state
         const requestOptions = {
@@ -136,6 +134,24 @@ class CreateUser extends Component {
                 newArrayBackEndReadable.push(SHORTEN_LABELS.ADMINISTRATOR)
             }
         }
+        if (newArrayBackEndReadable.includes(SHORTEN_LABELS.ADMINISTRATOR)){
+            newArrayBackEndReadable = []
+            newArrayBackEndReadable.push(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT)
+            newArrayBackEndReadable.push(SHORTEN_LABELS.MODEL_MANAGEMENT)
+            newArrayBackEndReadable.push(SHORTEN_LABELS.CALIBRATION)
+            newArrayBackEndReadable.push(SHORTEN_LABELS.ADMINISTRATOR)
+        }
+        if (newArrayBackEndReadable.length == 0) {
+            newArrayBackEndReadable.push(SHORTEN_LABELS.UNPRIVILEGED)
+        }
+        if (newArrayBackEndReadable.length>1 && newArrayBackEndReadable.includes(SHORTEN_LABELS.UNPRIVILEGED)){
+            newArrayBackEndReadable = newArrayBackEndReadable.filter(function(item) {
+                return item !== SHORTEN_LABELS.UNPRIVILEGED
+            })
+        }
+        if (newArrayBackEndReadable.includes(SHORTEN_LABELS.MODEL_MANAGEMENT) && !newArrayBackEndReadable.includes(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT)){
+            newArrayBackEndReadable.push(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT)
+        }
         newState["dropdown"] = newArrayBackEndReadable
         this.setState(newState)
     }
@@ -195,8 +211,8 @@ class CreateUser extends Component {
                             <HTPInput label={'Username'} onChange={this.handleChange('username')} placeholder={'required'}></HTPInput>
                             <HTPInput label={'Email'} onChange={this.handleChange('email')} placeholder={'required'}></HTPInput>
                             <HTPInput label={'Password'} type = 'Password' onChange={this.handleChange('password')} placeholder={'required'} type="password"></HTPInput>
-                            User Permissions
-                            <Multiselect options={LABELS} onSelect={this.onSelect} onRemove={this.onRemove} showCheckbox={true} isObject={false} />
+                            {/*<Multiselect options={LABELS} onSelect={this.onSelect} onRemove={this.onRemove} showCheckbox={true} isObject={false} />*/}
+                            <HTPAutoCompleteInput multiple = {true} options = {LABELS} label={'Categories'} size = {15} onChange={this.handleChange('dropdown')} placeholder={'required'}/>
                             <HTPButton label={'Create User'} onSubmit={this.handleSubmit}></HTPButton>
                             <br/>
                             <text style={{ color: this.state.responseColor }}>{this.getDisplayMessage()}</text>

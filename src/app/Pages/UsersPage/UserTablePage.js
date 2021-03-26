@@ -1,11 +1,13 @@
 import React, {Component} from "react";
-import {MDBBtn, MDBCol, MDBContainer, MDBRow} from "mdbreact";
+import {MDBBadge, MDBBtn, MDBCol, MDBContainer, MDBListGroupItem, MDBRow} from "mdbreact";
 import UserRequests from "../../../controller/requests/user_requests";
 import TableColumns from "../../Common/Tables/TableUtils/Columns";
 import DataTable from "../../Common/Tables/DataTable";
 import HTPButton from "../../Common/HTPButton";
 import CreateUserPopup from "./UserFunctions/CreateUserPopup";
-import {DISPLAYABLE_LABELS, SHORTEN_LABELS} from "../CreateFunctions/CreateUser";
+import {DISPLAYABLE_LABELS, LABELS, SHORTEN_LABELS} from "../CreateFunctions/CreateUser";
+import HTPAutoCompleteInput from "../../Common/Inputs/HTPAutoCompleteInput";
+import {EquipmentModel} from "../../../utils/ModelEnums";
 
 const ADMIN_NAME = 'Admin'
 
@@ -20,7 +22,8 @@ class UserTablePage extends Component{
             pk: "",
             new_user: {},
             usererrors: {},
-            modal : true
+            modal : true,
+            dropdown:[]
         }
     }
 
@@ -39,33 +42,62 @@ class UserTablePage extends Component{
 
     renderOptions = (result) => {
         return (<MDBRow style={{justifyContent: 'center', alignItems: 'center', marginTop: 0, xs: 2}}>
-                    {/*<HTPButton size="sm"*/}
-                    {/*           disabled={!result['is_active']}*/}
-                    {/*           color={result['is_staff'] == "admin" ? "orange" : "green"}*/}
-                    {/*           onSubmit={()=>this.changeAdminState(result['id'], this.state.idToStaff[result['id']] ? 'False' : 'True')}*/}
-                    {/*           label = {result['is_staff'] == "admin" ? "Revoke Admin Status" : "Grant Admin Status"}/>*/}
-                    <HTPButton color="orange"
-                               disabled={!result['is_active']}
-                               size="sm" onSubmit={()=>this.changeGroups(result['id'], ["instrument_management"])}
-                               label={'Change Instrument Management'}/>
-                    <HTPButton color="green"
-                               disabled={!result['is_active']}
-                               size="sm" onSubmit={()=>this.changeGroups(result['id'], ["model_management"])}
-                               label={'Change Model Management'}/>
-                    <HTPButton color="blue"
-                               disabled={!result['is_active']}
-                               size="sm" onSubmit={()=>this.changeGroups(result['id'], ["calibration"])}
-                               label={'Change Calibration'}/>
+                    <HTPAutoCompleteInput multiple = {true} options = {LABELS} label={'Categories'} size = {10} onChange={this.handleChange('dropdown')} placeholder={'required'}/>
                     <HTPButton color="purple"
                                disabled={!result['is_active']}
-                               size="sm" onSubmit={()=>this.changeGroups(result['id'], ["administrator"])}
-                               label={'Change Administrator'}/>
+                               size="sm" onSubmit={()=>this.permissionSubmitted(result['id'])}
+                               label={'Submit Changes'}/>
                     <HTPButton color="red"
                                disabled={!result['is_active']}
                                size="sm" onSubmit={()=>this.deactivateUser(result['id'])}
                                label={result['is_active'] ? 'Remove user' : 'User deleted'}/>
                 </MDBRow>)
     }
+
+    permissionSubmitted = async(pk) =>{
+        let newArrayBackEndReadable = []
+        for (let i=0; i<this.state.dropdown.length; i++){
+            let num = LABELS.indexOf(this.state.dropdown[i])
+            if (num==0){
+                newArrayBackEndReadable.push(SHORTEN_LABELS.UNPRIVILEGED)
+            }
+            if (num==1){
+                newArrayBackEndReadable.push(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT)
+            }
+            if (num==2){
+                newArrayBackEndReadable.push(SHORTEN_LABELS.MODEL_MANAGEMENT)
+            }
+            if (num==3){
+                newArrayBackEndReadable.push(SHORTEN_LABELS.CALIBRATION)
+            }
+            if (num==4){
+                newArrayBackEndReadable.push(SHORTEN_LABELS.ADMINISTRATOR)
+            }
+        }
+        if (newArrayBackEndReadable.includes(SHORTEN_LABELS.ADMINISTRATOR)){
+            newArrayBackEndReadable = []
+            newArrayBackEndReadable.push(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT)
+            newArrayBackEndReadable.push(SHORTEN_LABELS.MODEL_MANAGEMENT)
+            newArrayBackEndReadable.push(SHORTEN_LABELS.CALIBRATION)
+            newArrayBackEndReadable.push(SHORTEN_LABELS.ADMINISTRATOR)
+        }
+        if (newArrayBackEndReadable.length == 0) {
+            newArrayBackEndReadable.push(SHORTEN_LABELS.UNPRIVILEGED)
+        }
+        if (newArrayBackEndReadable.length>1 && newArrayBackEndReadable.includes(SHORTEN_LABELS.UNPRIVILEGED)){
+            newArrayBackEndReadable = newArrayBackEndReadable.filter(function(item) {
+                return item !== SHORTEN_LABELS.UNPRIVILEGED
+            })
+        }
+        if (newArrayBackEndReadable.includes(SHORTEN_LABELS.MODEL_MANAGEMENT) && !newArrayBackEndReadable.includes(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT)){
+            newArrayBackEndReadable.push(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT)
+        }
+        let result = await UserRequests.changeGroups(this.props.token, pk, newArrayBackEndReadable);
+        await this.getUserList()
+        return result
+    }
+
+
 
     userParse = (results) => {
         let idToStaff = {}
@@ -91,17 +123,50 @@ class UserTablePage extends Component{
                     }
                 }
                 let finalArray = this.determineWhichGroupsToDisplay(newArray)
-                let stringPermission = finalArray.toString()
+
+                let stringPermission = this.getCategoriesPretty(finalArray)
+
                 result["is_staff"] = stringPermission
             }
+
             result['options'] = result['name'] === ADMIN_NAME ? <div style={{textAlign : 'center'}}>Permanent Admin</div>
                 : this.renderOptions(result, idToStaff)
+
         })
         this.setState({idToStaff : idToStaff})
         return results
     }
 
+    getCategoriesPretty = (finalArray) => {
+        return(
+            <div>
+                <MDBBadge style={{marginRight : 5}}
+                                         color="green"
+                                         pill>
+                    {finalArray[0]}
+                </MDBBadge>
+                <MDBBadge style={{marginRight : 5}}
+                          color="green"
+                          pill>
+                    {finalArray[1]}
+                </MDBBadge>
+                <MDBBadge style={{marginRight : 5}}
+                          color="green"
+                          pill>
+                    {finalArray[2]}
+                </MDBBadge>
+                <MDBBadge style={{marginRight : 5}}
+                          color="green"
+                          pill>
+                    {finalArray[3]}
+                </MDBBadge>
+            </div>
+
+        )}
+
+
     determineWhichGroupsToDisplay = (array) => {
+        //to do
         return array
     }
 
@@ -119,6 +184,12 @@ class UserTablePage extends Component{
         let result = await UserRequests.deactivateUser(this.props.token, pk);
         await this.getUserList()
         return result
+    }
+
+    handleChange=(name)=>(value)=>{
+        let newState = {}
+        newState[name] = value
+        this.setState(newState)
     }
 
     changeGroups = async(pk, groupChanged) =>{
