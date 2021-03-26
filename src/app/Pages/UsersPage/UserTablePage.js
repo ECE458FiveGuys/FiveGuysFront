@@ -42,7 +42,7 @@ class UserTablePage extends Component{
 
     renderOptions = (result) => {
         return (<MDBRow style={{justifyContent: 'center', alignItems: 'center', marginTop: 0, xs: 2}}>
-                    <HTPAutoCompleteInput multiple = {true} options = {LABELS} label={'Categories'} size = {10} onChange={this.handleChange('dropdown')} placeholder={'required'}/>
+                    <HTPAutoCompleteInput multiple = {true} options = {LABELS} size = {10} onChange={this.handleChange('dropdown')} placeholder={'Reassign user permissions'}/>
                     <HTPButton color="purple"
                                disabled={!result['is_active']}
                                size="sm" onSubmit={()=>this.permissionSubmitted(result['id'])}

@@ -15,10 +15,10 @@ import HTPAutoCompleteInput from "../../Common/Inputs/HTPAutoCompleteInput";
 export const LABELS =
     [
         'Unprivileged (Can view models, instruments, and categories)',
-        'Instrument Management (Allows all Instruments functions excluding calibrations)',
-        'Model Management (Allows all Models and Instruments functions excluding calibrations)',
-        'Calibration (Allows the user to perform calibrations)',
-        "Administrator (Allows all functions above including changing other user's abilities",
+        'Instrument Management (All instrument functions excluding calibrations)',
+        'Model Management (All models and instruments functions excluding calibrations)',
+        'Calibration (All calibration functions)',
+        "Administrator (All functions above including changing user functions",
     ]
 
 export const SHORTEN_LABELS =
