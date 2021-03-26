@@ -148,7 +148,7 @@ export default class TableColumns {
             width: 50
         },
         {
-            label: 'Options',
+            label: 'Change User Permissions',
             field: 'options',
             sort: 'asc',
             width: 50
