@@ -8,6 +8,8 @@ import CreateUserPopup from "./UserFunctions/CreateUserPopup";
 import {DISPLAYABLE_LABELS, LABELS, SHORTEN_LABELS} from "../CreateFunctions/CreateUser";
 import HTPAutoCompleteInput from "../../Common/Inputs/HTPAutoCompleteInput";
 import {EquipmentModel} from "../../../utils/ModelEnums";
+import CreateModel from "../CreateFunctions/CreateModel";
+import HTPPopup from "../../Common/HTPPopup";
 
 const ADMIN_NAME = 'Admin'
 
@@ -23,7 +25,8 @@ class UserTablePage extends Component{
             new_user: {},
             usererrors: {},
             modal : true,
-            dropdown:[]
+            dropdown:[],
+            modal2 : false
         }
     }
 
@@ -42,35 +45,36 @@ class UserTablePage extends Component{
 
     renderOptions = (result) => {
         return (<MDBRow style={{justifyContent: 'center', alignItems: 'center', marginTop: 0, xs: 2}}>
-                    <HTPAutoCompleteInput multiple = {true} options = {LABELS} label={'Categories'} size = {10} onChange={this.handleChange('dropdown')} placeholder={'required'}/>
-                    <HTPButton color="purple"
+                    <HTPAutoCompleteInput multiple = {true} options = {[DISPLAYABLE_LABELS.UNPRIVILEGED, DISPLAYABLE_LABELS.INSTRUMENT_MANAGEMENT, DISPLAYABLE_LABELS.MODEL_MANAGEMENT, DISPLAYABLE_LABELS.CALIBRATION, DISPLAYABLE_LABELS.ADMINISTRATOR,]} size = {10} onChange={this.handleChange('dropdown')} placeholder={'Options...'}/>
+                    <HTPButton color="green"
                                disabled={!result['is_active']}
                                size="sm" onSubmit={()=>this.permissionSubmitted(result['id'])}
                                label={'Submit Changes'}/>
-                    <HTPButton color="red"
+                    <HTPButton color="blue"
                                disabled={!result['is_active']}
-                               size="sm" onSubmit={()=>this.deactivateUser(result['id'])}
-                               label={result['is_active'] ? 'Remove user' : 'User deleted'}/>
+                               size="sm" onSubmit={()=>this.toggleModal2()}
+                               label={'User Permission Descriptions'}/>
                 </MDBRow>)
     }
+
 
     permissionSubmitted = async(pk) =>{
         let newArrayBackEndReadable = []
         for (let i=0; i<this.state.dropdown.length; i++){
             let num = LABELS.indexOf(this.state.dropdown[i])
-            if (num==0){
+            if (this.state.dropdown[i] == DISPLAYABLE_LABELS.UNPRIVILEGED){
                 newArrayBackEndReadable.push(SHORTEN_LABELS.UNPRIVILEGED)
             }
-            if (num==1){
+            if (this.state.dropdown[i] == DISPLAYABLE_LABELS.INSTRUMENT_MANAGEMENT){
                 newArrayBackEndReadable.push(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT)
             }
-            if (num==2){
+            if (this.state.dropdown[i] == DISPLAYABLE_LABELS.MODEL_MANAGEMENT){
                 newArrayBackEndReadable.push(SHORTEN_LABELS.MODEL_MANAGEMENT)
             }
-            if (num==3){
+            if (this.state.dropdown[i] == DISPLAYABLE_LABELS.CALIBRATION){
                 newArrayBackEndReadable.push(SHORTEN_LABELS.CALIBRATION)
             }
-            if (num==4){
+            if (this.state.dropdown[i] == DISPLAYABLE_LABELS.ADMINISTRATOR){
                 newArrayBackEndReadable.push(SHORTEN_LABELS.ADMINISTRATOR)
             }
         }
@@ -100,15 +104,19 @@ class UserTablePage extends Component{
 
 
     userParse = (results) => {
+        let newResults = []
+        results.forEach(result => {
+            if (result.is_active) {
+                newResults.push(result)
+            }
+        })
+        results = newResults
         let idToStaff = {}
         results.forEach(result => {
-            if (result.hasOwnProperty("groups")) {
+            if (result.hasOwnProperty("groups") && result.is_active) {
                 let array = result["groups"]
                 let newArray = []
                 for (let i=0; i<array.length; i++){
-                    if (array[i]==SHORTEN_LABELS.UNPRIVILEGED){
-                        newArray.push(DISPLAYABLE_LABELS.UNPRIVILEGED)
-                    }
                     if (array[i]==SHORTEN_LABELS.INSTRUMENT_MANAGEMENT){
                         newArray.push(DISPLAYABLE_LABELS.INSTRUMENT_MANAGEMENT)
                     }
@@ -126,9 +134,21 @@ class UserTablePage extends Component{
 
                 let stringPermission = this.getCategoriesPretty(finalArray)
 
+
                 result["is_staff"] = stringPermission
             }
-
+            if (result.id !=1) {
+                result['delete'] = true == true ? <HTPButton color="red"
+                                                             disabled={!result['is_active']}
+                                                             size="sm"
+                                                             onSubmit={() => this.deactivateUser(result['id'])}
+                                                             label={"X"}/>
+                    : this.renderOptions(result, idToStaff)
+            }
+            else {
+                result['delete'] = result['name'] === ADMIN_NAME ? <div style={{textAlign : 'center'}}></div>
+                    : this.renderOptions(result, idToStaff)
+            }
             result['options'] = result['name'] === ADMIN_NAME ? <div style={{textAlign : 'center'}}>Permanent Admin</div>
                 : this.renderOptions(result, idToStaff)
 
@@ -166,7 +186,9 @@ class UserTablePage extends Component{
 
 
     determineWhichGroupsToDisplay = (array) => {
-        //to do
+        if (array.includes(DISPLAYABLE_LABELS.ADMINISTRATOR)){
+            return [DISPLAYABLE_LABELS.ADMINISTRATOR]
+        }
         return array
     }
 
@@ -200,7 +222,6 @@ class UserTablePage extends Component{
                 oldGroups = result["groups"]
             }
         })
-        console.log(oldGroups)
         if (!oldGroups.includes(groupChanged[0])){
             oldGroups.push(groupChanged[0])
         }
@@ -220,17 +241,37 @@ class UserTablePage extends Component{
         if (oldGroups.includes(SHORTEN_LABELS.MODEL_MANAGEMENT) && !oldGroups.includes(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT)){
             oldGroups.push(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT)
         }
-
-        console.log(oldGroups)
         let result = await UserRequests.changeGroups(this.props.token, pk, oldGroups);
         await this.getUserList()
         return result
+    }
+
+    toggleModal2 = () => {
+        this.setState({
+            modal2: !this.state.modal2
+        });
+    }
+
+    getDisplayMessage = () => {
+        let displayMessage = LABELS
+        return Array.isArray(displayMessage)  ? <div>
+            <ul>
+                {displayMessage.map(function(name, index){
+                    return <li key={ index }>{name}</li>;
+                })}
+            </ul>
+        </div> : <></>
     }
 
     render() {
         let {user, token} = this.props
         let {userList} = this.state
             return(<div style={{marginTop : 20, marginLeft : 100, marginRight : 100}}>
+                    <HTPPopup isOpen={this.state.modal2}
+                              toggleModal={this.toggleModal2}
+                              className={"text-info"}
+                              title={"User Permission Descriptions"}
+                              message={this.getDisplayMessage()}/>
                         <div style={{display : "flex", flexDirection : "row", justifyContent : "space-between", alignItems : 'center'}}>
                             <div style={{marginLeft : -15}}>
                                 <header className={"h2-responsive"} style={{marginLeft : 15, marginBottom: 10}}>
