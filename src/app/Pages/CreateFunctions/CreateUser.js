@@ -212,8 +212,17 @@ class CreateUser extends Component {
                             <HTPInput label={'Email'} onChange={this.handleChange('email')} placeholder={'required'}></HTPInput>
                             <HTPInput label={'Password'} type = 'Password' onChange={this.handleChange('password')} placeholder={'required'} type="password"></HTPInput>
                             {/*<Multiselect options={LABELS} onSelect={this.onSelect} onRemove={this.onRemove} showCheckbox={true} isObject={false} />*/}
-                            <HTPAutoCompleteInput multiple = {true} options = {LABELS} label={'Categories'} size = {15} onChange={this.handleChange('dropdown')} placeholder={'required'}/>
+                            <HTPAutoCompleteInput multiple = {true} options = {LABELS} label={'Categories'} size = {15} onChange={this.handleChange('dropdown')} placeholder={'Optional (defaults to upriviledged)'}/>
+                            <p></p>
+                            <div
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center"
+                                }}
+                            >
                             <HTPButton label={'Create User'} onSubmit={this.handleSubmit}></HTPButton>
+                            </div>
                             <br/>
                             <text style={{ color: this.state.responseColor }}>{this.getDisplayMessage()}</text>
                         </MDBCol>

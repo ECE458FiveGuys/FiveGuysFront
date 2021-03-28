@@ -44,8 +44,27 @@ class UserTablePage extends Component{
     }
 
     renderOptions = (result) => {
+        let currentGroupsRaw = result.groups
+        let currentGroupsPretty = []
+        for (let i=0; i<currentGroupsRaw.length; i++){
+            if (currentGroupsRaw[i] == SHORTEN_LABELS.UNPRIVILEGED){
+                currentGroupsPretty.push(DISPLAYABLE_LABELS.UNPRIVILEGED)
+            }
+            if (currentGroupsRaw[i] == SHORTEN_LABELS.INSTRUMENT_MANAGEMENT){
+                currentGroupsPretty.push(DISPLAYABLE_LABELS.INSTRUMENT_MANAGEMENT)
+            }
+            if (currentGroupsRaw[i] == SHORTEN_LABELS.MODEL_MANAGEMENT){
+                currentGroupsPretty.push(DISPLAYABLE_LABELS.MODEL_MANAGEMENT)
+            }
+            if (currentGroupsRaw[i] == SHORTEN_LABELS.CALIBRATION){
+                currentGroupsPretty.push(DISPLAYABLE_LABELS.CALIBRATION)
+            }
+            if (currentGroupsRaw[i] == SHORTEN_LABELS.ADMINISTRATOR){
+                currentGroupsPretty.push(DISPLAYABLE_LABELS.ADMINISTRATOR)
+            }
+        }
         return (<MDBRow style={{justifyContent: 'center', alignItems: 'center', marginTop: 0, xs: 2}}>
-                    <HTPAutoCompleteInput multiple = {true} options = {[DISPLAYABLE_LABELS.UNPRIVILEGED, DISPLAYABLE_LABELS.INSTRUMENT_MANAGEMENT, DISPLAYABLE_LABELS.MODEL_MANAGEMENT, DISPLAYABLE_LABELS.CALIBRATION, DISPLAYABLE_LABELS.ADMINISTRATOR,]} size = {10} onChange={this.handleChange('dropdown')} placeholder={'Options...'}/>
+                    <HTPAutoCompleteInput multiple = {true} defaultValue={currentGroupsPretty} options = {[DISPLAYABLE_LABELS.UNPRIVILEGED, DISPLAYABLE_LABELS.INSTRUMENT_MANAGEMENT, DISPLAYABLE_LABELS.MODEL_MANAGEMENT, DISPLAYABLE_LABELS.CALIBRATION, DISPLAYABLE_LABELS.ADMINISTRATOR,]} size = {10} onChange={this.handleChange('dropdown')} placeholder={'Options...'}/>
                     <HTPButton color="green"
                                disabled={!result['is_active']}
                                size="sm" onSubmit={()=>this.permissionSubmitted(result['id'])}
@@ -186,9 +205,6 @@ class UserTablePage extends Component{
 
 
     determineWhichGroupsToDisplay = (array) => {
-        if (array.includes(DISPLAYABLE_LABELS.ADMINISTRATOR)){
-            return [DISPLAYABLE_LABELS.ADMINISTRATOR]
-        }
         return array
     }
 
