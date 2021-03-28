@@ -69,10 +69,6 @@ class UserTablePage extends Component{
                                disabled={!result['is_active']}
                                size="sm" onSubmit={()=>this.permissionSubmitted(result['id'])}
                                label={'Submit Changes'}/>
-                    <HTPButton color="blue"
-                               disabled={!result['is_active']}
-                               size="sm" onSubmit={()=>this.toggleModal2()}
-                               label={'User Permission Descriptions'}/>
                 </MDBRow>)
     }
 
@@ -295,6 +291,9 @@ class UserTablePage extends Component{
                                 </header>
                                 <text className={"h5-responsive text-default"} style={{marginTop : 30, marginLeft: 15}}>{"Create users & modify permissions"}</text>
                             </div>
+                            <HTPButton color="blue"
+                                       onSubmit={()=>this.toggleModal2()}
+                                       label={'User Permission Descriptions'}/>
                             {user.is_staff && <CreateUserPopup
                                                     updatePage = {this.getUserList}
                                                     token={token}/>}
