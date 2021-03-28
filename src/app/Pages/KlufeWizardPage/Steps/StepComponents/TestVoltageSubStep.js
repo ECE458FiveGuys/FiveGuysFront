@@ -6,7 +6,10 @@ import {
     VoltageTestExpectedReadings, VoltageTestInputFrequencies, VoltageTestInputFrequencyValues, VoltageTestInputVoltages,
     VoltageTestStepNamesToKeys
 } from "../../step_utils";
-import {percentErrorGreaterThan} from "../../../LoadBankPage/Steps/LoadBankStepSteps/step_utils";
+import {
+    percentErrorGreaterThan,
+    percentErrorGreaterThanOrEqualTo
+} from "../../../LoadBankPage/Steps/LoadBankStepSteps/step_utils";
 import {isNumeric} from "../../../LoadBankPage/utils";
 import HTPInput from "../../../../Common/Inputs/HTPInput";
 import HTPButton from "../../../../Common/HTPButton";
@@ -35,7 +38,7 @@ export default class TestVoltageSubStep extends React.Component {
         }
         reading = parseFloat(reading)
         let error = []
-        if (percentErrorGreaterThan(VoltageTestErrorMargins[testVoltageStepKey]/idealVoltage, idealVoltage, reading)) {
+        if (percentErrorGreaterThanOrEqualTo(VoltageTestErrorMargins[testVoltageStepKey]/idealVoltage, idealVoltage, reading)) {
             error.push(VoltageTestErrorMessages[testVoltageStepKey])
         }
         if (error.length == 0) {

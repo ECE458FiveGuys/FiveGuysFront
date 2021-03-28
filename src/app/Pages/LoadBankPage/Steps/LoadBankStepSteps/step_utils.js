@@ -25,3 +25,7 @@ function buildStepNamesForResistor(idealCurrents, ampStepSize, numSteps, totalAm
 export function percentErrorGreaterThan (decimal, ideal, actual) {
     return Math.abs(((actual - ideal) / ideal)) > decimal
 }
+
+export function percentErrorGreaterThanOrEqualTo (decimal, ideal, actual) {
+    return Math.abs(((actual - ideal) / ideal)) >= decimal
+}
