@@ -3,7 +3,7 @@ import {MDBContainer, MDBIcon} from "mdbreact";
 import filetab_image from "../../../../assets/sheets_filetab_screenshot.png"
 import csvtab_image from "../../../../assets/sheets_csvtab_screenshot.png"
 import excel_save_image from "../../../../assets/excel_save_screenshot.png"
-// import "./ImportDoc.css";
+import "./ImportDoc.css";
 import {Accordion, Button, Card} from "react-bootstrap";
 import {Divider} from "@material-ui/core";
 import HTPNavBar from "../../../Common/HTPNavBar";
@@ -126,7 +126,7 @@ class ImportDocumentation extends Component{
             {/*    user={user}*/}
             {/*    location={location}*/}
             {/*/>*/}
-            <div>
+            <div className="importguide">
                 <MDBContainer>
                     <h1>Import Guide</h1>
                     <Divider horizontal={true} style={{width : 375, marginTop : 20, marginBottom : 20}}/>
@@ -140,11 +140,11 @@ class ImportDocumentation extends Component{
                                 <li>Click File->Download->Comma-separated values (.csv, current sheet):</li>
                                 <div>
                                     <img src={filetab_image}
-                                         // className = "image"
+                                         className = "images"
                                          // style={{}}
                                     />
                                     <img src={csvtab_image}
-                                         // className = "image"
+                                         className = "images"
                                          // style={{margin:"50px 50px"}}
                                     />
                                 </div>
@@ -153,7 +153,7 @@ class ImportDocumentation extends Component{
                             <li>Click File->Save As then select CSV UTF-8 as the File Format</li>
                             <div>
                                 <img src={excel_save_image}
-                                     className = "image"
+                                     className = "images"
                                 />
                             </div>
                             <li>Click Save</li>
@@ -215,7 +215,7 @@ class ImportDocumentation extends Component{
                                 Models identified by model number in conjunction with vendor must already exist
                                 in the database.
                             </li>
-                            <h4>Data Format Rules</h4>
+                            <h4>Data Format Rules:</h4>
                         </p>
                         <p>
                             <Accordion>
