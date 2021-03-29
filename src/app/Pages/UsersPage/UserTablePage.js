@@ -294,7 +294,7 @@ class UserTablePage extends Component{
                             <HTPButton color="blue"
                                        onSubmit={()=>this.toggleModal2()}
                                        label={'User Permission Descriptions'}/>
-                            {user.is_staff && <CreateUserPopup
+                            {user.groups.includes(SHORTEN_LABELS.ADMINISTRATOR) && <CreateUserPopup
                                                     updatePage = {this.getUserList}
                                                     token={token}/>}
                         </div>

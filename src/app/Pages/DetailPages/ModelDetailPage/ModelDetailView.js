@@ -115,7 +115,7 @@ export default class ModelDetailView extends Component {
                                                        token={token}
                                                        rows={instrumentRows}/>
                                         </div>
-                                        {user.is_staff &&
+                                        {user.groups.includes(SHORTEN_LABELS.ADMINISTRATOR) &&
                                             <div style={{marginTop : -20}}>
                                                 <UpdateInstrument token={token}
                                                                   updatePageState={this.updatePageState}
