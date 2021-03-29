@@ -48,7 +48,7 @@ export class ActionHeader extends React.Component{
     }
 
     render() {
-        let {updatePageState, selectMode, user, tableType, resetSelect} = this.props
+        let {user} = this.props
         return <div style={{display : 'flex', flex : 1, justifyContent : 'center', alignItems : 'center',
             flexDirection : 'column', textAlign : 'center', marginTop : 20, marginBottom : 20}}>
                     <h1 className={"h4-responsive"} style={{marginBottom : 10}}>
@@ -57,14 +57,6 @@ export class ActionHeader extends React.Component{
                         {this.props.tableType == Instrument.TYPE && user.groups.includes(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT) && this.renderCreateButtons()}
                         {this.props.tableType == EquipmentModel.TYPE && user.groups.includes(SHORTEN_LABELS.MODEL_MANAGEMENT) && this.renderCreateButtons()}
                         {this.renderExportButtons()}
-                        {/*{tableType == ModelFields.ModelTypes.INSTRUMENT &&*/}
-                        {/*    <div style={{marginTop : 10}}>*/}
-                        {/*        <HTPButton label={selectMode ? "Unselect" : "Select"}*/}
-                        {/*                   onSubmit={() => {*/}
-                        {/*                       updatePageState({selectMode : !selectMode})*/}
-                        {/*                       resetSelect()*/}
-                        {/*                   }}/>*/}
-                        {/*    </div>}*/}
                 </div>
     }
 

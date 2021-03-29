@@ -14,6 +14,12 @@ export const ParamNames = {
     PAGE_NUMBER : "page"
 }
 
+export const NullableFields = [
+    ModelFields.EquipmentModelFields.CALIBRATION_MODE
+]
+
+
+
 export default class RequestUtils {
 
     /*
@@ -329,7 +335,7 @@ export default class RequestUtils {
         let data = new FormData()
         Object.keys(fields).forEach(key => {
             let val = fields[key]
-            if (val) {
+            if (val || NullableFields.includes(val)) {
                 if (key == ModelFields.EquipmentModelFields.MODEL_CATEGORIES || key == ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES) {
                     val.forEach(category => {
                         data.append(key, category.name ? category.name : category)
