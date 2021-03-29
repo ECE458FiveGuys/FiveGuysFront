@@ -299,7 +299,7 @@ class UserTablePage extends Component{
                                 </header>
                                 <text className={"h5-responsive text-default"} style={{marginTop : 30, marginLeft: 15}}>{"Create users & modify permissions"}</text>
                             </div>
-                            {user.is_staff && <CreateUserPopup
+                            {user.groups.includes(SHORTEN_LABELS.ADMINISTRATOR) && <CreateUserPopup
                                                     updatePage = {this.getUserList}
                                                     token={token}/>}
                         </div>
