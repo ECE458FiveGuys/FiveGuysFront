@@ -44,6 +44,12 @@ class FormEntry extends Component {
         }
 
         if (fieldName === ModelFields.EquipmentModelFields.CALIBRATION_MODE) {
+            let defaultValue = undefined
+            if (this.props.isEdit) {
+                if (defaultValue != ModelFields.CalibrationModes.DEFAULT && defaultValue != ModelFields.CalibrationModes.NOT_CALIBRATABLE) {
+                    defaultValue = this.props.subject[fieldName]
+                }
+            }
             return (
                 <div>
                     <label  style={{marginBottom : 10}}
@@ -51,12 +57,13 @@ class FormEntry extends Component {
                         Advanced Calibration Modes
                     </label>
                     <select
+                        defaultValue={defaultValue}
                         onChange={(event) => {
                                            this.props.handleInputChange(fieldName)(event.target.value)
                                        }}
                         id = "calibration_mode_selector"
                         className="browser-default custom-select">
-                        <option value={undefined}>None (Simple Calibration Only)</option>
+                        <option value={ModelFields.CalibrationModes.DEFAULT}>None (simple calibration only, if calibratable)</option>
                         <option value={ModelFields.CalibrationModes.LOAD_BANK}>Load Bank</option>
                         <option value={ModelFields.CalibrationModes.GUIDED_HARDWARE}>Guided Hardware (Klufe 5700)</option>
                     </select>

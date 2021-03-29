@@ -259,6 +259,7 @@ class InventoryTable extends Component {
                 </div>
                 {this.inSelectMode() && this.getTableType() == ModelFields.ModelTypes.INSTRUMENT &&
                     <InstrumentSelectFooter instrumentCount={this.state.numSelected}
+                                            resetSelect = {this.resetSelect}
                                             getAllFunction={InventoryTableUtils.getAllSelected(token, searchRequestFunction,
                                                 getAllFunction, searchFieldValues, this.selectAllCheckboxRef, pkToEntriesSelected)}/>
                     }

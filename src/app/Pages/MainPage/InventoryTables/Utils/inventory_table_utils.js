@@ -24,7 +24,7 @@ export default class InventoryTableUtils {
                 } else {
                     selectedEntries = []
                     allSearchedEntries.forEach(entry => {
-                        if (pkToEntriesSelected.get(entry.pk)) {
+                        if (pkToEntriesSelected.get(entry.pk) == true) {
                             selectedEntries.push(entry)
                         }
                     })
@@ -53,7 +53,11 @@ export default class InventoryTableUtils {
             if (allSelected && searchFieldValues != {}) {
                 searchRequestFunction(token, searchFieldValues, paginatorCallBack, (errorMessage) => alert(errorMessage), undefined, undefined, undefined, MAX_PAGE_SIZE)
             } else if (!allSelected) {
-                InstrumentRequests.getAssetTagsByPK(token, Array.from(pkToEntriesSelected.keys()), getAssetsByPkCallBack, (errorMessage) => alert(errorMessage))
+                let selected = []
+                Array.from(pkToEntriesSelected.keys()).forEach(pk => {
+                    if (pkToEntriesSelected.get(pk)) selected.push(pk)
+                })
+                InstrumentRequests.getAssetTagsByPK(token, selected, getAssetsByPkCallBack, (errorMessage) => alert(errorMessage))
             } else {
                 getAllFunction(token, searchAllPagesCallBack, (errorMessage) => alert(errorMessage))
             }
