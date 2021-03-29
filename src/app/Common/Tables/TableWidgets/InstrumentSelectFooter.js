@@ -12,7 +12,7 @@ export default class InstrumentSelectFooter extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            printButtonEnabled : false,
+            printButtonEnabled : true,
             printButtonLabel : PRINT_LABELS_TEXT
         }
     }
