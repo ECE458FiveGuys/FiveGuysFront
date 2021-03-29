@@ -144,19 +144,19 @@ export default class TableColumns {
         {
             label: 'Permissions',
             field: ModelFields.UserFields.IS_STAFF,
-            sort: 'asc',
+            sort: 'disabled',
             width: 50
         },
         {
             label: 'Change User Permissions',
             field: 'options',
-            sort: 'asc',
+            sort: 'disabled',
             width: 50
         },
         {
             label: 'Delete',
             field: 'delete',
-            sort: 'asc',
+            sort: 'disabled',
             width: 10
         },
     ]

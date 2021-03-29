@@ -116,6 +116,13 @@ class UserTablePage extends Component{
         return result
     }
 
+    getCols() {
+        let cols = TableColumns.USER_COLUMNS
+        cols[4].label = <div>Change User Permission<i style={{marginLeft : 5, color: "blue"}}
+                                                                    onClick={this.toggleModal2}
+                                                                    className="fas fa-info-circle"></i></div>
+        return cols
+    }
 
 
     userParse = (results) => {
@@ -277,6 +284,7 @@ class UserTablePage extends Component{
 
     render() {
         let {user, token} = this.props
+        let cols = TableColumns.USER_COLUMNS
         let {userList} = this.state
             return(<div style={{marginTop : 20, marginLeft : 100, marginRight : 100}}>
                     <HTPPopup isOpen={this.state.modal2}
@@ -291,9 +299,6 @@ class UserTablePage extends Component{
                                 </header>
                                 <text className={"h5-responsive text-default"} style={{marginTop : 30, marginLeft: 15}}>{"Create users & modify permissions"}</text>
                             </div>
-                            <HTPButton color="blue"
-                                       onSubmit={()=>this.toggleModal2()}
-                                       label={'User Permission Descriptions'}/>
                             {user.is_staff && <CreateUserPopup
                                                     updatePage = {this.getUserList}
                                                     token={token}/>}
@@ -302,7 +307,7 @@ class UserTablePage extends Component{
                                 <DataTable
                                     disableRetreatAfterSorting={true}
                                     token={token}
-                                    columns={TableColumns.USER_COLUMNS}
+                                    columns={this.getCols()}
                                     rows={userList}
                                 />
                             </div>

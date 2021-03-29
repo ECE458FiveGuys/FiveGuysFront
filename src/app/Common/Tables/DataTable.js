@@ -28,6 +28,7 @@ export default class DataTable extends Component {
                     searching={searching}
                     disableRetreatAfterSorting={disableRetreatAfterSorting}
                     data={data}
+                    noBottomColumns={true}
                 />)
     }
 }
