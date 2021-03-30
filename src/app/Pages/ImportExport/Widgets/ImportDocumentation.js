@@ -67,7 +67,7 @@ class ImportDocumentation extends Component{
         Asset_Number: "Asset-Tag-Number",
         Comment: "Comment",
         Categories: "Instrument-Categories",
-        Calibration_Date: "Calibratoin-Date",
+        Calibration_Date: "Calibration-Date",
         Calibration_Comment: "Calibration-Comment"
     }
 
