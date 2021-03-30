@@ -17,7 +17,7 @@ class ImportDocumentation extends Component{
         Description: "Short-Description (Required)",
         Comment: "Comment",
         Categories: "Model-Categories",
-        LoadBank: "Load-Bank-Support",
+        SpecialCalibrationSupport: "Special-Calibration-Support",
         CalibrationFrequency: "Calibration-Frequency (Required)"
     }
 
@@ -46,9 +46,10 @@ class ImportDocumentation extends Component{
                 less than 100 characters each</li>
                 <li>Each category listed must match a category already in the database</li>
             </div>,
-        LoadBank:
+        SpecialCalibrationSupport:
             <div>
-                <li>“Y” if the model is calibrable via load bank wizard, empty otherwise</li>
+                <li>Either "Load-Bank", "Klufe", or empty, depending on the modeel's mode of calibration</li>
+                <li>Empty indicates that only simple calibrations are supported in the case the model is calibratable</li>
             </div>,
         CalibrationFrequency:
             <div>
@@ -176,7 +177,7 @@ class ImportDocumentation extends Component{
                             <p>
                             <li>Table MUST include each of the following 7 columns with its specified case sensitive name
                                 in the following order (left to right): “Vendor”, ”Model-Number”, ”Short-Description”,
-                                 ”Comment”, “Model-Categories”, ”Load-Ban k-Support”, ”Calibration-Frequency”
+                                 ”Comment”, “Model-Categories”, ”Special-Calibration-Support”, ”Calibration-Frequency”
                             </li>
                         </p>
                             <h4>Data Format Rules:</h4>
