@@ -21,7 +21,7 @@ export default function ModelSection(model, subheading, history=undefined, displ
                             alignItems : 'center', justifyContent : 'space-between',marginTop : 20, textAlign : 'center',
                             cursor : displayNavButton ? "pointer" : "default"}}>
                         {ModelDisplay(
-                            ["Model Number", "Vendor", "Calibration Frequency", "Calibration Mode"],
+                            ["Model Number", "Vendor", "Calibration Frequency", "Calibration Mode", "Calibration Approval Required"],
                             [
                                 model[ModelFields.EquipmentModelFields.MODEL_NUMBER],
                                 model[ModelFields.EquipmentModelFields.VENDOR],
@@ -31,7 +31,8 @@ export default function ModelSection(model, subheading, history=undefined, displ
                                     "Load Bank" :
                                     model[ModelFields.EquipmentModelFields.CALIBRATION_MODE] == ModelFields.CalibrationModes.GUIDED_HARDWARE ?
                                         "Guided Hardware" :
-                                            "Simple")
+                                            "Simple"),
+                                model[ModelFields.EquipmentModelFields.CALIBRATION_APPROVAL_REQUIRED]
                             ])}
                     </a>
                     <h1 style={{marginTop : 20}}

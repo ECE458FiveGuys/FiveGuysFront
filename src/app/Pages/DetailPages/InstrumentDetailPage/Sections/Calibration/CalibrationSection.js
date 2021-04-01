@@ -16,6 +16,7 @@ import {instrumentCalibratable} from "../../utils";
 import {Divider} from "@material-ui/core";
 import FileUtils from "../../../../../../utils/file_utils";
 import {SHORTEN_LABELS} from "../../../../CreateFunctions/CreateUser";
+import {buildEvidenceElement} from "../../../Common/utils";
 
 export default class CalibrationSection extends React.Component {
 
@@ -34,24 +35,41 @@ export default class CalibrationSection extends React.Component {
     }
 
     buildCalibrationTableRows = (calibrations) => {
+        let {instrument} = this.props
         return calibrations.map(calibration => {
             let calibrationCopy = {...calibration}
-            calibrationCopy[ModelFields.CalibrationFields.AdditionalFile] = (
-                calibrationCopy[ModelFields.CalibrationFields.AdditionalFile] ?
-                    <a target="_blank" href={calibrationCopy[ModelFields.CalibrationFields.AdditionalFile]}>
-                        <div style={{display : "flex", flexDirection : "row", alignItems : 'center'}}>
-                            <MDBIcon size={"2x"}
-                                     icon="file-alt" />
-                            <text style={{marginLeft : 10}}>
-                                {FileUtils.getFileNameFromPath(calibrationCopy[ModelFields.CalibrationFields.AdditionalFile])}
-                            </text>
-                        </div>
-                    </a> : calibrationCopy[ModelFields.CalibrationFields.LoadBankFile] || calibrationCopy[ModelFields.CalibrationFields.HardwareCalibrationFile] ?
-                        `Calibrated using the ${calibrationCopy[ModelFields.CalibrationFields.LoadBankFile] ? "load bank" : "guided hardware calibration"} 
-                        wizard (download certificate to view)` : false
-            )
+            calibrationCopy[ModelFields.CalibrationFields.AdditionalFile] = buildEvidenceElement(calibrationCopy)
+            if (this.approvalRequired(instrument)) {
+                let approvalData = calibration[ModelFields.CalibrationFields.ApprovalData]
+                const approvalStatus = approvalData ? (approvalData["approved"] ? "approved" : "rejected") : "pending approval"
+                calibrationCopy["approval_status"] = approvalStatus != "approved"
+                if (approvalStatus != "approved") {
+                    Object.keys(calibrationCopy).forEach(key => {
+                        let element = calibrationCopy[key]
+                        calibrationCopy[key] = this.highlightCell(element)
+                    })
+                }
+            }
+            calibrationCopy.clickEvent = () => handleNavClick(instrument.pk + "/calibration-events/" + calibrationCopy.pk, this.props.history)
             return calibrationCopy
         })
+    }
+
+    highlightCell(element) {
+        return <div style={{
+                    display: "flex",
+                    alignItems: "center",
+                    flex: 1,
+                    height: 40,
+                    marginTop: -10,
+                    marginBottom: -10,
+                    marginLeft: -5,
+                    marginRight: -5,
+                    overflow: true,
+                    background: "lightgray"
+                }}>
+                    <text style={{marginLeft: 5}}>{element}</text>
+                </div>
     }
 
     setCalibrationModalShow(boolean) {
@@ -60,6 +78,10 @@ export default class CalibrationSection extends React.Component {
 
     supportsHardwareCalibration(instrument) {
         return instrument[Instrument.FIELDS.MODEL][EquipmentModel.FIELDS.CALIBRATION_MODE] == ModelFields.CalibrationModes.GUIDED_HARDWARE
+    }
+
+    approvalRequired(instrument) {
+        return instrument.model[EquipmentModel.FIELDS.CALIBRATION_APPROVAL_REQUIRED]
     }
 
     renderRecordCalibrationButtons = () => {
@@ -120,7 +142,7 @@ export default class CalibrationSection extends React.Component {
                         closeModal={()=>this.setCalibrationModalShow(false)}
                         user={user}
                     />
-                    <DataTable columns={TableColumns.CALIBRATION_COLUMNS}
+                    <DataTable columns={this.approvalRequired(instrument) ? TableColumns.CALIBRATION_COLUMNS_APPROVAL : TableColumns.CALIBRATION_COLUMNS}
                                searching={false}
                                rows={calibrationTableRows}/>
                     <div style={{marginTop : -15, display : "flex", flexDirection : "row", justifyContent: "space-between"}}>

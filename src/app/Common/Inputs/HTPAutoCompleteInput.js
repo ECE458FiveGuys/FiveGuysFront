@@ -12,11 +12,10 @@ export default class HTPAutoCompleteInput extends Component {
         super(props)
     }
 
-    render() {
+    renderTypeAhead() {
         let {options, onChange, label, placeholder, size, disabled, multiple, value, selected, defaultValue, isValid, error}= this.props
-        return(
-        <MDBCol size={size}>
-                <label className="dark-grey-text form-label">{label}</label>
+        return <div>
+                    <label className="dark-grey-text form-label">{label}</label>
                     <Typeahead
                         defaultSelected={defaultValue ? multiple ? defaultValue : [defaultValue] : undefined}
                         id="basic-typeahead-single"
@@ -38,7 +37,17 @@ export default class HTPAutoCompleteInput extends Component {
                         selected={selected}
                     />
                     {error && <text style={{fontSize : 13}} className="text-danger">{error}</text>}
-        </MDBCol>
+            </div>
+    }
+
+    render() {
+        let {wrapped, size} = this.props
+        return(
+            wrapped ?
+                <MDBCol size={size}>
+                    {this.renderTypeAhead()}
+                </MDBCol> :
+                this.renderTypeAhead()
         )
     }
 }
@@ -55,7 +64,8 @@ HTPAutoCompleteInput.propTypes = {
     defaultValue : PropTypes.array,
     isValid : PropTypes.bool,
     error : PropTypes.string,
-    disabled : PropTypes.bool
+    disabled : PropTypes.bool,
+    wrapped : PropTypes.bool
 }
 
 HTPAutoCompleteInput.defaultProps = {
@@ -64,7 +74,8 @@ HTPAutoCompleteInput.defaultProps = {
     defaultValue : '',
     isValid : undefined,
     error : undefined,
-    disabled : false
+    disabled : false,
+    wrapped : true
 }
 
 

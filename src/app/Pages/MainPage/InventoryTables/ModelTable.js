@@ -23,6 +23,8 @@ export default class ModelTable extends Component {
 
             result[ModelFields.EquipmentModelFields.MODEL_CATEGORIES] =
                 TableUtils.categoriesToElement(result[ModelFields.EquipmentModelFields.MODEL_CATEGORIES])
+            result[ModelFields.EquipmentModelFields.CALIBRATOR_CATEGORIES] =
+                TableUtils.categoriesToElement(result[ModelFields.EquipmentModelFields.CALIBRATOR_CATEGORIES])
             result.clickEvent = () => {handleNavClick("/models/" + model_pk, this.props.history)}
         })
         return results

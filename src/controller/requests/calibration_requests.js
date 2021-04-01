@@ -1,4 +1,4 @@
-import {URLS} from "../strings";
+import {METHODS, URLS} from "../strings";
 import RequestUtils from "./request_utils";
 import ModelFields from "../../utils/enums";
 
@@ -15,6 +15,13 @@ export default class CalibrationRequests {
         RequestUtils.assistedFetch(URLS.CALIBRATIONS, "post",
             callBack, errorMessageCallBack,
             header, undefined, data)
+    }
+
+    static retreiveCalibrationEvent(token, eventId,
+                                    callBack = (json) => json,
+                                    errorMessageCallBack = (errorMessage) => errorMessage) {
+        let header = RequestUtils.buildTokenHeader(token)
+        RequestUtils.assistedFetch(URLS.CALIBRATIONS + eventId, METHODS.GET, callBack, errorMessageCallBack, header)
     }
 
     static buildCreateCalibrationData(instrumentId, date, userId, comment, file, loadBankData, klufeData) {

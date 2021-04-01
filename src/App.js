@@ -20,6 +20,7 @@ import {getToken, getUser, Logout} from "./auth/auth_utils";
 import {AUTH_URLS, METHODS} from "./controller/strings";
 import RequestUtils from "./controller/requests/request_utils";
 import history from "./auth/history";
+import CalibrationEventDetailView from "./app/Pages/DetailPages/CalibrationEventDetailPage/CalibrationEventDetailView";
 
 class App extends Component {
 
@@ -162,6 +163,13 @@ class InstrumentRoute extends Component {
                                  token={token}
                                  user={user}/>
               </Route>
+                <Route path={this.addToParentPath(id, 'calibration-events/:id')}
+                       render={(props) => (<CalibrationEventDetailView id={props.match.params.id}
+                                                                       location={location}
+                                                                       history={history}
+                                                                       token={token}
+                                                                       user={user}/>)} >
+                </Route>
               <Route path={this.addToParentPath(id, "load-bank/")}>
                 <LoadBankMain  instrumentId={id}
                                location={location}

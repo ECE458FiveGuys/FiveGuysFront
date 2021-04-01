@@ -54,7 +54,10 @@ export class ActionHeader extends React.Component{
                     <h1 className={"h4-responsive"} style={{marginBottom : 10}}>
                         {"Actions"}
                     </h1>
-                        {this.props.tableType == Instrument.TYPE && user.groups.includes(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT) && this.renderCreateButtons()}
+                        {this.props.tableType == Instrument.TYPE &&
+                                (user.groups.includes(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT) ||
+                                 user.groups.includes(SHORTEN_LABELS.ADMINISTRATOR) ||
+                                user.groups.includes(SHORTEN_LABELS.MODEL_MANAGEMENT)) && this.renderCreateButtons()}
                         {this.props.tableType == EquipmentModel.TYPE && user.groups.includes(SHORTEN_LABELS.MODEL_MANAGEMENT) && this.renderCreateButtons()}
                         {this.renderExportButtons()}
                 </div>

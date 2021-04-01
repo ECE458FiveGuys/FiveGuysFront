@@ -7,6 +7,7 @@ import Checkbox from "../TableWidgets/Checkbox";
 export default class TableUtils {
 
     static categoriesToElement(categories) {
+        if (!categories) return categories
         let categoryElement = []
         categories.forEach(category => {
             categoryElement.push(<MDBBadge style = {{marginRight : 5}} color={"green"}

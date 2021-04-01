@@ -6,6 +6,8 @@ import HTPButton from "../HTPButton";
 import {MDBBtn, MDBCol} from "mdbreact";
 import HTPPopup from "../HTPPopup";
 import {User} from "../../../utils/dtos";
+import {PaginatedResponseFields} from "./TableUtils/pagination_utils";
+import {UserError} from "../../../controller/exceptions";
 
 export default class DatatableEditable extends Component {
 
@@ -174,6 +176,9 @@ export default class DatatableEditable extends Component {
         validateDeleteFunction(token,
                                 selectedRow,
                                 (json) => {
+                                    if (json[PaginatedResponseFields.RESULTS].length > 0) {
+                                        throw new UserError("Instances using this category exist")
+                                    }
                                     this.delete()
                                 },
                                 (warnMessage) => {

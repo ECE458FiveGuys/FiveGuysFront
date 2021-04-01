@@ -51,6 +51,14 @@ export default class MiscellaneousRequests{
         }
     }
 
+    static async getCalibratedWithOptions(token,
+                                          callback = (json) => json,
+                                          errorMessageCallBack = (errorMessage) => errorMessage,
+                                            instrumentId) {
+        let header = RequestUtils.buildTokenHeader(token)
+        RequestUtils.assistedFetch(URLS.CALIBRATED_WITH_OPTIONS, METHODS.GET, callback, errorMessageCallBack, header, {"instrument" : instrumentId})
+    }
+
     // static async getModelNumbers(token,
     //                         vendorSubstring=undefined,
     //                         callBack = (json) => json,

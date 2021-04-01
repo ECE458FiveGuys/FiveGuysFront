@@ -14,6 +14,7 @@ import {handleNavClick} from "../../../utils";
 import {MDBCol} from "mdbreact";
 import UpdateInstrument from "../../../Common/Forms/UpdateInstrument";
 import {SHORTEN_LABELS} from "../../CreateFunctions/CreateUser";
+import InstrumentSection from "../Common/InstrumentSection";
 
 
 const DIVIDER_MARGINS = 0
@@ -34,11 +35,7 @@ export default class ModelDetailView extends Component {
         let retrieveModelCallback = (model) => {
             model = this.fixCalibrationFrequency(model)
             let instruments = model['instruments']
-            let instrumentRows = instruments.map(instrument => {
-                instrument.clickEvent = () => handleNavClick("/instruments/" + instrument.pk, this.props.history)
-                return instrument
-            })
-            this.setState({model: model, instruments: instruments, instrumentRows : instrumentRows});
+            this.setState({model: model, instruments: instruments});
         }
         let retrieveInstrumentError = (e) => {
             alert("RETRIEVE ERROR:" + e)
@@ -103,27 +100,12 @@ export default class ModelDetailView extends Component {
                                 <Divider style={{marginRight: DIVIDER_MARGINS, marginLeft: DIVIDER_MARGINS, height : 300, marginTop : 100}}
                                          orientation={"vertical"}
                                          flexItem={true}/>
-                                    <div style={{marginLeft : 100, marginRight : 100, textAlign : 'center', flex : 1.2}}>
-                                        <h1 className={"h2-responsive"}>
-                                            Instances
-                                        </h1>
-                                        <h1 className={"h5-responsive"}>
-                                            Here are the instances of this model in circulation:
-                                        </h1>
-                                        <div style={{cursor : "pointer"}}>
-                                            <DataTable columns={MODEL_INSTRUMENT_TABLE_COLUMNS}
+                                    <InstrumentSection instruments={instruments}
                                                        token={token}
-                                                       rows={instrumentRows}/>
-                                        </div>
-                                        {user.groups.includes(SHORTEN_LABELS.ADMINISTRATOR) &&
-                                            <div style={{marginTop : -20}}>
-                                                <UpdateInstrument token={token}
-                                                                  updatePageState={this.updatePageState}
-                                                                  history={history}
-                                                                  existingFields={{model_number : model.model_number, vendor : model.vendor}}
-                                                                  mode={UpdateInstrument.CREATE_MODE}/>
-                                            </div>}
-                                    </div>
+                                                       history={history}
+                                                       tableTitle={"Instances"}
+                                                       tableSubtitle={"Here are the instances of this model in circulation:"}
+                                                       />
                             </div>
                         </div>
                     </div>
@@ -134,19 +116,3 @@ export default class ModelDetailView extends Component {
         }
     }
 }
-
-const MODEL_INSTRUMENT_TABLE_COLUMNS =
-    [
-        {
-            label: 'Asset Tag Number',
-            field: ModelFields.InstrumentFields.ASSET_TAG,
-            sort: 'int',
-            width: 100
-        },
-        {
-            label: 'Serial Number',
-            field: ModelFields.InstrumentFields.SERIAL_NUMBER,
-            sort: 'asc',
-            width: 100
-        },
-    ]

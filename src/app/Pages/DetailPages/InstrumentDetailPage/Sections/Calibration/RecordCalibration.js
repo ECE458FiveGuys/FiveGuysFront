@@ -5,6 +5,7 @@ import CalibrationRequests from "../../../../../../controller/requests/calibrati
 import {Instrument} from "../../../../../../utils/ModelEnums";
 import {handleFieldValueChange} from "../../../../../Common/Inputs/input_utils";
 import {UserError} from "../../../../../../controller/exceptions";
+import MiscellaneousRequests from "../../../../../../controller/requests/miscellaneous_requests";
 
 const ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'pdf', 'xlsx']
 
@@ -15,6 +16,13 @@ class RecordCalibration extends Component {
         this.state = {
             fields : {date : this.parseDate(today)}
         }
+    }
+
+    componentDidMount() {
+        // MiscellaneousRequests.getCalibratedWithOptions(this.props.token,
+        //     (json) => this.setState({calibratedWithOptions : json}),
+        //     (error) => alert(error),
+        //     this.props.instrument.pk)
     }
 
     validateSubmit = () => {
@@ -79,6 +87,7 @@ class RecordCalibration extends Component {
                 title={"Record New Calibration Event for Instrument "+this.props.instrument[Instrument.FIELDS.ASSET_TAG]}
                 handleInputChange={handleFieldValueChange(this)}
                 isEdit = {false}
+                calibratedWithOptions = {this.props.calibratedWithOptions}
                 handleDayClick = {this.handleDayClick}
                 handleFileSelect = {this.handleFileSelect}
                 generalError = {this.state.generalError}

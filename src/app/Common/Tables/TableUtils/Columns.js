@@ -32,6 +32,18 @@ export default class TableColumns {
             sort: 'disabled',
             width: 100
         },
+        {
+            label: 'Calibration Approval Required',
+            field: ModelFields.EquipmentModelFields.CALIBRATION_APPROVAL_REQUIRED,
+            sort: 'disabled',
+            width: 100
+        },
+        {
+            label: 'Calibrator Categories',
+            field: ModelFields.EquipmentModelFields.CALIBRATOR_CATEGORIES,
+            sort: 'disabled',
+            width: 100
+        },
     ]
 
     static INSTRUMENT_COLUMNS = [
@@ -89,7 +101,6 @@ export default class TableColumns {
             sort: 'disabled',
             width: 100
         },
-
     ]
 
     static CATEGORY_COLUMNS = [
@@ -115,11 +126,23 @@ export default class TableColumns {
             width: 270
         },
         {
-            label: 'Additonal Evidence',
+            label: 'Additional Evidence',
             field: 'additional_evidence',
             sort: 'asc',
             width: 270
         }
+    ]
+
+    static CALIBRATION_COLUMNS_APPROVAL = [
+        ...TableColumns.CATEGORY_COLUMNS,
+        [
+            {
+                label: 'Approval Status',
+                field: 'approval_status',
+                sort: 'asc',
+                width: 270
+            }
+        ]
     ]
 
     static USER_COLUMNS = [
