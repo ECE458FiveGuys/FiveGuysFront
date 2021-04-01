@@ -1,7 +1,7 @@
 import React from 'react'
 import HTPButton from "../HTPButton";
 import HTPPopup from "../HTPPopup";
-import ModelFields from "../../../utils/enums";
+import ModelFields, {MiscellaneousEnums} from "../../../utils/enums";
 import MiscellaneousRequests from "../../../controller/requests/miscellaneous_requests";
 import {Instrument} from "../../../utils/ModelEnums";
 import {handleFieldValueChange, handleFormChange, handleInputValueChange} from "../Inputs/input_utils";
@@ -140,6 +140,20 @@ export default class UpdateInventory extends React.Component {
         let errorCallBack = (message) => {
             message = message.replace("model_number", "model number")
             this.setState({generalError : message})
+        }
+
+        let calibrationMode = fields[ModelFields.EquipmentModelFields.CALIBRATION_MODE]
+        let calibratorCategories = fields[ModelFields.EquipmentModelFields.CALIBRATOR_CATEGORIES]
+        if (calibrationMode && calibrationMode == ModelFields.CalibrationModes.GUIDED_HARDWARE) {
+            if (!calibratorCategories) calibratorCategories = []
+            calibratorCategories.push(MiscellaneousEnums.KNOWN_CATEGORIES.KLUFE)
+            fields[ModelFields.EquipmentModelFields.CALIBRATOR_CATEGORIES] = calibratorCategories
+        }
+        if (calibrationMode && calibrationMode == ModelFields.CalibrationModes.LOAD_BANK) {
+            if (!calibratorCategories) calibratorCategories = []
+            calibratorCategories.push(MiscellaneousEnums.KNOWN_CATEGORIES.VOLTMETER)
+            calibratorCategories.push(MiscellaneousEnums.KNOWN_CATEGORIES.SHUNT_METER)
+            fields[ModelFields.EquipmentModelFields.CALIBRATOR_CATEGORIES] = calibratorCategories
         }
 
         if (mode == UpdateInventory.EDIT_MODE) {
