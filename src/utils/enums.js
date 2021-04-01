@@ -93,6 +93,13 @@ export default class ModelFields {
         LOAD_BANK : "LOAD_BANK",
         GUIDED_HARDWARE : "GUIDED_HARDWARE"
     }
+
+    static ApprovalDataFields = {
+        IS_APPROVED : "is_approved",
+        APPROVER : "approver",
+        DATE : "date",
+        COMMENT : "comment"
+    }
 }
 
 export class MiscellaneousEnums {

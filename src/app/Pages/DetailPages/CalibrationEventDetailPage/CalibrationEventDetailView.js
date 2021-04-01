@@ -15,9 +15,13 @@ import {getUser} from "../../../../auth/auth_utils";
 import UserRequests from "../../../../controller/requests/user_requests";
 import InstrumentSection from "../Common/InstrumentSection";
 import ModelFields from "../../../../utils/enums";
+import ApprovalSection from "./Section/ApprovalSection";
 
 
 const DIVIDER_MARGINS = 100
+const APPROVED = "approved"
+const REJECTED = "rejected"
+const PENDING = "pending approval"
 
 export default class CalibrationEventDetailView extends Component {
 
@@ -59,10 +63,15 @@ export default class CalibrationEventDetailView extends Component {
         let {calibrationEvent, calibratedWith} = this.state
         let {token, history, user, location} = this.props
         if (calibrationEvent) {
+            let approvalData = calibrationEvent[ModelFields.CalibrationFields.ApprovalData]
+            const approvalStatus = approvalData ? approvalData[ModelFields.ApprovalDataFields.IS_APPROVED] ? APPROVED : REJECTED : PENDING
             return (
                 <div style={{height : "100%"}}>
                     <HTPNavBar user={user}
                                location={location}/>
+                    {this.approvalRequired() && approvalStatus != APPROVED && <div style={{backgroundColor : approvalStatus == REJECTED ? "red" : "orange", opacity : .8, display : "flex", height : 50, alignItems : "center"}}>
+                        <text style={{color : "white", marginLeft : 20}}>{approvalStatus == REJECTED ? "This calibration has been rejected" : "This calibration requires approval"}</text>
+                    </div>}
                     <div style={{flex: 1,
                         display: "flex",
                         flexDirection: "column",
@@ -89,24 +98,24 @@ export default class CalibrationEventDetailView extends Component {
                                                    type={Instrument.TYPE}
                                                    deleteFunction={InstrumentRequests.deleteInstruments}/>
                                 </div>}
-                                {!this.approvalRequired() &&
-                                    <div>
-                                        <text className={"h4-responsive"} style={{marginBottom : 20, marginTop : 30}}>
-                                            Approval Status
-                                        </text>
-
-                                        </div>
+                                {this.approvalRequired() && <Divider style={{marginTop : 20}}
+                                                                      orientation={"horizontal"}
+                                                                      />}
+                                {this.approvalRequired() &&
+                                    <ApprovalSection calibrationEvent = {calibrationEvent}
+                                                    user={user}
+                                                    token={token}/>
                                 }
-                                <div style={{display : 'flex', flexDirection : "column", justifyContent : "center", alignItems : 'center'}}>
-                                    <text className={"h4-responsive"} style={{marginBottom : 20, marginTop : 30}}>
-                                        Visit the instrument for this event:
-                                    </text>
-                                    <HTPButton
-                                        onSubmit={() => handleNavClick("/instruments/" + calibrationEvent.instrument.pk , history, undefined, true)}
-                                        color={"blue"}
-                                        label={"Go to Instrument"}
-                                        className={"form-control"}/>
-                                </div>
+                                {/*<div style={{display : 'flex', flexDirection : "column", justifyContent : "center", alignItems : 'center'}}>*/}
+                                {/*    <text className={"h4-responsive"} style={{marginBottom : 20, marginTop : 30}}>*/}
+                                {/*        Visit the instrument for this event:*/}
+                                {/*    </text>*/}
+                                {/*    <HTPButton*/}
+                                {/*        onSubmit={() => handleNavClick("/instruments/" + calibrationEvent.instrument.pk , history, undefined, true)}*/}
+                                {/*        color={"blue"}*/}
+                                {/*        label={"Go to Instrument"}*/}
+                                {/*        className={"form-control"}/>*/}
+                                {/*</div>*/}
                             </div>
                             <Divider style={{marginRight: DIVIDER_MARGINS, marginLeft: DIVIDER_MARGINS, height : 400, marginTop : 100}}
                                      orientation={"vertical"}

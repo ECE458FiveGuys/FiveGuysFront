@@ -41,7 +41,7 @@ export default class CalibrationSection extends React.Component {
             calibrationCopy[ModelFields.CalibrationFields.AdditionalFile] = buildEvidenceElement(calibrationCopy)
             if (this.approvalRequired(instrument)) {
                 let approvalData = calibration[ModelFields.CalibrationFields.ApprovalData]
-                const approvalStatus = approvalData ? (approvalData["approved"] ? "approved" : "rejected") : "pending approval"
+                const approvalStatus = approvalData ? (approvalData[ModelFields.ApprovalDataFields.IS_APPROVED] ? "approved" : "rejected") : "pending approval"
                 calibrationCopy["approval_status"] = approvalStatus != "approved"
                 if (approvalStatus != "approved") {
                     Object.keys(calibrationCopy).forEach(key => {
