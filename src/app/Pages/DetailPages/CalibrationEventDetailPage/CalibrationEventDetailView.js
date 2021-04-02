@@ -42,7 +42,7 @@ export default class CalibrationEventDetailView extends Component {
             UserRequests.retrieveUser(token, this.state.calibrationEvent.user, retrieveUserCallBack, (e) => alert(e))
         }
         let retrieveEventCallback = (event) => {
-            this.setState({calibrationEvent : event, calibratedWith: event["calibrated_with"]}, () => {
+            this.setState({calibrationEvent : event, calibratedWith: event[ModelFields.CalibrationFields.CalibratedWith]}, () => {
                 InstrumentRequests.retrieveInstrument(token, event.instrument, retrieveInstrumentCallback, (e) => alert(e));
             });
         }
@@ -62,7 +62,7 @@ export default class CalibrationEventDetailView extends Component {
     render() {
         let {calibrationEvent, calibratedWith} = this.state
         let {token, history, user, location} = this.props
-        if (calibrationEvent) {
+        if (calibrationEvent && calibrationEvent.instrument.pk) {
             let approvalData = calibrationEvent[ModelFields.CalibrationFields.ApprovalData]
             const approvalStatus = approvalData ? approvalData[ModelFields.ApprovalDataFields.IS_APPROVED] ? APPROVED : REJECTED : PENDING
             return (
@@ -87,17 +87,6 @@ export default class CalibrationEventDetailView extends Component {
                         <div style={{flex: 1, display: "flex", flexDirection: "row", justifyContent: 'space-between'}}>
                             <div style={{flex : 1, display : "flex", flexDirection : "column", justifyContent : 'flex-start'}}>
                                 {CalibrationEventSection(calibrationEvent)}
-                                {user.groups.includes(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT) &&
-                                <div style={{marginTop : 30}}>
-                                    <ActionSection token={token}
-                                                   hasText={false}
-                                                   hasLogo={false}
-                                                   subject={calibrationEvent}
-                                                   updatePageState={this.updatePageState}
-                                                   history={history}
-                                                   type={Instrument.TYPE}
-                                                   deleteFunction={InstrumentRequests.deleteInstruments}/>
-                                </div>}
                                 {this.approvalRequired() && <Divider style={{marginTop : 20}}
                                                                       orientation={"horizontal"}
                                                                       />}

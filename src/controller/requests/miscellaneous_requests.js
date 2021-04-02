@@ -56,7 +56,7 @@ export default class MiscellaneousRequests{
                                           errorMessageCallBack = (errorMessage) => errorMessage,
                                             instrumentId) {
         let header = RequestUtils.buildTokenHeader(token)
-        RequestUtils.assistedFetch(URLS.CALIBRATED_WITH_OPTIONS, METHODS.GET, callback, errorMessageCallBack, header, {"instrument" : instrumentId})
+        RequestUtils.assistedFetch(URLS.CALIBRATORS(instrumentId), METHODS.GET, callback, errorMessageCallBack, header)
     }
 
     // static async getModelNumbers(token,

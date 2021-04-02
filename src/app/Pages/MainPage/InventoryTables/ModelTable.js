@@ -20,7 +20,8 @@ export default class ModelTable extends Component {
                 "Not Calibratable"
                 :
                 result[ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY].split(" ")[0]
-
+            result[ModelFields.EquipmentModelFields.CALIBRATION_APPROVAL_REQUIRED] =
+                result[ModelFields.EquipmentModelFields.CALIBRATION_APPROVAL_REQUIRED] ? "required" : "not required"
             result[ModelFields.EquipmentModelFields.MODEL_CATEGORIES] =
                 TableUtils.categoriesToElement(result[ModelFields.EquipmentModelFields.MODEL_CATEGORIES])
             result[ModelFields.EquipmentModelFields.CALIBRATOR_CATEGORIES] =

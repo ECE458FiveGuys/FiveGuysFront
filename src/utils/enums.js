@@ -95,7 +95,7 @@ export default class ModelFields {
     }
 
     static ApprovalDataFields = {
-        IS_APPROVED : "is_approved",
+        IS_APPROVED : "approved",
         APPROVER : "approver",
         DATE : "date",
         COMMENT : "comment"

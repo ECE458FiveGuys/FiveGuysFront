@@ -101,10 +101,14 @@ export default class ModelDetailView extends Component {
                                          orientation={"vertical"}
                                          flexItem={true}/>
                                     <InstrumentSection instruments={instruments}
+                                                       user={user}
                                                        token={token}
                                                        history={history}
                                                        tableTitle={"Instances"}
                                                        tableSubtitle={"Here are the instances of this model in circulation:"}
+                                                       model={model}
+                                                       showCreate={true}
+                                                       updatePageState={this.updatePageState}
                                                        />
                             </div>
                         </div>

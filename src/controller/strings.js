@@ -32,9 +32,8 @@ export const URLS =
         OAUTH_URL : OAUTH_URL,
         MODEL_NUMBERS : ROOT_URL + "models/model_numbers/",
         CALIBRATIONS : ROOT_URL + "calibration-events/",
-        CALIBRATED_WITH_OPTIONS : ROOT_URL + "calibrated-with-options",
-        REJECT_CALIBRATION : (pk) => ROOT_URL + `calibration-events/${pk}/reject`,
-        APPROVE_CALIBRATION : (pk) => ROOT_URL + `calibration-events/${pk}/approve`
+        APPROVAL_DATA : ROOT_URL + "approval-data",
+        CALIBRATORS : (pk) => ROOT_URL + `instruments/${pk}/calibrators`,
     }
 
 export const KLUFE_URLS = {

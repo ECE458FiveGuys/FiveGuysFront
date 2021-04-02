@@ -21,7 +21,7 @@ export default function ModelSection(model, subheading, history=undefined, displ
                             alignItems : 'center', justifyContent : 'space-between',marginTop : 20, textAlign : 'center',
                             cursor : displayNavButton ? "pointer" : "default"}}>
                         {ModelDisplay(
-                            ["Model Number", "Vendor", "Calibration Frequency", "Calibration Mode", "Calibration Approval Required"],
+                            ["Model Number", "Vendor", "Calibration Frequency", "Calibration Mode", "Calibration Approval Required", "Calibration Categories"],
                             [
                                 model[ModelFields.EquipmentModelFields.MODEL_NUMBER],
                                 model[ModelFields.EquipmentModelFields.VENDOR],
@@ -32,7 +32,9 @@ export default function ModelSection(model, subheading, history=undefined, displ
                                     model[ModelFields.EquipmentModelFields.CALIBRATION_MODE] == ModelFields.CalibrationModes.GUIDED_HARDWARE ?
                                         "Guided Hardware" :
                                             "Simple"),
-                                model[ModelFields.EquipmentModelFields.CALIBRATION_APPROVAL_REQUIRED]
+                                model[ModelFields.EquipmentModelFields.CALIBRATION_APPROVAL_REQUIRED] =
+                                    model[ModelFields.EquipmentModelFields.CALIBRATION_APPROVAL_REQUIRED] ? "required" : "not required",
+                                model[ModelFields.EquipmentModelFields.CALIBRATOR_CATEGORIES]
                             ])}
                     </a>
                     <h1 style={{marginTop : 20}}

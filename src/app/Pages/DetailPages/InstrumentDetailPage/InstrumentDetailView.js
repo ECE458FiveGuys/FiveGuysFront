@@ -8,14 +8,10 @@ import CalibrationSection from "./Sections/Calibration/CalibrationSection";
 import PropTypes from "prop-types";
 import {User} from "../../../../utils/dtos";
 import {instrumentCalibratable} from "./utils";
-import MainView from "../../MainPage/MainView";
-import ModelSection from "../Common/ModelSection";
 import InstrumentSection from "./Sections/InstrumentSection";
-import ModelFields from "../../../../utils/enums";
 import {EquipmentModel, Instrument} from "../../../../utils/ModelEnums";
 import HTPButton from "../../../Common/HTPButton";
 import {handleNavClick} from "../../../utils";
-import {MDBCol} from "mdbreact";
 import {SHORTEN_LABELS} from "../../CreateFunctions/CreateUser";
 
 const DIVIDER_MARGINS = 100
@@ -65,7 +61,7 @@ export default class InstrumentDetailView extends Component {
                             <div style={{flex: 1, display: "flex", flexDirection: "row", justifyContent: 'space-between'}}>
                                 <div style={{flex : 1, display : "flex", flexDirection : "column", justifyContent : 'flex-start'}}>
                                     {InstrumentSection(instrument)}
-                                    {user.groups.includes(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT) &&
+                                    {user.groups.includes(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT) || user.groups.includes(SHORTEN_LABELS.ADMINISTRATOR) &&
                                     <div style={{marginTop : 30}}>
                                         <ActionSection token={token}
                                                        hasText={false}

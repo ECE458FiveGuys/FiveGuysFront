@@ -44,10 +44,11 @@ export default class CalibrationRequests {
 
     static handleCalibration(token, mode, eventPk, userId, comment, callBack, errorCallBack) {
         let formData = new FormData()
-        formData.append(ModelFields.ApprovalDataFields.APPROVER, userId)
-        formData.append(ModelFields.ApprovalDataFields.COMMENT, comment)
-        RequestUtils.assistedFetch(mode == "accepted" ? URLS.APPROVE_CALIBRATION(eventPk) : URLS.REJECT_CALIBRATION(eventPk),
-                                    METHODS.POST, callBack, errorCallBack, RequestUtils.buildTokenHeader(token), undefined, formData
+        if (userId) formData.append(ModelFields.ApprovalDataFields.APPROVER, userId)
+        if (comment) formData.append(ModelFields.ApprovalDataFields.COMMENT, comment)
+        if (eventPk) formData.append("calibration_event", eventPk)
+        formData.append(ModelFields.ApprovalDataFields.IS_APPROVED, mode == "accepted")
+        RequestUtils.assistedFetch(URLS.APPROVAL_DATA, METHODS.POST, callBack, errorCallBack, RequestUtils.buildTokenHeader(token), undefined, formData
             )
     }
 }
