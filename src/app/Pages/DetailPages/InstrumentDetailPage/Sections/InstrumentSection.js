@@ -32,19 +32,39 @@ export default function InstrumentSection(instrument) {
                                         "Simple")
                         ])}
                 </div>
-                <h1 style={{marginTop : 20}}
-                    className={"h5-responsive"}>
-                    Categories:
-                </h1>
-                <div>
-                    {instrument[Instrument.FIELDS.INSTRUMENT_CATEGORIES] && instrument[Instrument.FIELDS.INSTRUMENT_CATEGORIES].map(category => {
-                        return <MDBBadge style={{marginRight : 5}}
-                                         color="green"
-                                         pill>
-                            {category.name}
-                        </MDBBadge>
-                    })}
+                <div style={{display : "flex", flexDirection : "row", justifyContent : "space-between"}}>
+                    <div style={{marginRight : 60}}>
+                        <h1 style={{marginTop : 20}}
+                            className={"h5-responsive"}>
+                            Instrument Categories:
+                        </h1>
+                        <div>
+                            {instrument[Instrument.FIELDS.INSTRUMENT_CATEGORIES] && instrument[Instrument.FIELDS.INSTRUMENT_CATEGORIES].map(category => {
+                                return <MDBBadge style={{marginRight : 5}}
+                                                 color="green"
+                                                 pill>
+                                    {category.name}
+                                </MDBBadge>
+                            })}
+                        </div>
+                    </div>
+                    <div>
+                        <h1 style={{marginTop : 20}}
+                            className={"h5-responsive"}>
+                            Model Categories:
+                        </h1>
+                        <div>
+                            {instrument.model[EquipmentModel.FIELDS.MODEL_CATEGORIES] && instrument.model[EquipmentModel.FIELDS.MODEL_CATEGORIES] .map(category => {
+                                return <MDBBadge style={{marginRight : 5}}
+                                                 color="green"
+                                                 pill>
+                                    {category.name}
+                                </MDBBadge>
+                            })}
+                        </div>
+                    </div>
                 </div>
+
                 {instrument.model[EquipmentModel.FIELDS.DESCRIPTION] &&
                 <div>
                     <h1 style={{marginTop : 20}}

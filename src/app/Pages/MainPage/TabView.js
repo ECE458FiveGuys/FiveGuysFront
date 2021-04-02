@@ -29,22 +29,22 @@ class TabView extends Component {
                 <MDBNav className="nav-tabs mt-4">
                     {modelPage && <MDBNavItem>
                         <MDBNavLink link to="#" active={this.state.activeItem === "1"} onClick={this.toggle("1")} role="tab" >
-                            Models
+                            Instruments
                         </MDBNavLink>
                     </MDBNavItem>}
                     {instrumentPage && <MDBNavItem>
                         <MDBNavLink link to="#" active={this.state.activeItem === "2"} onClick={this.toggle("2")} role="tab" >
-                            Instruments
+                            Models
                         </MDBNavLink>
                     </MDBNavItem>}
                 </MDBNav>
                 <MDBTabContent
                     activeItem={this.state.activeItem} >
-                    {modelPage && <MDBTabPane tabId="1" role="tabpanel" >
-                        {modelPage}
-                    </MDBTabPane>}
-                    {instrumentPage && <MDBTabPane tabId={"2"} role="tabpanel">
+                    {instrumentPage && <MDBTabPane tabId={"1"} role="tabpanel">
                         {instrumentPage}
+                    </MDBTabPane>}
+                    {modelPage && <MDBTabPane tabId="2" role="tabpanel" >
+                        {modelPage}
                     </MDBTabPane>}
 
                 </MDBTabContent>

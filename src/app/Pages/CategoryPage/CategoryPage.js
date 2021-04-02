@@ -21,13 +21,13 @@ export default class CategoryPage extends Component {
         this.loadCategories()
     }
 
-    loadCategories () {
+    loadCategories (callBack = () => {}) {
         let {token, modelType} = this.props
         // categoryType = model_categories or instrument_categories
         let getCategoriesCallBack = (categoryType) => (json) => {
             let newState = {}
             newState[categoryType] = json
-            this.setState(newState)
+            this.setState(newState, callBack)
         }
         MiscellaneousRequests.getCategories(token, modelType, getCategoriesCallBack, ()=>{}, true)
     }
@@ -35,7 +35,6 @@ export default class CategoryPage extends Component {
     /*
     Once search field values are updated, call this.loadTableData to update the table based on the search fields
      */
-
 
 
     updateSearchFieldValues = (searchFieldValues) => {
@@ -57,6 +56,7 @@ export default class CategoryPage extends Component {
                                     rows={isModel ?
                                         this.state.model_categories : this.state.instrument_categories}
                                     editableColumns={this.props.columns}
+                                    reloadRows={(callBack) => this.loadCategories(callBack)}
                                     createFunction={isModel ? CategoryRequests.createModelCategory : CategoryRequests.createInstrumentCategory}
                                     editFunction={isModel ? CategoryRequests.editModelCategory : CategoryRequests.editInstrumentCategory}
                                     deleteFunction={isModel ? CategoryRequests.deleteModelCategory : CategoryRequests.deleteInstrumentCategory}

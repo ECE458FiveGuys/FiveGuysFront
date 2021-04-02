@@ -64,7 +64,7 @@ class NavbarPage extends Component {
                             {Buttons}
                         </MDBNavbarNav>
                         <text className={"white-text"} style={{position: "absolute", left: (window.innerWidth - 140) / 2}}>
-                            {`Welcome, ${user.getFirstName()}`}
+                            {`Welcome, ${location.pathname == "/user-settings" ? user.username : user.getFirstName()}`}
                         </text>
                         <MDBNavbarNav right>
                             <MDBNavItem style={{marginRight: 100}}>
