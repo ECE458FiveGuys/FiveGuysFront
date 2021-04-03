@@ -51,7 +51,7 @@ export function generateLabels(instruments) {
         }
 
         let data = instrument.asset_tag_number
-        let text = "HTP Asset     " + instrument.asset_tag_number
+        let text = " HPT Asset     " + instrument.asset_tag_number
         let canvas = createCanvas(0,0,'svg');
 
         JsBarcode(canvas, data,{text:text,...LABEL_OPTIONS});

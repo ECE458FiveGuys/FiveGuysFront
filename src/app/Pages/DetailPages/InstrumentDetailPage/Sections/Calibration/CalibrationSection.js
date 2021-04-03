@@ -16,6 +16,7 @@ import {instrumentCalibratable} from "../../utils";
 import {Divider} from "@material-ui/core";
 import FileUtils from "../../../../../../utils/file_utils";
 import {SHORTEN_LABELS} from "../../../../CreateFunctions/CreateUser";
+import FormBuilder from "../../../../../Common/Forms/FormBuilder";
 
 export default class CalibrationSection extends React.Component {
 
@@ -58,6 +59,10 @@ export default class CalibrationSection extends React.Component {
         this.setState({calibrationModalShow : boolean})
     }
 
+    tempSetCustomFormShow(boolean) {
+        this.setState({tempSetCustomFormShow : boolean})
+    }
+
     supportsHardwareCalibration(instrument) {
         return instrument[Instrument.FIELDS.MODEL][EquipmentModel.FIELDS.CALIBRATION_MODE] == ModelFields.CalibrationModes.GUIDED_HARDWARE
     }
@@ -85,6 +90,11 @@ export default class CalibrationSection extends React.Component {
                         onSubmit={() => {
                             handleNavClick("/instruments/" + instrument.pk + "/klufe-wizard/", history)
                         }}/> : <></>}
+                {<HTPButton
+                    label={"Temp Custom Form Button"}
+                    onSubmit={() => {
+                        this.tempSetCustomFormShow(true)
+                    }}/>}
             </div>)
     }
 
@@ -102,7 +112,7 @@ export default class CalibrationSection extends React.Component {
 
     render() {
         let {token, instrument, user} = this.props
-        let {calibrationModalShow, calibrationTableRows} = this.state
+        let {calibrationModalShow, calibrationTableRows, tempSetCustomFormShow} = this.state
         return(<div style={{marginLeft : 50, marginRight : 50, textAlign : 'center', flex : 1.8}}>
                             <h1 style={{alignSelf : 'center', justifySelf : 'center', textAlign : "center"}}
                                 className={"h2-responsive"}>
@@ -118,6 +128,13 @@ export default class CalibrationSection extends React.Component {
                         token={token}
                         instrument={instrument}
                         closeModal={()=>this.setCalibrationModalShow(false)}
+                        user={user}
+                    />
+                    <FormBuilder
+                        show={tempSetCustomFormShow}
+                        onHide={()=>this.tempSetCustomFormShow(false)}
+                        closeModal={()=>this.tempSetCustomFormShow(false)}
+                        token={token}
                         user={user}
                     />
                     <DataTable columns={TableColumns.CALIBRATION_COLUMNS}
