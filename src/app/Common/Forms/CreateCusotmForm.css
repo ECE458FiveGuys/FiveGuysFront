@@ -1,0 +1,12 @@
+.create-custom-form .card{
+    background-color: lightgray;
+    position: relative;
+    height: 150px;
+}
+
+.create-custom-form .icon{
+    position: absolute;
+    right: 5%;
+    top: 50%;
+    margin: -7px;
+}
