@@ -1,77 +1,82 @@
-import React, {Component} from "react";
+import {SortableContainer, SortableElement, arrayMove, SortableHandle} from 'react-sortable-hoc';
 import {Button, Modal} from "react-bootstrap";
-import {MDBCol, MDBContainer, MDBRow} from "mdbreact";
-import {ReactSortable} from 'react-sortablejs';
+import {MDBCol, MDBContainer, MDBIcon, MDBRow} from "mdbreact";
+import {ReactSortable} from "react-sortablejs";
+import React, {Component} from "react";
 import CustomFormField from "./CustomFormField";
+import {forEach} from "react-bootstrap/ElementChildren";
 
-class CustomForm extends Component {
+const DragHandle = SortableHandle(() => <MDBIcon icon={'grip-lines'} size={'2x'}/>);
+
+const SortableItem = SortableElement(({value,onRemove}) => (
+    <div className="SortableItem">
+        {<CustomFormField type={value.type} id={value.id} dragHandle={<DragHandle/>} onRemove={() => onRemove(value.id)}/>}
+    </div>
+));
+
+const SortableList = SortableContainer(({children}) => {
+    return <ul>{children}</ul>;
+
+});
+
+class SortableComponent extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            list: [
-                {id:1,name:<CustomFormField type={"header"}/>},
-                {id:2,name:<CustomFormField type={"text"}/>},
-                {id:3,name:<CustomFormField type={"input"}/>},
-                {id:4,name:<CustomFormField type={"type4"}/>}
-            ]
-        }
+            items: [
+                {id:0,type:'header'},
+                {id:1,type:'text'},
+                {id:2,type:'input'},
+            ],
+        };
     }
 
-    addNewField = () => {
-        const items = this.state.list
-        let new_item = {id:5,name:<CustomFormField type={"text"}/>}
-        items.push(new_item)
-        this.setState({list: items})
-        console.log("ADD NEW FIELD",this.state.list)
+
+    onSortEnd = ({oldIndex, newIndex}) => {
+        this.setState(({items}) => ({
+            items: arrayMove(items, oldIndex, newIndex),
+        }));
+    };
+
+    remove = (id) => {
+        if(this.state) {
+            console.log(id)
+
+            let items = this.state.items;
+
+            const newList = items.filter((item) => item.id !== id);
+            // items.splice(index, 1);
+
+            this.setState({items: newList})
+        }
+
+    }
+
+    add() {
+        const items = this.state.items;
+        let new_item = {id:1,type:'text'};
+        items.push(new_item);
+        this.setState({items : items})
+        console.log(new_item);
     }
 
     render() {
+        const {items} = this.state;
+
         return (
             <div>
-                <Modal
-                    {... this.props}
-                    size="lg"
-                    aria-labelledby="contained-modal-title-vcenter"
-                    centered
-                >
-                    <Modal.Header closeButton>
-                        <Modal.Title
-                            className={"text-info"}
-                            id="contained-modal-title-vcenter">
-                            {"Create Custom Form"}
-                        </Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <MDBContainer>
-                            <MDBRow style={{justifyContent: 'center', alignItems: 'center'}}>
-                                <MDBCol md="7">
-                                    <div>
-                                        <ReactSortable
-                                            list={this.state.list}
-                                            // onUpdate={(newState) => this.setState({list: newState})}
-                                            setList={(newState) => {
-                                                this.setState({list: newState})
-                                                console.log("CALLED SET LIST",this.state.list)
-                                            }}
-                                        >
-                                            {this.state.list.map((item) => (
-                                                <div key={item ? item.id : ''}>{item ? item.name : ''}</div>
-                                            ))}
-                                        </ReactSortable>
-                                    </div>
-                                </MDBCol>
-                            </MDBRow>
-                        </MDBContainer>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button onClick={this.addNewField}>Add New Field</Button>
-                        <Button variant={'green'} onClick={''}>Save</Button>
-                        <Button variant={'blue'} onClick={this.props.onHide}>Cancel</Button>
-                    </Modal.Footer>
-                </Modal>
+                <SortableList onSortEnd={this.onSortEnd} useDragHandle>
+                    {items.map((value, index) => (
+                        <SortableItem key={`item-${value}`}
+                                      index={index}
+                                      value={value}
+                                      onRemove={this.remove} />
+                    ))}
+                </SortableList>
+                <button onClick={() => this.add()}>Add Document</button>
             </div>
         );
     }
 }
-export default CustomForm;
+export default SortableComponent
