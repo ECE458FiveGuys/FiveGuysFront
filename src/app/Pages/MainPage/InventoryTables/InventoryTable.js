@@ -13,6 +13,10 @@ import Checkbox from "../../../Common/Tables/TableWidgets/Checkbox";
 import InstrumentSelectFooter from "../../../Common/Tables/TableWidgets/InstrumentSelectFooter";
 import InventoryTableUtils from "./Utils/inventory_table_utils";
 import {handleNavClick} from "../../../utils";
+import {MDBDropdown, MDBDropdownItem, MDBDropdownMenu, MDBDropdownToggle, MDBIcon} from "mdbreact";
+import {Logout} from "../../../../auth/auth_utils";
+import HTPButton from "../../../Common/HTPButton";
+import DataTable from "../../../Common/Tables/DataTable";
 
 class InventoryTable extends Component {
 
@@ -24,6 +28,7 @@ class InventoryTable extends Component {
         })
         this.state = {
             searchFieldValues : searchFieldValues,
+            paginationMode : true,
             pkToCheckBoxRefs : new Map(), // for select mode. A map of references to all checkboxes on the current page
             pkToEntriesSelected : new Map() // for select mode. A map of references to all instrument pks selected / unselected
         }
@@ -38,6 +43,12 @@ class InventoryTable extends Component {
     async componentDidMount() {
         this.loadVendors()
         this.loadCategories()
+        this.getAllFunction()
+    }
+
+    getAllFunction() {
+        let {parseSearchResultsFunction} = this.props
+        this.props.getAllFunction(this.props.token, json => this.setState({rows : parseSearchResultsFunction(json)}))
     }
 
     loadVendors () {
@@ -212,7 +223,7 @@ class InventoryTable extends Component {
 
     render() {
         let {searchRequestFunction, parseSearchResultsFunction, token, columns, searchFields, user, history, getAllFunction} = this.props
-        let {searchFieldValues, pkToEntriesSelected} = this.state
+        let {searchFieldValues, pkToEntriesSelected, paginationMode, rows} = this.state
         return (
             <div>
                 <div style={{display: 'flex', flexDirection : "row"}}>
@@ -239,11 +250,12 @@ class InventoryTable extends Component {
                                       tableType={this.getTableType()}
                                       selectMode={this.inSelectMode()}
                                       resetSelect={this.resetSelect}
+                                      paginationMode={this.state.paginationMode}
                                       searchParams={searchFieldValues}/>
                     </div>
                 </div>
                 <div style={{marginBottom : this.inSelectMode() ? 25 : -15, cursor: "pointer"}}>
-                    <BackendPaginatedDataTable columns={this.getTableType() == Instrument.TYPE ? this.state.selectColumns : this.props.columns}
+                    {paginationMode ? <BackendPaginatedDataTable columns={this.getTableType() == Instrument.TYPE ? this.state.selectColumns : this.props.columns}
                                                dataFetchFunction={searchRequestFunction}
                                                dataFetchFunctionParser={(data) => {
                                                    data = parseSearchResultsFunction(data)
@@ -255,7 +267,13 @@ class InventoryTable extends Component {
                                                searchParams={searchFieldValues}
                                                token={token}
                                                ref={this.tableRef}
-                    />
+                    /> :
+                        <DataTable rows={rows}
+                                   displayEntries={false}
+                                   paging={false}
+                                   searching={false}
+                                   columns={this.props.columns}/>
+                    }
                 </div>
                 {this.inSelectMode() && this.getTableType() == ModelFields.ModelTypes.INSTRUMENT &&
                     <InstrumentSelectFooter instrumentCount={this.state.numSelected}

@@ -44,6 +44,7 @@ class ExportModel extends Component{
                         onSubmit={this.downloadModels}
                         label={loading ? "Downloading..." : "Export Table"}
                         disabled={loading}
+                        size={"sm"}
                     />
                     <CSVLink
                         data={data}

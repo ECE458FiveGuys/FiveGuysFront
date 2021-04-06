@@ -10,7 +10,7 @@ export default class DataTable extends Component {
     }
 
     render() {
-        let {columns, rows, searching, backendPagination, disableRetreatAfterSorting, displayEntries} = this.props
+        let {columns, rows, searching, backendPagination, disableRetreatAfterSorting, displayEntries, paging} = this.props
         let data = {
             columns: columns,
             rows: rows
@@ -21,6 +21,7 @@ export default class DataTable extends Component {
                 (<MDBDataTable
                     autoWidth={false}
                     hover
+                    paging={paging}
                     striped
                     bordered
                     small
@@ -39,11 +40,13 @@ DataTable.propTypes = {
     searching : PropTypes.bool,
     backendPaginated : PropTypes.bool,
     disableRetreatAfterSorting : PropTypes.bool,
-    displayEntries: PropTypes.bool
+    displayEntries: PropTypes.bool,
+    paging: PropTypes.bool,
 }
 
 DataTable.defaultProps = {
     backendPaginated : false,
+    paging : true,
     displayEntries : true,
     disableRetreatAfterSorting : false
 }

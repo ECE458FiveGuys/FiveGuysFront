@@ -56,7 +56,7 @@ export default class SearchHeader extends Component {
     }
 
     appendSearchFields = (Rows, col) => {
-        let {searchFields, updateSearchFieldValues, token, updatePageState} = this.props
+        let {searchFields} = this.props
         Object.keys(searchFields).forEach(key => {
                 let searchFieldName = searchFields[key]
                 if (searchFieldName == ModelFields.EquipmentModelSearchFields.Vendor ||

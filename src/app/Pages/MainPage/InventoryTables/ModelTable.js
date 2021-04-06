@@ -5,6 +5,7 @@ import ModelFields from "../../../../utils/enums";
 import ModelRequests from "../../../../controller/requests/model_requests";
 import {handleNavClick} from "../../../utils";
 import TableUtils from "../../../Common/Tables/TableUtils/table_utils";
+import InstrumentRequests from "../../../../controller/requests/instrument_requests";
 
 export default class ModelTable extends Component {
 
@@ -39,6 +40,7 @@ export default class ModelTable extends Component {
                             user={this.props.user}
                             history={this.props.history}
                             searchRequestFunction={ModelRequests.getModelsWithSearchParams}
+                            getAllFunction={InstrumentRequests.getAllInstruments}
                             parseSearchResultsFunction={this.parseSearchResults}/>
         );
     }

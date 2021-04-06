@@ -69,7 +69,7 @@ export default class TableUtils {
 function createCalibrationExpirationElement(dateString, color) {
     return (<div style={{flex: 1, flexDirection: "row", justifyContent : 'space-between', alignItems : 'center', display: "flex"}}>
                 <text>{dateString}</text>
-                <MDBIcon style={{color: color, marginRight : 75}}
+                <MDBIcon style={{color: color, marginRight : 75, marginLeft : 10}}
                          size={"1x"}
                          icon={dateIcons[color]}
                 />

@@ -8,6 +8,7 @@ import {handleFieldValueChange, handleFormChange, handleInputValueChange} from "
 import * as PropTypes from "prop-types";
 import FormModal from "./FormModal";
 import {FormEnums} from "./form_enums";
+import ExportModel from "../../Pages/ImportExport/Widgets/ExportModel";
 
 export default class UpdateInventory extends React.Component {
 
@@ -182,6 +183,7 @@ export default class UpdateInventory extends React.Component {
             <div>
                 <HTPButton variant="green"
                            color={"green"}
+                           size={"sm"}
                            label={mode == UpdateInventory.EDIT_MODE ? 'Edit' : 'Create'}
                            onSubmit={() => this.setEditModalShow(true)}>
                 </HTPButton>

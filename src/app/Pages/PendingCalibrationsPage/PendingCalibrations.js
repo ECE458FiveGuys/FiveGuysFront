@@ -110,7 +110,7 @@ export default class PendingCalibrations extends React.Component {
 
 const PENDING_CALIB_COLS = [
     {
-        label: 'Asset Tags',
+        label: 'Asset Tag',
         field: ModelFields.InstrumentFields.ASSET_TAG,
         sort: 'asc',
         width: 150
