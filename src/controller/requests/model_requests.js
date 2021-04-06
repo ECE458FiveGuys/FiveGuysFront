@@ -20,6 +20,14 @@ export default class ModelRequests {
             METHODS.GET, callBack, errorMessageCallBack, header, params)
     }
 
+    static async getAllModels(token,
+                                   callBack = (json) => json,
+                                   errorMessageCallBack = (errorMessage) => errorMessage) {
+        let header = RequestUtils.buildTokenHeader(token)
+        RequestUtils.assistedFetch(URLS.MODELS_ALL, METHODS.GET, callBack, errorMessageCallBack, header)
+    }
+
+
     static async getModelsByCategory(token, categoryObj,
                                        callBack,
                                        errorMessageCallBack) {

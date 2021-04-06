@@ -40,7 +40,7 @@ export default class ModelTable extends Component {
                             user={this.props.user}
                             history={this.props.history}
                             searchRequestFunction={ModelRequests.getModelsWithSearchParams}
-                            getAllFunction={InstrumentRequests.getAllInstruments}
+                            getAllFunction={ModelRequests.getAllModels}
                             parseSearchResultsFunction={this.parseSearchResults}/>
         );
     }
