@@ -9,7 +9,7 @@ import UpdateInventory from "../../../Common/Forms/UpdateInventory";
 import UpdateInstrument from "../../../Common/Forms/UpdateInstrument";
 import UpdateModel from "../../../Common/Forms/UpdateModel";
 import HTPPopup from "../../../Common/HTPPopup";
-import SortableComponent from "../../../Common/Forms/CustomFormTemp";
+import SortableComponent from "../../../Common/Forms/CustomForm";
 import {MDBNavItem, MDBNavLink} from "mdbreact";
 
 export default class ActionSection extends React.Component {

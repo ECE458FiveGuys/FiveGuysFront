@@ -20,8 +20,7 @@ import {getToken, getUser, Logout} from "./auth/auth_utils";
 import {AUTH_URLS, METHODS} from "./controller/strings";
 import RequestUtils from "./controller/requests/request_utils";
 import history from "./auth/history";
-import CustomFormTemp from "./app/Common/Forms/CustomFormTemp";
-import SortableComponent from "./app/Common/Forms/CustomFormTemp";
+import SortableComponent from "./app/Common/Forms/CustomForm";
 
 class App extends Component {
 
@@ -132,7 +131,7 @@ class App extends Component {
                     <MessagePage text={"Hmm, looks like your permissions have changed. Let's head back to the main page."}/>
                 </Route>
                 <Route path="/create-custom-form"
-                       render={(props) => (<SortableComponent
+                       render={(props) => (<SortableComponent location={props.location}
                                                token={this.state.token}
                                                user={this.state.user}/>)}>
                 </Route>

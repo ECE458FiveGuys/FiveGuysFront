@@ -5,6 +5,8 @@ import {ReactSortable} from "react-sortablejs";
 import React, {Component} from "react";
 import CustomFormField from "./CustomFormField";
 import {forEach} from "react-bootstrap/ElementChildren";
+import HTPNavBar from "../HTPNavBar";
+import './CreateCusotmForm.css';
 
 const DragHandle = SortableHandle(() => <MDBIcon icon={'grip-lines'} size={'2x'}/>);
 
@@ -29,6 +31,7 @@ class SortableComponent extends Component {
                 {id:1,type:'text'},
                 {id:2,type:'input'},
             ],
+            nextFieldId: 3
         };
     }
 
@@ -53,28 +56,47 @@ class SortableComponent extends Component {
 
     }
 
-    add() {
-        const items = this.state.items;
-        let new_item = {id:1,type:'text'};
+    add(inputType) {
+        const {items,nextFieldId} = this.state;
+        let new_item = {id:nextFieldId, type:inputType};
+        let newFieldId = nextFieldId + 1;
         items.push(new_item);
-        this.setState({items : items})
+
+        this.setState({items : items, nextFieldId:newFieldId})
         console.log(new_item);
     }
 
     render() {
         const {items} = this.state;
-
+        let {user,location} = this.props;
         return (
             <div>
-                <SortableList onSortEnd={this.onSortEnd} useDragHandle>
-                    {items.map((value, index) => (
-                        <SortableItem key={`item-${value}`}
-                                      index={index}
-                                      value={value}
-                                      onRemove={this.remove} />
-                    ))}
-                </SortableList>
-                <button onClick={() => this.add()}>Add Document</button>
+                <HTPNavBar user={user} location={location}/>
+                <MDBContainer>
+                    <MDBCol>
+                        <MDBRow>
+                            <Button variant={"blue"} onClick={() => this.add()}>Return to model</Button>
+                        </MDBRow>
+                        <MDBRow>
+                            <SortableList onSortEnd={this.onSortEnd} useDragHandle>
+                                {items.map((value, index) => (
+                                    <SortableItem key={`item-${value}`}
+                                                  index={index}
+                                                  value={value}
+                                                  onRemove={this.remove} />
+                                ))}
+                            </SortableList>
+                        </MDBRow>
+                        <MDBRow>
+                            {/*{Object.keys(CustomFormField.INPUTS).forEach((inputType) =>*/}
+                            <Button variant={"blue"} onClick={() => this.add("text")}>{"text"}</Button>
+                            <Button variant={"blue"} onClick={() => this.add("header")}>{"header"}</Button>
+                            <Button variant={"blue"} onClick={() => this.add("input")}>{"input"}</Button>
+                            {/*)}*/}
+                            {/*<Button variant={"blue"} onClick={() => this.add()}>Add Field</Button>*/}
+                        </MDBRow>
+                    </MDBCol>
+                </MDBContainer>
             </div>
         );
     }

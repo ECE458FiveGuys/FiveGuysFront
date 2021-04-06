@@ -1,12 +1,13 @@
-.create-custom-form .card{
+.custom-form-field .card{
     background-color: lightgray;
     position: relative;
-    height: 150px;
+    height: 200px;
 }
 
-.create-custom-form .icon{
+.custom-form-field .icon{
     position: absolute;
     right: 5%;
     top: 50%;
     margin: -7px;
 }
+
