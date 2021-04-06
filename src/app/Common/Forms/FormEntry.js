@@ -68,22 +68,26 @@ class FormEntry extends Component {
             }
             return (
                 <div>
-                    <label  style={{marginBottom : 10}}
-                            htmlFor={"calibration_mode_selector"}>
+                    <label style={{marginBottom: 10}}
+                           htmlFor={"calibration_mode_selector"}>
                         Advanced Calibration Modes
                     </label>
                     <select
                         defaultValue={defaultValue}
                         onChange={(event) => {
-                                           this.props.handleInputChange(fieldName)(event.target.value)
-                                       }}
-                        id = "calibration_mode_selector"
+                            this.props.handleInputChange(fieldName)(event.target.value)
+                        }}
+                        id="calibration_mode_selector"
                         className="browser-default custom-select">
-                        <option value={ModelFields.CalibrationModes.DEFAULT}>None (simple calibration only, if calibratable)</option>
+                        <option value={ModelFields.CalibrationModes.DEFAULT}>None (simple calibration only, if
+                            calibratable)
+                        </option>
                         <option value={ModelFields.CalibrationModes.LOAD_BANK}>Load Bank</option>
-                        <option value={ModelFields.CalibrationModes.GUIDED_HARDWARE}>Guided Hardware (Klufe 5700)</option>
+                        <option value={ModelFields.CalibrationModes.GUIDED_HARDWARE}>Guided Hardware (Klufe 5700)
+                        </option>
                     </select>
-                    {this.props.fieldErrors[fieldName] && <text style={{fontSize : 13}} className="text-danger">{this.props.fieldErrors[fieldName]}</text>}
+                    {this.props.fieldErrors[fieldName] &&
+                    <text style={{fontSize: 13}} className="text-danger">{this.props.fieldErrors[fieldName]}</text>}
                 </div>
             )
         }
