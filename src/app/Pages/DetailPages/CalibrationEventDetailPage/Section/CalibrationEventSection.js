@@ -1,10 +1,7 @@
 import ModelDisplay from "../../../../Common/Displays/HTPModelDisplay";
 import ModelFields from "../../../../../utils/enums";
 import {EquipmentModel, Instrument} from "../../../../../utils/ModelEnums";
-import {MDBBadge, MDBIcon} from "mdbreact";
 import React from "react";
-import {handleNavClick} from "../../../../utils";
-import FileUtils from "../../../../../utils/file_utils";
 import {buildEvidenceElement} from "../../Common/utils";
 
 export default function CalibrationEventSection(calibrationEvent) {

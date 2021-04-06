@@ -1,15 +1,13 @@
 import React from "react";
 import ModelDisplay from "../../../../Common/Displays/HTPModelDisplay";
 import ModelFields, {MiscellaneousEnums} from "../../../../../utils/enums";
-import {buildEvidenceElement} from "../../Common/utils";
 import HTPButton from "../../../../Common/HTPButton";
 import HTPPopup from "../../../../Common/HTPPopup";
-import HTPInput from "../../../../Common/Inputs/HTPInput";
-import {FormEnums} from "../../../../Common/Forms/form_enums";
 import HTPMultiLineInput from "../../../../Common/Inputs/HTPMultiLineInput";
 import CalibrationRequests from "../../../../../controller/requests/calibration_requests";
 import * as PropTypes from "prop-types";
 import {User} from "../../../../../utils/dtos";
+import {SHORTEN_LABELS} from "../../../CreateFunctions/CreateUser";
 
 const APPROVED = "approved"
 const REJECTED = "rejected"
@@ -24,11 +22,11 @@ export default class ApprovalSection extends React.Component {
 
     renderApprovalOptions(approvalStatus) {
         return <div>
-                    {approvalStatus == REJECTED || approvalStatus == PENDING &&
-                    <HTPButton
-                        label={"Accept"}
-                        onSubmit={() => this.toggleModal(APPROVED)}/>}
-                    {approvalStatus == APPROVED || approvalStatus == PENDING &&
+                    {(approvalStatus == REJECTED || approvalStatus == PENDING) &&
+                        <HTPButton
+                            label={"Accept"}
+                            onSubmit={() => this.toggleModal(APPROVED)}/>}
+                    {(approvalStatus == APPROVED || approvalStatus == PENDING) &&
                         <HTPButton
                             label={"Reject"}
                             color={"red"}
@@ -39,7 +37,10 @@ export default class ApprovalSection extends React.Component {
     handleCalibration(mode) {
         let {token, user, calibrationEvent} = this.props
         let {comment} = this.state
-        CalibrationRequests.handleCalibration(token, mode, calibrationEvent.pk, user.pk, comment, this.toggleModal, (e) => alert(e))
+        CalibrationRequests.handleCalibration(token, mode, calibrationEvent.pk, user.id, comment, () => {
+            this.toggleModal()
+                this.props.reloadCalibration()
+        }, (e) => alert(e))
     }
 
     toggleModal = (mode) => {
@@ -51,7 +52,7 @@ export default class ApprovalSection extends React.Component {
     }
 
     render() {
-        let {calibrationEvent} = this.props
+        let {calibrationEvent, user} = this.props
         let {modal, mode} = this.state
         let approvalData = calibrationEvent[ModelFields.CalibrationFields.ApprovalData]
         const approvalStatus = approvalData ? approvalData[ModelFields.ApprovalDataFields.IS_APPROVED] ? APPROVED : REJECTED : PENDING
@@ -66,12 +67,12 @@ export default class ApprovalSection extends React.Component {
                             approvalData ? approvalData[ModelFields.ApprovalDataFields.APPROVER] : undefined,
                             approvalData ? approvalData[ModelFields.ApprovalDataFields.DATE] : undefined,
                             approvalData ? approvalData[ModelFields.ApprovalDataFields.COMMENT] : undefined,
-                            this.renderApprovalOptions(approvalStatus)
+                            user.groups.includes(SHORTEN_LABELS.ADMINISTRATOR) ? this.renderApprovalOptions(approvalStatus) : undefined
                         ])}
                     <HTPPopup toggleModal={this.toggleModal}
                               message={<HTPMultiLineInput placeholder={"Your thoughts (optional)"}
                                                           label={"Leave a Comment"}
-                                                          onChange={(text) => this.setState({comment : text})}/>}
+                                                          onChange={(event) => this.setState({comment : event.target.value})}/>}
                               title={mode == APPROVED ? "Approve Calibration" : "Reject Calibration"}
                               isOpen={modal}
                               additionalButtons={<HTPButton label={mode == APPROVED ? "Approve" : "Reject"}

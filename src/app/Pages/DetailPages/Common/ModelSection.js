@@ -2,7 +2,7 @@ import ModelDisplay from "../../../Common/Displays/HTPModelDisplay";
 import ModelFields from "../../../../utils/enums";
 import HTPButton from "../../../Common/HTPButton";
 import {MDBBadge, MDBCol} from "mdbreact";
-import {EquipmentModel} from "../../../../utils/ModelEnums";
+import {EquipmentModel, Instrument} from "../../../../utils/ModelEnums";
 import React from "react";
 import {handleNavClick} from "../../../utils";
 
@@ -34,22 +34,44 @@ export default function ModelSection(model, subheading, history=undefined, displ
                                             "Simple"),
                                 model[ModelFields.EquipmentModelFields.CALIBRATION_APPROVAL_REQUIRED] =
                                     model[ModelFields.EquipmentModelFields.CALIBRATION_APPROVAL_REQUIRED] ? "required" : "not required",
-                                model[ModelFields.EquipmentModelFields.CALIBRATOR_CATEGORIES]
                             ])}
                     </a>
                     <h1 style={{marginTop : 20}}
                         className={"h5-responsive"}>
                         Categories:
                     </h1>
-                        <div>
-                            {model[EquipmentModel.FIELDS.MODEL_CATEGORIES] && model[EquipmentModel.FIELDS.MODEL_CATEGORIES].map(category => {
-                                return <MDBBadge style={{marginRight : 5}}
-                                                color="green"
-                                                 pill>
-                                    {category.name}
-                                </MDBBadge>
-                            })}
+                    <div style={{display : "flex", flexDirection : "row", justifyContent : "space-between"}}>
+                        <div style={{marginRight : 60}}>
+                            <h1 style={{marginTop : 20}}
+                                className={"h5-responsive"}>
+                                Model Categories:
+                            </h1>
+                            <div>
+                                {model[EquipmentModel.FIELDS.INSTRUMENT_CATEGORIES] && model[EquipmentModel.FIELDS.INSTRUMENT_CATEGORIES].map(category => {
+                                    return <MDBBadge style={{marginRight : 5}}
+                                                     color="green"
+                                                     pill>
+                                        {category.name}
+                                    </MDBBadge>
+                                })}
+                            </div>
                         </div>
+                        <div>
+                            <h1 style={{marginTop : 20}}
+                                className={"h5-responsive"}>
+                                Calibrator Categories:
+                            </h1>
+                            <div>
+                                {model[EquipmentModel.FIELDS.CALIBRATOR_CATEGORIES] && model[EquipmentModel.FIELDS.CALIBRATOR_CATEGORIES].map(category => {
+                                    return <MDBBadge style={{marginRight : 5}}
+                                                     color="green"
+                                                     pill>
+                                        {category.name}
+                                    </MDBBadge>
+                                })}
+                            </div>
+                        </div>
+                    </div>
                         {model[EquipmentModel.FIELDS.DESCRIPTION] &&
                                 <div>
                                     <h1 style={{marginTop : 20}}

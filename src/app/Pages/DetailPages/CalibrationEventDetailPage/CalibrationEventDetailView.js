@@ -31,6 +31,10 @@ export default class CalibrationEventDetailView extends Component {
     }
 
     componentDidMount() {
+        this.loadCalibration()
+    }
+
+    loadCalibration = () => {
         let {token, id} = this.props
         let retrieveUserCallBack = (user) => {
             this.state.calibrationEvent.user = user
@@ -39,7 +43,7 @@ export default class CalibrationEventDetailView extends Component {
         let retrieveInstrumentCallback = (instrument) => {
             this.state.calibrationEvent.instrument = instrument
             this.setState({calibrationEvent: this.state.calibrationEvent})
-            UserRequests.retrieveUser(token, this.state.calibrationEvent.user, retrieveUserCallBack, (e) => alert(e))
+            UserRequests.retrieveUser(token, this.state.calibrationEvent.user.pk, retrieveUserCallBack, (e) => alert(e))
         }
         let retrieveEventCallback = (event) => {
             this.setState({calibrationEvent : event, calibratedWith: event[ModelFields.CalibrationFields.CalibratedWith]}, () => {
@@ -54,9 +58,9 @@ export default class CalibrationEventDetailView extends Component {
     }
 
     approvalRequired = () => {
-        let calibrationEvent = this.props.calibrationEvent
+        let calibrationEvent = this.state.calibrationEvent
         return calibrationEvent && calibrationEvent.instrument && calibrationEvent.instrument.model &&
-            this.props.calibrationEvent.instrument.model[ModelFields.EquipmentModelFields.CALIBRATION_APPROVAL_REQUIRED]
+            this.state.calibrationEvent.instrument.model[ModelFields.EquipmentModelFields.CALIBRATION_APPROVAL_REQUIRED]
     }
 
     render() {
@@ -87,24 +91,14 @@ export default class CalibrationEventDetailView extends Component {
                         <div style={{flex: 1, display: "flex", flexDirection: "row", justifyContent: 'space-between'}}>
                             <div style={{flex : 1, display : "flex", flexDirection : "column", justifyContent : 'flex-start'}}>
                                 {CalibrationEventSection(calibrationEvent)}
-                                {this.approvalRequired() && <Divider style={{marginTop : 20}}
+                                {this.approvalRequired() && <Divider style={{marginTop : 30}}
                                                                       orientation={"horizontal"}
                                                                       />}
                                 {this.approvalRequired() &&
                                     <ApprovalSection calibrationEvent = {calibrationEvent}
+                                                     reloadCalibration = {this.loadCalibration}
                                                     user={user}
-                                                    token={token}/>
-                                }
-                                {/*<div style={{display : 'flex', flexDirection : "column", justifyContent : "center", alignItems : 'center'}}>*/}
-                                {/*    <text className={"h4-responsive"} style={{marginBottom : 20, marginTop : 30}}>*/}
-                                {/*        Visit the instrument for this event:*/}
-                                {/*    </text>*/}
-                                {/*    <HTPButton*/}
-                                {/*        onSubmit={() => handleNavClick("/instruments/" + calibrationEvent.instrument.pk , history, undefined, true)}*/}
-                                {/*        color={"blue"}*/}
-                                {/*        label={"Go to Instrument"}*/}
-                                {/*        className={"form-control"}/>*/}
-                                {/*</div>*/}
+                                                    token={token}/>}
                             </div>
                             <Divider style={{marginRight: DIVIDER_MARGINS, marginLeft: DIVIDER_MARGINS, height : 400, marginTop : 100}}
                                      orientation={"vertical"}

@@ -21,6 +21,7 @@ import {AUTH_URLS, METHODS} from "./controller/strings";
 import RequestUtils from "./controller/requests/request_utils";
 import history from "./auth/history";
 import CalibrationEventDetailView from "./app/Pages/DetailPages/CalibrationEventDetailPage/CalibrationEventDetailView";
+import PendingCalibrations from "./app/Pages/PendingCalibrationsPage/PendingCalibrations";
 
 class App extends Component {
 
@@ -112,6 +113,11 @@ class App extends Component {
                                                            token={this.state.token}
                                                            user={this.state.user}/>)}>
               </Route>
+                <Route path="/pending-calibrations"
+                       render={(props) => (<PendingCalibrations location={props.location}
+                                                          token={this.state.token}
+                                                          user={this.state.user}/>)}>
+                </Route>
 
               <Route path="/create-user/">
                 <CreateUser token={this.state.token}

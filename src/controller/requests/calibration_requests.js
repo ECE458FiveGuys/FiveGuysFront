@@ -47,7 +47,7 @@ export default class CalibrationRequests {
         if (userId) formData.append(ModelFields.ApprovalDataFields.APPROVER, userId)
         if (comment) formData.append(ModelFields.ApprovalDataFields.COMMENT, comment)
         if (eventPk) formData.append("calibration_event", eventPk)
-        formData.append(ModelFields.ApprovalDataFields.IS_APPROVED, mode == "accepted")
+        formData.append(ModelFields.ApprovalDataFields.IS_APPROVED, mode == "approved" ? "True" : "False")
         RequestUtils.assistedFetch(URLS.APPROVAL_DATA, METHODS.POST, callBack, errorCallBack, RequestUtils.buildTokenHeader(token), undefined, formData
             )
     }

@@ -37,13 +37,7 @@ export default class TableColumns {
             field: ModelFields.EquipmentModelFields.CALIBRATION_APPROVAL_REQUIRED,
             sort: 'disabled',
             width: 100
-        },
-        {
-            label: 'Calibrator Categories',
-            field: ModelFields.EquipmentModelFields.CALIBRATOR_CATEGORIES,
-            sort: 'disabled',
-            width: 100
-        },
+        }
     ]
 
     static INSTRUMENT_COLUMNS = [
@@ -134,15 +128,13 @@ export default class TableColumns {
     ]
 
     static CALIBRATION_COLUMNS_APPROVAL = [
-        ...TableColumns.CATEGORY_COLUMNS,
-        [
-            {
-                label: 'Approval Status',
-                field: 'approval_status',
-                sort: 'asc',
-                width: 270
-            }
-        ]
+        ...TableColumns.CALIBRATION_COLUMNS,
+        {
+            label: 'Approval Status',
+            field: 'approval_status',
+            sort: 'asc',
+            width: 270
+        }
     ]
 
     static USER_COLUMNS = [

@@ -84,16 +84,16 @@ export default class InstrumentDetailView extends Component {
                                     </div>
                                 </div>
                                 {instrumentCalibratable(instrument) &&
-                                <Divider style={{marginRight: DIVIDER_MARGINS, marginLeft: DIVIDER_MARGINS, height : 400, marginTop : 100}}
-                                         orientation={"vertical"}
-                                         flexItem={true}/>}
+                                    <Divider style={{marginRight: DIVIDER_MARGINS, marginLeft: DIVIDER_MARGINS, height : 400, marginTop : 100}}
+                                             orientation={"vertical"}
+                                             flexItem={true}/>}
                                 {instrumentCalibratable(instrument) &&
-                                <CalibrationSection token={token}
-                                                    user={user}
-                                                    instrument={instrument}
-                                                    history={history}
-                                                    calibrations={calibrations}
-                                />}
+                                    <CalibrationSection token={token}
+                                                        user={user}
+                                                        instrument={instrument}
+                                                        history={history}
+                                                        calibrations={calibrations}
+                                    />}
                             </div>
                         </div>
                 </div>

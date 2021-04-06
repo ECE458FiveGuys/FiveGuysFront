@@ -42,7 +42,7 @@ export default class CalibrationSection extends React.Component {
             if (this.approvalRequired(instrument)) {
                 let approvalData = calibration[ModelFields.CalibrationFields.ApprovalData]
                 const approvalStatus = approvalData ? (approvalData[ModelFields.ApprovalDataFields.IS_APPROVED] ? "approved" : "rejected") : "pending approval"
-                calibrationCopy["approval_status"] = approvalStatus != "approved"
+                calibrationCopy["approval_status"] = approvalStatus
                 if (approvalStatus != "approved") {
                     Object.keys(calibrationCopy).forEach(key => {
                         let element = calibrationCopy[key]
@@ -50,7 +50,7 @@ export default class CalibrationSection extends React.Component {
                     })
                 }
             }
-            calibrationCopy.clickEvent = () => handleNavClick(instrument.pk + "/calibration-events/" + calibrationCopy.pk, this.props.history)
+            calibrationCopy.clickEvent = () => handleNavClick(instrument.pk + "/calibration-events/" + calibration.pk, this.props.history)
             return calibrationCopy
         })
     }
@@ -59,6 +59,7 @@ export default class CalibrationSection extends React.Component {
         return <div style={{
                     display: "flex",
                     alignItems: "center",
+                    justifyContent: "center",
                     flex: 1,
                     height: 40,
                     marginTop: -10,
