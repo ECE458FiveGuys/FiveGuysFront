@@ -303,7 +303,7 @@ export default class RequestUtils {
             fields.append(ModelFields.InstrumentFields.SERIAL_NUMBER, '')
         }
         if (comment) fields.append(ModelFields.InstrumentFields.COMMENT, comment)
-        if (asset_tag && !editMode) fields.append("asset_tag", parseInt(asset_tag))
+        if (asset_tag && !editMode) fields.append(Instrument.FIELDS.ASSET_TAG, parseInt(asset_tag))
         if (instrument_categories) {
             instrument_categories.forEach(category => {
                 fields.append(ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES, category.name ? category.name : category)
