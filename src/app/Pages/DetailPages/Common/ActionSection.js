@@ -72,8 +72,8 @@ export default class ActionSection extends React.Component {
                     <Button variant="red" onClick={() => this.setDeleteModalShow(true)}>
                         Delete
                     </Button>
-                    <Button variant="blue">
-                        <MDBNavLink to="/create-custom-form">{"Create Custom Calibration Form"}</MDBNavLink>
+                    <Button variant="blue" onClick={() => this.setCustomFormModalShow(true)}>
+                        Create Custom Calibration Form
                     </Button>
                 </div>
                 {hasLogo &&
@@ -87,11 +87,11 @@ export default class ActionSection extends React.Component {
                     deleteMethod = {this.handleDelete}
                     message={"Are you sure you want to remove this from your inventory? This action cannot be undone."}
                 />
-                {/*<SortableComponent*/}
-                {/*    show={customFormModalShow}*/}
-                {/*    onHide={() => this.setCustomFormModalShow(false)}*/}
-                {/*    token = {token}*/}
-                {/*/>*/}
+                <SortableComponent
+                    show={customFormModalShow}
+                    onHide={() => this.setCustomFormModalShow(false)}
+                    token = {token}
+                />
                 <HTPPopup toggleModal={this.toggleModal}
                           message={error}
                           title={"Error!"}

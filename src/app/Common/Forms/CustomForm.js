@@ -1,18 +1,18 @@
 import {SortableContainer, SortableElement, arrayMove, SortableHandle} from 'react-sortable-hoc';
-import {Button, Modal} from "react-bootstrap";
-import {MDBCol, MDBContainer, MDBIcon, MDBRow} from "mdbreact";
-import {ReactSortable} from "react-sortablejs";
+import {Button, Modal, ModalBody} from "react-bootstrap";
+import {MDBCol, MDBContainer, MDBIcon, MDBModal, MDBModalHeader, MDBRow} from "mdbreact";
 import React, {Component} from "react";
 import CustomFormField from "./CustomFormField";
-import {forEach} from "react-bootstrap/ElementChildren";
-import HTPNavBar from "../HTPNavBar";
 import './CreateCusotmForm.css';
+import SubmitModal from "./ConfirmationModals/SubmitModal";
+import CancelModal from "./ConfirmationModals/CancelModal";
 
-const DragHandle = SortableHandle(() => <MDBIcon icon={'grip-lines'} size={'2x'}/>);
+const DragHandle = SortableHandle(() => <MDBIcon className={'drag-handle'} icon={'grip-lines'} size={'2x'}/>);
 
-const SortableItem = SortableElement(({value,onRemove}) => (
+const SortableItem = SortableElement(({value,onRemove, onChange, onInputFieldChange}) => (
     <div className="SortableItem">
-        {<CustomFormField type={value.type} id={value.id} dragHandle={<DragHandle/>} onRemove={() => onRemove(value.id)}/>}
+        {<CustomFormField type={value.type} id={value.id} dragHandle={<DragHandle/>} onRemove={() => onRemove(value.id)}
+                          onChange={onChange} onInputFieldChange={onInputFieldChange}/>}
     </div>
 ));
 
@@ -25,14 +25,55 @@ class SortableComponent extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
+        this.state = this.makeRefreshState()
+    }
+
+    makeRefreshState () {
+        return {
+            entries: {},
             items: [
                 {id:0,type:'header'},
-                {id:1,type:'text'},
-                {id:2,type:'input'},
+                {id:1,type:'input'},
             ],
-            nextFieldId: 3
-        };
+            nextFieldId: 2
+        }
+    }
+
+    // scrollToBottom() {
+    //     let el = document.getElementsByClassName('sortable-list')
+    //     el.scrollTop = el.scrollHeight
+    // }
+
+    setCancelModalShow(boolean){
+        // this.setState(this.makeRefreshState())
+        this.setState({cancelModalShow:boolean})
+    }
+
+    setSubmitModalShow(boolean){
+        this.setState({submitModalShow:boolean})
+    }
+
+    onInputFieldChange = (id) => (event) => {
+        // let newInputData = {}
+        // if(event.target.type === 'select-one') {
+        //     newInputData['type'] = event.target.value
+        // }
+        // else if(event.target.type === 'textarea') {
+        //     newInputData['prompt'] = event.target.value
+        // }
+        // else {
+        //     console.log("Unprocessed change")
+        // }
+        //
+        // let newEntries = Object.assign({},this.state.entries)
+        // newEntries[id] = JSON.stringify(newInputData)
+        // this.setState({entries:newEntries})
+    }
+
+    onChange = (id) => (event) => {
+        // let newEntries = Object.assign({},this.state.entries)
+        // newEntries[id] = event.target.value
+        // this.setState({entries:newEntries})
     }
 
 
@@ -43,17 +84,13 @@ class SortableComponent extends Component {
     };
 
     remove = (id) => {
-        if(this.state) {
-            console.log(id)
+        let items = this.state.items;
+        let entries = Object.assign({},this.state.entries);
 
-            let items = this.state.items;
+        const newList = items.filter((item) => item.id !== id);
+        delete entries[id]
 
-            const newList = items.filter((item) => item.id !== id);
-            // items.splice(index, 1);
-
-            this.setState({items: newList})
-        }
-
+        this.setState({items: newList, entries:entries})
     }
 
     add(inputType) {
@@ -63,41 +100,90 @@ class SortableComponent extends Component {
         items.push(new_item);
 
         this.setState({items : items, nextFieldId:newFieldId})
-        console.log(new_item);
+        // this.scrollToBottom()
+    }
+
+    cancelSubmission = () => {
+        // this.makeRefreshState()
+        // this.props.onHide()
+    }
+
+    submitForm = () => {
+        console.log(this.state.entries,this.state.items)
+        let {items,entries} = this.state
+        let finalForm = {};
+
+        items.forEach((item) => {
+            finalForm[item.type] = entries[item.id]
+        })
+
+        let finalFormString = JSON.stringify(finalForm)
+        console.log(finalFormString)
     }
 
     render() {
         const {items} = this.state;
-        let {user,location} = this.props;
         return (
-            <div>
-                <HTPNavBar user={user} location={location}/>
-                <MDBContainer>
-                    <MDBCol>
-                        <MDBRow>
-                            <Button variant={"blue"} onClick={() => this.add()}>Return to model</Button>
-                        </MDBRow>
-                        <MDBRow>
-                            <SortableList onSortEnd={this.onSortEnd} useDragHandle>
-                                {items.map((value, index) => (
-                                    <SortableItem key={`item-${value}`}
-                                                  index={index}
-                                                  value={value}
-                                                  onRemove={this.remove} />
-                                ))}
-                            </SortableList>
-                        </MDBRow>
-                        <MDBRow>
-                            {/*{Object.keys(CustomFormField.INPUTS).forEach((inputType) =>*/}
-                            <Button variant={"blue"} onClick={() => this.add("text")}>{"text"}</Button>
-                            <Button variant={"blue"} onClick={() => this.add("header")}>{"header"}</Button>
-                            <Button variant={"blue"} onClick={() => this.add("input")}>{"input"}</Button>
-                            {/*)}*/}
-                            {/*<Button variant={"blue"} onClick={() => this.add()}>Add Field</Button>*/}
-                        </MDBRow>
-                    </MDBCol>
-                </MDBContainer>
-            </div>
+            <Modal
+                {... this.props}
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title
+                        className={"text-info"}
+                        id="contained-modal-title-vcenter">
+                        Create Custom Form
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                        <MDBContainer className={'custom-form'}>
+                            <MDBCol>
+                                <MDBRow>
+                                    <Button variant={"blue"} onClick={() => this.add("text")}>{"add text"}</Button>
+                                    <Button variant={"blue"} onClick={() => this.add("header")}>{"add header"}</Button>
+                                    <Button variant={"blue"} onClick={() => this.add("input")}>{"add input"}</Button>
+                                </MDBRow>
+                                <MDBRow>
+                                    <div className={'overflow-auto sortable-list'}>
+                                        <SortableList
+                                            onSortEnd={this.onSortEnd} useDragHandle classN
+                                            helperClass='sortable-helper'
+                                        >
+                                            {items.map((value, index) => (
+                                                <SortableItem key={`item-${value}`}
+                                                              index={index}
+                                                              value={value}
+                                                              onRemove={this.remove}
+                                                              onChange={this.onChange}
+                                                              onInputFieldChange={this.onInputFieldChange}
+                                                />
+                                            ))}
+                                        </SortableList>
+                                    </div>
+                                </MDBRow>
+                                <MDBRow className={'add-buttons'}>
+                                    <Button variant={"green"} onClick={() => this.setSubmitModalShow(true)}>Save</Button>
+                                    <Button variant={"danger"} onClick={() => this.setCancelModalShow(true)}>Cancel</Button>
+                                </MDBRow>
+                            </MDBCol>
+                        <SubmitModal
+                            show={this.state.submitModalShow}
+                            onHide={() => this.setSubmitModalShow(false)}
+                            onSubmission={this.submitForm}
+                            message={'Are you sure you\'re ready to submit?'}
+                        />
+                        <CancelModal
+                            show={this.state.cancelModalShow}
+                            onHide={() => this.setCancelModalShow(false)}
+                            onCancel={this.cancelSubmission}
+                            message={'Are you sure you want to leave? Any changes you\'ve made will not be saved.'}
+                        />
+                        </MDBContainer>
+                </Modal.Body>
+            </Modal>
+
         );
     }
 }

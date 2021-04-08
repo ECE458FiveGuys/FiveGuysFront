@@ -10,81 +10,87 @@ import HTPMultiLineInput from "../Inputs/HTPMultiLineInput";
 class CustomFormField extends Component {
     constructor(props) {
         super(props);
+        this.state = {}
     }
 
-    static INPUTS = {
-        header:
+    headerField() {
+        // console.log(this.state)
+        return(
             <div>
-                <HTPMultiLineInput size={1} label={"Header Text"} placeholder={"Enter Text"} name={"Header Text"} onChange={""} style={{width:5}}/>
-            </div>,
-        text:
+                <HTPMultiLineInput size={1} label={"Header Text"} placeholder={"Enter Text"} name={"Header Text"}
+                                   onChange={(event) => this.props.onChange(this.props.id)(event)}/>
+            </div>
+        )
+    }
+
+    textField() {
+        // console.log(this.state)
+        return(
             <div>
-                <HTPMultiLineInput size={2} label={"Body Text"} placeholder={"Enter Text"} name={"Body Text"} onChange={""} style={{width:5}}/>
-            </div>,
-        input:
+                <HTPMultiLineInput size={2} label={"Body Text"} placeholder={"Enter Text"} name={"Body Text"}
+                                    onChange={(event) => this.props.onChange(this.props.id)(event)}/>
+            </div>
+        )
+    }
+
+    inputField(){
+        // console.log(this.state)
+        return(
             <div>
                 <label>
                     Type
                 </label>
-                <select className="browser-default custom-select" style={{width:'115px'}}>
-                    <option value={''} disabled selected>--Select--</option>
-                    <option value={''}>Text</option>
-                    <option value={''}>Numeric</option>
+                <select
+                    className="browser-default custom-select" style={{width:'115px'}}
+                    onChange={(event) => this.props.onInputFieldChange(this.props.id)(event)}
+                >
+                    <option value={'unselected'} disabled selected>--Select--</option>
+                    <option value={'text'}>Text</option>
+                    <option value={'number'}>Numeric</option>
                 </select>
-                <label>
-                    Prompt
-                </label>
-                <input/>
+
+                <HTPMultiLineInput size={1} label={"Prompt"} placeholder={"Enter Text"} name={"Input"}
+                                   onChange={(event) => this.props.onInputFieldChange(this.props.id)(event)}/>
             </div>
+        )
+    }
+
+    static INPUTS = {
+        header: 'Header',
+        text: 'Body Text',
+        input: 'Add Input'
+
     };
 
+    FIELDS = {
+        header: this.headerField(),
+        text: this.textField(),
+        input: this.inputField()
+    }
+
     render() {
-        // let INPUTS = {
-        //     header:
-        //         <div>
-        //             <HTPMultiLineInput size={1} label={"Header Text"} placeholder={"Enter Text"} name={"Header Text"} onChange={""} style={{width:5}}/>
-        //         </div>,
-        //     text:
-        //         <div>
-        //             <HTPMultiLineInput size={2} label={"Body Text"} placeholder={"Enter Text"} name={"Body Text"} onChange={""} style={{width:5}}/>
-        //         </div>,
-        //     input:
-        //         <div>
-        //             <label>
-        //                 Type
-        //             </label>
-        //             <select className="browser-default custom-select" style={{width:'115px'}}>
-        //                 <option value={''} disabled selected>--Select--</option>
-        //                 <option value={''}>Text</option>
-        //                 <option value={''}>Numeric</option>
-        //             </select>
-        //             <label>
-        //                 Prompt
-        //             </label>
-        //             <input/>
-        //         </div>
-        // };
         return(
             <div className={"custom-form-field"}>
                 <Card>
                     <Card.Body>
-                        <MDBContainer>
-                            <MDBRow>
-                                <MDBCol size={10}>
-                                    {(this.props.type in CustomFormField.INPUTS) ? CustomFormField.INPUTS[this.props.type] : "TYPE DOESNT EXIST"}
-                                </MDBCol>
-                                <MDBCol>
-                                    <MDBRow>
-                                        <Button variant={'transparent'} onClick={this.props.onRemove} >
-                                            <MDBIcon icon={'times'} className={""}/>
-                                        </Button>
-                                    </MDBRow>
-                                    <MDBRow>
+                        {/*<MDBContainer>*/}
+                            {/*<MDBCol>*/}
+                            <div className="row">
+                                <div className="col-10">
+                                    {(this.props.type in this.FIELDS) ? this.FIELDS[this.props.type] : "TYPE DOESNT EXIST"}
+                                </div>
+                                <div className="col-2" >
+                                    <div className="row">
+                                    <Button type={'button'} variant={'danger'} onClick={this.props.onRemove} className={"my-button"}>
+                                        <MDBIcon icon={'times'} className={"my-icon"}/>
+                                    </Button>
+                                    </div>
+                                    <div className="row" style={{right:'0%'}}>
                                         {this.props.dragHandle}
-                                    </MDBRow>
-                                </MDBCol>
-                            </MDBRow>
-                        </MDBContainer>
+                                    </div>
+                                </div>
+                            </div>
+                        {/*</MDBContainer>*/}
                     </Card.Body>
                 </Card>
             </div>
