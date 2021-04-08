@@ -3,8 +3,9 @@ import ModelFields from "../../../../../utils/enums";
 import {EquipmentModel, Instrument} from "../../../../../utils/ModelEnums";
 import React from "react";
 import {buildEvidenceElement} from "../../Common/utils";
+import {handleNavClick} from "../../../../utils";
 
-export default function CalibrationEventSection(calibrationEvent) {
+export default function CalibrationEventSection(calibrationEvent, history) {
     return(<div style={{display : "flex", flexDirection : "column", justifyContent : 'flex-start', alignItems : 'center', textAlign : 'center'}}>
         <h1 style={{marginRight : 20}}
             className={"h2-responsive"}>
@@ -19,7 +20,14 @@ export default function CalibrationEventSection(calibrationEvent) {
             {ModelDisplay(
                 ["Instrument", "Date", "Calibrator Username", "Calibrator Name", "Additional Evidence"],
                 [
-                    calibrationEvent.instrument[ModelFields.InstrumentFields.ASSET_TAG],
+                    <div
+                        style={{
+                            color : "blue",
+                            cursor : "pointer"
+                        }}
+                        onClick={() => handleNavClick("/instruments/" + calibrationEvent.instrument.pk , history, undefined, true)}>
+                        {calibrationEvent.instrument[ModelFields.InstrumentFields.ASSET_TAG]}
+                    </div>,
                     calibrationEvent[ModelFields.CalibrationFields.Date],
                     calibrationEvent[ModelFields.CalibrationFields.User][ModelFields.UserFields.USERNAME],
                     calibrationEvent[ModelFields.CalibrationFields.User][ModelFields.UserFields.NAME],

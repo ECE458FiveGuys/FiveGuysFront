@@ -71,7 +71,7 @@ class NavbarPage extends Component {
                             {`Welcome, ${location.pathname == "/user-settings" ? user.username : user.getFirstName()}`}
                         </text>
                         <MDBNavbarNav right>
-                            {user.groups.includes(SHORTEN_LABELS.ADMINISTRATOR) &&
+                            {(user.groups.includes(SHORTEN_LABELS.ADMINISTRATOR) || user.groups.includes(SHORTEN_LABELS.CALIBRATION_APPROVER)) &&
                             <MDBNavItem
                                 style={{display : "flex", flexDirection : "row", marginRight : 10}}
                                 active={location.pathname == "/pending-calibrations"}>

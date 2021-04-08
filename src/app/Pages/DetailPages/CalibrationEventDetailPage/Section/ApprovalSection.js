@@ -67,7 +67,8 @@ export default class ApprovalSection extends React.Component {
                             approvalData ? approvalData[ModelFields.ApprovalDataFields.APPROVER] : undefined,
                             approvalData ? approvalData[ModelFields.ApprovalDataFields.DATE] : undefined,
                             approvalData ? approvalData[ModelFields.ApprovalDataFields.COMMENT] : undefined,
-                            user.groups.includes(SHORTEN_LABELS.ADMINISTRATOR) ? this.renderApprovalOptions(approvalStatus) : undefined
+                            user.groups.includes(SHORTEN_LABELS.ADMINISTRATOR) || user.groups.includes(SHORTEN_LABELS.CALIBRATION_APPROVER) ?
+                                this.renderApprovalOptions(approvalStatus) : undefined
                         ])}
                     <HTPPopup toggleModal={this.toggleModal}
                               message={<HTPMultiLineInput placeholder={"Your thoughts (optional)"}

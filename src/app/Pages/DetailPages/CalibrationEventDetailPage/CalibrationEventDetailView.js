@@ -90,7 +90,7 @@ export default class CalibrationEventDetailView extends Component {
                         </div>
                         <div style={{flex: 1, display: "flex", flexDirection: "row", justifyContent: 'space-between'}}>
                             <div style={{flex : 1, display : "flex", flexDirection : "column", justifyContent : 'flex-start'}}>
-                                {CalibrationEventSection(calibrationEvent)}
+                                {CalibrationEventSection(calibrationEvent, history)}
                                 {this.approvalRequired() && <Divider style={{marginTop : 30}}
                                                                       orientation={"horizontal"}
                                                                       />}
