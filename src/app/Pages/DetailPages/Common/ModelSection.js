@@ -87,6 +87,6 @@ export default function ModelSection(model, subheading, history=undefined, displ
                                 Comment:
                             </h1>
                         </div>}
-                            <text style={{display : "flex", flexWrap : 'wrap', flex : 1}}>{model[EquipmentModel.FIELDS.COMMENT]}</text>
+                            <div style={{whiteSpace: "pre-wrap", display : "flex", flexWrap : 'wrap', flex : 1}}>{model[EquipmentModel.FIELDS.COMMENT]}</div>
             </div>)
 }

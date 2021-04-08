@@ -47,9 +47,8 @@ export default class SearchHeader extends Component {
 
     renderSearchButton = () => {
         return(<MDBCol size={1} style={{display: "flex", marginLeft: 20, marginRight : 20, alignItems : "center", justifyContent:"center"}}>
-                    <button type="button"
-                            className="btn btn-primary"
-                            onClick={()=>this.props.updateSearchFieldValues(this.state.searchFieldValues)}>
+                    <button type="submit"
+                            className="btn btn-primary">
                         Search
                     </button>
                 </MDBCol>)
@@ -101,9 +100,15 @@ export default class SearchHeader extends Component {
                     {`Search Your ${type}`}
                 </header>
                 <div style={{display: 'flex', flexDirection : "row"}}>
-                    <div style={{display : 'flex', flexDirection : 'row', flex : 1, flexWrap : 'wrap'}}>
-                        {Rows}
-                    </div>
+                    <form
+                        onClick={(e)=> {e.preventDefault()
+                            this.props.updateSearchFieldValues(this.state.searchFieldValues)
+                        }}
+                        >
+                        <div style={{display : 'flex', flexDirection : 'row', flex : 1, flexWrap : 'wrap'}}>
+                            {Rows}
+                        </div>
+                    </form>
                 </div>
             </div>
         )
