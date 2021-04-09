@@ -62,16 +62,16 @@ export default class InstrumentDetailView extends Component {
                                 <div style={{flex : 1, display : "flex", flexDirection : "column", justifyContent : 'flex-start'}}>
                                     {InstrumentSection(instrument)}
                                     {user.groups.includes(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT) || user.groups.includes(SHORTEN_LABELS.ADMINISTRATOR) &&
-                                    <div style={{marginTop : 30}}>
-                                        <ActionSection token={token}
-                                                       hasText={false}
-                                                       hasLogo={false}
-                                                       subject={instrument}
-                                                       updatePageState={this.updatePageState}
-                                                       history={history}
-                                                       type={Instrument.TYPE}
-                                                       deleteFunction={InstrumentRequests.deleteInstruments}/>
-                                    </div>}
+                                        <div style={{marginTop : 30}}>
+                                            <ActionSection token={token}
+                                                           hasText={false}
+                                                           hasLogo={false}
+                                                           subject={instrument}
+                                                           updatePageState={this.updatePageState}
+                                                           history={history}
+                                                           type={Instrument.TYPE}
+                                                           deleteFunction={InstrumentRequests.deleteInstruments}/>
+                                        </div>}
                                     <div style={{display : 'flex', flexDirection : "column", justifyContent : "center", alignItems : 'center'}}>
                                         <text className={"h4-responsive"} style={{marginBottom : 20, marginTop : 30}}>
                                             Visit the model for this instance:

@@ -47,7 +47,7 @@ export default function ModelSection(model, subheading, history=undefined, displ
                                 Model Categories:
                             </h1>
                             <div>
-                                {model[EquipmentModel.FIELDS.INSTRUMENT_CATEGORIES] && model[EquipmentModel.FIELDS.INSTRUMENT_CATEGORIES].map(category => {
+                                {model[EquipmentModel.FIELDS.MODEL_CATEGORIES] && model[EquipmentModel.FIELDS.MODEL_CATEGORIES].map(category => {
                                     return <MDBBadge style={{marginRight : 5}}
                                                      color="green"
                                                      pill>

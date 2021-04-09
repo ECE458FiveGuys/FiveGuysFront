@@ -339,7 +339,9 @@ export default class RequestUtils {
         Object.keys(fields).forEach(key => {
             let val = fields[key]
             if (val || NullableFields.includes(val)) {
-                if (key == ModelFields.EquipmentModelFields.MODEL_CATEGORIES || key == ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES) {
+                if (key == ModelFields.EquipmentModelFields.MODEL_CATEGORIES ||
+                    key == ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES ||
+                    key == ModelFields.EquipmentModelFields.CALIBRATOR_CATEGORIES) {
                     val.forEach(category => {
                         data.append(key, category.name ? category.name : category)
                     })

@@ -9,12 +9,8 @@ import {handleNavClick} from "../../../../../utils";
 import {Button} from "react-bootstrap";
 import {createCertificate} from "./certificate_writer";
 import PropTypes from "prop-types";
-import ActionSection from "../../../Common/ActionSection";
 import {User} from "../../../../../../utils/dtos";
-import {MDBIcon} from "mdbreact";
 import {instrumentCalibratable} from "../../utils";
-import {Divider} from "@material-ui/core";
-import FileUtils from "../../../../../../utils/file_utils";
 import {SHORTEN_LABELS} from "../../../../CreateFunctions/CreateUser";
 import {buildEvidenceElement} from "../../../Common/utils";
 import FormBuilder from "../../../../../Common/Forms/FormBuilder";
@@ -75,7 +71,9 @@ export default class CalibrationSection extends React.Component {
     }
 
     setCalibrationModalShow(boolean) {
-        this.setState({calibrationModalShow : boolean})
+        this.setState({calibrationModalShow : boolean}, () => {
+            if (!boolean) this.setState({generalError : undefined})
+        })
     }
 
     tempSetCustomFormShow(boolean) {
@@ -135,7 +133,7 @@ export default class CalibrationSection extends React.Component {
 
     render() {
         let {token, instrument, user} = this.props
-        let {calibrationModalShow, calibrationTableRows, tempSetCustomFormShow} = this.state
+        let {calibrationModalShow, calibrationTableRows, tempSetCustomFormShow, generalError} = this.state
         return(<div style={{marginLeft : 50, marginRight : 50, textAlign : 'center', flex : 1.8}}>
                             <h1 style={{alignSelf : 'center', justifySelf : 'center', textAlign : "center"}}
                                 className={"h2-responsive"}>
@@ -152,6 +150,8 @@ export default class CalibrationSection extends React.Component {
                         instrument={instrument}
                         closeModal={()=>this.setCalibrationModalShow(false)}
                         user={user}
+                        generalError={generalError}
+                        setError={(e) => this.setState({generalError : e})}
                     />
                     <FormBuilder
                         show={tempSetCustomFormShow}

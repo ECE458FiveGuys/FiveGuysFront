@@ -105,6 +105,7 @@ export default class CalibrationEventDetailView extends Component {
                                      flexItem={true}/>
                             <InstrumentSection instruments={calibratedWith}
                                                token={token}
+                                               history={history}
                                                tableSubtitle={"Instruments used to perform this calibration:"}
                                                tableTitle={"Calibrated With"}
                             />

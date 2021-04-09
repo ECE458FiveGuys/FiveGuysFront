@@ -8,10 +8,10 @@ export default class CalibrationRequests {
     static async recordCalibration(token, instrumentId, date, userId, comment, file = undefined, loadBankData = undefined,
                                    callBack = (json) => json,
                                    errorMessageCallBack = (errorMessage) => errorMessage,
-                                   klufeData=undefined) {
+                                   klufeData=undefined, calibratedWithPKs=undefined) {
 
         let header = RequestUtils.buildTokenHeader(token)
-        let data = this.buildCreateCalibrationData(instrumentId, date, userId, comment, file, loadBankData, klufeData)
+        let data = this.buildCreateCalibrationData(instrumentId, date, userId, comment, file, loadBankData, klufeData, calibratedWithPKs)
         RequestUtils.assistedFetch(URLS.CALIBRATIONS, "post",
             callBack, errorMessageCallBack,
             header, undefined, data)
@@ -24,14 +24,15 @@ export default class CalibrationRequests {
         RequestUtils.assistedFetch(URLS.CALIBRATIONS + eventId, METHODS.GET, callBack, errorMessageCallBack, header)
     }
 
-    static buildCreateCalibrationData(instrumentId, date, userId, comment, file, loadBankData, klufeData) {
+    static buildCreateCalibrationData(instrumentId, date, userId, comment, file, loadBankData, klufeData, calibratedWithPks) {
         const data = new FormData();
         data.append(ModelFields.CalibrationFields.Instrument, instrumentId)
         data.append(ModelFields.CalibrationFields.Date, date)
         data.append(ModelFields.CalibrationFields.User, userId)
-        if (comment) {
-            data.append(ModelFields.CalibrationFields.Comment, comment)
-        }
+        if (comment) data.append(ModelFields.CalibrationFields.Comment, comment)
+        if (calibratedWithPks) calibratedWithPks.forEach(pk => {
+            data.append(ModelFields.CalibrationFields.CalibratedWith, parseInt(pk))
+        })
         if (loadBankData) {
             data.append(ModelFields.CalibrationFields.LoadBankFile, JSON.stringify(loadBankData))
         } else if (klufeData) {
