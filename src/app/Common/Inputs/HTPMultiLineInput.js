@@ -37,7 +37,7 @@ export default class HTPMultiLineInput extends Component {
                     onChangeCapture={event => {
                         onChange(event)
                     }}
-                    id="exampleFormControlTextarea1"
+                    // id="exampleFormControlTextarea1"
                     rows={size}
                 />
                 {error && <text style={{fontSize : 13}} className="text-danger">{error}</text>}

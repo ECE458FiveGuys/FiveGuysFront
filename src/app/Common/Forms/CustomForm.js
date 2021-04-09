@@ -12,14 +12,33 @@ const DragHandle = SortableHandle(() => <MDBIcon className={'drag-handle'} icon=
 const SortableItem = SortableElement(({value,onRemove, onChange, onInputFieldChange}) => (
     <div className="SortableItem">
         {<CustomFormField type={value.type} id={value.id} dragHandle={<DragHandle/>} onRemove={() => onRemove(value.id)}
-                          onChange={onChange} onInputFieldChange={onInputFieldChange}/>}
+                          onChange={onChange} onInputFieldChange={onInputFieldChange}
+        />}
     </div>
 ));
 
-const SortableList = SortableContainer(({children}) => {
-    return <ul>{children}</ul>;
+const SortableList = SortableContainer(({items,onRemove,onChange,onInputFieldChange}) => {
+    // return <ul>{children}</ul>;
 
+    return(
+        <ul className="SortableList">
+            {items.map((value, index) => {
+                return(
+                <SortableItem
+                    key={`item-${value.id}`} //TODO issue may be value is not unique*/}
+                                          index={index}
+                                          value={value}
+                                          onRemove={onRemove}
+                                          onChange={onChange}
+                                          onInputFieldChange={onInputFieldChange}
+                />
+                )
+            })}
+        </ul>
+    );
 });
+
+    // return ();
 
 class SortableComponent extends Component {
 
@@ -54,26 +73,26 @@ class SortableComponent extends Component {
     }
 
     onInputFieldChange = (id) => (event) => {
-        // let newInputData = {}
-        // if(event.target.type === 'select-one') {
-        //     newInputData['type'] = event.target.value
-        // }
-        // else if(event.target.type === 'textarea') {
-        //     newInputData['prompt'] = event.target.value
-        // }
-        // else {
-        //     console.log("Unprocessed change")
-        // }
-        //
-        // let newEntries = Object.assign({},this.state.entries)
-        // newEntries[id] = JSON.stringify(newInputData)
-        // this.setState({entries:newEntries})
+        let newInputData = (this.state.entries[id]) ? JSON.parse(this.state.entries[id]):{}
+        if(event.target.type === 'select-one') {
+            newInputData['type'] = event.target.value
+        }
+        else if(event.target.type === 'textarea') {
+            newInputData['prompt'] = event.target.value
+        }
+        else {
+            console.log("Unprocessed change")
+        }
+
+        let newEntries = Object.assign({},this.state.entries)
+        newEntries[id] = JSON.stringify(newInputData)
+        this.setState({entries:newEntries})
     }
 
     onChange = (id) => (event) => {
-        // let newEntries = Object.assign({},this.state.entries)
-        // newEntries[id] = event.target.value
-        // this.setState({entries:newEntries})
+        let newEntries = Object.assign({},this.state.entries)
+        newEntries[id] = event.target.value
+        this.setState({entries:newEntries})
     }
 
 
@@ -104,21 +123,24 @@ class SortableComponent extends Component {
     }
 
     cancelSubmission = () => {
-        // this.makeRefreshState()
-        // this.props.onHide()
+        this.makeRefreshState()
+        this.props.onHide()
     }
 
     submitForm = () => {
-        console.log(this.state.entries,this.state.items)
         let {items,entries} = this.state
-        let finalForm = {};
+        let finalForm = [];
 
         items.forEach((item) => {
-            finalForm[item.type] = entries[item.id]
+            let entry = {}
+            entry['type'] = item.type
+            entry['value'] = entries[item.id]
+            finalForm.push(entry)
         })
+        let stringToSubmit = {'form':finalForm}
+        let finalFormString = JSON.stringify(stringToSubmit)
 
-        let finalFormString = JSON.stringify(finalForm)
-        console.log(finalFormString)
+        console.log(JSON.parse(finalFormString))
     }
 
     render() {
@@ -147,20 +169,32 @@ class SortableComponent extends Component {
                                 </MDBRow>
                                 <MDBRow>
                                     <div className={'overflow-auto sortable-list'}>
-                                        <SortableList
-                                            onSortEnd={this.onSortEnd} useDragHandle classN
-                                            helperClass='sortable-helper'
-                                        >
-                                            {items.map((value, index) => (
-                                                <SortableItem key={`item-${value}`}
-                                                              index={index}
-                                                              value={value}
-                                                              onRemove={this.remove}
-                                                              onChange={this.onChange}
-                                                              onInputFieldChange={this.onInputFieldChange}
-                                                />
-                                            ))}
-                                        </SortableList>
+                                        {/*{items.map((value, index) => {*/}
+                                            <SortableList
+                                                onSortEnd={this.onSortEnd}
+                                                helperClass='sortable-helper'
+                                                items={items}
+                                                onRemove={this.remove}
+                                                onChange={this.onChange}
+                                                onInputFieldChange={this.onInputFieldChange}
+                                            >
+                                            </SortableList>
+                                        {/*}*/}
+                                        {/*<SortableList*/}
+                                        {/*    onSortEnd={this.onSortEnd} useDragHandle classN*/}
+                                        {/*    helperClass='sortable-helper'*/}
+                                        {/*>*/}
+
+                                        {/*    {items.map((value, index) => {*/}
+                                        {/*        return(<SortableItem key={`item-${value}`} //TODO issue may be value is not unique*/}
+                                        {/*                      index={index}*/}
+                                        {/*                      value={value}*/}
+                                        {/*                      onRemove={this.remove}*/}
+                                        {/*                      onChange={this.onChange}*/}
+                                        {/*                      onInputFieldChange={this.onInputFieldChange}*/}
+                                        {/*        />)*/}
+                                        {/*    })}*/}
+                                        {/*</SortableList>*/}
                                     </div>
                                 </MDBRow>
                                 <MDBRow className={'add-buttons'}>

@@ -50,7 +50,8 @@ class CustomFormField extends Component {
                 </select>
 
                 <HTPMultiLineInput size={1} label={"Prompt"} placeholder={"Enter Text"} name={"Input"}
-                                   onChange={(event) => this.props.onInputFieldChange(this.props.id)(event)}/>
+                                   onChange={(event) => this.props.onInputFieldChange(this.props.id)(event)}
+                />
             </div>
         )
     }
