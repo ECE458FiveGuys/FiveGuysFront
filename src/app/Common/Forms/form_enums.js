@@ -79,16 +79,28 @@ FormEnums {
         [ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES] : FormEnums.FieldRequirementTypes.OPTIONAL,
     }
 
+    // Calibrations
+
+    static CalibrationEventFieldRequirementTypes = {
+        [ModelFields.CalibrationFields.CalibratedWith] : FormEnums.FieldRequirementTypes.OPTIONAL
+    }
+
+    static CalibrationEventFieldPlaceHolders = {
+        [ModelFields.CalibrationFields.CalibratedWith] : FormEnums.FieldPlaceHolders.OPTIONAL_MULTIPLE
+    }
+
     // All:
 
     static AllFieldRequirementTypes = {
         ...FormEnums.EquipmentModelFieldRequirementTypes,
-        ...FormEnums.InstrumentFieldRequirementTypes
+        ...FormEnums.InstrumentFieldRequirementTypes,
+        ...FormEnums.CalibrationEventFieldRequirementTypes
     }
 
     static AllFieldPlaceHolders = {
         ...FormEnums.EquipmentModelFieldPlaceHolders,
-        ...FormEnums.InstrumentFieldPlaceHolders
+        ...FormEnums.InstrumentFieldPlaceHolders,
+        ...FormEnums.CalibrationEventFieldPlaceHolders
     }
 
 }
