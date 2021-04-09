@@ -54,7 +54,9 @@ class SortableComponent extends Component {
                 {id:0,type:'header'},
                 {id:1,type:'input'},
             ],
-            nextFieldId: 2
+            nextFieldId: 2,
+            cancelModalShow: false,
+            submitModalShow: false
         }
     }
 
@@ -123,7 +125,7 @@ class SortableComponent extends Component {
     }
 
     cancelSubmission = () => {
-        this.makeRefreshState()
+        this.setState(this.makeRefreshState())
         this.props.onHide()
     }
 
@@ -141,6 +143,8 @@ class SortableComponent extends Component {
         let finalFormString = JSON.stringify(stringToSubmit)
 
         console.log(JSON.parse(finalFormString))
+
+        this.cancelSubmission()
     }
 
     render() {
@@ -169,7 +173,6 @@ class SortableComponent extends Component {
                                 </MDBRow>
                                 <MDBRow>
                                     <div className={'overflow-auto sortable-list'}>
-                                        {/*{items.map((value, index) => {*/}
                                             <SortableList
                                                 onSortEnd={this.onSortEnd}
                                                 helperClass='sortable-helper'
@@ -179,22 +182,6 @@ class SortableComponent extends Component {
                                                 onInputFieldChange={this.onInputFieldChange}
                                             >
                                             </SortableList>
-                                        {/*}*/}
-                                        {/*<SortableList*/}
-                                        {/*    onSortEnd={this.onSortEnd} useDragHandle classN*/}
-                                        {/*    helperClass='sortable-helper'*/}
-                                        {/*>*/}
-
-                                        {/*    {items.map((value, index) => {*/}
-                                        {/*        return(<SortableItem key={`item-${value}`} //TODO issue may be value is not unique*/}
-                                        {/*                      index={index}*/}
-                                        {/*                      value={value}*/}
-                                        {/*                      onRemove={this.remove}*/}
-                                        {/*                      onChange={this.onChange}*/}
-                                        {/*                      onInputFieldChange={this.onInputFieldChange}*/}
-                                        {/*        />)*/}
-                                        {/*    })}*/}
-                                        {/*</SortableList>*/}
                                     </div>
                                 </MDBRow>
                                 <MDBRow className={'add-buttons'}>
