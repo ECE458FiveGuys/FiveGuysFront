@@ -51,17 +51,18 @@ class RecordCalibration extends Component {
         }
 
         let calibratedWithPKs = []
-        calibrated_with.forEach(assetTag => {
-                calibratedWithOptions.forEach(instrument => {
-                    if (instrument[Instrument.FIELDS.ASSET_TAG] == parseInt(assetTag)) calibratedWithPKs.push(parseInt(instrument.pk))
-                })
-            }
-        )
+        if (calibrated_with) {
+            calibrated_with.forEach(assetTag => {
+                    calibratedWithOptions.forEach(instrument => {
+                        if (instrument[Instrument.FIELDS.ASSET_TAG] == parseInt(assetTag)) calibratedWithPKs.push(parseInt(instrument.pk))
+                    })
+                }
+            )}
 
         try {
             this.validateSubmit()
             CalibrationRequests.recordCalibration(this.props.token, instrument.pk, date, user.id, comment, file,
-                undefined, editCallback, calibrationError, undefined, calibratedWithPKs)
+                undefined, editCallback, calibrationError, undefined, calibratedWithPKs.length == 0 ? undefined : calibratedWithPKs)
         } catch (e) {
             this.props.setError(e.message)
         }

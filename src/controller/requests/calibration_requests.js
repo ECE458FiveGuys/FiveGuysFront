@@ -30,9 +30,11 @@ export default class CalibrationRequests {
         data.append(ModelFields.CalibrationFields.Date, date)
         data.append(ModelFields.CalibrationFields.User, userId)
         if (comment) data.append(ModelFields.CalibrationFields.Comment, comment)
-        if (calibratedWithPks) calibratedWithPks.forEach(pk => {
-            data.append(ModelFields.CalibrationFields.CalibratedWith, parseInt(pk))
-        })
+        if (calibratedWithPks) {
+            calibratedWithPks.forEach(pk => {
+                data.append(ModelFields.CalibrationFields.CalibratedWith, parseInt(pk))
+            })
+        }
         if (loadBankData) {
             data.append(ModelFields.CalibrationFields.LoadBankFile, JSON.stringify(loadBankData))
         } else if (klufeData) {
