@@ -64,7 +64,7 @@ export default class CalibrationSection extends React.Component {
                     marginLeft: -5,
                     marginRight: -5,
                     overflow: true,
-                    background: "lightgray"
+                    background: "darkgray"
                 }}>
                     <text style={{marginLeft: 5}}>{element}</text>
                 </div>
