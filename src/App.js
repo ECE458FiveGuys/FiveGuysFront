@@ -20,7 +20,7 @@ import {getToken, getUser, Logout} from "./auth/auth_utils";
 import {AUTH_URLS, METHODS} from "./controller/strings";
 import RequestUtils from "./controller/requests/request_utils";
 import history from "./auth/history";
-import SortableComponent from "./app/Common/Forms/CustomForm";
+import SortableComponent from "./app/Common/Forms/CustomFormGenerator";
 
 class App extends Component {
 

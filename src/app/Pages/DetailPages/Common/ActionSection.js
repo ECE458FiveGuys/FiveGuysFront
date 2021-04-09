@@ -9,8 +9,9 @@ import UpdateInventory from "../../../Common/Forms/UpdateInventory";
 import UpdateInstrument from "../../../Common/Forms/UpdateInstrument";
 import UpdateModel from "../../../Common/Forms/UpdateModel";
 import HTPPopup from "../../../Common/HTPPopup";
-import SortableComponent from "../../../Common/Forms/CustomForm";
+import SortableComponent from "../../../Common/Forms/CustomFormGenerator";
 import {MDBNavItem, MDBNavLink} from "mdbreact";
+import CreateCustomFormButtons from "./CreateCustomFormButtons";
 
 export default class ActionSection extends React.Component {
 
@@ -23,9 +24,9 @@ export default class ActionSection extends React.Component {
         this.setState({deleteModalShow:boolean})
     }
 
-    setCustomFormModalShow(boolean) {
-        this.setState({customFormModalShow:boolean})
-    }
+    // setCustomFormModalShow(boolean) {
+    //     this.setState({customFormModalShow:boolean})
+    // }
 
     handleDelete = () => {
         let {subject, token, history, deleteFunction, type} = this.props
@@ -72,9 +73,7 @@ export default class ActionSection extends React.Component {
                     <Button variant="red" onClick={() => this.setDeleteModalShow(true)}>
                         Delete
                     </Button>
-                    <Button variant="blue" onClick={() => this.setCustomFormModalShow(true)}>
-                        Create Custom Calibration Form
-                    </Button>
+                    <CreateCustomFormButtons/>
                 </div>
                 {hasLogo &&
                 <img alt="loading"
@@ -87,11 +86,11 @@ export default class ActionSection extends React.Component {
                     deleteMethod = {this.handleDelete}
                     message={"Are you sure you want to remove this from your inventory? This action cannot be undone."}
                 />
-                <SortableComponent
-                    show={customFormModalShow}
-                    onHide={() => this.setCustomFormModalShow(false)}
-                    token = {token}
-                />
+                {/*<SortableComponent*/}
+                {/*    show={customFormModalShow}*/}
+                {/*    onHide={() => this.setCustomFormModalShow(false)}*/}
+                {/*    token = {token}*/}
+                {/*/>*/}
                 <HTPPopup toggleModal={this.toggleModal}
                           message={error}
                           title={"Error!"}

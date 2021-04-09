@@ -18,8 +18,6 @@ const SortableItem = SortableElement(({value,onRemove, onChange, onInputFieldCha
 ));
 
 const SortableList = SortableContainer(({items,onRemove,onChange,onInputFieldChange}) => {
-    // return <ul>{children}</ul>;
-
     return(
         <ul className="SortableList">
             {items.map((value, index) => {
@@ -37,8 +35,6 @@ const SortableList = SortableContainer(({items,onRemove,onChange,onInputFieldCha
         </ul>
     );
 });
-
-    // return ();
 
 class SortableComponent extends Component {
 

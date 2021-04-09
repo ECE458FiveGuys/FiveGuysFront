@@ -58,8 +58,16 @@ export default class CalibrationSection extends React.Component {
         this.setState({calibrationModalShow : boolean})
     }
 
+    setCustomCalibrationModalShow(boolean) {
+        this.setState({customCalibrationModalShow : boolean})
+    }
+
     supportsHardwareCalibration(instrument) {
         return instrument[Instrument.FIELDS.MODEL][EquipmentModel.FIELDS.CALIBRATION_MODE] == ModelFields.CalibrationModes.GUIDED_HARDWARE
+    }
+
+    supportsCustomFormCalibration(instrument) {
+        return instrument[Instrument.FIELDS.MODEL][EquipmentModel.FIELDS.CALIBRATION_MODE] == ModelFields.CalibrationModes.CUSTOM_FORM
     }
 
     renderRecordCalibrationButtons = () => {
@@ -84,6 +92,12 @@ export default class CalibrationSection extends React.Component {
                         label={"Klufe K5700 Calibration"}
                         onSubmit={() => {
                             handleNavClick("/instruments/" + instrument.pk + "/klufe-wizard/", history)
+                        }}/> : <></>}
+                {instrumentCalibratable(instrument) && this.supportsCustomFormCalibration(instrument) ?
+                    <HTPButton
+                        label={"Custom Form Calibration"}
+                        onSubmit={() => {
+                            this.setCustomCalibrationModalShow(true)
                         }}/> : <></>}
             </div>)
     }
@@ -120,6 +134,15 @@ export default class CalibrationSection extends React.Component {
                         closeModal={()=>this.setCalibrationModalShow(false)}
                         user={user}
                     />
+                    {/*<RecordCustomCalibration*/}
+                    {/*    show={customCalibrationModalShow}*/}
+                    {/*    onHide={()=>this.setCustomCalibrationModalShow(false)}*/}
+                    {/*    token={token}*/}
+                    {/*    instrument={instrument}*/}
+                    {/*    closeModal={()=>this.setCustomCalibrationModalShow(false)}*/}
+                    {/*    user={user}*/}
+                    {/*    preview={false}*/}
+                    {/*/>*/}
                     <DataTable columns={TableColumns.CALIBRATION_COLUMNS}
                                searching={false}
                                rows={calibrationTableRows}/>
