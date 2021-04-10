@@ -6,6 +6,8 @@ import CustomFormField from "./CustomFormField";
 import './CreateCusotmForm.css';
 import SubmitModal from "./ConfirmationModals/SubmitModal";
 import CancelModal from "./ConfirmationModals/CancelModal";
+import ModelRequests from "../../../controller/requests/model_requests";
+
 
 const DragHandle = SortableHandle(() => <MDBIcon className={'drag-handle'} icon={'grip-lines'} size={'2x'}/>);
 
@@ -23,12 +25,12 @@ const SortableList = SortableContainer(({items,onRemove,onChange,onInputFieldCha
             {items.map((value, index) => {
                 return(
                 <SortableItem
-                    key={`item-${value.id}`} //TODO issue may be value is not unique*/}
-                                          index={index}
-                                          value={value}
-                                          onRemove={onRemove}
-                                          onChange={onChange}
-                                          onInputFieldChange={onInputFieldChange}
+                      key={`item-${value.id}`}
+                      index={index}
+                      value={value}
+                      onRemove={onRemove}
+                      onChange={onChange}
+                      onInputFieldChange={onInputFieldChange}
                 />
                 )
             })}
@@ -139,6 +141,17 @@ class SortableComponent extends Component {
         let finalFormString = JSON.stringify(stringToSubmit)
 
         console.log(JSON.parse(finalFormString))
+        let successCallback = (response) => {
+            this.props.setExistingFields(finalFormString)
+        }
+
+        let errorCallback = (response) => {
+            alert(response)
+        }
+
+        // ModelRequests.editModelWithFields(
+        //     this.props.token,this.props.model,{custom_form:finalFormString},successCallback,errorCallback
+        // )
 
         this.cancelSubmission()
     }

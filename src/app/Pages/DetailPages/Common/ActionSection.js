@@ -73,7 +73,9 @@ export default class ActionSection extends React.Component {
                     <Button variant="red" onClick={() => this.setDeleteModalShow(true)}>
                         Delete
                     </Button>
-                    <CreateCustomFormButtons/>
+                    <CreateCustomFormButtons
+                        model={subject}
+                    />
                 </div>
                 {hasLogo &&
                 <img alt="loading"
