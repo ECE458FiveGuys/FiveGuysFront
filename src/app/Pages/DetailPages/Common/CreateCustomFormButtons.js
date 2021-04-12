@@ -33,7 +33,7 @@ class CreateCustomFormButtons extends Component {
     generateButtons() {
         return (
             // (this.props.model.calibration_mode === ModelFields.CalibrationModes.CUSTOM_FORM) ?
-                ((this.props.model.calibration_form) ? this.createModeButtons():this.editModeButtons())
+                ((this.props.model.custom_form || this.state.existingFields) ? this.editModeButtons():this.createModeButtons())
             // :
                 // (<div/>)
         );
@@ -61,14 +61,14 @@ class CreateCustomFormButtons extends Component {
     }
 
     render() {
-        let {token,customFormModalShow,createMode,existingFields, customFormPreviewModalShow} = this.state
+        let {customFormModalShow,createMode,existingFields, customFormPreviewModalShow} = this.state
         return (
             <div>
                 {this.generateButtons()}
                 <SortableComponent
                     show={customFormModalShow}
                     onHide={() => this.setCustomFormModalShow(false)}
-                    token = {token}
+                    token = {this.props.token}
                     createMode = {createMode}
                     existingFields = {existingFields}
                     setExistingFields={this.setExistingFormFields}
@@ -77,7 +77,7 @@ class CreateCustomFormButtons extends Component {
                 <CustomFormView
                     show={customFormPreviewModalShow}
                     onHide={() => this.setCustomFormPreviewModalShow(false)}
-                    token = {token}
+                    token = {this.props.token}
                     fields = {existingFields}
                     preview={true}
                 />

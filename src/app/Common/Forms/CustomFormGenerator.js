@@ -148,10 +148,12 @@ class SortableComponent extends Component {
         let errorCallback = (response) => {
             alert(response)
         }
-
-        // ModelRequests.editModelWithFields(
-        //     this.props.token,this.props.model,{custom_form:finalFormString},successCallback,errorCallback
-        // )
+        // this.props.model.custom_form = finalFormString
+        let {model} = this.props
+        let fields = {vendor:model.vendor,model_number:model.model_number,description:model.description,custom_form:finalFormString}
+        ModelRequests.editModelWithFields(
+            this.props.token,model.pk, fields,successCallback,errorCallback
+        )
 
         this.cancelSubmission()
     }

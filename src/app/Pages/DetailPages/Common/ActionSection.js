@@ -74,6 +74,7 @@ export default class ActionSection extends React.Component {
                         Delete
                     </Button>
                     <CreateCustomFormButtons
+                        token={token}
                         model={subject}
                     />
                 </div>

@@ -87,6 +87,6 @@ export default class ModelFields {
         DEFAULT : "DEFAULT",
         LOAD_BANK : "LOAD_BANK",
         GUIDED_HARDWARE : "GUIDED_HARDWARE",
-        CUSTOM_FORM : "CUSTOM_FORM"
+        // CUSTOM_FORM : "CUSTOM_FORM"
     }
 }
