@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {Button, Modal} from "react-bootstrap";
 import {MDBCol, MDBContainer, MDBRow} from "mdbreact";
 import FormEntry from "./FormEntry";
+import HTPMultiLineInput from "../Inputs/HTPMultiLineInput";
 
 
 class CustomFormView extends Component {
@@ -12,29 +13,32 @@ class CustomFormView extends Component {
     parseFields(field) {
         if(field.type === "header") {
             return(
-              <div>
+                <h1 className="mb-3">
                   {field.value}
-              </div>
-            );
+                </h1>
+            )
         }
-        if(field.type === "input") {
+        else if(field.type === "input") {
             let {type,prompt} = JSON.parse(field.value)
+            return(
+                <HTPMultiLineInput size={1} label={prompt} disabled/>
+            )
 
         }
-        if(field.type === "text") {
+        else if(field.type === "text") {
             return (
-            <ul>
-               <li>{field.value}</li>
-            </ul>
-            );
+                <ul>
+                   <li>{field.value}</li>
+                </ul>
+            )
         }
-        return <div/>
+        // return (<div>HELLO WORLD<div/>);
     }
 
     render() {
         let parsedFields = {}
         if(this.props.fields){
-            parsedFields = JSON.parse(this.props.fields)
+            parsedFields = JSON.parse(this.props.fields).form
         }
         return (
             <Modal
@@ -53,12 +57,10 @@ class CustomFormView extends Component {
                 <Modal.Body>
                     <MDBContainer>
                         <MDBRow style={{justifyContent: 'center', alignItems: 'center'}}>
-                            <MDBCol md="7">
-                                    {Object.keys(parsedFields).map((field) => {
-                                        <div>{this.parseFields(field)}</div>
-                                        }
+                            <MDBCol md="10">
+                                    {parsedFields.map((field) =>
+                                        this.parseFields(field)
                                     )}
-                                    HELLO WORLD!
                             </MDBCol>
                         </MDBRow>
                     </MDBContainer>
