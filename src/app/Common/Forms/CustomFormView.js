@@ -28,6 +28,7 @@ class CustomFormView extends Component {
             </ul>
             );
         }
+        return <div/>
     }
 
     render() {
@@ -35,7 +36,6 @@ class CustomFormView extends Component {
         if(this.props.fields){
             parsedFields = JSON.parse(this.props.fields)
         }
-         //TODO this line causing bug
         return (
             <Modal
                 {... this.props}
@@ -54,8 +54,8 @@ class CustomFormView extends Component {
                     <MDBContainer>
                         <MDBRow style={{justifyContent: 'center', alignItems: 'center'}}>
                             <MDBCol md="7">
-                                    {Object.keys(parsedFields).map((type) => {
-                                        <div>{"HELLO WORLD!"+type}</div>
+                                    {Object.keys(parsedFields).map((field) => {
+                                        <div>{this.parseFields(field)}</div>
                                         }
                                     )}
                                     HELLO WORLD!

@@ -14,7 +14,7 @@ const DragHandle = SortableHandle(() => <MDBIcon className={'drag-handle'} icon=
 const SortableItem = SortableElement(({value,onRemove, onChange, onInputFieldChange}) => (
     <div className="SortableItem">
         {<CustomFormField type={value.type} id={value.id} dragHandle={<DragHandle/>} onRemove={() => onRemove(value.id)}
-                          onChange={onChange} onInputFieldChange={onInputFieldChange}
+                          onChange={onChange} onInputFieldChange={onInputFieldChange} content={value.content}
         />}
     </div>
 ));
@@ -28,6 +28,7 @@ const SortableList = SortableContainer(({items,onRemove,onChange,onInputFieldCha
                       key={`item-${value.id}`}
                       index={index}
                       value={value}
+                      // content={value.content}
                       onRemove={onRemove}
                       onChange={onChange}
                       onInputFieldChange={onInputFieldChange}
@@ -46,12 +47,21 @@ class SortableComponent extends Component {
     }
 
     makeRefreshState () {
+        let fieldsTemp = (this.props.existingFields) ? this.props.existingFields:this.props.model.custom_form
+        let fields = JSON.parse(fieldsTemp).form
+        // if(this.props)
+        let items = []
+        let entries = {}
+        let id = -1
+        fields.forEach((field) => {
+                id++
+                items.push({id:id,type:field.type,content:field.value})
+                entries[id] = field.value
+            }
+        )
         return {
-            entries: {},
-            items: [
-                {id:0,type:'header'},
-                {id:1,type:'input'},
-            ],
+            entries: entries,
+            items: items,
             nextFieldId: 2,
             cancelModalShow: false,
             submitModalShow: false
@@ -140,9 +150,10 @@ class SortableComponent extends Component {
         let stringToSubmit = {'form':finalForm}
         let finalFormString = JSON.stringify(stringToSubmit)
 
-        console.log(JSON.parse(finalFormString))
+        // console.log(JSON.parse(finalFormString))
         let successCallback = (response) => {
             this.props.setExistingFields(finalFormString)
+            this.cancelSubmission()
         }
 
         let errorCallback = (response) => {
@@ -155,7 +166,7 @@ class SortableComponent extends Component {
             this.props.token,model.pk, fields,successCallback,errorCallback
         )
 
-        this.cancelSubmission()
+        // this.cancelSubmission()
     }
 
     render() {

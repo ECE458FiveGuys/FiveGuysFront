@@ -13,28 +13,54 @@ class CustomFormField extends Component {
         this.state = {}
     }
 
+    fieldType(type) {
+        if(type === "header") {
+            return (this.headerField())
+        }
+        if(type === "text") {
+            return (this.textField())
+        }
+        if(type === "input") {
+            return (this.inputField())
+        }
+    }
     headerField() {
-        // console.log(this.state)
+        let {content} = this.props
         return(
             <div>
                 <HTPMultiLineInput size={1} label={"Header Text"} placeholder={"Enter Text"} name={"Header Text"}
-                                   onChange={(event) => this.props.onChange(this.props.id)(event)}/>
+                                   onChange={(event) => this.props.onChange(this.props.id)(event)}
+                                   defaultValue={content}
+                />
             </div>
         )
     }
 
     textField() {
-        // console.log(this.state)
+        let {id,content,onChange} = this.props
         return(
             <div>
                 <HTPMultiLineInput size={2} label={"Body Text"} placeholder={"Enter Text"} name={"Body Text"}
-                                    onChange={(event) => this.props.onChange(this.props.id)(event)}/>
+                                   onChange={(event) => onChange(id)(event)}
+                                   defaultValue={content}
+                />
             </div>
         )
     }
 
-    inputField(){
-        // console.log(this.state)
+    inputField() {
+        let {id, onInputFieldChange} = this.props
+        console.log(this.props.content)
+        let content = {}
+        if(this.props.content) {
+        //
+            content = JSON.parse(this.props.content)
+        } else {
+            content["type"] = "unselected"
+            content["prompt"] = ""
+        }
+
+
         return(
             <div>
                 <label>
@@ -42,7 +68,8 @@ class CustomFormField extends Component {
                 </label>
                 <select
                     className="browser-default custom-select" style={{width:'115px'}}
-                    onChange={(event) => this.props.onInputFieldChange(this.props.id)(event)}
+                    onChange={(event) => onInputFieldChange(id)(event)}
+                    defaultValue={content.type}
                 >
                     <option value={'unselected'} disabled selected>--Select--</option>
                     <option value={'text'}>Text</option>
@@ -50,7 +77,8 @@ class CustomFormField extends Component {
                 </select>
 
                 <HTPMultiLineInput size={1} label={"Prompt"} placeholder={"Enter Text"} name={"Input"}
-                                   onChange={(event) => this.props.onInputFieldChange(this.props.id)(event)}
+                                   onChange={(event) => onInputFieldChange(id)(event)}
+                                   defaultValue={content.prompt}
                 />
             </div>
         )
@@ -63,11 +91,11 @@ class CustomFormField extends Component {
 
     };
 
-    FIELDS = {
-        header: this.headerField(),
-        text: this.textField(),
-        input: this.inputField()
-    }
+    // FIELDS = {
+    //     header: this.headerField(),
+    //     text: this.textField(),
+    //     input: this.inputField()
+    // }
 
     render() {
         return(
@@ -78,7 +106,7 @@ class CustomFormField extends Component {
                             {/*<MDBCol>*/}
                             <div className="row">
                                 <div className="col-10">
-                                    {(this.props.type in this.FIELDS) ? this.FIELDS[this.props.type] : "TYPE DOESNT EXIST"}
+                                    {this.fieldType(this.props.type)}
                                 </div>
                                 <div className="col-2" >
                                     <div className="row">

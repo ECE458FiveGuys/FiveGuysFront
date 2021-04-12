@@ -11,7 +11,7 @@ import UpdateModel from "../../../Common/Forms/UpdateModel";
 import HTPPopup from "../../../Common/HTPPopup";
 import SortableComponent from "../../../Common/Forms/CustomFormGenerator";
 import {MDBNavItem, MDBNavLink} from "mdbreact";
-import CreateCustomFormButtons from "./CreateCustomFormButtons";
+import CustomFormSection from "./CustomFormSection";
 
 export default class ActionSection extends React.Component {
 
@@ -73,7 +73,7 @@ export default class ActionSection extends React.Component {
                     <Button variant="red" onClick={() => this.setDeleteModalShow(true)}>
                         Delete
                     </Button>
-                    <CreateCustomFormButtons
+                    <CustomFormSection
                         token={token}
                         model={subject}
                     />
@@ -89,11 +89,6 @@ export default class ActionSection extends React.Component {
                     deleteMethod = {this.handleDelete}
                     message={"Are you sure you want to remove this from your inventory? This action cannot be undone."}
                 />
-                {/*<SortableComponent*/}
-                {/*    show={customFormModalShow}*/}
-                {/*    onHide={() => this.setCustomFormModalShow(false)}*/}
-                {/*    token = {token}*/}
-                {/*/>*/}
                 <HTPPopup toggleModal={this.toggleModal}
                           message={error}
                           title={"Error!"}

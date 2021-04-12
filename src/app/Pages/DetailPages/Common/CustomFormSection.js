@@ -5,13 +5,18 @@ import CustomFormView from "../../../Common/Forms/CustomFormView";
 import ModelFields from "../../../../utils/enums";
 
 
-class CreateCustomFormButtons extends Component {
+class CustomFormSection extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            createMode:false // temporary TODO
+            createMode:false, // temporary TODO
+            existingFields: this.props.model.custom_form
         }
+        // if (!this.state.existingFields) {
+        //     let custom_form = this.props.model.custom_form
+        //     this.setState({existingFields:custom_form})
+        // }
     }
 
     setCustomFormModalShow(boolean) {
@@ -31,9 +36,13 @@ class CreateCustomFormButtons extends Component {
     }
 
     generateButtons() {
+        // if (!this.state.existingFields) {
+        //     this.setState({existingFields:this.props.model.custom_form})
+        // }
         return (
             // (this.props.model.calibration_mode === ModelFields.CalibrationModes.CUSTOM_FORM) ?
-                ((this.props.model.custom_form || this.state.existingFields) ? this.editModeButtons():this.createModeButtons())
+                ((this.state.existingFields || this.props.model.custom_form) ? this.editModeButtons():this.createModeButtons())
+
             // :
                 // (<div/>)
         );
@@ -86,4 +95,4 @@ class CreateCustomFormButtons extends Component {
     }
 }
 
-export default CreateCustomFormButtons
+export default CustomFormSection
