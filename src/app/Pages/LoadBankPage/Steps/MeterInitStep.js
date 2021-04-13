@@ -3,12 +3,15 @@ import {Checkbox, Divider, StepContent} from "@material-ui/core";
 import PropTypes from "prop-types";
 import HTPInput from "../../../Common/Inputs/HTPInput";
 import InstrumentRequests from "../../../../controller/requests/instrument_requests";
-import ModelFields from "../../../../utils/enums";
+import ModelFields, {MiscellaneousEnums} from "../../../../utils/enums";
 import {dateColors, parseDate} from "../../../utils";
 import {UserError} from "../../../../controller/exceptions";
-import {EquipmentModel, Instrument} from "../../../../utils/ModelEnums";
+import {EquipmentModel, Instrument, Models} from "../../../../utils/ModelEnums";
 import {isNumeric} from "../utils";
 import {PaginatedResponseFields} from "../../../Common/Tables/TableUtils/pagination_utils";
+import RequestUtils from "../../../../controller/requests/request_utils";
+import MiscellaneousRequests from "../../../../controller/requests/miscellaneous_requests";
+import HTPAutoCompleteInput from "../../../Common/Inputs/HTPAutoCompleteInput";
 
 
 export default class MeterInitStep extends React.Component {
@@ -21,6 +24,20 @@ export default class MeterInitStep extends React.Component {
         this.state = {
             ready : false,
         }
+    }
+
+    componentDidMount() {
+        InstrumentRequests.getInstrumentsByCategory(this.props.token, {name : MiscellaneousEnums.KNOWN_CATEGORIES.SHUNT_METER},
+            (json) => this.setState({shuntMeterOptions : this.makeAssetTagArray(json)}),
+            (error) => alert(error),
+            Models.EQUIPMENT_MODEL.TYPE)
+        InstrumentRequests.getInstrumentsByCategory(this.props.token, {name : MiscellaneousEnums.KNOWN_CATEGORIES.VOLTMETER},
+            (json) => this.setState({voltmeterOptions : this.makeAssetTagArray(json)}),
+            (error) => alert(error), Models.EQUIPMENT_MODEL.TYPE)
+    }
+
+    makeAssetTagArray(json) {
+        return json[PaginatedResponseFields.RESULTS].length > 0 ? json[PaginatedResponseFields.RESULTS].map(entry => entry[Instrument.FIELDS.ASSET_TAG].toString()) : []
     }
 
     static getInstrument = (token, modelNumber, assetTag, meterType, successCallBack, errorCallBack) => {
@@ -101,15 +118,18 @@ export default class MeterInitStep extends React.Component {
     }
 
     render() {
+        let {voltmeterOptions, shuntMeterOptions} = this.state
         return (<div style={{flex: 1, display: "flex", flexDirection: "row", width : "100%", alignItems: "center", justifyContent: 'space-between', marginBottom : 30}}>
                     <div style={{display: "inline-flex", flex: 1, width: "100%", flexDirection: "column", alignItems: "center", marginBottom : 30}}>
                         <p  className={"h3-responsive"}
                             style={{marginTop : 20, marginBottom: 30, justifyContent: "center", alignItems: 'center'}}>
                             Locate a valid voltmeter:
                         </p>
-                        <HTPInput label={"Voltmeter Asset Tag"}
-                                  onChange={(value) => this.handleChange(MeterInitStep.VOLTMETER, ModelFields.InstrumentFields.ASSET_TAG, value)}
-                                  placeholder={"Asset Tag"}/>
+                        <HTPAutoCompleteInput label={"Voltmeter Asset Tag"}
+                                              options={voltmeterOptions}
+                                              wrapped={false}
+                                              onChange={(value) => this.handleChange(MeterInitStep.VOLTMETER, ModelFields.InstrumentFields.ASSET_TAG, value)}
+                                              placeholder={"Asset Tag"}/>
                     </div>
                     <Divider flexItem={true} orientation={"vertical"}/>
                     <div style={{flex: 1, display: "flex", flexDirection: "column", alignItems: "center", marginBottom : 30}}>
@@ -117,9 +137,11 @@ export default class MeterInitStep extends React.Component {
                             style={{marginTop : 20, marginBottom: 30, justifyContent: "center", alignItems: 'center'}}>
                             Locate a valid shunt meter:
                         </p>
-                        <HTPInput label={"Shunt Meter Asset Tag"}
-                                  onChange={(value) => this.handleChange(MeterInitStep.SHUNT_METER, ModelFields.InstrumentFields.ASSET_TAG, value)}
-                                  placeholder={"Asset Tag"}/>
+                        <HTPAutoCompleteInput label={"Shunt Meter Asset Tag"}
+                                              options={shuntMeterOptions}
+                                              wrapped={false}
+                                              onChange={(value) => this.handleChange(MeterInitStep.SHUNT_METER, ModelFields.InstrumentFields.ASSET_TAG, value)}
+                                              placeholder={"Asset Tag"}/>
                     </div>
         </div>)
     }

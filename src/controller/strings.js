@@ -31,7 +31,10 @@ export const URLS =
         INSTRUMENT_CATEGORIES: ROOT_URL + "instrument-categories/",
         OAUTH_URL : OAUTH_URL,
         MODEL_NUMBERS : ROOT_URL + "models/model_numbers/",
-        CALIBRATIONS : ROOT_URL + "calibration-events/"
+        CALIBRATIONS : ROOT_URL + "calibration-events/",
+        APPROVAL_DATA : ROOT_URL + "approval-data/",
+        CALIBRATORS : (pk) => ROOT_URL + `instruments/${pk}/calibrators/`,
+        PENDING_APPROVAL : ROOT_URL + "calibration-events/pending_approval/"
     }
 
 export const KLUFE_URLS = {
@@ -40,7 +43,6 @@ export const KLUFE_URLS = {
     SET_AC : KLUFE_URL + "set/AC/",
     SET_DC : KLUFE_URL + "set/DC/"
 }
-
 
 export const AUTH_URLS =
     {

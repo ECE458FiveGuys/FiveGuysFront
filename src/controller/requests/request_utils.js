@@ -111,6 +111,7 @@ export default class RequestUtils {
                         .then(errorText => {
                             if (timeout) clearTimeout(timeoutSetter)
                             if (errorText == "Invalid token") Logout()
+                            console.log(new ServerError(errorText).message)
                             alert(new ServerError(errorText).message)
                         })
                 } else {
@@ -127,11 +128,13 @@ export default class RequestUtils {
                         error.text()
                             .then(errorText => {
                                 if (timeout) clearTimeout(timeoutSetter)
+                                console.log(new ServerError(errorText).message)
                                 alert(new ServerError(errorText).message)
                             })
                     } catch (e) {
                         if (error == "TypeError: Failed to fetch") return
                         if (timeout) clearTimeout(timeoutSetter)
+                        console.log(new ServerError(error).message)
                         alert(new ServerError(error).message)
                     }
                 }
@@ -295,12 +298,12 @@ export default class RequestUtils {
     static buildCreateInstrumentData(model_pk, serial_number, comment, asset_tag, instrument_categories, editMode=undefined) {
         let fields = new FormData()
         if (model_pk) fields.append(ModelFields.InstrumentFields.MODEL, model_pk)
-        if (serial_number && serial_number != null) fields.append(ModelFields.InstrumentFields.SERIAL_NUMBER, serial_number)
+            if (serial_number && serial_number != null) fields.append(ModelFields.InstrumentFields.SERIAL_NUMBER, serial_number)
         if ((!serial_number || serial_number == null) && editMode) {
-            fields.append(ModelFields.InstrumentFields.SERIAL_NUMBER, 'U')
+            fields.append(ModelFields.InstrumentFields.SERIAL_NUMBER, '')
         }
         if (comment) fields.append(ModelFields.InstrumentFields.COMMENT, comment)
-        if (asset_tag && !editMode) fields.append(ModelFields.InstrumentFields.ASSET_TAG, asset_tag)
+        if (asset_tag && !editMode) fields.append(Instrument.FIELDS.ASSET_TAG, parseInt(asset_tag))
         if (instrument_categories) {
             instrument_categories.forEach(category => {
                 fields.append(ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES, category.name ? category.name : category)
@@ -336,10 +339,14 @@ export default class RequestUtils {
         Object.keys(fields).forEach(key => {
             let val = fields[key]
             if (val || NullableFields.includes(val)) {
-                if (key == ModelFields.EquipmentModelFields.MODEL_CATEGORIES || key == ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES) {
+                if (key == ModelFields.EquipmentModelFields.MODEL_CATEGORIES ||
+                    key == ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES ||
+                    key == ModelFields.EquipmentModelFields.CALIBRATOR_CATEGORIES) {
                     val.forEach(category => {
                         data.append(key, category.name ? category.name : category)
                     })
+                } else if (key == ModelFields.EquipmentModelFields.CALIBRATOR_CATEGORIES) {
+                    val.forEach(entry => data.append(key, entry))
                 } else if (key == ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY) {
                     data.append(key, parseInt(val))
                 } else data.append(key, val)

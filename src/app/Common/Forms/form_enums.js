@@ -27,6 +27,8 @@ FormEnums {
         [ModelFields.EquipmentModelFields.MODEL_CATEGORIES] : FormEnums.FieldRequirementTypes.OPTIONAL,
         [ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY] : FormEnums.FieldRequirementTypes.OPTIONAL,
         [ModelFields.EquipmentModelFields.CALIBRATION_MODE] : FormEnums.FieldRequirementTypes.OPTIONAL,
+        [ModelFields.EquipmentModelFields.CALIBRATION_APPROVAL_REQUIRED] : FormEnums.FieldRequirementTypes.REQUIRED,
+        [ModelFields.EquipmentModelFields.CALIBRATOR_CATEGORIES] : FormEnums.FieldRequirementTypes.OPTIONAL
     }
 
     static EquipmentModelFieldPlaceHolders = {
@@ -36,7 +38,8 @@ FormEnums {
         [ModelFields.EquipmentModelFields.COMMENT] : FormEnums.FieldPlaceHolders.COMMENT,
         [ModelFields.EquipmentModelFields.MODEL_CATEGORIES] : FormEnums.FieldPlaceHolders.OPTIONAL_MULTIPLE,
         [ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY] : FormEnums.FieldPlaceHolders.OPTIONAL_INT,
-        [ModelFields.EquipmentModelFields.CALIBRATION_MODE] : FormEnums.FieldPlaceHolders.OPTIONAL_STRING
+        [ModelFields.EquipmentModelFields.CALIBRATION_MODE] : FormEnums.FieldPlaceHolders.OPTIONAL_STRING,
+        [ModelFields.EquipmentModelFields.CALIBRATOR_CATEGORIES] : FormEnums.FieldPlaceHolders.OPTIONAL_MULTIPLE
     }
 
     static EquipmentModelFieldNames = {
@@ -44,9 +47,11 @@ FormEnums {
         [ModelFields.EquipmentModelFields.MODEL_NUMBER] : "Model Number",
         [ModelFields.EquipmentModelFields.DESCRIPTION] : "Description",
         [ModelFields.EquipmentModelFields.COMMENT] : "Comment",
-        [ModelFields.EquipmentModelFields.MODEL_CATEGORIES] : "Categories",
         [ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY] : "Calibration Frequency",
-        [ModelFields.EquipmentModelFields.CALIBRATION_MODE] : "Load Bank Wizard Supported?"
+        [ModelFields.EquipmentModelFields.CALIBRATION_MODE] : "Advanced Calibration Categories",
+        [ModelFields.EquipmentModelFields.CALIBRATION_APPROVAL_REQUIRED] : "Calibration Approval Required?",
+        [ModelFields.EquipmentModelFields.MODEL_CATEGORIES] : "Categories",
+        [ModelFields.EquipmentModelFields.CALIBRATOR_CATEGORIES] : "Calibrator Categories"
     }
 
     // Instruments:
@@ -74,16 +79,28 @@ FormEnums {
         [ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES] : FormEnums.FieldRequirementTypes.OPTIONAL,
     }
 
+    // Calibrations
+
+    static CalibrationEventFieldRequirementTypes = {
+        [ModelFields.CalibrationFields.CalibratedWith] : FormEnums.FieldRequirementTypes.OPTIONAL
+    }
+
+    static CalibrationEventFieldPlaceHolders = {
+        [ModelFields.CalibrationFields.CalibratedWith] : FormEnums.FieldPlaceHolders.OPTIONAL_MULTIPLE
+    }
+
     // All:
 
     static AllFieldRequirementTypes = {
         ...FormEnums.EquipmentModelFieldRequirementTypes,
-        ...FormEnums.InstrumentFieldRequirementTypes
+        ...FormEnums.InstrumentFieldRequirementTypes,
+        ...FormEnums.CalibrationEventFieldRequirementTypes
     }
 
     static AllFieldPlaceHolders = {
         ...FormEnums.EquipmentModelFieldPlaceHolders,
-        ...FormEnums.InstrumentFieldPlaceHolders
+        ...FormEnums.InstrumentFieldPlaceHolders,
+        ...FormEnums.CalibrationEventFieldPlaceHolders
     }
 
 }

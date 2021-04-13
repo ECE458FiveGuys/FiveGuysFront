@@ -59,6 +59,9 @@ class UserTablePage extends Component{
             if (currentGroupsRaw[i] == SHORTEN_LABELS.CALIBRATION){
                 currentGroupsPretty.push(DISPLAYABLE_LABELS.CALIBRATION)
             }
+            if (currentGroupsRaw[i] == SHORTEN_LABELS.CALIBRATION_APPROVER){
+                currentGroupsPretty.push(DISPLAYABLE_LABELS.CALIBRATION_APPROVER)
+            }
             if (currentGroupsRaw[i] == SHORTEN_LABELS.ADMINISTRATOR){
                 currentGroupsPretty.push(DISPLAYABLE_LABELS.ADMINISTRATOR)
             }
@@ -89,6 +92,9 @@ class UserTablePage extends Component{
             if (this.state.dropdown[i] == DISPLAYABLE_LABELS.CALIBRATION){
                 newArrayBackEndReadable.push(SHORTEN_LABELS.CALIBRATION)
             }
+            if (this.state.dropdown[i] == DISPLAYABLE_LABELS.CALIBRATION_APPROVER){
+                newArrayBackEndReadable.push(SHORTEN_LABELS.CALIBRATION_APPROVER)
+            }
             if (this.state.dropdown[i] == DISPLAYABLE_LABELS.ADMINISTRATOR){
                 newArrayBackEndReadable.push(SHORTEN_LABELS.ADMINISTRATOR)
             }
@@ -110,6 +116,9 @@ class UserTablePage extends Component{
         }
         if (newArrayBackEndReadable.includes(SHORTEN_LABELS.MODEL_MANAGEMENT) && !newArrayBackEndReadable.includes(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT)){
             newArrayBackEndReadable.push(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT)
+        }
+        if (newArrayBackEndReadable.includes(SHORTEN_LABELS.CALIBRATION_APPROVER) && !newArrayBackEndReadable.includes(SHORTEN_LABELS.CALIBRATION)){
+            newArrayBackEndReadable.push(SHORTEN_LABELS.CALIBRATION)
         }
         let result = await UserRequests.changeGroups(this.props.token, pk, newArrayBackEndReadable);
         await this.getUserList()
@@ -147,6 +156,9 @@ class UserTablePage extends Component{
                     }
                     if (array[i]==SHORTEN_LABELS.CALIBRATION){
                         newArray.push(DISPLAYABLE_LABELS.CALIBRATION)
+                    }
+                    if (array[i]==SHORTEN_LABELS.CALIBRATION_APPROVER){
+                        newArray.push(DISPLAYABLE_LABELS.CALIBRATION_APPROVER)
                     }
                     if (array[i]==SHORTEN_LABELS.ADMINISTRATOR){
                         newArray.push(DISPLAYABLE_LABELS.ADMINISTRATOR)
@@ -259,6 +271,9 @@ class UserTablePage extends Component{
         }
         if (oldGroups.includes(SHORTEN_LABELS.MODEL_MANAGEMENT) && !oldGroups.includes(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT)){
             oldGroups.push(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT)
+        }
+        if (oldGroups.includes(SHORTEN_LABELS.CALIBRATION_APPROVER) && !oldGroups.includes(SHORTEN_LABELS.CALIBRATION)){
+            oldGroups.push(SHORTEN_LABELS.CALIBRATION)
         }
         let result = await UserRequests.changeGroups(this.props.token, pk, oldGroups);
         await this.getUserList()

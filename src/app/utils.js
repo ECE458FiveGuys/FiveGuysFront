@@ -35,11 +35,13 @@ export function getCurrentDate() {
     return `${ye}-${mo}-${da}`
 }
 
-export let handleNavClick = (url, history, newTab = undefined) => {
+export let handleNavClick = (url, history, newTab = undefined, absolute = false) => {
     if (!window.event && newTab) {
         window.open()
     } else if (window.event && window.event.ctrlKey) {
         window.open(url)
+    } else if (absolute) {
+        history.replace(url)
     } else {
         history.push(url)
     }

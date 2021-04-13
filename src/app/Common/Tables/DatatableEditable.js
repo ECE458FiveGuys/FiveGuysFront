@@ -6,26 +6,38 @@ import HTPButton from "../HTPButton";
 import {MDBBtn, MDBCol} from "mdbreact";
 import HTPPopup from "../HTPPopup";
 import {User} from "../../../utils/dtos";
+import {PaginatedResponseFields} from "./TableUtils/pagination_utils";
+import {UserError} from "../../../controller/exceptions";
 
 export default class DatatableEditable extends Component {
 
     constructor(props) {
         super(props)
         this.updateSelectedRow = this.updateSelectedRow.bind(this)
-        this.state = {
+        this.state = this.initialize()
+        this.state.fieldMap = {}  // object of column fields to current input values
+        this.state.modal = false
+        Object.assign(this.state, this.createEditableFields())
+    }
+
+    initialize = () => {
+        let state = {
             pkToRow: new Map(),
             pkToParsedRow : {},
-            fieldMap: {},  // object of column fields to current input values
-            modal: false
         }
 
-        Object.assign(this.state, {
-            parsedRows: this.parseRows(this.props.rows, this.state.pkToRow, this.state.pkToParsedRow),
+        Object.assign(state, {
+            parsedRows: this.parseRows(this.props.rows, state.pkToRow, state.pkToParsedRow),
             selectedRow: undefined
         })
 
-        Object.assign(this.state, this.createEditableFields())
+        return state
     }
+
+    reinitialize = (callBack) => {
+        this.props.reloadRows(() => this.setState(this.initialize(), callBack()))
+    }
+
 
     highlightRow(rowPk) {
         this.highlightRowHelper(rowPk, false)
@@ -38,7 +50,6 @@ export default class DatatableEditable extends Component {
     highlightRowHelper(rowPk, unhighlight = false) {
         let parsedRow = this.state.pkToParsedRow[rowPk]
         Object.keys(parsedRow).forEach(rowFieldKey => {
-            //this.props.user.groups.includes(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT)
             if (rowFieldKey != "clickEvent" && rowFieldKey != "pk") {
                 let actualFieldValue = this.state.pkToRow.get(rowPk)[rowFieldKey]
                 parsedRow[rowFieldKey] = unhighlight ? actualFieldValue :
@@ -138,7 +149,7 @@ export default class DatatableEditable extends Component {
     }
 
     onSubmit = () => {
-        let {selectedRow, pkToParsedRow, fieldMap} = this.state
+        let {selectedRow, pkToParsedRow, pkToRow, fieldMap} = this.state
         let {token, editFunction, createFunction} = this.props
         selectedRow ?
         editFunction(token,
@@ -154,10 +165,7 @@ export default class DatatableEditable extends Component {
         :
         createFunction(token,
             (json) => {
-                pkToParsedRow[json.pk] = json
-                //this.setState({rows: this.addEditFunctions(rows, this.state.pkToRow)})
-                this.setState({selectedRow : selectedRow, pkToParsedRow : pkToParsedRow, successMessage : "Successfully created"})
-                this.toggleModal()
+                this.reinitialize(() => this.setState({successMessage : "Successfully created"}, this.toggleModal))
             },
             (errorMessage) => this.handleErrorMessage(errorMessage),
             fieldMap)
@@ -174,6 +182,9 @@ export default class DatatableEditable extends Component {
         validateDeleteFunction(token,
                                 selectedRow,
                                 (json) => {
+                                    if (json[PaginatedResponseFields.RESULTS].length > 0) {
+                                        throw new UserError("Instances using this category exist")
+                                    }
                                     this.delete()
                                 },
                                 (warnMessage) => {
@@ -187,14 +198,7 @@ export default class DatatableEditable extends Component {
         let {selectedRow, pkToParsedRow} = this.state
         deleteFunction(token,
             selectedRow.pk,
-            (json) => {
-                delete pkToParsedRow[selectedRow.pk]
-                this.updateSelectedRow(undefined,
-                    () => {
-                        this.setState({successMessage : "Successfully deleted"})
-                        this.toggleModal()
-                    })
-            },
+            (json) => this.reinitialize(() => this.setState({successMessage : "Successfully deleted"}, this.toggleModal)),
             (errorMessage) => this.setState({errorMessage : errorMessage})
         )
     }
@@ -261,5 +265,6 @@ DatatableEditable.propTypes = {
     createFunction : PropTypes.func, // a shared library API function to be called when the create button is selected
     deleteFunction : PropTypes.func.isRequired, // a shared library API function to be called when the delete button is selected
     validateDeleteFunction: PropTypes.func, // optional function to confirm whether warning should be displayed on delete
-    tableName: PropTypes.string
+    tableName: PropTypes.string,
+    reloadRows : PropTypes.func.isRequired
 }

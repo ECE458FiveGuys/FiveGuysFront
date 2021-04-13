@@ -3,7 +3,6 @@ import DayPicker from "react-day-picker";
 import HTPMultiLineInput from "../Inputs/HTPMultiLineInput";
 import ModelFields from "../../../utils/enums";
 import HTPAutoCompleteInput from "../Inputs/HTPAutoCompleteInput";
-import FileUtils from "../../../utils/file_utils";
 import {MDBBtn} from "mdbreact";
 import {FormEnums} from "./form_enums";
 import PropTypes from "prop-types";
@@ -43,6 +42,23 @@ class FormEntry extends Component {
 
         }
 
+        if (fieldName === ModelFields.EquipmentModelFields.CALIBRATION_APPROVAL_REQUIRED) {
+            return (
+                <div className="custom-control custom-checkbox" style={{display : 'flex', flexDirection : 'column'}}>
+                    <input type="checkbox"
+                           className="custom-control-input"
+                           id="defaultUnchecked"
+                           onChange={(event) => {
+                               this.props.handleInputChange(fieldName)(event.target.checked)
+                           }}
+                           defaultChecked={this.props.isEdit && this.props.subject[ModelFields.EquipmentModelFields.CALIBRATION_APPROVAL_REQUIRED]}
+                    />
+                    <label className="custom-control-label" htmlFor="defaultUnchecked">
+                        {FormEnums.EquipmentModelFieldNames[ModelFields.EquipmentModelFields.CALIBRATION_APPROVAL_REQUIRED]}
+                    </label>
+                </div>)
+        }
+
         if (fieldName === ModelFields.EquipmentModelFields.CALIBRATION_MODE) {
             let defaultValue = undefined
             if (this.props.isEdit) {
@@ -52,22 +68,26 @@ class FormEntry extends Component {
             }
             return (
                 <div>
-                    <label  style={{marginBottom : 10}}
-                            htmlFor={"calibration_mode_selector"}>
+                    <label style={{marginBottom: 10}}
+                           htmlFor={"calibration_mode_selector"}>
                         Advanced Calibration Modes
                     </label>
                     <select
                         defaultValue={defaultValue}
                         onChange={(event) => {
-                                           this.props.handleInputChange(fieldName)(event.target.value)
-                                       }}
-                        id = "calibration_mode_selector"
+                            this.props.handleInputChange(fieldName)(event.target.value)
+                        }}
+                        id="calibration_mode_selector"
                         className="browser-default custom-select">
-                        <option value={ModelFields.CalibrationModes.DEFAULT}>None (simple calibration only, if calibratable)</option>
+                        <option value={ModelFields.CalibrationModes.DEFAULT}>None (simple calibration only, if
+                            calibratable)
+                        </option>
                         <option value={ModelFields.CalibrationModes.LOAD_BANK}>Load Bank</option>
-                        <option value={ModelFields.CalibrationModes.GUIDED_HARDWARE}>Guided Hardware (Klufe 5700)</option>
+                        <option value={ModelFields.CalibrationModes.GUIDED_HARDWARE}>Guided Hardware (Klufe 5700)
+                        </option>
                     </select>
-                    {this.props.fieldErrors[fieldName] && <text style={{fontSize : 13}} className="text-danger">{this.props.fieldErrors[fieldName]}</text>}
+                    {this.props.fieldErrors[fieldName] &&
+                    <text style={{fontSize: 13}} className="text-danger">{this.props.fieldErrors[fieldName]}</text>}
                 </div>
             )
         }
@@ -92,12 +112,19 @@ class FormEntry extends Component {
             );
         }
 
-        if (fieldName === ModelFields.EquipmentModelFields.MODEL_CATEGORIES || fieldName === ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES) {
-            let {modelCategories, instrumentCategories, handleInputChange} = this.props
+        if (fieldName === ModelFields.EquipmentModelFields.MODEL_CATEGORIES ||
+            fieldName === ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES ||
+            fieldName === ModelFields.EquipmentModelFields.CALIBRATOR_CATEGORIES ||
+            fieldName === ModelFields.CalibrationFields.CalibratedWith) {
+            let {modelCategories, instrumentCategories, handleInputChange, calibratedWithOptions} = this.props
             return (<HTPAutoCompleteInput placeholder={FormEnums.AllFieldPlaceHolders[fieldName]}
-                                          options={fieldName === ModelFields.EquipmentModelFields.MODEL_CATEGORIES ? modelCategories : instrumentCategories}
+                                          options={fieldName === ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES ? instrumentCategories :
+                                              fieldName == ModelFields.CalibrationFields.CalibratedWith ? calibratedWithOptions : modelCategories}
                                           onChange={handleInputChange(fieldName)}
-                                          label={fieldName === ModelFields.EquipmentModelFields.MODEL_CATEGORIES ? "Model Categories" : "Instrument Categories"}
+                                          label={fieldName === ModelFields.EquipmentModelFields.MODEL_CATEGORIES ? "Model Categories" :
+                                              fieldName === ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES ? "Instrument Categories" :
+                                                  fieldName == ModelFields.CalibrationFields.CalibratedWith ? "Calibrated With" :
+                                                  "Calibrator Categories"}
                                           disabled={fixedFields[fieldName]}
                                           multiple={true}
                                           error={this.props.fieldErrors[fieldName]}
@@ -144,7 +171,10 @@ class FormEntry extends Component {
             ModelFields.InstrumentFields.COMMENT,
             ModelFields.EquipmentModelFields.MODEL_CATEGORIES,
             ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES,
-            ModelFields.EquipmentModelFields.CALIBRATION_MODE
+            ModelFields.EquipmentModelFields.CALIBRATION_MODE,
+            ModelFields.EquipmentModelFields.CALIBRATION_APPROVAL_REQUIRED,
+            ModelFields.EquipmentModelFields.CALIBRATOR_CATEGORIES,
+            ModelFields.CalibrationFields.CalibratedWith
         ]
 
         let {formFields, generalError, fieldErrors, fixedFields, subject} = this.props
@@ -213,6 +243,7 @@ FormEntry.propTypes = {
     handleFileSelect : PropTypes.func,
     modelCategories : PropTypes.array,
     instrumentCategories : PropTypes.array,
+    calibratedWithOptions : PropTypes.array,
     vendors : PropTypes.array,
     modelNumbers : PropTypes.array,
 }

@@ -70,7 +70,7 @@ export default class ActionSection extends React.Component {
                                      history={history}
                                      mode={UpdateInventory.EDIT_MODE}
                                      model={subject}/>}
-                    <Button variant="red" onClick={() => this.setDeleteModalShow(true)}>
+                    <Button variant="red" size={"sm"} onClick={() => this.setDeleteModalShow(true)}>
                         Delete
                     </Button>
                     <CustomFormSection

@@ -6,7 +6,6 @@ import {Instrument} from "../../../utils/ModelEnums";
 
 export default function ModelDisplay(listOfFieldNames, listOfFieldValues, listOfColors) {
     let InstrumentDisplay = []
-    listOfColors = listOfColors ? listOfColors : listOfFieldValues.map(element => 'green')
     for (let i = 0; i < listOfFieldNames.length; i++) {
         if (listOfFieldValues[i]) {
             let color = listOfFieldNames[i] == "Calibration Expiration" ? parseDate(listOfFieldValues[i]) : "black"

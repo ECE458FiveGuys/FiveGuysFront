@@ -1,12 +1,11 @@
 import React, { Component } from "react";
 import { MDBNavbar, MDBNavbarBrand, MDBNavbarNav, MDBNavItem, MDBNavLink, MDBNavbarToggler, MDBCollapse, MDBDropdown,
     MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem, MDBIcon } from "mdbreact";
-import { BrowserRouter as Router } from 'react-router-dom';
-import {StorageKeys} from "../../utils/enums";
 import PropTypes from "prop-types";
 import {User} from "../../utils/dtos";
 import {SHORTEN_LABELS} from "../../app/Pages/CreateFunctions/CreateUser";
-import {Logout} from "../../auth/auth_utils";
+import {getToken, Logout} from "../../auth/auth_utils";
+import MiscellaneousRequests from "../../controller/requests/miscellaneous_requests";
 
 class NavbarPage extends Component {
 
@@ -20,6 +19,7 @@ class NavbarPage extends Component {
 
     componentDidMount() {
         this.updateWindowDimensions();
+        this.getPendingApproval();
         window.addEventListener('resize', this.updateWindowDimensions);
     }
 
@@ -33,6 +33,10 @@ class NavbarPage extends Component {
 
     toggleCollapse = () => {
         this.setState({ isOpen: !this.state.isOpen });
+    }
+
+    getPendingApproval = () => {
+        MiscellaneousRequests.getPendingApproval(getToken(), (json) => this.setState({pendingApproval : json}), (error) => alert(error))
     }
 
     render() {
@@ -64,9 +68,20 @@ class NavbarPage extends Component {
                             {Buttons}
                         </MDBNavbarNav>
                         <text className={"white-text"} style={{position: "absolute", left: (window.innerWidth - 140) / 2}}>
-                            {`Welcome, ${user.getFirstName()}`}
+                            {`Welcome, ${location.pathname == "/user-settings" ? user.username : user.getFirstName()}`}
                         </text>
                         <MDBNavbarNav right>
+                            {(user.groups.includes(SHORTEN_LABELS.ADMINISTRATOR) || user.groups.includes(SHORTEN_LABELS.CALIBRATION_APPROVER)) &&
+                            <MDBNavItem
+                                style={{display : "flex", flexDirection : "row", marginRight : 10}}
+                                active={location.pathname == "/pending-calibrations"}>
+                                <MDBNavLink to="/pending-calibrations">
+                                    <MDBIcon icon="bell"/>
+                                </MDBNavLink>
+                                <div style={{backgroundColor : "orange", color : "white", marginLeft : -15, borderRadius : "20%", height : 20, display : "flex", justifyContent : 'center', alignItems : "center"}}>
+                                    <text style={{marginLeft : 5, marginRight : 5}}>{this.state.pendingApproval ? this.state.pendingApproval.length : 0}</text>
+                                </div>
+                            </MDBNavItem>}
                             <MDBNavItem style={{marginRight: 100}}>
                                 <MDBDropdown>
                                     <MDBDropdownToggle nav caret>

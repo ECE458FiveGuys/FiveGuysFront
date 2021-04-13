@@ -3,7 +3,7 @@ import RequestUtils from "./request_utils";
 import ModelFields from "../../utils/enums";
 import {UserError} from "../exceptions";
 import {METHODS, URLS} from "../strings";
-import {EquipmentModel, Instrument} from "../../utils/ModelEnums";
+import {EquipmentModel, Instrument, Models} from "../../utils/ModelEnums";
 import {PaginatedResponseFields} from "../../app/Common/Tables/TableUtils/pagination_utils";
 import {User} from "../../utils/dtos";
 import ModelRequests from "./model_requests";
@@ -31,20 +31,15 @@ export default class InstrumentRequests {
 
     static async getInstrumentsByCategory(token, categoryObj,
                                      callBack,
-                                     errorMessageCallBack) {
+                                     errorMessageCallBack,
+                                          categoryType = Models.INSTRUMENT.TYPE) {
         let params = {}
-        params[ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES + "__name"] = categoryObj.name
-        let fullCallBack = (json) => {
-            if (json[PaginatedResponseFields.RESULTS].length > 0) {
-                throw new UserError("Instances using this category exist")
-            } else {
-                callBack()
-            }
-        }
-
+        params[(categoryType == Models.INSTRUMENT.TYPE ?
+            ModelFields.InstrumentFields.INSTRUMENT_CATEGORIES :
+            "model__" + ModelFields.EquipmentModelFields.MODEL_CATEGORIES) + "__name"] = categoryObj.name
         let header = RequestUtils.buildTokenHeader(token)
         RequestUtils.assistedFetch(URLS.INSTRUMENTS,
-            METHODS.GET, fullCallBack, errorMessageCallBack, header, params)
+            METHODS.GET, callBack, errorMessageCallBack, header, params)
     }
 
     static async getInstrumentsWithSearchParams(token, searchParams,

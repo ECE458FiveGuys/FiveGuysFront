@@ -4,6 +4,7 @@ import {CSVLink} from "react-csv"
 import HTPButton from "../../../Common/HTPButton";
 import ModelRequests from "../../../../controller/requests/model_requests";
 import InstrumentRequests from "../../../../controller/requests/instrument_requests";
+import ExportModel from "./ExportModel";
 class ExportInstrument extends Component{
 
     constructor(props) {
@@ -39,6 +40,7 @@ class ExportInstrument extends Component{
                 <HTPButton
                     onSubmit={this.downloadInstruments}
                     color={"blue"}
+                    size={"sm"}
                     label={loading ? "Downloading..." : "Export Table"}
                     disabled={loading}
                 >

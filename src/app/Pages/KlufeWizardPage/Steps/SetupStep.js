@@ -2,18 +2,23 @@ import React from "react";
 import {Checkbox, StepContent} from "@material-ui/core";
 import PropTypes from "prop-types";
 import {MDBBadge, MDBContainer, MDBListGroup, MDBListGroupItem} from "mdbreact";
-import ModelFields from "../../../../utils/enums";
+import ModelFields, {MiscellaneousEnums} from "../../../../utils/enums";
 import InstrumentRequests from "../../../../controller/requests/instrument_requests";
 import Loading from "../../../Common/Images/Loading";
 import ModelDisplay from "../../../Common/Displays/HTPModelDisplay";
 import {parseDate} from "../../../utils";
 import InstrumentDisplay from "../../../Common/Displays/HTPInstrumentDisplay";
+import {Instrument, Models} from "../../../../utils/ModelEnums";
+import {PaginatedResponseFields} from "../../../Common/Tables/TableUtils/pagination_utils";
+import HTPAutoCompleteInput from "../../../Common/Inputs/HTPAutoCompleteInput";
 
 export default class SetupStep extends React.Component {
 
     constructor(props) {
         super(props);
-        props.markReadyToSubmit()
+        this.state = {
+            ready : false
+        }
     }
 
     componentDidMount() {
@@ -26,6 +31,32 @@ export default class SetupStep extends React.Component {
         )
     }
 
+    componentDidMount() {
+        InstrumentRequests.getInstrumentsByCategory(this.props.token, {name : MiscellaneousEnums.KNOWN_CATEGORIES.KLUFE},
+            (json) => this.setState({klufeOptions : this.makeAssetTagArray(json)}),
+            (error) => alert(error),
+            Models.EQUIPMENT_MODEL.TYPE)
+    }
+
+    makeAssetTagArray(json) {
+        return json[PaginatedResponseFields.RESULTS].length > 0 ? json[PaginatedResponseFields.RESULTS].map(entry => entry[Instrument.FIELDS.ASSET_TAG].toString()) : []
+    }
+
+    handleChange = (value) => {
+        let {updateStepperState} = this.props
+        updateStepperState({klufe : value}, this.shouldEnableSubmit)
+    }
+
+    shouldEnableSubmit = () => {
+        let {klufe} = this.props.stepperState
+        let {ready} = this.state
+        if (klufe && !ready) {
+            this.setState({ready : true}, this.props.markReadyToSubmit)
+        } else if ((!klufe) && ready) {
+            this.setState({ready : false}, this.props.markReadyToSubmit)
+        }
+    }
+
     render() {
         let {user} = this.props
         let instrument = this.props.stepperState.instrument
@@ -36,8 +67,16 @@ export default class SetupStep extends React.Component {
                     To get started, retrieve the Fluke 87 with the following properties:
                 </p>
                 {InstrumentDisplay(instrument)}
+                <p style={{marginTop : 20, marginBottom: 30, justifyContent: "center", alignItems: 'center'}}>
+                    Now, Identify the Klufe K5700 you will be using:
+                </p>
+                <HTPAutoCompleteInput label={"Shunt Meter Asset Tag"}
+                                      options={this.props.klufeOptions}
+                                      wrapped={false}
+                                      onChange={(value) => this.handleChange(value)}
+                                      placeholder={"Asset Tag"}/>
                 <p style={{marginTop : 40, marginBottom: 10, justifyContent: "center", alignItems: 'center'}}>
-                    Now, take it to the Klufe K5700.
+                    Now, take your Fluke 87 to the Klufe K5700.
                 </p>
             </div>) : <Loading/>
     }

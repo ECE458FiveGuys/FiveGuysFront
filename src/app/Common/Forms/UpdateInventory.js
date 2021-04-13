@@ -1,13 +1,14 @@
 import React from 'react'
 import HTPButton from "../HTPButton";
 import HTPPopup from "../HTPPopup";
-import ModelFields from "../../../utils/enums";
+import ModelFields, {MiscellaneousEnums} from "../../../utils/enums";
 import MiscellaneousRequests from "../../../controller/requests/miscellaneous_requests";
 import {Instrument} from "../../../utils/ModelEnums";
 import {handleFieldValueChange, handleFormChange, handleInputValueChange} from "../Inputs/input_utils";
 import * as PropTypes from "prop-types";
 import FormModal from "./FormModal";
 import {FormEnums} from "./form_enums";
+import ExportModel from "../../Pages/ImportExport/Widgets/ExportModel";
 
 export default class UpdateInventory extends React.Component {
 
@@ -142,6 +143,20 @@ export default class UpdateInventory extends React.Component {
             this.setState({generalError : message})
         }
 
+        let calibrationMode = fields[ModelFields.EquipmentModelFields.CALIBRATION_MODE]
+        let calibratorCategories = fields[ModelFields.EquipmentModelFields.CALIBRATOR_CATEGORIES]
+        if (calibrationMode && calibrationMode == ModelFields.CalibrationModes.GUIDED_HARDWARE) {
+            if (!calibratorCategories) calibratorCategories = []
+            calibratorCategories.push(MiscellaneousEnums.KNOWN_CATEGORIES.KLUFE)
+            fields[ModelFields.EquipmentModelFields.CALIBRATOR_CATEGORIES] = calibratorCategories
+        }
+        if (calibrationMode && calibrationMode == ModelFields.CalibrationModes.LOAD_BANK) {
+            if (!calibratorCategories) calibratorCategories = []
+            calibratorCategories.push(MiscellaneousEnums.KNOWN_CATEGORIES.VOLTMETER)
+            calibratorCategories.push(MiscellaneousEnums.KNOWN_CATEGORIES.SHUNT_METER)
+            fields[ModelFields.EquipmentModelFields.CALIBRATOR_CATEGORIES] = calibratorCategories
+        }
+
         if (mode == UpdateInventory.EDIT_MODE) {
             editFunction(token, subject.pk, fields, callBack, errorCallBack)
         } else if (mode == UpdateInventory.CREATE_MODE) {
@@ -168,6 +183,7 @@ export default class UpdateInventory extends React.Component {
             <div>
                 <HTPButton variant="green"
                            color={"green"}
+                           size={"sm"}
                            label={mode == UpdateInventory.EDIT_MODE ? 'Edit' : 'Create'}
                            onSubmit={() => this.setEditModalShow(true)}>
                 </HTPButton>

@@ -43,6 +43,7 @@ class FormModal extends Component{
                                                generalError = {this.props.generalError}
                                                fieldErrors = {this.props.fieldErrors}
                                                fixedFields = {this.props.fixedFields}
+                                               calibratedWithOptions={this.props.calibratedWithOptions}
                                     />
                                 </div>
                             </MDBCol>

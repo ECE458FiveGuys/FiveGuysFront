@@ -43,7 +43,6 @@ export default class InstrumentSelectFooter extends React.Component {
                            let getAllFunctionCallBack = (instruments) => {
                                generateLabels(instruments)
                                this.setState({printButtonEnabled : true, printButtonLabel: PRINT_LABELS_TEXT})
-                               //this.props.resetSelect()
                            }
                            this.props.getAllFunction(getAllFunctionCallBack)
                        }}/>

@@ -5,19 +5,17 @@ import ErrorParser from "../../app/Pages/CreateFunctions/ErrorParser";
 export default class UserRequests {
     static params;
     static async retrieveUser(token,
-                              username,
+                              pk,
                               callBack = (json) => json,
                               errorMessageCallBack = (errorMessage) => errorMessage)
     {
-        let params = {"username" : username}
         let header = RequestUtils.buildTokenHeader(token)
 
-        RequestUtils.assistedFetch(AUTH_URLS.USERS,
+        RequestUtils.assistedFetch(AUTH_URLS.USERS + pk,
             METHODS.GET,
             callBack,
             errorMessageCallBack,
-            header,
-            params)
+            header)
     }
 
     static async getAllUsers(token)

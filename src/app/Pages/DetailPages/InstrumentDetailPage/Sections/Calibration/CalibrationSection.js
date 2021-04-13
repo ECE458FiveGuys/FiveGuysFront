@@ -9,13 +9,11 @@ import {handleNavClick} from "../../../../../utils";
 import {Button} from "react-bootstrap";
 import {createCertificate} from "./certificate_writer";
 import PropTypes from "prop-types";
-import ActionSection from "../../../Common/ActionSection";
 import {User} from "../../../../../../utils/dtos";
-import {MDBIcon} from "mdbreact";
 import {instrumentCalibratable} from "../../utils";
-import {Divider} from "@material-ui/core";
-import FileUtils from "../../../../../../utils/file_utils";
 import {SHORTEN_LABELS} from "../../../../CreateFunctions/CreateUser";
+import {buildEvidenceElement} from "../../../Common/utils";
+import FormBuilder from "../../../../../Common/Forms/FormBuilder";
 
 export default class CalibrationSection extends React.Component {
 
@@ -34,28 +32,52 @@ export default class CalibrationSection extends React.Component {
     }
 
     buildCalibrationTableRows = (calibrations) => {
+        let {instrument} = this.props
         return calibrations.map(calibration => {
             let calibrationCopy = {...calibration}
-            calibrationCopy[ModelFields.CalibrationFields.AdditionalFile] = (
-                calibrationCopy[ModelFields.CalibrationFields.AdditionalFile] ?
-                    <a target="_blank" href={calibrationCopy[ModelFields.CalibrationFields.AdditionalFile]}>
-                        <div style={{display : "flex", flexDirection : "row", alignItems : 'center'}}>
-                            <MDBIcon size={"2x"}
-                                     icon="file-alt" />
-                            <text style={{marginLeft : 10}}>
-                                {FileUtils.getFileNameFromPath(calibrationCopy[ModelFields.CalibrationFields.AdditionalFile])}
-                            </text>
-                        </div>
-                    </a> : calibrationCopy[ModelFields.CalibrationFields.LoadBankFile] || calibrationCopy[ModelFields.CalibrationFields.HardwareCalibrationFile] ?
-                        `Calibrated using the ${calibrationCopy[ModelFields.CalibrationFields.LoadBankFile] ? "load bank" : "guided hardware calibration"} 
-                        wizard (download certificate to view)` : false
-            )
+            calibrationCopy[ModelFields.CalibrationFields.AdditionalFile] = buildEvidenceElement(calibrationCopy)
+            if (this.approvalRequired(instrument)) {
+                let approvalData = calibration[ModelFields.CalibrationFields.ApprovalData]
+                const approvalStatus = approvalData ? (approvalData[ModelFields.ApprovalDataFields.IS_APPROVED] ? "approved" : "rejected") : "pending approval"
+                calibrationCopy["approval_status"] = approvalStatus
+                if (approvalStatus != "approved") {
+                    Object.keys(calibrationCopy).forEach(key => {
+                        let element = calibrationCopy[key]
+                        calibrationCopy[key] = this.highlightCell(element)
+                    })
+                }
+            }
+            calibrationCopy.clickEvent = () => handleNavClick(instrument.pk + "/calibration-events/" + calibration.pk, this.props.history)
             return calibrationCopy
         })
     }
 
+    highlightCell(element) {
+        return <div style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flex: 1,
+                    height: 40,
+                    marginTop: -10,
+                    marginBottom: -10,
+                    marginLeft: -5,
+                    marginRight: -5,
+                    overflow: true,
+                    background: "darkgray"
+                }}>
+                    <text style={{marginLeft: 5}}>{element}</text>
+                </div>
+    }
+
     setCalibrationModalShow(boolean) {
-        this.setState({calibrationModalShow : boolean})
+        this.setState({calibrationModalShow : boolean}, () => {
+            if (!boolean) this.setState({generalError : undefined})
+        })
+    }
+
+    tempSetCustomFormShow(boolean) {
+        this.setState({tempSetCustomFormShow : boolean})
     }
 
     setCustomCalibrationModalShow(boolean) {
@@ -68,6 +90,10 @@ export default class CalibrationSection extends React.Component {
 
     supportsCustomFormCalibration(instrument) {
         return instrument[Instrument.FIELDS.MODEL][EquipmentModel.FIELDS.CALIBRATION_MODE] == ModelFields.CalibrationModes.CUSTOM_FORM
+    }
+
+    approvalRequired(instrument) {
+        return instrument.model[EquipmentModel.FIELDS.CALIBRATION_APPROVAL_REQUIRED]
     }
 
     renderRecordCalibrationButtons = () => {
@@ -99,6 +125,11 @@ export default class CalibrationSection extends React.Component {
                         onSubmit={() => {
                             this.setCustomCalibrationModalShow(true)
                         }}/> : <></>}
+                {<HTPButton
+                    label={"Temp Custom Form Button"}
+                    onSubmit={() => {
+                        this.tempSetCustomFormShow(true)
+                    }}/>}
             </div>)
     }
 
@@ -116,7 +147,7 @@ export default class CalibrationSection extends React.Component {
 
     render() {
         let {token, instrument, user} = this.props
-        let {calibrationModalShow, calibrationTableRows} = this.state
+        let {calibrationModalShow, calibrationTableRows, tempSetCustomFormShow, generalError} = this.state
         return(<div style={{marginLeft : 50, marginRight : 50, textAlign : 'center', flex : 1.8}}>
                             <h1 style={{alignSelf : 'center', justifySelf : 'center', textAlign : "center"}}
                                 className={"h2-responsive"}>
@@ -133,17 +164,17 @@ export default class CalibrationSection extends React.Component {
                         instrument={instrument}
                         closeModal={()=>this.setCalibrationModalShow(false)}
                         user={user}
+                        generalError={generalError}
+                        setError={(e) => this.setState({generalError : e})}
                     />
-                    {/*<RecordCustomCalibration*/}
-                    {/*    show={customCalibrationModalShow}*/}
-                    {/*    onHide={()=>this.setCustomCalibrationModalShow(false)}*/}
-                    {/*    token={token}*/}
-                    {/*    instrument={instrument}*/}
-                    {/*    closeModal={()=>this.setCustomCalibrationModalShow(false)}*/}
-                    {/*    user={user}*/}
-                    {/*    preview={false}*/}
-                    {/*/>*/}
-                    <DataTable columns={TableColumns.CALIBRATION_COLUMNS}
+                    <FormBuilder
+                        show={tempSetCustomFormShow}
+                        onHide={()=>this.tempSetCustomFormShow(false)}
+                        closeModal={()=>this.tempSetCustomFormShow(false)}
+                        token={token}
+                        user={user}
+                    />
+                    <DataTable columns={this.approvalRequired(instrument) ? TableColumns.CALIBRATION_COLUMNS_APPROVAL : TableColumns.CALIBRATION_COLUMNS}
                                searching={false}
                                rows={calibrationTableRows}/>
                     <div style={{marginTop : -15, display : "flex", flexDirection : "row", justifyContent: "space-between"}}>

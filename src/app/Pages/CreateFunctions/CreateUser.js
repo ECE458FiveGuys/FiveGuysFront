@@ -18,6 +18,7 @@ export const LABELS =
         'Instrument Management (All instrument functions excluding calibrations)',
         'Model Management (All models and instruments functions excluding calibrations)',
         'Calibration (All calibration functions)',
+        'Calibration Approver (Can approve/reject calibrations, inherits calibration permission)',
         "Administrator (All functions above including changing user functions",
     ]
 
@@ -27,6 +28,7 @@ export const SHORTEN_LABELS =
         INSTRUMENT_MANAGEMENT : 'instrument_management',
         MODEL_MANAGEMENT : 'model_management',
         CALIBRATION : 'calibration',
+        CALIBRATION_APPROVER: 'calibration_approver',
         ADMINISTRATOR : 'administrator',
     }
 
@@ -36,6 +38,7 @@ export const DISPLAYABLE_LABELS =
         INSTRUMENT_MANAGEMENT : 'Instrument Management',
         MODEL_MANAGEMENT : 'Model Management',
         CALIBRATION : 'Calibration',
+        CALIBRATION_APPROVER: 'Calibration Approver',
         ADMINISTRATOR : 'Administrator',
     }
 
@@ -131,6 +134,9 @@ class CreateUser extends Component {
                 newArrayBackEndReadable.push(SHORTEN_LABELS.CALIBRATION)
             }
             if (num==4){
+                newArrayBackEndReadable.push(SHORTEN_LABELS.CALIBRATION_APPROVER)
+            }
+            if (num==5){
                 newArrayBackEndReadable.push(SHORTEN_LABELS.ADMINISTRATOR)
             }
         }
@@ -139,6 +145,7 @@ class CreateUser extends Component {
             newArrayBackEndReadable.push(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT)
             newArrayBackEndReadable.push(SHORTEN_LABELS.MODEL_MANAGEMENT)
             newArrayBackEndReadable.push(SHORTEN_LABELS.CALIBRATION)
+            newArrayBackEndReadable.push(SHORTEN_LABELS.CALIBRATION_APPROVER)
             newArrayBackEndReadable.push(SHORTEN_LABELS.ADMINISTRATOR)
         }
         if (newArrayBackEndReadable.length == 0) {
@@ -151,6 +158,9 @@ class CreateUser extends Component {
         }
         if (newArrayBackEndReadable.includes(SHORTEN_LABELS.MODEL_MANAGEMENT) && !newArrayBackEndReadable.includes(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT)){
             newArrayBackEndReadable.push(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT)
+        }
+        if (newArrayBackEndReadable.includes(SHORTEN_LABELS.CALIBRATION_APPROVER) && !newArrayBackEndReadable.includes(SHORTEN_LABELS.CALIBRATION)){
+            newArrayBackEndReadable.push(SHORTEN_LABELS.CALIBRATION)
         }
         newState["dropdown"] = newArrayBackEndReadable
         this.setState(newState)

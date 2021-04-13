@@ -1273,6 +1273,11 @@
     gud "^1.0.0"
     warning "^4.0.3"
 
+"@interactjs/types@1.10.8":
+  version "1.10.8"
+  resolved "https://registry.yarnpkg.com/@interactjs/types/-/types-1.10.8.tgz#098da479de9c5ac9c8ba97d113746b7dcd9c2204"
+  integrity sha512-qU2QfnN7r8AU4mSd2W3XmRtR0d35R1PReIT9b5YzpNLX9S0OQgNBLrEEFyXpa9alq/9h6wYNIwPCVAsknF5uZw==
+
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@istanbuljs/load-nyc-config/-/load-nyc-config-1.1.0.tgz#fd3db1d59ecf7cf121e80650bb86712f9b55eced"
@@ -6568,6 +6573,13 @@ install@^0.13.0:
   resolved "https://registry.yarnpkg.com/install/-/install-0.13.0.tgz#6af6e9da9dd0987de2ab420f78e60d9c17260776"
   integrity sha512-zDml/jzr2PKU9I8J/xyZBQn8rPCAY//UOYNmR01XwNwyfhEWObo2SWfSl1+0tm1u6PhxLwDnfsT/6jB7OUxqFA==
 
+interactjs@^1.2.8:
+  version "1.10.8"
+  resolved "https://registry.yarnpkg.com/interactjs/-/interactjs-1.10.8.tgz#a85b6e89ebf2ed88ea1678287ffcf0becf0dfb1c"
+  integrity sha512-hIU82lF9mplmAHVTUmZbHMHKm96AwlD0zWGuf9krKt2dhALHsMOdU+yVilPqIv1VpNAGV66F9B14Rfs4ulS2nA==
+  dependencies:
+    "@interactjs/types" "1.10.8"
+
 internal-ip@^4.3.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/internal-ip/-/internal-ip-4.3.0.tgz#845452baad9d2ca3b69c635a137acb9a0dad0907"
@@ -10396,6 +10408,14 @@ react-dom@^17.0.1:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     scheduler "^0.20.2"
+
+react-drag-sortable@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/react-drag-sortable/-/react-drag-sortable-1.0.6.tgz#8e979772b2a759b3ed3cb0afcc5cd677457b010c"
+  integrity sha512-EO0pYDMbI9vPT8TXJ3D7fZ58BYQ2F9WPzNkoE+IuKExzZ8Ab0RfoenpZAk55i15XeD/K7+dI7JRPnxvXI7DCIQ==
+  dependencies:
+    interactjs "^1.2.8"
+    lodash "^4.17.4"
 
 react-error-overlay@^6.0.9:
   version "6.0.9"

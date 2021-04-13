@@ -24,7 +24,9 @@ export default class ModelFields {
         COMMENT: "comment",
         CALIBRATION_FREQUENCY: "calibration_frequency",
         MODEL_CATEGORIES: "model_categories",
-        CALIBRATION_MODE: "calibration_mode"
+        CALIBRATION_MODE: "calibration_mode",
+        CALIBRATION_APPROVAL_REQUIRED : "approval_required",
+        CALIBRATOR_CATEGORIES : "calibrator_categories"
     }
 
     static EquipmentModelSearchFields = {
@@ -73,13 +75,16 @@ export default class ModelFields {
         "Comment" : "comment",
         "LoadBankFile" : "load_bank_data",
         "AdditionalFile" : "additional_evidence",
-        "HardwareCalibrationFile" : "guided_hardware_data"
+        "HardwareCalibrationFile" : "guided_hardware_data",
+        ApprovalData : "approval_data",
+        CalibratedWith : "calibrated_with"
     }
 
     static CalibrationFormFields = {
         "date" : "Date",
         "comment" : "Comment",
-        "additional_evidence" : "Additional Evidence"
+        "additional_evidence" : "Additional Evidence",
+        [ModelFields.CalibrationFields.CalibratedWith] : "Calibrated With"
     }
 
     static CalibrationModes = {
@@ -88,5 +93,21 @@ export default class ModelFields {
         LOAD_BANK : "LOAD_BANK",
         GUIDED_HARDWARE : "GUIDED_HARDWARE",
         // CUSTOM_FORM : "CUSTOM_FORM"
+    }
+
+    static ApprovalDataFields = {
+        IS_APPROVED : "approved",
+        APPROVER : "approver",
+        DATE : "date",
+        COMMENT : "comment"
+    }
+}
+
+export class MiscellaneousEnums {
+
+    static KNOWN_CATEGORIES = {
+        KLUFE : "Klufe K5700-compatible calibrators",
+        VOLTMETER : "voltmeter",
+        SHUNT_METER : "shunt meter"
     }
 }

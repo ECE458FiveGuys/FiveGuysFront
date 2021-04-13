@@ -29,7 +29,8 @@ render(){
                             </h1>
                             <Step stepNumber={1}
                                   stepText={"First, check out this guide on import format:"}/>
-                                  <a onClick={() => history.push("documentation/")}>
+                                  {/*<a onClick={() => history.push("documentation/")}>*/}
+                                  <a onClick={() => window.open("documentation/")}>
                                       <text style={{color : 'teal'}}>Import Guide</text>
                                         <MDBIcon icon={"question-circle"}
                                                  style={{color : 'teal', marginTop : 15, marginBottom : 15,

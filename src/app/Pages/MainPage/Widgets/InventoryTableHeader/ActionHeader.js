@@ -47,16 +47,30 @@ export class ActionHeader extends React.Component{
                 </div>)
     }
 
+    renderPagingButton() {
+        let {paginationMode, updatePageState} = this.props
+        return <div style={{marginTop : 10, display : "flex", justifyContent : "center"}}>
+                    <HTPButton label={paginationMode ? "No Paging" : "Paginate"}
+                               color={paginationMode ? "red" : "green"}
+                               size={"sm"}
+                               onSubmit={() => updatePageState({paginationMode : !paginationMode})}/>
+                </div>
+    }
+
     render() {
-        let {user} = this.props
+        let {user, paginationMode} = this.props
         return <div style={{display : 'flex', flex : 1, justifyContent : 'center', alignItems : 'center',
             flexDirection : 'column', textAlign : 'center', marginTop : 20, marginBottom : 20}}>
                     <h1 className={"h4-responsive"} style={{marginBottom : 10}}>
                         {"Actions"}
                     </h1>
-                        {this.props.tableType == Instrument.TYPE && user.groups.includes(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT) && this.renderCreateButtons()}
+                        {this.props.tableType == Instrument.TYPE &&
+                                (user.groups.includes(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT) ||
+                                 user.groups.includes(SHORTEN_LABELS.ADMINISTRATOR) ||
+                                user.groups.includes(SHORTEN_LABELS.MODEL_MANAGEMENT)) && this.renderCreateButtons()}
                         {this.props.tableType == EquipmentModel.TYPE && user.groups.includes(SHORTEN_LABELS.MODEL_MANAGEMENT) && this.renderCreateButtons()}
                         {this.renderExportButtons()}
+                        {this.renderPagingButton()}
                 </div>
     }
 
@@ -70,9 +84,11 @@ ActionHeader.propTypes = {
     tableType : PropTypes.string.isRequired,
     searchParams : PropTypes.object.isRequired,
     selectMode : PropTypes.bool,
-    resetSelect : PropTypes.func
+    resetSelect : PropTypes.func,
+    paginationMode : PropTypes.func,
 }
 
 ActionHeader.defaultProps = {
-    selectMode : false
+    selectMode : false,
+    paginationMode : true
 }

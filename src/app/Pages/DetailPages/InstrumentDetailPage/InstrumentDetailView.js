@@ -8,14 +8,10 @@ import CalibrationSection from "./Sections/Calibration/CalibrationSection";
 import PropTypes from "prop-types";
 import {User} from "../../../../utils/dtos";
 import {instrumentCalibratable} from "./utils";
-import MainView from "../../MainPage/MainView";
-import ModelSection from "../Common/ModelSection";
 import InstrumentSection from "./Sections/InstrumentSection";
-import ModelFields from "../../../../utils/enums";
 import {EquipmentModel, Instrument} from "../../../../utils/ModelEnums";
 import HTPButton from "../../../Common/HTPButton";
 import {handleNavClick} from "../../../utils";
-import {MDBCol} from "mdbreact";
 import {SHORTEN_LABELS} from "../../CreateFunctions/CreateUser";
 
 const DIVIDER_MARGINS = 100
@@ -65,17 +61,17 @@ export default class InstrumentDetailView extends Component {
                             <div style={{flex: 1, display: "flex", flexDirection: "row", justifyContent: 'space-between'}}>
                                 <div style={{flex : 1, display : "flex", flexDirection : "column", justifyContent : 'flex-start'}}>
                                     {InstrumentSection(instrument)}
-                                    {user.groups.includes(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT) &&
-                                    <div style={{marginTop : 30}}>
-                                        <ActionSection token={token}
-                                                       hasText={false}
-                                                       hasLogo={false}
-                                                       subject={instrument}
-                                                       updatePageState={this.updatePageState}
-                                                       history={history}
-                                                       type={Instrument.TYPE}
-                                                       deleteFunction={InstrumentRequests.deleteInstruments}/>
-                                    </div>}
+                                    {user.groups.includes(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT) || user.groups.includes(SHORTEN_LABELS.ADMINISTRATOR) &&
+                                        <div style={{marginTop : 30}}>
+                                            <ActionSection token={token}
+                                                           hasText={false}
+                                                           hasLogo={false}
+                                                           subject={instrument}
+                                                           updatePageState={this.updatePageState}
+                                                           history={history}
+                                                           type={Instrument.TYPE}
+                                                           deleteFunction={InstrumentRequests.deleteInstruments}/>
+                                        </div>}
                                     <div style={{display : 'flex', flexDirection : "column", justifyContent : "center", alignItems : 'center'}}>
                                         <text className={"h4-responsive"} style={{marginBottom : 20, marginTop : 30}}>
                                             Visit the model for this instance:
@@ -88,16 +84,16 @@ export default class InstrumentDetailView extends Component {
                                     </div>
                                 </div>
                                 {instrumentCalibratable(instrument) &&
-                                <Divider style={{marginRight: DIVIDER_MARGINS, marginLeft: DIVIDER_MARGINS, height : 400, marginTop : 100}}
-                                         orientation={"vertical"}
-                                         flexItem={true}/>}
+                                    <Divider style={{marginRight: DIVIDER_MARGINS, marginLeft: DIVIDER_MARGINS, height : 400, marginTop : 100}}
+                                             orientation={"vertical"}
+                                             flexItem={true}/>}
                                 {instrumentCalibratable(instrument) &&
-                                <CalibrationSection token={token}
-                                                    user={user}
-                                                    instrument={instrument}
-                                                    history={history}
-                                                    calibrations={calibrations}
-                                />}
+                                    <CalibrationSection token={token}
+                                                        user={user}
+                                                        instrument={instrument}
+                                                        history={history}
+                                                        calibrations={calibrations}
+                                    />}
                             </div>
                         </div>
                 </div>

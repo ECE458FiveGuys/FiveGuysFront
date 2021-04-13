@@ -21,6 +21,8 @@ import {AUTH_URLS, METHODS} from "./controller/strings";
 import RequestUtils from "./controller/requests/request_utils";
 import history from "./auth/history";
 import SortableComponent from "./app/Common/Forms/CustomFormGenerator";
+import CalibrationEventDetailView from "./app/Pages/DetailPages/CalibrationEventDetailPage/CalibrationEventDetailView";
+import PendingCalibrations from "./app/Pages/PendingCalibrationsPage/PendingCalibrations";
 
 class App extends Component {
 
@@ -112,6 +114,11 @@ class App extends Component {
                                                            token={this.state.token}
                                                            user={this.state.user}/>)}>
               </Route>
+                <Route path="/pending-calibrations"
+                       render={(props) => (<PendingCalibrations location={props.location}
+                                                          token={this.state.token}
+                                                          user={this.state.user}/>)}>
+                </Route>
 
               <Route path="/create-user/">
                 <CreateUser token={this.state.token}
@@ -168,6 +175,13 @@ class InstrumentRoute extends Component {
                                  token={token}
                                  user={user}/>
               </Route>
+                <Route path={this.addToParentPath(id, 'calibration-events/:id')}
+                       render={(props) => (<CalibrationEventDetailView id={props.match.params.id}
+                                                                       location={location}
+                                                                       history={history}
+                                                                       token={token}
+                                                                       user={user}/>)} >
+                </Route>
               <Route path={this.addToParentPath(id, "load-bank/")}>
                 <LoadBankMain  instrumentId={id}
                                location={location}
