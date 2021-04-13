@@ -80,8 +80,16 @@ export default class CalibrationSection extends React.Component {
         this.setState({tempSetCustomFormShow : boolean})
     }
 
+    setCustomCalibrationModalShow(boolean) {
+        this.setState({customCalibrationModalShow : boolean})
+    }
+
     supportsHardwareCalibration(instrument) {
         return instrument[Instrument.FIELDS.MODEL][EquipmentModel.FIELDS.CALIBRATION_MODE] == ModelFields.CalibrationModes.GUIDED_HARDWARE
+    }
+
+    supportsCustomFormCalibration(instrument) {
+        return instrument[Instrument.FIELDS.MODEL][EquipmentModel.FIELDS.CALIBRATION_MODE] == ModelFields.CalibrationModes.CUSTOM_FORM
     }
 
     approvalRequired(instrument) {
@@ -111,11 +119,17 @@ export default class CalibrationSection extends React.Component {
                         onSubmit={() => {
                             handleNavClick("/instruments/" + instrument.pk + "/klufe-wizard/", history)
                         }}/> : <></>}
-                {<HTPButton
-                    label={"Temp Custom Form Button"}
-                    onSubmit={() => {
-                        this.tempSetCustomFormShow(true)
-                    }}/>}
+                {instrumentCalibratable(instrument) && this.supportsCustomFormCalibration(instrument) ?
+                    <HTPButton
+                        label={"Custom Form Calibration"}
+                        onSubmit={() => {
+                            this.setCustomCalibrationModalShow(true)
+                        }}/> : <></>}
+                {/*{<HTPButton*/}
+                {/*    label={"Temp Custom Form Button"}*/}
+                {/*    onSubmit={() => {*/}
+                {/*        this.tempSetCustomFormShow(true)*/}
+                {/*    }}/>}*/}
             </div>)
     }
 
@@ -153,13 +167,13 @@ export default class CalibrationSection extends React.Component {
                         generalError={generalError}
                         setError={(e) => this.setState({generalError : e})}
                     />
-                    <FormBuilder
-                        show={tempSetCustomFormShow}
-                        onHide={()=>this.tempSetCustomFormShow(false)}
-                        closeModal={()=>this.tempSetCustomFormShow(false)}
-                        token={token}
-                        user={user}
-                    />
+                    {/*<FormBuilder*/}
+                    {/*    show={tempSetCustomFormShow}*/}
+                    {/*    onHide={()=>this.tempSetCustomFormShow(false)}*/}
+                    {/*    closeModal={()=>this.tempSetCustomFormShow(false)}*/}
+                    {/*    token={token}*/}
+                    {/*    user={user}*/}
+                    {/*/>*/}
                     <DataTable columns={this.approvalRequired(instrument) ? TableColumns.CALIBRATION_COLUMNS_APPROVAL : TableColumns.CALIBRATION_COLUMNS}
                                searching={false}
                                rows={calibrationTableRows}/>

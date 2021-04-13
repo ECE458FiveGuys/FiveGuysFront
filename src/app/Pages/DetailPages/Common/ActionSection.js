@@ -9,6 +9,9 @@ import UpdateInventory from "../../../Common/Forms/UpdateInventory";
 import UpdateInstrument from "../../../Common/Forms/UpdateInstrument";
 import UpdateModel from "../../../Common/Forms/UpdateModel";
 import HTPPopup from "../../../Common/HTPPopup";
+import SortableComponent from "../../../Common/Forms/CustomFormGenerator";
+import {MDBNavItem, MDBNavLink} from "mdbreact";
+import CustomFormSection from "./CustomFormSection";
 
 export default class ActionSection extends React.Component {
 
@@ -20,6 +23,10 @@ export default class ActionSection extends React.Component {
     setDeleteModalShow(boolean) {
         this.setState({deleteModalShow:boolean})
     }
+
+    // setCustomFormModalShow(boolean) {
+    //     this.setState({customFormModalShow:boolean})
+    // }
 
     handleDelete = () => {
         let {subject, token, history, deleteFunction, type} = this.props
@@ -42,7 +49,7 @@ export default class ActionSection extends React.Component {
     }
 
     render() {
-        let {deleteModalShow, error, modal} = this.state
+        let {deleteModalShow, error, modal, customFormModalShow} = this.state
         let {token, subject, history, updatePageState, type, hasText, hasLogo} = this.props
         return(
             <div style={{flex : 1, display : "flex", flexDirection : "column", justifyContent : 'flex-start', alignItems : 'center'}}>
@@ -66,6 +73,10 @@ export default class ActionSection extends React.Component {
                     <Button variant="red" size={"sm"} onClick={() => this.setDeleteModalShow(true)}>
                         Delete
                     </Button>
+                    <CustomFormSection
+                        token={token}
+                        model={subject}
+                    />
                 </div>
                 {hasLogo &&
                 <img alt="loading"

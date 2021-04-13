@@ -1,0 +1,57 @@
+.custom-form {
+    /*padding-top: 20px;*/
+}
+
+/*.modal {*/
+/*    z-index: 2000;*/
+/*}*/
+
+.custom-form-field .card-body{
+    background-color: lightgray;
+    position: relative;
+    height: 175px;
+    width: 600px;
+
+}
+
+/*.custom-form .add-buttons{*/
+/*    margin: auto;*/
+/*    !*padding: 10px;*!*/
+/*}*/
+
+.custom-form-field .my-button{
+    position: absolute;
+    /*padding: 52px;*/
+    right: 0%;
+    top: 0%;
+    margin-top: -20px;
+    margin-right: -5px;
+}
+
+.custom-form-field .drag-handle{
+    position: absolute;
+    top:60%;
+    right:0%;
+    /*vertical-align: center;*/
+
+}
+
+/*.custom-form .container{*/
+/*    !*background-color: aqua;*!*/
+/*    !*margin: auto;*!*/
+/*}*/
+
+
+
+.custom-form .sortable-list{
+    /*position: absolute;*/
+    /*align-content: center;*/
+    margin: auto;
+    padding: 30px;
+    height:400px;
+    /*z-index: 2001;*/
+}
+
+.sortable-helper {
+    z-index: 100000000000000;
+}
