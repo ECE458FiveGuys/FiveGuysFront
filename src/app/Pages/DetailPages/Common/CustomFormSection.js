@@ -41,7 +41,7 @@ class CustomFormSection extends Component {
         // }
         return (
             // (this.props.model.calibration_mode === ModelFields.CalibrationModes.CUSTOM_FORM) ?
-                ((this.state.existingFields || this.props.model.custom_form) ? this.editModeButtons():this.createModeButtons())
+                ((this.state.existingFields) ? this.editModeButtons():this.createModeButtons())
 
             // :
                 // (<div/>)

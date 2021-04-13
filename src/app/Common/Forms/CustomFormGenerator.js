@@ -47,22 +47,32 @@ class SortableComponent extends Component {
     }
 
     makeRefreshState () {
-        let fieldsTemp = (this.props.existingFields) ? this.props.existingFields:this.props.model.custom_form
-        let fields = JSON.parse(fieldsTemp).form
-        // if(this.props)
+        // let fieldsTemp = (this.props.existingFields) ? this.props.existingFields:this.props.model.custom_form
+        // console.log(this.props.model.custom_form)
+        // let fields = []
+        let initFields = [{id:-3, type:'header'},{id:-2, type:'input'}]
+        // let fields = (this.props.existingFields) ? JSON.parse(this.props.existingFields).form : initFields // TODO only parse if fields exist, populte generator with blank fields if none exist
+        // // if(this.props)
         let items = []
         let entries = {}
-        let id = -1
-        fields.forEach((field) => {
-                id++
-                items.push({id:id,type:field.type,content:field.value})
-                entries[id] = field.value
-            }
-        )
+        let nextFieldId = 0
+
+        if(this.props.existingFields) {
+            let fields = JSON.parse(this.props.existingFields).form
+            fields.forEach((field) => {
+                    items.push({id: nextFieldId, type: field.type, content: field.value})
+                    entries[nextFieldId] = field.value
+                    nextFieldId++
+                }
+            )
+        } else {
+            items = [{id:0, type:'header'},{id:1, type:'input'}]
+            nextFieldId = 2;
+        }
         return {
             entries: entries,
             items: items,
-            nextFieldId: 2,
+            nextFieldId: nextFieldId,
             cancelModalShow: false,
             submitModalShow: false
         }
