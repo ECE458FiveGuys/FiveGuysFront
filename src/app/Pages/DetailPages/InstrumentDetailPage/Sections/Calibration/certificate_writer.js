@@ -68,7 +68,7 @@ async function getChainOfTruthTree(certificate, instrument, calibrationEvent, to
             let testerFixed = JSON.parse(json_tester)
             makePageRecursive(certificate, instrument, calibrationEvent, token, testerFixed)
         })
-        .catch((error) => { //failure
+        .catch((error) => {
             console.log(error)
         });
 
@@ -79,8 +79,15 @@ async function getChainOfTruthTree(certificate, instrument, calibrationEvent, to
     //console.log(this.state.calibratedWithOptions)
 }
 
-function makePageRecursive(certificate, instrument, calibrationEvent, token, json){
+function makePageRecursive(certificate, instrument, calibrationEvent, token, json) {
+    console.log(json.pk)
     console.log(json)
+    let calibratedWith = json.calibrated_with
+    if (json.calibrated_with) {
+        calibratedWith.forEach(instrument => {
+            makePageRecursive(certificate, instrument, calibrationEvent, token, instrument)
+        })
+    }
 }
 
 function makePageWithoutChain(certificate, instrument, calibrationEvent, token){

@@ -23,7 +23,6 @@ class RecordCalibration extends Component {
             (json) => this.setState({calibratedWithOptions : json}),
                     e => alert(e),
             this.props.instrument.pk)
-        console.log(this.props.instrument.pk)
     }
 
     validateSubmit = () => {
