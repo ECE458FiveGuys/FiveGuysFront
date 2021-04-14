@@ -91,7 +91,8 @@ export default class ModelFields {
         NOT_CALIBRATABLE : "NOT_CALIBRATABLE",
         DEFAULT : "DEFAULT",
         LOAD_BANK : "LOAD_BANK",
-        GUIDED_HARDWARE : "GUIDED_HARDWARE"
+        GUIDED_HARDWARE : "GUIDED_HARDWARE",
+        // CUSTOM_FORM : "CUSTOM_FORM"
     }
 
     static ApprovalDataFields = {

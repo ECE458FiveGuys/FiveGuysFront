@@ -20,6 +20,7 @@ import {getToken, getUser, Logout} from "./auth/auth_utils";
 import {AUTH_URLS, METHODS} from "./controller/strings";
 import RequestUtils from "./controller/requests/request_utils";
 import history from "./auth/history";
+import SortableComponent from "./app/Common/Forms/CustomFormGenerator";
 import CalibrationEventDetailView from "./app/Pages/DetailPages/CalibrationEventDetailPage/CalibrationEventDetailView";
 import PendingCalibrations from "./app/Pages/PendingCalibrationsPage/PendingCalibrations";
 
@@ -135,6 +136,11 @@ class App extends Component {
               </Route>
                 <Route path={"/permission-change"}>
                     <MessagePage text={"Hmm, looks like your permissions have changed. Let's head back to the main page."}/>
+                </Route>
+                <Route path="/create-custom-form"
+                       render={(props) => (<SortableComponent location={props.location}
+                                               token={this.state.token}
+                                               user={this.state.user}/>)}>
                 </Route>
               <Route>
                 <MessagePage text={"Sorry, this page does not exist."}/>
