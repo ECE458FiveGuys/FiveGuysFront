@@ -47,12 +47,6 @@ class SortableComponent extends Component {
     }
 
     makeRefreshState () {
-        // let fieldsTemp = (this.props.existingFields) ? this.props.existingFields:this.props.model.custom_form
-        // console.log(this.props.model.custom_form)
-        // let fields = []
-        // let initFields = [{id:-3, type:'header'},{id:-2, type:'input'}]
-        // let fields = (this.props.existingFields) ? JSON.parse(this.props.existingFields).form : initFields // TODO only parse if fields exist, populte generator with blank fields if none exist
-        // // if(this.props)
         let items = []
         let entries = {}
         let nextFieldId = 0
@@ -84,7 +78,6 @@ class SortableComponent extends Component {
     // }
 
     setCancelModalShow(boolean){
-        // this.setState(this.makeRefreshState())
         this.setState({cancelModalShow:boolean})
     }
 
@@ -175,8 +168,6 @@ class SortableComponent extends Component {
         ModelRequests.editModelWithFields(
             this.props.token,model.pk, fields,successCallback,errorCallback
         )
-
-        // this.cancelSubmission()
     }
 
     render() {

@@ -32,7 +32,6 @@ class CustomFormView extends Component {
                 </ul>
             )
         }
-        // return (<div>HELLO WORLD<div/>);
     }
 
     render() {

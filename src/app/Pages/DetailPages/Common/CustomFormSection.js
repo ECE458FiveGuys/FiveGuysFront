@@ -2,7 +2,6 @@ import React, {Component} from "react";
 import {Button} from "react-bootstrap";
 import SortableComponent from "../../../Common/Forms/CustomFormGenerator";
 import CustomFormView from "../../../Common/Forms/CustomFormView";
-import ModelFields from "../../../../utils/enums";
 
 
 class CustomFormSection extends Component {
@@ -13,10 +12,6 @@ class CustomFormSection extends Component {
             createMode:false, // temporary TODO
             existingFields: this.props.model.custom_form
         }
-        // if (!this.state.existingFields) {
-        //     let custom_form = this.props.model.custom_form
-        //     this.setState({existingFields:custom_form})
-        // }
     }
 
     setCustomFormModalShow(boolean) {
@@ -36,9 +31,6 @@ class CustomFormSection extends Component {
     }
 
     generateButtons() {
-        // if (!this.state.existingFields) {
-        //     this.setState({existingFields:this.props.model.custom_form})
-        // }
         return (
             // (this.props.model.calibration_mode === ModelFields.CalibrationModes.CUSTOM_FORM) ?
                 ((this.state.existingFields) ? this.editModeButtons():this.createModeButtons())

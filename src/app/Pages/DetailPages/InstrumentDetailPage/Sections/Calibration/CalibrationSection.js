@@ -13,7 +13,6 @@ import {User} from "../../../../../../utils/dtos";
 import {instrumentCalibratable} from "../../utils";
 import {SHORTEN_LABELS} from "../../../../CreateFunctions/CreateUser";
 import {buildEvidenceElement} from "../../../Common/utils";
-import FormBuilder from "../../../../../Common/Forms/FormBuilder";
 
 export default class CalibrationSection extends React.Component {
 

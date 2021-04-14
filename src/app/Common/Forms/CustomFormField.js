@@ -91,19 +91,11 @@ class CustomFormField extends Component {
 
     };
 
-    // FIELDS = {
-    //     header: this.headerField(),
-    //     text: this.textField(),
-    //     input: this.inputField()
-    // }
-
     render() {
         return(
             <div className={"custom-form-field"}>
                 <Card>
                     <Card.Body>
-                        {/*<MDBContainer>*/}
-                            {/*<MDBCol>*/}
                             <div className="row">
                                 <div className="col-10">
                                     {this.fieldType(this.props.type)}
@@ -119,7 +111,6 @@ class CustomFormField extends Component {
                                     </div>
                                 </div>
                             </div>
-                        {/*</MDBContainer>*/}
                     </Card.Body>
                 </Card>
             </div>
