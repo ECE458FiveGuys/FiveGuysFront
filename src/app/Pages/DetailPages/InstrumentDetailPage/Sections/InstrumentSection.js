@@ -3,7 +3,6 @@ import ModelFields from "../../../../../utils/enums";
 import {EquipmentModel, Instrument} from "../../../../../utils/ModelEnums";
 import {MDBBadge} from "mdbreact";
 import React from "react";
-import {handleNavClick} from "../../../../utils";
 
 export default function InstrumentSection(instrument) {
     return(<div style={{display : "flex", flexDirection : "column", justifyContent : 'flex-start', alignItems : 'center', textAlign : 'center'}}>
