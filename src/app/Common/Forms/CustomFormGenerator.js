@@ -50,7 +50,7 @@ class SortableComponent extends Component {
         // let fieldsTemp = (this.props.existingFields) ? this.props.existingFields:this.props.model.custom_form
         // console.log(this.props.model.custom_form)
         // let fields = []
-        let initFields = [{id:-3, type:'header'},{id:-2, type:'input'}]
+        // let initFields = [{id:-3, type:'header'},{id:-2, type:'input'}]
         // let fields = (this.props.existingFields) ? JSON.parse(this.props.existingFields).form : initFields // TODO only parse if fields exist, populte generator with blank fields if none exist
         // // if(this.props)
         let items = []

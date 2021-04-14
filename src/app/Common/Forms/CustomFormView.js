@@ -36,7 +36,7 @@ class CustomFormView extends Component {
     }
 
     render() {
-        let parsedFields = {}
+        let parsedFields = []
         if(this.props.fields){
             parsedFields = JSON.parse(this.props.fields).form
         }
