@@ -61,7 +61,7 @@ export default class InstrumentDetailView extends Component {
                             <div style={{flex: 1, display: "flex", flexDirection: "row", justifyContent: 'space-between'}}>
                                 <div style={{flex : 1, display : "flex", flexDirection : "column", justifyContent : 'flex-start'}}>
                                     {InstrumentSection(instrument)}
-                                    {user.groups.includes(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT) || user.groups.includes(SHORTEN_LABELS.ADMINISTRATOR) &&
+                                    {(user.groups.includes(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT) || user.groups.includes(SHORTEN_LABELS.ADMINISTRATOR)) &&
                                         <div style={{marginTop : 30}}>
                                             <ActionSection token={token}
                                                            hasText={false}

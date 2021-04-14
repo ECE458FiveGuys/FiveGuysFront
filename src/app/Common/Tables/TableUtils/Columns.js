@@ -162,18 +162,6 @@ export default class TableColumns {
             sort: 'disabled',
             width: 50
         },
-        {
-            label: 'Change User Permissions',
-            field: 'options',
-            sort: 'disabled',
-            width: 50
-        },
-        {
-            label: 'Delete',
-            field: 'delete',
-            sort: 'disabled',
-            width: 10
-        },
     ]
 
     static USER_COLUMNS_EDITABLE = [

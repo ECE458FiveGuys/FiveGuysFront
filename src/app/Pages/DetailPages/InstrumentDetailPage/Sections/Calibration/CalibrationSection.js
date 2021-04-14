@@ -13,13 +13,15 @@ import {User} from "../../../../../../utils/dtos";
 import {instrumentCalibratable} from "../../utils";
 import {SHORTEN_LABELS} from "../../../../CreateFunctions/CreateUser";
 import {buildEvidenceElement} from "../../../Common/utils";
+import Checkbox from "../../../../../Common/Tables/TableWidgets/Checkbox";
 
 export default class CalibrationSection extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            calibrationTableRows : this.buildCalibrationTableRows(props.instrument["calibration_history"])
+            calibrationTableRows : this.buildCalibrationTableRows(props.instrument["calibration_history"]),
+            chainOfTruth : false
         }
     }
 
@@ -135,13 +137,18 @@ export default class CalibrationSection extends React.Component {
     renderCalibrationCertificateButton = () => {
         let {instrument, calibrations, token} = this.props
         return (instrumentCalibratable(instrument)) ?
-            <Button
-                disabled={!calibrations || calibrations.length == 0}
-                onClick={() => {
-                        createCertificate(instrument, calibrations[0].user, calibrations[0], token)
-                }}>
-                Download Certificate
-            </Button> : <div></div>
+            <div style={{flexDirection : "column", display : "flex"}}>
+                <Button
+                    disabled={!calibrations || calibrations.length == 0}
+                    onClick={() => {
+                            createCertificate(instrument, calibrations[0].user, calibrations[0], token, this.state.chainOfTruth)
+                    }}>
+                    Download Certificate
+                </Button>
+                <Checkbox handleSelect={() => this.setState({chainOfTruth : !this.state.chainOfTruth})}
+                          id={"chainOfTruth"}
+                          label={"Chain of Truth"}/>
+            </div> : <div></div>
     }
 
     render() {

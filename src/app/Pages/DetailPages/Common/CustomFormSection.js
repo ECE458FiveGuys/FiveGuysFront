@@ -42,19 +42,27 @@ class CustomFormSection extends Component {
 
     createModeButtons() {
         return (
-            <Button variant="blue" onClick={() => this.setCustomFormModalShow(true)}>
-                Create Custom Calibration Form
-            </Button>
+            <div style={{marginTop : 30}}>
+                <Button variant="blue"
+                        size={"sm"}
+                        onClick={() => this.setCustomFormModalShow(true)}>
+                    Create Custom Calibration Form
+                </Button>
+            </div>
         )
     }
 
     editModeButtons() {
         return (
-            <div>
-                <Button variant="blue" onClick={() => this.setCustomFormModalShow(true)}>
+            <div style={{marginTop : 30}}>
+                <Button variant="blue"
+                        size={"sm"}
+                        onClick={() => this.setCustomFormModalShow(true)}>
                     Edit Custom Calibration Form
                 </Button>
-                <Button variant="blue" onClick={() => this.setCustomFormPreviewModalShow(true)}>
+                <Button variant="blue"
+                        size={"sm"}
+                        onClick={() => this.setCustomFormPreviewModalShow(true)}>
                     View Custom Form Preview
                 </Button>
             </div>
