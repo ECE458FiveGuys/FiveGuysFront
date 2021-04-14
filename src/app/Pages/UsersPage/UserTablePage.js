@@ -11,6 +11,7 @@ import {EquipmentModel} from "../../../utils/ModelEnums";
 import CreateModel from "../CreateFunctions/CreateModel";
 import HTPPopup from "../../Common/HTPPopup";
 
+
 const ADMIN_NAME = 'Admin'
 
 class UserTablePage extends Component{
@@ -26,8 +27,12 @@ class UserTablePage extends Component{
             usererrors: {},
             modal : true,
             dropdown:[],
-            modal2 : false
+            modal2 : false,
+            check : false,
+            ref : React.createRef(),
+            checkedMap : new Map()
         }
+        this.checkChanged = this.checkChanged.bind(this);
     }
 
     componentDidMount() {
@@ -46,6 +51,17 @@ class UserTablePage extends Component{
     renderOptions = (result) => {
         let currentGroupsRaw = result.groups
         let currentGroupsPretty = []
+        let id = result['id']
+
+        let currMap = this.state.checkedMap
+        currMap[id] = true
+        this.setState({
+            checkedMap: currMap
+        });
+
+
+
+        let temp = this.state.result['id']
         for (let i=0; i<currentGroupsRaw.length; i++){
             if (currentGroupsRaw[i] == SHORTEN_LABELS.UNPRIVILEGED){
                 currentGroupsPretty.push(DISPLAYABLE_LABELS.UNPRIVILEGED)
@@ -72,11 +88,33 @@ class UserTablePage extends Component{
                                disabled={!result['is_active']}
                                size="sm" onSubmit={()=>this.permissionSubmitted(result['id'])}
                                label={'Submit Changes'}/>
+                    <input
+                        name="isGoing"
+                        type="checkbox"
+                        ref={this.state.ref}
+                        checked={temp}
+                        onChange={this.checkChanged(0, 5)}
+                        />
                 </MDBRow>)
+    }
+
+    handleCheckboxChange = event =>
+        console.log("here")
+
+    checkChanged = async(num, pk) => {
+        this.setState({
+            check: !this.state.check
+        });
+        console.log(pk)
     }
 
 
     permissionSubmitted = async(pk) =>{
+        let newState = {}
+        newState["check"] = true
+        this.setState(newState)
+
+        console.log(this.state.check)
         let newArrayBackEndReadable = []
         for (let i=0; i<this.state.dropdown.length; i++){
             let num = LABELS.indexOf(this.state.dropdown[i])

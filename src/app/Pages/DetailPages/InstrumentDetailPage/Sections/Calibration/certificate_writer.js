@@ -22,11 +22,35 @@ const SUBHEADING_FONT_SIZE = 20
 const INLINE_IMAGE_EXTENSIONS = ["jpeg", "jpg", "gif", "png"]
 
 export async function createCertificate (instrument, user, calibrationEvent, token) {
+    let isChainEnabled = false
     let certificate = new jsPDF()
     const pageWidth = certificate.internal.pageSize.getWidth();
     await addImage(certificate, Logo, 'png', 10)
     certificate.line((pageWidth - DIVIDER_WIDTH) / 2, IMAGE_HEIGHT + 10, (pageWidth + DIVIDER_WIDTH) / 2, IMAGE_HEIGHT + 10)
     writeInstrumentDetails(certificate, user, instrument, calibrationEvent, pageWidth)
+    certificate.setFont("helvetica")
+    certificate.setFontSize(30)
+    certificate.setTextColor(0, 100, 0);
+    certificate.text('CALIBRATION CERTIFICATE', pageWidth / 2, IMAGE_HEIGHT + 25, 'center');
+    //everything above here is only done once
+
+    if (isChainEnabled){
+        makePageRecursive(certificate, instrument, calibrationEvent, token)
+    }
+    else {
+        makePageWithoutChain(certificate, instrument, calibrationEvent, token)
+    }
+}
+
+let saveCertificate = (certificate, instrument) => {
+    certificate.save(`calibration_certificate_inst_${instrument[Instrument.FIELDS.ASSET_TAG]}.pdf`)
+}
+
+function makePageRecursive(certificate, instrument, calibrationEvent, token){
+
+}
+
+function makePageWithoutChain(certificate, instrument, calibrationEvent, token){
     let additionalEvidence = calibrationEvent[ModelFields.CalibrationFields.AdditionalFile]
     let loadBankData = calibrationEvent[ModelFields.CalibrationFields.LoadBankFile] ? JSON.parse(calibrationEvent[ModelFields.CalibrationFields.LoadBankFile]) : undefined
     let flukeData = calibrationEvent[ModelFields.CalibrationFields.HardwareCalibrationFile] ? JSON.parse(calibrationEvent[ModelFields.CalibrationFields.HardwareCalibrationFile]) : undefined
@@ -35,10 +59,6 @@ export async function createCertificate (instrument, user, calibrationEvent, tok
             flukeData ? writeHardwareCalibrationSection(certificate, flukeData) :
                 void(0)
     if (!additionalEvidence) saveCertificate(certificate, instrument)
-}
-
-let saveCertificate = (certificate, instrument) => {
-    certificate.save(`calibration_certificate_inst_${instrument[Instrument.FIELDS.ASSET_TAG]}.pdf`)
 }
 
 export function addImage(certificate, image, extension, marginTop=0) {
@@ -70,21 +90,17 @@ function convertImgToBase64URL(url, callback, mimetype){
 }
 
 function writeInstrumentDetails (pdf, user, instrument, calibrationEvent, pageWidth) {
-    pdf.setFont("helvetica")
-    pdf.setFontSize(30)
-    pdf.setTextColor(0, 100, 0);
-    pdf.text('CALIBRATION CERTIFICATE', pageWidth / 2, IMAGE_HEIGHT + 25, 'center');
     pdf.autoTable({
         head: [['Calibration Info', '']],
         margin: { top: IMAGE_HEIGHT + 35 },
         body: [['Model Number', instrument.model.model_number],
-                ['Vendor', instrument.model.vendor],
-                ['Short Description', instrument.model.description],
-                ['Serial Number', instrument[ModelFields.InstrumentFields.SERIAL_NUMBER]],
-                ['Asset Number', instrument[ModelFields.InstrumentFields.ASSET_TAG]],
-                ['Most Recent Calibration', calibrationEvent[ModelFields.CalibrationFields.Date]],
-                ['Calibration Expiration Date', instrument[Instrument.FIELDS.EXPIRATION_DATE]],
-                ['Engineer', user.name]]
+            ['Vendor', instrument.model.vendor],
+            ['Short Description', instrument.model.description],
+            ['Serial Number', instrument[ModelFields.InstrumentFields.SERIAL_NUMBER]],
+            ['Asset Number', instrument[ModelFields.InstrumentFields.ASSET_TAG]],
+            ['Most Recent Calibration', calibrationEvent[ModelFields.CalibrationFields.Date]],
+            ['Calibration Expiration Date', instrument[Instrument.FIELDS.EXPIRATION_DATE]],
+            ['Engineer', user.name]]
     })
 }
 
@@ -102,56 +118,56 @@ function writeAdditionalEvidence (certificate, additionalEvidence, instrument, t
         }
         convertImgToBase64URL(additionalEvidence, addImageCallback, `image/${extension}`)
         //srcToFile(additionalEvidence, name, `image/png`, addImageCallback)
-        // addImage(certificate, additionalEvidence)
+        //addImage(certificate, additionalEvidence)
     }
     else if (extension == "xlsx") {
         let callBack = (file) => {
             // var csv_table = xlsxToTable(file)
             certificate.setFontSize(SUBHEADING_FONT_SIZE)
             certificate.text('XLSX DATA FROM \n'+name+':\n', pageWidth / 2, TOP_MARGIN, 'center');
-                var workbook = XLSX.read(file, {
-                    type: 'array'
-                });
-                // certificate.text('XLSX DATA FROM '+name+':', pageWidth / 2, 190, 'center');
-                // workbook.SheetNames.forEach(function (sheetName) {
-                    var sheetName = workbook.SheetNames[0];
-                    var XL_row_object = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
-                    // var XL_csv_object = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName]);
-                    let table = {}
-                    // let head = []
-                    let body = []
-                    table['margin'] = { top: 25 }
-                    var count = -1
-                    // head = ['XSLX File Data']
-                    XL_row_object.forEach((row) => {
-                        if(row.__rowNum__ != count+1){
-                            if(Object.keys(table).length != 0) {
-                                table['body'] = body
-                                certificate.autoTable(table)
-                                body = []
-                            }
-                            table['head'] = [Object.values(row)]
-                        } else {
-                            body.push(Object.values(row))
+            var workbook = XLSX.read(file, {
+                type: 'array'
+            });
+            // certificate.text('XLSX DATA FROM '+name+':', pageWidth / 2, 190, 'center');
+            // workbook.SheetNames.forEach(function (sheetName) {
+            var sheetName = workbook.SheetNames[0];
+            var XL_row_object = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+            // var XL_csv_object = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName]);
+            let table = {}
+            // let head = []
+            let body = []
+            table['margin'] = { top: 25 }
+            var count = -1
+            // head = ['XSLX File Data']
+            XL_row_object.forEach((row) => {
+                    if(row.__rowNum__ != count+1){
+                        if(Object.keys(table).length != 0) {
+                            table['body'] = body
+                            certificate.autoTable(table)
+                            body = []
+                        }
+                        table['head'] = [Object.values(row)]
+                    } else {
+                        body.push(Object.values(row))
                         // let rowAsArray = Object.values(row)
                         // if (Object.keys(table).length == 0) {
                         //     table['head'] = [Object.values(row)]
-                        }
-                        count = row.__rowNum__
-                            // body.push(Object.values(row))
-                            // while(rowAsArray.length > head.length){
-                            //     head.push('')
-                            // }
-
                     }
-                    )
-                    // let _head = []
-                    // _head.push(head)
-                    // table['head'] = _head
-                    // table['body'] = body
-                    // certificate.autoTable(table)
-                // })
-                saveCertificate(certificate, instrument)
+                    count = row.__rowNum__
+                    // body.push(Object.values(row))
+                    // while(rowAsArray.length > head.length){
+                    //     head.push('')
+                    // }
+
+                }
+            )
+            // let _head = []
+            // _head.push(head)
+            // table['head'] = _head
+            // table['body'] = body
+            // certificate.autoTable(table)
+            // })
+            saveCertificate(certificate, instrument)
         }
         srcToFile(additionalEvidence, name, `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`, callBack)
     }
@@ -172,42 +188,42 @@ function writeAdditionalEvidence (certificate, additionalEvidence, instrument, t
 
 export function writeLoadBankSection (certificate, loadBankData) {
     certificate.autoTable(
-            {
-                head: [['Visual Inspection', '[y/n]']],
-                columnStyles: {1: {fillColor: [0, 250, 0]}},
-                body: [['Visual inspection ok?', 'y']]
-            }
+        {
+            head: [['Visual Inspection', '[y/n]']],
+            columnStyles: {1: {fillColor: [0, 250, 0]}},
+            body: [['Visual inspection ok?', 'y']]
+        }
     )
     let voltmeter = loadBankData.voltmeter
     let shuntMeter = loadBankData.shuntMeter
     certificate.autoTable(
-            {
-                head: [['Load Step Verification', 'Model Number', 'Asset Tag Number']],
-                body: [['Voltmeter to be used', voltmeter[EquipmentModel.FIELDS.MODEL_NUMBER], voltmeter[Instrument.FIELDS.ASSET_TAG]],
-                    ['Shunt Meter to be used', shuntMeter[EquipmentModel.FIELDS.MODEL_NUMBER], shuntMeter[Instrument.FIELDS.ASSET_TAG]]
-                ]
-            })
+        {
+            head: [['Load Step Verification', 'Model Number', 'Asset Tag Number']],
+            body: [['Voltmeter to be used', voltmeter[EquipmentModel.FIELDS.MODEL_NUMBER], voltmeter[Instrument.FIELDS.ASSET_TAG]],
+                ['Shunt Meter to be used', shuntMeter[EquipmentModel.FIELDS.MODEL_NUMBER], shuntMeter[Instrument.FIELDS.ASSET_TAG]]
+            ]
+        })
     let recordedCurrents = loadBankData.recordedCurrents
     certificate.autoTable(
-            {
-                head: [['Load Level',
-                    'CR: Current reported [A]\n(from display)',
-                    'CA: Current actual [A]\n(from shunt meter)',
-                    'CR: Accepted Range [A]',
-                    'CA: Accepted Range [A]',
-                    'ok?'
-                ]],
-                columnStyles: {5: {fillColor: [0, 250, 0]}},
-                body: Object.keys(recordedCurrents).map(stepName => {
-                    let recordedCurrent = recordedCurrents[stepName]
-                    return [stepName,
-                        recordedCurrent.CR,
-                        recordedCurrent.CA,
-                        `${(IdealCurrents[stepName] * .97).toFixed(1)}-${(IdealCurrents[stepName] * 1.03).toFixed(1)}`,
-                        `${(IdealCurrents[stepName] * .95).toFixed(1)}-${(IdealCurrents[stepName] * 1.05).toFixed(1)}`,
-                        'ok']
-                })
+        {
+            head: [['Load Level',
+                'CR: Current reported [A]\n(from display)',
+                'CA: Current actual [A]\n(from shunt meter)',
+                'CR: Accepted Range [A]',
+                'CA: Accepted Range [A]',
+                'ok?'
+            ]],
+            columnStyles: {5: {fillColor: [0, 250, 0]}},
+            body: Object.keys(recordedCurrents).map(stepName => {
+                let recordedCurrent = recordedCurrents[stepName]
+                return [stepName,
+                    recordedCurrent.CR,
+                    recordedCurrent.CA,
+                    `${(IdealCurrents[stepName] * .97).toFixed(1)}-${(IdealCurrents[stepName] * 1.03).toFixed(1)}`,
+                    `${(IdealCurrents[stepName] * .95).toFixed(1)}-${(IdealCurrents[stepName] * 1.05).toFixed(1)}`,
+                    'ok']
             })
+        })
     let recordedVoltage = loadBankData.recordedVoltage
     certificate.autoTable(
         {
@@ -227,14 +243,14 @@ export function writeLoadBankSection (certificate, loadBankData) {
                 'ok']]
         })
     certificate.autoTable(
-            {
-                head: [['Functional Checks', '[y/n]']],
-                columnStyles: {1: {fillColor: [0, 250, 0]}},
-                body: [['Low voltage cutoff', 'y'],
-                    ['Cell voltage disconnect alarm', 'y'],
-                    ['Recorded data ok', 'y'],
-                    ['Printer ok', 'y']]
-            }
+        {
+            head: [['Functional Checks', '[y/n]']],
+            columnStyles: {1: {fillColor: [0, 250, 0]}},
+            body: [['Low voltage cutoff', 'y'],
+                ['Cell voltage disconnect alarm', 'y'],
+                ['Recorded data ok', 'y'],
+                ['Printer ok', 'y']]
+        }
     )
 }
 
@@ -281,7 +297,7 @@ function xlsxToTable(file) {
     var name = file.name;
     const reader = new FileReader();
     // reader.onload = (evt) => { // evt = on_file_select event
-        /* Parse data */
+    /* Parse data */
     // const bstr = evt.target.result;
     const wb = XLSX.read(file, {type:'array'});
     /* Get first worksheet */
