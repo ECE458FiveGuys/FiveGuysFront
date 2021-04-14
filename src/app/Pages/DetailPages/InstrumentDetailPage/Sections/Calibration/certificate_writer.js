@@ -4,6 +4,8 @@ import {EquipmentModel, Instrument} from "../../../../../../utils/ModelEnums";
 import Logo from "../../../../../../assets/hpt_logo.png"
 import {IdealCurrents} from "../../../../LoadBankPage/Steps/LoadBankStepSteps/step_utils";
 import FileUtils from "../../../../../../utils/file_utils";
+import Tree from 'react-tree-graph';
+import ReactDOMServer from "react-dom/server";
 // import XLSX from "xlsx";
 
 import * as XLSX from 'xlsx';
@@ -12,6 +14,7 @@ import {
     VoltageTestInputFrequencies,
     VoltageTestInputVoltages
 } from "../../../../KlufeWizardPage/step_utils";
+import html2canvas from "html2canvas";
 
 const LOGO_ASPECT_RATIO = 1.26
 const IMAGE_HEIGHT = 80 + 10
@@ -294,4 +297,25 @@ function xlsxToTable(file) {
     return data
     // };
     // reader.readAsBinaryString(file);
+}
+
+function tree_generator(instrument_tree){
+    return(
+        <div>
+            <Tree
+                data={instrument_tree}
+                height={500}
+                width={500}
+                />
+        </div>
+    )
+}
+
+function tree_to_pdf(certificate = new jsPDF(), instrument_tree){
+    let html = ReactDOMServer.renderToStaticMarkup(tree_generator(instrument_tree.render()))
+    html2canvas(html).then((canvas)=> {
+        const image = canvas.toDataURL('image/png');
+        addImage(certificate, image, 'png', 10);
+        }
+    )
 }
