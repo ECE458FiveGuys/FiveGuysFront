@@ -4,6 +4,7 @@ import {EquipmentModel, Instrument} from "../../../../../../utils/ModelEnums";
 import Logo from "../../../../../../assets/hpt_logo.png"
 import {IdealCurrents} from "../../../../LoadBankPage/Steps/LoadBankStepSteps/step_utils";
 import FileUtils from "../../../../../../utils/file_utils";
+import MiscellaneousRequests from "../../../../../../controller/requests/miscellaneous_requests";
 // import XLSX from "xlsx";
 
 import * as XLSX from 'xlsx';
@@ -12,6 +13,9 @@ import {
     VoltageTestInputFrequencies,
     VoltageTestInputVoltages
 } from "../../../../KlufeWizardPage/step_utils";
+import {AUTH_URLS, METHODS, URLS} from "../../../../../../controller/strings";
+import ErrorParser from "../../../../CreateFunctions/ErrorParser";
+import RequestUtils from "../../../../../../controller/requests/request_utils";
 
 const LOGO_ASPECT_RATIO = 1.26
 const IMAGE_HEIGHT = 80 + 10
@@ -22,7 +26,7 @@ const SUBHEADING_FONT_SIZE = 20
 const INLINE_IMAGE_EXTENSIONS = ["jpeg", "jpg", "gif", "png"]
 
 export async function createCertificate (instrument, user, calibrationEvent, token) {
-    let isChainEnabled = false
+    let isChainEnabled = true
     let certificate = new jsPDF()
     const pageWidth = certificate.internal.pageSize.getWidth();
     await addImage(certificate, Logo, 'png', 10)
@@ -35,7 +39,8 @@ export async function createCertificate (instrument, user, calibrationEvent, tok
     //everything above here is only done once
 
     if (isChainEnabled){
-        makePageRecursive(certificate, instrument, calibrationEvent, token)
+        //makePageRecursive(certificate, instrument, calibrationEvent, token)
+        await getChainOfTruthTree(certificate, instrument, calibrationEvent, token)
     }
     else {
         makePageWithoutChain(certificate, instrument, calibrationEvent, token)
@@ -46,8 +51,36 @@ let saveCertificate = (certificate, instrument) => {
     certificate.save(`calibration_certificate_inst_${instrument[Instrument.FIELDS.ASSET_TAG]}.pdf`)
 }
 
-function makePageRecursive(certificate, instrument, calibrationEvent, token){
+async function getChainOfTruthTree(certificate, instrument, calibrationEvent, token){
+    let json = MiscellaneousRequests.getCalibrationCertificate(token, (json) => this.setState({calibratedWithOptions : json}), instrument.pk)
+    let fullToken = 'Token ' + token
+    const requestOptions = {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json', 'Authorization': fullToken, 'Accept':'application/json'},
+    };
 
+    const response = await fetch(URLS.CALIBRATION_CERTIFICATE(instrument.pk), requestOptions)
+        .then(response => {
+            return response.text()})
+        .then(json => { //success
+            let realJson = JSON.parse(json)
+            let json_tester = '{"pk":233,"instrument":248,"date":"2021-03-02","user":{"pk":1,"username":"admin"},"comment":"Emergency re-calibration","additional_evidence":null,"load_bank_data":"","guided_hardware_data":"","custom_data":"","approval_data":{"pk":206,"calibration_event":233,"approved":true,"approver":1,"date":"2021-04-07","comment":""},"calibrated_with":[{"pk":2,"serial_number":null,"asset_tag_number":884723,"calibration_event":{"pk":2,"instrument":2,"date":"2021-03-01","user":{"pk":1,"username":"admin"},"comment":"Monthly load bank related instruments calibration - Mar21","additional_evidence":null,"load_bank_data":"","guided_hardware_data":"","custom_data":"","approval_data":{"pk":2,"calibration_event":2,"approved":true,"approver":1,"date":"2021-04-07","comment":""},"calibrated_with":[{"pk":128,"serial_number":null,"asset_tag_number":100114,"calibration_event":{"pk":123,"instrument":128,"date":"2021-02-03","user":{"pk":1,"username":"admin"},"comment":"Calibrated all instruments markeds during January random tests on Feb 3rd","additional_evidence":null,"load_bank_data":"","guided_hardware_data":"","custom_data":"","approval_data":{"pk":96,"calibration_event":123,"approved":true,"approver":1,"date":"2021-04-07","comment":""},"calibrated_with":[]}}]}},{"pk":26,"serial_number":null,"asset_tag_number":100016,"calibration_event":{"pk":26,"instrument":26,"date":"2021-02-03","user":{"pk":1,"username":"admin"},"comment":"Calibrated all instruments markeds during January random tests on Feb 3rd","additional_evidence":null,"load_bank_data":"","guided_hardware_data":"","custom_data":"","approval_data":{"pk":24,"calibration_event":26,"approved":true,"approver":1,"date":"2021-04-07","comment":""},"calibrated_with":[{"pk":250,"serial_number":null,"asset_tag_number":100219,"calibration_event":{"pk":235,"instrument":250,"date":"2021-01-01","user":{"pk":1,"username":"admin"},"comment":"Calibrated preemptively as a part of routine annual eval","additional_evidence":null,"load_bank_data":"","guided_hardware_data":"","custom_data":"","approval_data":{"pk":208,"calibration_event":235,"approved":true,"approver":1,"date":"2021-04-07","comment":""},"calibrated_with":[{"pk":326,"serial_number":null,"asset_tag_number":100083,"calibration_event":{"pk":312,"instrument":326,"date":"2020-12-15","user":{"pk":1,"username":"admin"},"comment":"","additional_evidence":null,"load_bank_data":"","guided_hardware_data":"","custom_data":"","approval_data":{"pk":285,"calibration_event":312,"approved":true,"approver":1,"date":"2021-04-14","comment":""},"calibrated_with":[]}}]}}]}}]}'
+            let testerFixed = JSON.parse(json_tester)
+            makePageRecursive(certificate, instrument, calibrationEvent, token, testerFixed)
+        })
+        .catch((error) => { //failure
+            console.log(error)
+        });
+
+
+
+    //let header = RequestUtils.buildTokenHeader(token)
+    //RequestUtils.assistedFetch(URLS.CALIBRATION_CERTIFICATE(instrument.pk), METHODS.GET, (json) => this.setState({calibratedWithOptions : json}), e => alert(e), header)
+    //console.log(this.state.calibratedWithOptions)
+}
+
+function makePageRecursive(certificate, instrument, calibrationEvent, token, json){
+    console.log(json)
 }
 
 function makePageWithoutChain(certificate, instrument, calibrationEvent, token){

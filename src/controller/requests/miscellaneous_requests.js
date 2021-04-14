@@ -59,6 +59,24 @@ export default class MiscellaneousRequests {
         RequestUtils.assistedFetch(URLS.CALIBRATORS(instrumentId), METHODS.GET, callback, errorMessageCallBack, header)
     }
 
+    static async getCalibrationCertificate(token, callback,
+                                          instrumentId) {
+        let fullToken = 'Token ' + token
+        const requestOptions = {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json', 'Authorization': fullToken, 'Accept':'application/json'},
+        };
+
+        const response = await fetch(URLS.CALIBRATION_CERTIFICATE(instrumentId), requestOptions)
+            .then(response => {
+                return response.text()})
+            .then(json => { //success
+                return json
+            })
+            .catch((error) => { //failure
+            });
+    }
+
     static async getPendingApproval(token,
                                     callback = (json) => json,
                                     errorMessageCallBack = (errorMessage) => errorMessage) {
