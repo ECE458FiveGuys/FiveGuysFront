@@ -38,7 +38,7 @@ export default class Checkbox extends Component {
                            onChange={() => this.props.handleSelect(this.props.id)}
                            disabled={false}
                         />
-                        <label className="custom-control-label" htmlFor={this.props.id}></label>
+                        <label className="custom-control-label" htmlFor={this.props.id}>{this.props.label}</label>
                 </div>
             </div>)
     }
@@ -47,6 +47,7 @@ export default class Checkbox extends Component {
 Checkbox.propTypes = {
     handleSelect : PropTypes.func.isRequired,
     id : PropTypes.string.isRequired,
-    defaultChecked : PropTypes.bool
+    defaultChecked : PropTypes.bool,
+    label : PropTypes.string
     //updateSelectedRow : PropTypes.func.isRequired
 }

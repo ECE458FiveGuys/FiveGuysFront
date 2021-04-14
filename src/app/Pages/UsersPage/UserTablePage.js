@@ -7,11 +7,9 @@ import HTPButton from "../../Common/HTPButton";
 import CreateUserPopup from "./UserFunctions/CreateUserPopup";
 import {DISPLAYABLE_LABELS, LABELS, SHORTEN_LABELS} from "../CreateFunctions/CreateUser";
 import HTPAutoCompleteInput from "../../Common/Inputs/HTPAutoCompleteInput";
-import {EquipmentModel} from "../../../utils/ModelEnums";
-import CreateModel from "../CreateFunctions/CreateModel";
 import HTPPopup from "../../Common/HTPPopup";
-
-const ADMIN_NAME = 'Admin'
+import Checkbox from "../../Common/Tables/TableWidgets/Checkbox";
+import {handleNavClick} from "../../utils";
 
 class UserTablePage extends Component{
 
@@ -26,7 +24,8 @@ class UserTablePage extends Component{
             usererrors: {},
             modal : true,
             dropdown:[],
-            modal2 : false
+            modal2 : false,
+            userPermissions: new Map()
         }
     }
 
@@ -43,97 +42,6 @@ class UserTablePage extends Component{
         return results
     }
 
-    renderOptions = (result) => {
-        let currentGroupsRaw = result.groups
-        let currentGroupsPretty = []
-        for (let i=0; i<currentGroupsRaw.length; i++){
-            if (currentGroupsRaw[i] == SHORTEN_LABELS.UNPRIVILEGED){
-                currentGroupsPretty.push(DISPLAYABLE_LABELS.UNPRIVILEGED)
-            }
-            if (currentGroupsRaw[i] == SHORTEN_LABELS.INSTRUMENT_MANAGEMENT){
-                currentGroupsPretty.push(DISPLAYABLE_LABELS.INSTRUMENT_MANAGEMENT)
-            }
-            if (currentGroupsRaw[i] == SHORTEN_LABELS.MODEL_MANAGEMENT){
-                currentGroupsPretty.push(DISPLAYABLE_LABELS.MODEL_MANAGEMENT)
-            }
-            if (currentGroupsRaw[i] == SHORTEN_LABELS.CALIBRATION){
-                currentGroupsPretty.push(DISPLAYABLE_LABELS.CALIBRATION)
-            }
-            if (currentGroupsRaw[i] == SHORTEN_LABELS.CALIBRATION_APPROVER){
-                currentGroupsPretty.push(DISPLAYABLE_LABELS.CALIBRATION_APPROVER)
-            }
-            if (currentGroupsRaw[i] == SHORTEN_LABELS.ADMINISTRATOR){
-                currentGroupsPretty.push(DISPLAYABLE_LABELS.ADMINISTRATOR)
-            }
-        }
-        return (<MDBRow style={{justifyContent: 'center', alignItems: 'center', marginTop: 0, xs: 2}}>
-                    <HTPAutoCompleteInput multiple = {true} defaultValue={currentGroupsPretty} options = {[DISPLAYABLE_LABELS.UNPRIVILEGED, DISPLAYABLE_LABELS.INSTRUMENT_MANAGEMENT, DISPLAYABLE_LABELS.MODEL_MANAGEMENT, DISPLAYABLE_LABELS.CALIBRATION, DISPLAYABLE_LABELS.ADMINISTRATOR,]} size = {10} onChange={this.handleChange('dropdown')} placeholder={'Options...'}/>
-                    <HTPButton color="green"
-                               disabled={!result['is_active']}
-                               size="sm" onSubmit={()=>this.permissionSubmitted(result['id'])}
-                               label={'Submit Changes'}/>
-                </MDBRow>)
-    }
-
-
-    permissionSubmitted = async(pk) =>{
-        let newArrayBackEndReadable = []
-        for (let i=0; i<this.state.dropdown.length; i++){
-            let num = LABELS.indexOf(this.state.dropdown[i])
-            if (this.state.dropdown[i] == DISPLAYABLE_LABELS.UNPRIVILEGED){
-                newArrayBackEndReadable.push(SHORTEN_LABELS.UNPRIVILEGED)
-            }
-            if (this.state.dropdown[i] == DISPLAYABLE_LABELS.INSTRUMENT_MANAGEMENT){
-                newArrayBackEndReadable.push(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT)
-            }
-            if (this.state.dropdown[i] == DISPLAYABLE_LABELS.MODEL_MANAGEMENT){
-                newArrayBackEndReadable.push(SHORTEN_LABELS.MODEL_MANAGEMENT)
-            }
-            if (this.state.dropdown[i] == DISPLAYABLE_LABELS.CALIBRATION){
-                newArrayBackEndReadable.push(SHORTEN_LABELS.CALIBRATION)
-            }
-            if (this.state.dropdown[i] == DISPLAYABLE_LABELS.CALIBRATION_APPROVER){
-                newArrayBackEndReadable.push(SHORTEN_LABELS.CALIBRATION_APPROVER)
-            }
-            if (this.state.dropdown[i] == DISPLAYABLE_LABELS.ADMINISTRATOR){
-                newArrayBackEndReadable.push(SHORTEN_LABELS.ADMINISTRATOR)
-            }
-        }
-        if (newArrayBackEndReadable.includes(SHORTEN_LABELS.ADMINISTRATOR)){
-            newArrayBackEndReadable = []
-            newArrayBackEndReadable.push(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT)
-            newArrayBackEndReadable.push(SHORTEN_LABELS.MODEL_MANAGEMENT)
-            newArrayBackEndReadable.push(SHORTEN_LABELS.CALIBRATION)
-            newArrayBackEndReadable.push(SHORTEN_LABELS.ADMINISTRATOR)
-        }
-        if (newArrayBackEndReadable.length == 0) {
-            newArrayBackEndReadable.push(SHORTEN_LABELS.UNPRIVILEGED)
-        }
-        if (newArrayBackEndReadable.length>1 && newArrayBackEndReadable.includes(SHORTEN_LABELS.UNPRIVILEGED)){
-            newArrayBackEndReadable = newArrayBackEndReadable.filter(function(item) {
-                return item !== SHORTEN_LABELS.UNPRIVILEGED
-            })
-        }
-        if (newArrayBackEndReadable.includes(SHORTEN_LABELS.MODEL_MANAGEMENT) && !newArrayBackEndReadable.includes(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT)){
-            newArrayBackEndReadable.push(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT)
-        }
-        if (newArrayBackEndReadable.includes(SHORTEN_LABELS.CALIBRATION_APPROVER) && !newArrayBackEndReadable.includes(SHORTEN_LABELS.CALIBRATION)){
-            newArrayBackEndReadable.push(SHORTEN_LABELS.CALIBRATION)
-        }
-        let result = await UserRequests.changeGroups(this.props.token, pk, newArrayBackEndReadable);
-        await this.getUserList()
-        return result
-    }
-
-    getCols() {
-        let cols = TableColumns.USER_COLUMNS
-        cols[4].label = <div>Change User Permission<i style={{marginLeft : 5, color: "blue"}}
-                                                                    onClick={this.toggleModal2}
-                                                                    className="fas fa-info-circle"></i></div>
-        return cols
-    }
-
-
     userParse = (results) => {
         let newResults = []
         results.forEach(result => {
@@ -146,6 +54,7 @@ class UserTablePage extends Component{
         results.forEach(result => {
             if (result.hasOwnProperty("groups") && result.is_active) {
                 let array = result["groups"]
+                array = this.determineWhichGroupsToDisplay(array)
                 let newArray = []
                 for (let i=0; i<array.length; i++){
                     if (array[i]==SHORTEN_LABELS.INSTRUMENT_MANAGEMENT){
@@ -164,62 +73,36 @@ class UserTablePage extends Component{
                         newArray.push(DISPLAYABLE_LABELS.ADMINISTRATOR)
                     }
                 }
-                let finalArray = this.determineWhichGroupsToDisplay(newArray)
-
-                let stringPermission = this.getCategoriesPretty(finalArray)
-
+                let stringPermission = this.getCategoriesPretty(newArray)
 
                 result["is_staff"] = stringPermission
             }
-            if (result.id !=1) {
-                result['delete'] = true == true ? <HTPButton color="red"
-                                                             disabled={!result['is_active']}
-                                                             size="sm"
-                                                             onSubmit={() => this.deactivateUser(result['id'])}
-                                                             label={"X"}/>
-                    : this.renderOptions(result, idToStaff)
-            }
-            else {
-                result['delete'] = result['name'] === ADMIN_NAME ? <div style={{textAlign : 'center'}}></div>
-                    : this.renderOptions(result, idToStaff)
-            }
-            result['options'] = result['name'] === ADMIN_NAME ? <div style={{textAlign : 'center'}}>Permanent Admin</div>
-                : this.renderOptions(result, idToStaff)
-
+            result.clickEvent = () => handleNavClick("/user-view/" + result.id, this.props.history)
         })
         this.setState({idToStaff : idToStaff})
         return results
     }
 
     getCategoriesPretty = (finalArray) => {
-        return(
-            <div>
-                <MDBBadge style={{marginRight : 5}}
-                                         color="green"
-                                         pill>
-                    {finalArray[0]}
-                </MDBBadge>
-                <MDBBadge style={{marginRight : 5}}
-                          color="green"
-                          pill>
-                    {finalArray[1]}
-                </MDBBadge>
-                <MDBBadge style={{marginRight : 5}}
-                          color="green"
-                          pill>
-                    {finalArray[2]}
-                </MDBBadge>
-                <MDBBadge style={{marginRight : 5}}
-                          color="green"
-                          pill>
-                    {finalArray[3]}
-                </MDBBadge>
-            </div>
-
+        let index = 0
+        return (finalArray.map(value => {
+                index = index + 1
+                return <MDBBadge style={{marginRight : 5}}
+                                                     color="green"
+                                                     pill>
+                            {finalArray[index - 1]}
+                            </MDBBadge>})
         )}
 
 
     determineWhichGroupsToDisplay = (array) => {
+        if (array.includes(SHORTEN_LABELS.ADMINISTRATOR)) return [SHORTEN_LABELS.ADMINISTRATOR]
+        if (array.includes(SHORTEN_LABELS.CALIBRATION_APPROVER) && array.includes(SHORTEN_LABELS.CALIBRATION)) {
+            array.splice(array.indexOf(SHORTEN_LABELS.CALIBRATION), 1)
+        }
+        if (array.includes(SHORTEN_LABELS.MODEL_MANAGEMENT) && array.includes(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT)) {
+            array.splice(array.indexOf(SHORTEN_LABELS.MODEL_MANAGEMENT), 1)
+        }
         return array
     }
 
@@ -233,80 +116,16 @@ class UserTablePage extends Component{
         return results
     }
 
-    deactivateUser = async(pk) =>{
-        let result = await UserRequests.deactivateUser(this.props.token, pk);
-        await this.getUserList()
-        return result
-    }
-
     handleChange=(name)=>(value)=>{
         let newState = {}
         newState[name] = value
         this.setState(newState)
     }
 
-    changeGroups = async(pk, groupChanged) =>{
-        let oldGroups = []
-        let results = await UserRequests.getAllUsers(this.props.token)
-        results.forEach(result => {
-            if (result["id"]==pk) {
-                oldGroups = result["groups"]
-            }
-        })
-        if (!oldGroups.includes(groupChanged[0])){
-            oldGroups.push(groupChanged[0])
-        }
-        else {
-            oldGroups = oldGroups.filter(function(item) {
-                return item !== groupChanged[0]
-            })
-        }
-        if (oldGroups.length==0){
-            oldGroups.push(SHORTEN_LABELS.UNPRIVILEGED)
-        }
-        if (oldGroups.length>1 && oldGroups.includes(SHORTEN_LABELS.UNPRIVILEGED)){
-            oldGroups = oldGroups.filter(function(item) {
-                return item !== SHORTEN_LABELS.UNPRIVILEGED
-            })
-        }
-        if (oldGroups.includes(SHORTEN_LABELS.MODEL_MANAGEMENT) && !oldGroups.includes(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT)){
-            oldGroups.push(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT)
-        }
-        if (oldGroups.includes(SHORTEN_LABELS.CALIBRATION_APPROVER) && !oldGroups.includes(SHORTEN_LABELS.CALIBRATION)){
-            oldGroups.push(SHORTEN_LABELS.CALIBRATION)
-        }
-        let result = await UserRequests.changeGroups(this.props.token, pk, oldGroups);
-        await this.getUserList()
-        return result
-    }
-
-    toggleModal2 = () => {
-        this.setState({
-            modal2: !this.state.modal2
-        });
-    }
-
-    getDisplayMessage = () => {
-        let displayMessage = LABELS
-        return Array.isArray(displayMessage)  ? <div>
-            <ul>
-                {displayMessage.map(function(name, index){
-                    return <li key={ index }>{name}</li>;
-                })}
-            </ul>
-        </div> : <></>
-    }
-
     render() {
         let {user, token} = this.props
-        let cols = TableColumns.USER_COLUMNS
         let {userList} = this.state
             return(<div style={{marginTop : 20, marginLeft : 100, marginRight : 100}}>
-                    <HTPPopup isOpen={this.state.modal2}
-                              toggleModal={this.toggleModal2}
-                              className={"text-info"}
-                              title={"User Permission Descriptions"}
-                              message={this.getDisplayMessage()}/>
                         <div style={{display : "flex", flexDirection : "row", justifyContent : "space-between", alignItems : 'center'}}>
                             <div style={{marginLeft : -15}}>
                                 <header className={"h2-responsive"} style={{marginLeft : 15, marginBottom: 10}}>
@@ -322,7 +141,7 @@ class UserTablePage extends Component{
                                 <DataTable
                                     disableRetreatAfterSorting={true}
                                     token={token}
-                                    columns={this.getCols()}
+                                    columns={TableColumns.USER_COLUMNS}
                                     rows={userList}
                                 />
                             </div>

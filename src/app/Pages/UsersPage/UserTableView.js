@@ -16,6 +16,7 @@ class UserTableView extends Component{
                     location={this.props.location}
                 />
                 <UserTablePage
+                    history={this.props.history}
                     user={this.props.user}
                     token={this.props.token}
                 />

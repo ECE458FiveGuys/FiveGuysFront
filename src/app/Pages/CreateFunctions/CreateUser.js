@@ -14,7 +14,7 @@ import HTPAutoCompleteInput from "../../Common/Inputs/HTPAutoCompleteInput";
 
 export const LABELS =
     [
-        'Unprivileged (Can view models, instruments, and categories)',
+        // 'Unprivileged (Can view models, instruments, and categories)',
         'Instrument Management (All instrument functions excluding calibrations)',
         'Model Management (All models and instruments functions excluding calibrations)',
         'Calibration (All calibration functions)',
@@ -24,7 +24,7 @@ export const LABELS =
 
 export const SHORTEN_LABELS =
     {
-        UNPRIVILEGED : 'unprivileged',
+        // UNPRIVILEGED : 'unprivileged',
         INSTRUMENT_MANAGEMENT : 'instrument_management',
         MODEL_MANAGEMENT : 'model_management',
         CALIBRATION : 'calibration',
@@ -34,12 +34,12 @@ export const SHORTEN_LABELS =
 
 export const DISPLAYABLE_LABELS =
     {
-        UNPRIVILEGED : 'Unprivileged',
+        // UNPRIVILEGED : 'Unprivileged (None)',
         INSTRUMENT_MANAGEMENT : 'Instrument Management',
         MODEL_MANAGEMENT : 'Model Management',
         CALIBRATION : 'Calibration',
         CALIBRATION_APPROVER: 'Calibration Approver',
-        ADMINISTRATOR : 'Administrator',
+        ADMINISTRATOR : 'Administrator (All)',
     }
 
 
@@ -121,9 +121,9 @@ class CreateUser extends Component {
         let newArrayBackEndReadable = [] //first turns the imput into readable backend
         for (let i=0; i<this.state.dropdown.length; i++){
             let num = LABELS.indexOf(this.state.dropdown[i])
-            if (num==0){
-                newArrayBackEndReadable.push(SHORTEN_LABELS.UNPRIVILEGED)
-            }
+            // if (num==0){
+            //     newArrayBackEndReadable.push(SHORTEN_LABELS.UNPRIVILEGED)
+            // }
             if (num==1){
                 newArrayBackEndReadable.push(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT)
             }
@@ -148,14 +148,14 @@ class CreateUser extends Component {
             newArrayBackEndReadable.push(SHORTEN_LABELS.CALIBRATION_APPROVER)
             newArrayBackEndReadable.push(SHORTEN_LABELS.ADMINISTRATOR)
         }
-        if (newArrayBackEndReadable.length == 0) {
-            newArrayBackEndReadable.push(SHORTEN_LABELS.UNPRIVILEGED)
-        }
-        if (newArrayBackEndReadable.length>1 && newArrayBackEndReadable.includes(SHORTEN_LABELS.UNPRIVILEGED)){
-            newArrayBackEndReadable = newArrayBackEndReadable.filter(function(item) {
-                return item !== SHORTEN_LABELS.UNPRIVILEGED
-            })
-        }
+        // if (newArrayBackEndReadable.length == 0) {
+        //     newArrayBackEndReadable.push(SHORTEN_LABELS.UNPRIVILEGED)
+        // }
+        // if (newArrayBackEndReadable.length>1 && newArrayBackEndReadable.includes(SHORTEN_LABELS.UNPRIVILEGED)){
+        //     newArrayBackEndReadable = newArrayBackEndReadable.filter(function(item) {
+        //         return item !== SHORTEN_LABELS.UNPRIVILEGED
+        //     })
+        // }
         if (newArrayBackEndReadable.includes(SHORTEN_LABELS.MODEL_MANAGEMENT) && !newArrayBackEndReadable.includes(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT)){
             newArrayBackEndReadable.push(SHORTEN_LABELS.INSTRUMENT_MANAGEMENT)
         }

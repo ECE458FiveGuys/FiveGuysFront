@@ -23,6 +23,7 @@ import history from "./auth/history";
 import SortableComponent from "./app/Common/Forms/CustomFormGenerator";
 import CalibrationEventDetailView from "./app/Pages/DetailPages/CalibrationEventDetailPage/CalibrationEventDetailView";
 import PendingCalibrations from "./app/Pages/PendingCalibrationsPage/PendingCalibrations";
+import UserDetailView from "./app/Pages/DetailPages/UserDetailPage/UserDetailView";
 
 class App extends Component {
 
@@ -111,9 +112,18 @@ class App extends Component {
               </Route>
               <Route path="/users"
                      render={(props) => (<UserTableView location={props.location}
+                                                        history={props.history}
                                                            token={this.state.token}
                                                            user={this.state.user}/>)}>
               </Route>
+                <Route path="/user-view/:id"
+                       render={(props) => (<UserDetailView
+                                                          id={props.match.params.id}
+                                                          location={props.location}
+                                                          history={props.history}
+                                                          token={this.state.token}
+                                                          user={this.state.user}/>)}>
+                </Route>
                 <Route path="/pending-calibrations"
                        render={(props) => (<PendingCalibrations location={props.location}
                                                           token={this.state.token}

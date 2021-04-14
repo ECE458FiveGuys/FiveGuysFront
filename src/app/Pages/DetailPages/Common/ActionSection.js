@@ -58,7 +58,7 @@ export default class ActionSection extends React.Component {
                     {`As an admin, you may:`}
                 </h1>}
                 <div style={{display : "flex", flexDirection : 'row'}}>
-                    {type == ModelFields.ModelTypes.INSTRUMENT?
+                    {type == ModelFields.ModelTypes.INSTRUMENT ?
                         <UpdateInstrument
                             mode={UpdateInventory.EDIT_MODE}
                             token={token}
@@ -73,11 +73,11 @@ export default class ActionSection extends React.Component {
                     <Button variant="red" size={"sm"} onClick={() => this.setDeleteModalShow(true)}>
                         Delete
                     </Button>
+                </div>
+                {type == ModelFields.ModelTypes.EQUIPMENT_MODEL &&
                     <CustomFormSection
                         token={token}
-                        model={subject}
-                    />
-                </div>
+                        model={subject}/>}
                 {hasLogo &&
                 <img alt="loading"
                      style={{width: 250, marginTop: 50}}
