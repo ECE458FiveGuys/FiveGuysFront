@@ -24,6 +24,7 @@ import SortableComponent from "./app/Common/Forms/CustomFormGenerator";
 import CalibrationEventDetailView from "./app/Pages/DetailPages/CalibrationEventDetailPage/CalibrationEventDetailView";
 import PendingCalibrations from "./app/Pages/PendingCalibrationsPage/PendingCalibrations";
 import UserDetailView from "./app/Pages/DetailPages/UserDetailPage/UserDetailView";
+import TreeView from "./app/Pages/TreePage/TreeView";
 
 class App extends Component {
 
@@ -149,8 +150,13 @@ class App extends Component {
                 </Route>
                 <Route path="/create-custom-form"
                        render={(props) => (<SortableComponent location={props.location}
-                                               token={this.state.token}
-                                               user={this.state.user}/>)}>
+                                                              token={this.state.token}
+                                                              user={this.state.user}/>)}>
+                </Route>
+                <Route path="/Tree"
+                       render={(props) => (<TreeView location={props.location}
+                                                              token={this.state.token}
+                                                              user={this.state.user}/>)}>
                 </Route>
               <Route>
                 <MessagePage text={"Sorry, this page does not exist."}/>

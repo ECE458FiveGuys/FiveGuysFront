@@ -6,7 +6,9 @@ import {IdealCurrents} from "../../../../LoadBankPage/Steps/LoadBankStepSteps/st
 import FileUtils from "../../../../../../utils/file_utils";
 import Tree from 'react-tree-graph';
 import ReactDOMServer from "react-dom/server";
+import React, {Component, PropTypes} from 'react';
 // import XLSX from "xlsx";
+
 
 import * as XLSX from 'xlsx';
 import {
@@ -30,6 +32,7 @@ export async function createCertificate (instrument, user, calibrationEvent, tok
     await addImage(certificate, Logo, 'png', 10)
     certificate.line((pageWidth - DIVIDER_WIDTH) / 2, IMAGE_HEIGHT + 10, (pageWidth + DIVIDER_WIDTH) / 2, IMAGE_HEIGHT + 10)
     writeInstrumentDetails(certificate, user, instrument, calibrationEvent, pageWidth)
+
     let additionalEvidence = calibrationEvent[ModelFields.CalibrationFields.AdditionalFile]
     let loadBankData = calibrationEvent[ModelFields.CalibrationFields.LoadBankFile] ? JSON.parse(calibrationEvent[ModelFields.CalibrationFields.LoadBankFile]) : undefined
     let flukeData = calibrationEvent[ModelFields.CalibrationFields.HardwareCalibrationFile] ? JSON.parse(calibrationEvent[ModelFields.CalibrationFields.HardwareCalibrationFile]) : undefined
@@ -49,6 +52,11 @@ export function addImage(certificate, image, extension, marginTop=0) {
     let imageHeight = IMAGE_HEIGHT
     let imageWidth = IMAGE_HEIGHT * LOGO_ASPECT_RATIO
     certificate.addImage(image, extension, (pageWidth - imageWidth) / 2, marginTop, imageWidth, imageHeight)
+}
+
+export function addTree(certificate, image, extension, marginTop=0) {
+    const pageWidth = certificate.internal.pageSize.getWidth();
+    certificate.addImage(image, extension, (pageWidth) / 2, marginTop)
 }
 
 function convertImgToBase64URL(url, callback, mimetype){
@@ -311,11 +319,3 @@ function tree_generator(instrument_tree){
     )
 }
 
-function tree_to_pdf(certificate = new jsPDF(), instrument_tree){
-    let html = ReactDOMServer.renderToStaticMarkup(tree_generator(instrument_tree.render()))
-    html2canvas(html).then((canvas)=> {
-        const image = canvas.toDataURL('image/png');
-        addImage(certificate, image, 'png', 10);
-        }
-    )
-}
