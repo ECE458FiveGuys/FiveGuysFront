@@ -83,8 +83,15 @@ class SortableComponent extends Component {
             let items = [...this.state.items]
             items[error].error = true
             this.setState({items:items})
+            console.log(error)
         })
-        // TODO add field to an items entry, copy items, modify that entry, set state
+    }
+
+    removeError(errorId) {
+        let items = [...this.state.items]
+        items[errorId].error = false
+        this.setState({items:items})
+        // console.log(error)
     }
 
     setCancelModalShow(boolean){
@@ -158,12 +165,19 @@ class SortableComponent extends Component {
         items.forEach((item) => {
             let entry = {}
 
-            if(!entries || !entries[item.id] || !JSON.parse(entries[item.id]).prompt || !JSON.parse(entries[item.id]).type || JSON.parse(entries[item.id]).prompt === ""){
+            if(!entries || !entries[item.id] ||
+                (item.type === "input"
+                    && ( !JSON.parse(entries[item.id]).prompt
+                        || !JSON.parse(entries[item.id]).type
+                        || JSON.parse(entries[item.id]).prompt === "")
+                )){
                 errors.push(item.id)
                 console.log("EMPTY FIELD"+item.id)
                 // console.log(entries[item.id])
             } else {
-
+                if(item.error) {
+                    this.removeError(item.id)
+                }
                 console.log(entries[item.id])
                 entry['type'] = item.type
                 entry['value'] = entries[item.id]
@@ -179,7 +193,7 @@ class SortableComponent extends Component {
             console.log(errors)
         }
         else {
-
+            console.log("submitting")
 
             let stringToSubmit = {'form': finalForm}
             let finalFormString = JSON.stringify(stringToSubmit)
