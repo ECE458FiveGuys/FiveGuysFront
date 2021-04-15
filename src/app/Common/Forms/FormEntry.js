@@ -83,8 +83,8 @@ class FormEntry extends Component {
                             calibratable)
                         </option>
                         <option value={ModelFields.CalibrationModes.LOAD_BANK}>Load Bank</option>
-                        <option value={ModelFields.CalibrationModes.GUIDED_HARDWARE}>Guided Hardware (Klufe 5700)
-                        </option>
+                        <option value={ModelFields.CalibrationModes.GUIDED_HARDWARE}>Guided Hardware (Klufe 5700)</option>
+                        <option value={ModelFields.CalibrationModes.CUSTOM_FORM}>Custom Form</option>
                     </select>
                     {this.props.fieldErrors[fieldName] &&
                     <text style={{fontSize: 13}} className="text-danger">{this.props.fieldErrors[fieldName]}</text>}
