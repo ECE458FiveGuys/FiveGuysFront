@@ -21,7 +21,7 @@ class CustomFormView extends Component {
         else if(field.type === "input") {
             let {type,prompt} = JSON.parse(field.value)
             return(
-                <HTPMultiLineInput size={1} label={prompt} disabled/>
+                <HTPMultiLineInput size={1} label={prompt}/>
             )
 
         }
