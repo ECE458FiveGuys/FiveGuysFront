@@ -7,6 +7,7 @@ import './CreateCusotmForm.css';
 import SubmitModal from "./ConfirmationModals/SubmitModal";
 import CancelModal from "./ConfirmationModals/CancelModal";
 import ModelRequests from "../../../controller/requests/model_requests";
+import {forEach} from "react-bootstrap/ElementChildren";
 
 
 const DragHandle = SortableHandle(() => <MDBIcon className={'drag-handle'} icon={'grip-lines'} size={'2x'}/>);
@@ -14,7 +15,7 @@ const DragHandle = SortableHandle(() => <MDBIcon className={'drag-handle'} icon=
 const SortableItem = SortableElement(({value,onRemove, onChange, onInputFieldChange}) => (
     <div className="SortableItem">
         {<CustomFormField type={value.type} id={value.id} dragHandle={<DragHandle/>} onRemove={() => onRemove(value.id)}
-                          onChange={onChange} onInputFieldChange={onInputFieldChange} content={value.content}
+                          onChange={onChange} onInputFieldChange={onInputFieldChange} content={value.content} error={value.error}
         />}
     </div>
 ));
@@ -60,7 +61,7 @@ class SortableComponent extends Component {
                 }
             )
         } else {
-            items = [{id:0, type:'header'},{id:1, type:'input'}]
+            items = [{id:0, type:'header', error: false},{id:1, type:'input', error:false}]
             nextFieldId = 2;
         }
         return {
@@ -76,6 +77,15 @@ class SortableComponent extends Component {
     //     let el = document.getElementsByClassName('sortable-list')
     //     el.scrollTop = el.scrollHeight
     // }
+
+    declareErrors(errors) {
+        errors.forEach((error)=>{
+            let items = [...this.state.items]
+            items[error].error = true
+            this.setState({items:items})
+        })
+        // TODO add field to an items entry, copy items, modify that entry, set state
+    }
 
     setCancelModalShow(boolean){
         this.setState({cancelModalShow:boolean})
@@ -127,7 +137,7 @@ class SortableComponent extends Component {
 
     add(inputType) {
         const {items,nextFieldId} = this.state;
-        let new_item = {id:nextFieldId, type:inputType};
+        let new_item = {id:nextFieldId, type:inputType, error:false};
         let newFieldId = nextFieldId + 1;
         items.push(new_item);
 
@@ -143,31 +153,57 @@ class SortableComponent extends Component {
     submitForm = () => {
         let {items,entries} = this.state
         let finalForm = [];
+        let errors = [];
 
         items.forEach((item) => {
             let entry = {}
-            entry['type'] = item.type
-            entry['value'] = entries[item.id]
-            finalForm.push(entry)
+
+            if(!entries || !entries[item.id] || !JSON.parse(entries[item.id]).prompt || !JSON.parse(entries[item.id]).type || JSON.parse(entries[item.id]).prompt === ""){
+                errors.push(item.id)
+                console.log("EMPTY FIELD"+item.id)
+                // console.log(entries[item.id])
+            } else {
+
+                console.log(entries[item.id])
+                entry['type'] = item.type
+                entry['value'] = entries[item.id]
+
+                finalForm.push(entry)
+            }
+
         })
-        let stringToSubmit = {'form':finalForm}
-        let finalFormString = JSON.stringify(stringToSubmit)
 
-        // console.log(JSON.parse(finalFormString))
-        let successCallback = (response) => {
-            this.props.setExistingFields(finalFormString)
-            this.cancelSubmission()
+        if(errors.length > 0){
+            this.declareErrors(errors)
+            this.setSubmitModalShow(false)
+            console.log(errors)
         }
+        else {
 
-        let errorCallback = (response) => {
-            alert(response)
+
+            let stringToSubmit = {'form': finalForm}
+            let finalFormString = JSON.stringify(stringToSubmit)
+
+            // console.log(JSON.parse(finalFormString))
+            let successCallback = (response) => {
+                this.props.setExistingFields(finalFormString)
+                this.cancelSubmission()
+            }
+
+            let errorCallback = (response) => {
+                alert(response)
+            }
+            let {model} = this.props
+            let fields = {
+                vendor: model.vendor,
+                model_number: model.model_number,
+                description: model.description,
+                custom_form: finalFormString
+            }
+            ModelRequests.editModelWithFields(
+                this.props.token, model.pk, fields, successCallback, errorCallback
+            )
         }
-        // this.props.model.custom_form = finalFormString
-        let {model} = this.props
-        let fields = {vendor:model.vendor,model_number:model.model_number,description:model.description,custom_form:finalFormString}
-        ModelRequests.editModelWithFields(
-            this.props.token,model.pk, fields,successCallback,errorCallback
-        )
     }
 
     render() {
