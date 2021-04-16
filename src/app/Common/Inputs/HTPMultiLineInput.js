@@ -40,6 +40,7 @@ export default class HTPMultiLineInput extends Component {
                     id="exampleFormControlTextarea1"
                     rows={size}
                     style={style}
+                    name={name}
                 />
                 {error && <text style={{fontSize : 13}} className="text-danger">{error}</text>}
             </div>

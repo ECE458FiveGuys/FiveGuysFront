@@ -14,6 +14,7 @@ import {instrumentCalibratable} from "../../utils";
 import {SHORTEN_LABELS} from "../../../../CreateFunctions/CreateUser";
 import {buildEvidenceElement} from "../../../Common/utils";
 import Checkbox from "../../../../../Common/Tables/TableWidgets/Checkbox";
+import CustomFormView from "../../../../../Common/Forms/CustomFormView";
 
 export default class CalibrationSection extends React.Component {
 
@@ -77,9 +78,9 @@ export default class CalibrationSection extends React.Component {
         })
     }
 
-    tempSetCustomFormShow(boolean) {
-        this.setState({tempSetCustomFormShow : boolean})
-    }
+    // tempSetCustomFormShow(boolean) {
+    //     this.setState({tempSetCustomFormShow : boolean})
+    // }
 
     setCustomCalibrationModalShow(boolean) {
         this.setState({customCalibrationModalShow : boolean})
@@ -126,11 +127,7 @@ export default class CalibrationSection extends React.Component {
                         onSubmit={() => {
                             this.setCustomCalibrationModalShow(true)
                         }}/> : <></>}
-                {/*{<HTPButton*/}
-                {/*    label={"Temp Custom Form Button"}*/}
-                {/*    onSubmit={() => {*/}
-                {/*        this.tempSetCustomFormShow(true)*/}
-                {/*    }}/>}*/}
+
             </div>)
     }
 
@@ -153,7 +150,7 @@ export default class CalibrationSection extends React.Component {
 
     render() {
         let {token, instrument, user} = this.props
-        let {calibrationModalShow, calibrationTableRows, tempSetCustomFormShow, generalError} = this.state
+        let {calibrationModalShow, calibrationTableRows, customCalibrationModalShow, generalError} = this.state
         return(<div style={{marginLeft : 50, marginRight : 50, textAlign : 'center', flex : 1.8}}>
                             <h1 style={{alignSelf : 'center', justifySelf : 'center', textAlign : "center"}}
                                 className={"h2-responsive"}>
@@ -173,13 +170,13 @@ export default class CalibrationSection extends React.Component {
                         generalError={generalError}
                         setError={(e) => this.setState({generalError : e})}
                     />
-                    {/*<FormBuilder*/}
-                    {/*    show={tempSetCustomFormShow}*/}
-                    {/*    onHide={()=>this.tempSetCustomFormShow(false)}*/}
-                    {/*    closeModal={()=>this.tempSetCustomFormShow(false)}*/}
-                    {/*    token={token}*/}
-                    {/*    user={user}*/}
-                    {/*/>*/}
+                    <CustomFormView
+                        show={customCalibrationModalShow}
+                        onHide={() => this.setCustomCalibrationModalShow(false)}
+                        token = {this.props.token}
+                        fields = {instrument.custom_form}
+                        preview={false}
+                    />
                     <DataTable columns={this.approvalRequired(instrument) ? TableColumns.CALIBRATION_COLUMNS_APPROVAL : TableColumns.CALIBRATION_COLUMNS}
                                searching={false}
                                rows={calibrationTableRows}/>
