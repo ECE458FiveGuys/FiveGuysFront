@@ -25,32 +25,35 @@ class CustomFormField extends Component {
         }
     }
     headerField() {
-        let {content} = this.props
+        let {content,error} = this.props
         return(
             <div>
                 <HTPMultiLineInput size={1} label={"Header Text"} placeholder={"Enter Text"} name={"Header Text"}
                                    onChange={(event) => this.props.onChange(this.props.id)(event)}
                                    defaultValue={content}
+                                   error={(error)?"ERROR":undefined}
+                                   // TODO ERROR BOOLEAN IS PROPS.ERROR
                 />
             </div>
         )
     }
 
     textField() {
-        let {id,content,onChange} = this.props
+        let {id,content,onChange,error} = this.props
         return(
             <div>
                 <HTPMultiLineInput size={2} label={"Body Text"} placeholder={"Enter Text"} name={"Body Text"}
                                    onChange={(event) => onChange(id)(event)}
                                    defaultValue={content}
+                                   error={(error)?"ERROR":undefined}
                 />
             </div>
         )
     }
 
     inputField() {
-        let {id, onInputFieldChange} = this.props
-        console.log(this.props.content)
+        let {id, onInputFieldChange,error} = this.props
+        // console.log(this.props.content)
         let content = {}
         if(this.props.content) {
         //
@@ -79,6 +82,8 @@ class CustomFormField extends Component {
                 <HTPMultiLineInput size={1} label={"Prompt"} placeholder={"Enter Text"} name={"Input"}
                                    onChange={(event) => onInputFieldChange(id)(event)}
                                    defaultValue={content.prompt}
+                                   error={(error)?"ERROR":undefined}
+
                 />
             </div>
         )
