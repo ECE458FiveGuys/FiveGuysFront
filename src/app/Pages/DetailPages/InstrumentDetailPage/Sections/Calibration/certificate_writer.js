@@ -26,7 +26,7 @@ const SUBHEADING_FONT_SIZE = 20
 const INLINE_IMAGE_EXTENSIONS = ["jpeg", "jpg", "gif", "png"]
 
 export async function createCertificate (instrument, user, calibrationEvent, token) {
-    let isChainEnabled = true
+    let isChainEnabled = false
     let certificate = new jsPDF()
     const pageWidth = certificate.internal.pageSize.getWidth();
     await addImage(certificate, Logo, 'png', 10)
@@ -38,12 +38,12 @@ export async function createCertificate (instrument, user, calibrationEvent, tok
     //everything above here is only done once
 
     if (isChainEnabled){
-        //makePageRecursive(certificate, instrument, calibrationEvent, token)
         await getChainOfTruthTree(certificate, instrument, calibrationEvent, token)
     }
     else {
         writeInstrumentDetails(certificate, user, instrument, calibrationEvent, pageWidth)
         makePageWithoutChain(certificate, instrument, calibrationEvent, token)
+        saveCertificate(certificate, instrument)
     }
 }
 
@@ -103,7 +103,7 @@ function makePageRecursive(certificate, instrument, calibrationEvent, token, jso
     if (json.calibrated_with) {
         calibratedWith.forEach(temp => {
             assetTagNumber = temp.asset_tag_number
-            calibratedWithString = calibratedWithString + " " + assetTagNumber + " (Page " + map.[assetTagNumber] + ")"
+            calibratedWithString = calibratedWithString + assetTagNumber + " (Page " + map.[assetTagNumber] + ")" + " "
         })
     }
     certificate.autoTable({
@@ -132,6 +132,7 @@ function makePageRecursive(certificate, instrument, calibrationEvent, token, jso
             ['Date', json.approval_data.date],
             ['Comment', json.approval_data.comment]]
     })
+    makePageWithoutChain(certificate, json.instrument, json, token)//here instrument.calibration_event or json
     certificate.addPage()
     console.log(json)
     calibratedWith = json.calibrated_with
@@ -151,7 +152,7 @@ function makePageWithoutChain(certificate, instrument, calibrationEvent, token){
         loadBankData ? writeLoadBankSection(certificate, loadBankData) :
             flukeData ? writeHardwareCalibrationSection(certificate, flukeData) :
                 void(0)
-    if (!additionalEvidence) saveCertificate(certificate, instrument)
+    //if (!additionalEvidence) saveCertificate(certificate, instrument)
 }
 
 export function addImage(certificate, image, extension, marginTop=0) {
@@ -219,7 +220,7 @@ function writeAdditionalEvidence (certificate, additionalEvidence, instrument, t
         let addImageCallback = (image) => {
             certificate.text('ADDITIONAL EVIDENCE:', pageWidth / 2, 205, 'center');
             addImage(certificate, image, extension, 210)
-            saveCertificate(certificate, instrument)
+            //saveCertificate(certificate, instrument)
         }
         convertImgToBase64URL(additionalEvidence, addImageCallback, `image/${extension}`)
         //srcToFile(additionalEvidence, name, `image/png`, addImageCallback)
@@ -272,7 +273,7 @@ function writeAdditionalEvidence (certificate, additionalEvidence, instrument, t
             // table['body'] = body
             // certificate.autoTable(table)
             // })
-            saveCertificate(certificate, instrument)
+            //saveCertificate(certificate, instrument)
         }
         srcToFile(additionalEvidence, name, `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`, callBack)
     }
@@ -287,7 +288,7 @@ function writeAdditionalEvidence (certificate, additionalEvidence, instrument, t
             head: [['AdditionalEvidence']],
             body: [[additionalEvidence]]
         })
-        saveCertificate(certificate, instrument)
+        //saveCertificate(certificate, instrument)
     }
 }
 
