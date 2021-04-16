@@ -34,7 +34,8 @@ export const URLS =
         CALIBRATIONS : ROOT_URL + "calibration-events/",
         APPROVAL_DATA : ROOT_URL + "approval-data/",
         CALIBRATORS : (pk) => ROOT_URL + `instruments/${pk}/calibrators/`,
-        PENDING_APPROVAL : ROOT_URL + "calibration-events/pending_approval/"
+        PENDING_APPROVAL : ROOT_URL + "calibration-events/pending_approval/",
+        CALIBRATION_CERTIFICATE : (pk) => ROOT_URL + `instruments/${pk}/calibration_certificate/`,
     }
 
 export const KLUFE_URLS = {
