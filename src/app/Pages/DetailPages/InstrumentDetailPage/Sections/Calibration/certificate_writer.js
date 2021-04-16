@@ -31,7 +31,6 @@ export async function createCertificate (instrument, user, calibrationEvent, tok
     const pageWidth = certificate.internal.pageSize.getWidth();
     await addImage(certificate, Logo, 'png', 10)
     certificate.line((pageWidth - DIVIDER_WIDTH) / 2, IMAGE_HEIGHT + 10, (pageWidth + DIVIDER_WIDTH) / 2, IMAGE_HEIGHT + 10)
-    writeInstrumentDetails(certificate, user, instrument, calibrationEvent, pageWidth)
     certificate.setFont("helvetica")
     certificate.setFontSize(30)
     certificate.setTextColor(0, 100, 0);
@@ -43,6 +42,7 @@ export async function createCertificate (instrument, user, calibrationEvent, tok
         await getChainOfTruthTree(certificate, instrument, calibrationEvent, token)
     }
     else {
+        writeInstrumentDetails(certificate, user, instrument, calibrationEvent, pageWidth)
         makePageWithoutChain(certificate, instrument, calibrationEvent, token)
     }
 }
@@ -52,7 +52,6 @@ let saveCertificate = (certificate, instrument) => {
 }
 
 async function getChainOfTruthTree(certificate, instrument, calibrationEvent, token){
-    let json = MiscellaneousRequests.getCalibrationCertificate(token, (json) => this.setState({calibratedWithOptions : json}), instrument.pk)
     let fullToken = 'Token ' + token
     const requestOptions = {
         method: 'GET',
@@ -63,10 +62,16 @@ async function getChainOfTruthTree(certificate, instrument, calibrationEvent, to
         .then(response => {
             return response.text()})
         .then(json => { //success
+            console.log(json)
             let realJson = JSON.parse(json)
-            let json_tester = '{"pk":233,"instrument":248,"date":"2021-03-02","user":{"pk":1,"username":"admin"},"comment":"Emergency re-calibration","additional_evidence":null,"load_bank_data":"","guided_hardware_data":"","custom_data":"","approval_data":{"pk":206,"calibration_event":233,"approved":true,"approver":1,"date":"2021-04-07","comment":""},"calibrated_with":[{"pk":2,"serial_number":null,"asset_tag_number":884723,"calibration_event":{"pk":2,"instrument":2,"date":"2021-03-01","user":{"pk":1,"username":"admin"},"comment":"Monthly load bank related instruments calibration - Mar21","additional_evidence":null,"load_bank_data":"","guided_hardware_data":"","custom_data":"","approval_data":{"pk":2,"calibration_event":2,"approved":true,"approver":1,"date":"2021-04-07","comment":""},"calibrated_with":[{"pk":128,"serial_number":null,"asset_tag_number":100114,"calibration_event":{"pk":123,"instrument":128,"date":"2021-02-03","user":{"pk":1,"username":"admin"},"comment":"Calibrated all instruments markeds during January random tests on Feb 3rd","additional_evidence":null,"load_bank_data":"","guided_hardware_data":"","custom_data":"","approval_data":{"pk":96,"calibration_event":123,"approved":true,"approver":1,"date":"2021-04-07","comment":""},"calibrated_with":[]}}]}},{"pk":26,"serial_number":null,"asset_tag_number":100016,"calibration_event":{"pk":26,"instrument":26,"date":"2021-02-03","user":{"pk":1,"username":"admin"},"comment":"Calibrated all instruments markeds during January random tests on Feb 3rd","additional_evidence":null,"load_bank_data":"","guided_hardware_data":"","custom_data":"","approval_data":{"pk":24,"calibration_event":26,"approved":true,"approver":1,"date":"2021-04-07","comment":""},"calibrated_with":[{"pk":250,"serial_number":null,"asset_tag_number":100219,"calibration_event":{"pk":235,"instrument":250,"date":"2021-01-01","user":{"pk":1,"username":"admin"},"comment":"Calibrated preemptively as a part of routine annual eval","additional_evidence":null,"load_bank_data":"","guided_hardware_data":"","custom_data":"","approval_data":{"pk":208,"calibration_event":235,"approved":true,"approver":1,"date":"2021-04-07","comment":""},"calibrated_with":[{"pk":326,"serial_number":null,"asset_tag_number":100083,"calibration_event":{"pk":312,"instrument":326,"date":"2020-12-15","user":{"pk":1,"username":"admin"},"comment":"","additional_evidence":null,"load_bank_data":"","guided_hardware_data":"","custom_data":"","approval_data":{"pk":285,"calibration_event":312,"approved":true,"approver":1,"date":"2021-04-14","comment":""},"calibrated_with":[]}}]}}]}}]}'
+            let json_tester = '{"pk":233,"instrument":{"pk":248,"serial_number":null,"asset_tag_number":100217,"model":{"pk":52,"model_number":"8508A","vendor":"Fluke","description":"8.5 Digit Reference Multimeter"}},"date":"2021-03-02","user":{"pk":1,"username":"admin"},"comment":"Emergency re-calibration","additional_evidence":null,"load_bank_data":"","guided_hardware_data":"","custom_data":"","approval_data":{"pk":206,"calibration_event":233,"approved":true,"approver":{"pk":1,"name":"Admin","username":"admin","email":"admin@localhost"},"date":"2021-04-07","comment":""},"calibrated_with":[{"pk":2,"serial_number":null,"asset_tag_number":884723,"calibration_event":{"pk":2,"instrument":{"pk":2,"serial_number":null,"asset_tag_number":884723,"model":{"pk":2,"model_number":"99V","vendor":"Fluke","description":"voltmeter"}},"date":"2021-03-01","user":{"pk":1,"username":"admin"},"comment":"Monthly load bank related instruments calibration - Mar21","additional_evidence":null,"load_bank_data":"","guided_hardware_data":"","custom_data":"","approval_data":{"pk":2,"calibration_event":2,"approved":true,"approver":{"pk":1,"name":"Admin","username":"admin","email":"admin@localhost"},"date":"2021-04-07","comment":""},"calibrated_with":[{"pk":128,"serial_number":null,"asset_tag_number":100114,"calibration_event":{"pk":123,"instrument":{"pk":128,"serial_number":null,"asset_tag_number":100114,"model":{"pk":28,"model_number":"8808A","vendor":"Fluke","description":"Digital Multimeter"}},"date":"2021-02-03","user":{"pk":1,"username":"admin"},"comment":"Calibrated all instruments markeds during January random tests on Feb 3rd","additional_evidence":null,"load_bank_data":"","guided_hardware_data":"","custom_data":"","approval_data":{"pk":96,"calibration_event":123,"approved":true,"approver":{"pk":1,"name":"Admin","username":"admin","email":"admin@localhost"},"date":"2021-04-07","comment":""},"calibrated_with":[],"calibration_expiration_date":"2021-04-18"}}],"calibration_expiration_date":"2021-04-30"}},{"pk":26,"serial_number":null,"asset_tag_number":100016,"calibration_event":{"pk":26,"instrument":{"pk":26,"serial_number":null,"asset_tag_number":100016,"model":{"pk":8,"model_number":"8558A","vendor":"Fluke","description":"Digit Multimeter"}},"date":"2021-02-03","user":{"pk":1,"username":"admin"},"comment":"Calibrated all instruments markeds during January random tests on Feb 3rd","additional_evidence":null,"load_bank_data":"","guided_hardware_data":"","custom_data":"","approval_data":{"pk":24,"calibration_event":26,"approved":true,"approver":{"pk":1,"name":"Admin","username":"admin","email":"admin@localhost"},"date":"2021-04-07","comment":""},"calibrated_with":[{"pk":250,"serial_number":null,"asset_tag_number":100219,"calibration_event":{"pk":235,"instrument":{"pk":250,"serial_number":null,"asset_tag_number":100219,"model":{"pk":52,"model_number":"8508A","vendor":"Fluke","description":"8.5 Digit Reference Multimeter"}},"date":"2021-01-01","user":{"pk":1,"username":"admin"},"comment":"Calibrated preemptively as a part of routine annual eval","additional_evidence":null,"load_bank_data":"","guided_hardware_data":"","custom_data":"","approval_data":{"pk":208,"calibration_event":235,"approved":true,"approver":{"pk":1,"name":"Admin","username":"admin","email":"admin@localhost"},"date":"2021-04-07","comment":""},"calibrated_with":[{"pk":326,"serial_number":null,"asset_tag_number":100083,"calibration_event":{"pk":312,"instrument":{"pk":326,"serial_number":null,"asset_tag_number":100083,"model":{"pk":22,"model_number":"AS0104","vendor":"AMETEK","description":"solid-state power amplifiers"}},"date":"2020-12-15","user":{"pk":1,"username":"admin"},"comment":"","additional_evidence":null,"load_bank_data":"","guided_hardware_data":"","custom_data":"","approval_data":{"pk":285,"calibration_event":312,"approved":true,"approver":{"pk":1,"name":"Admin","username":"admin","email":"admin@localhost"},"date":"2021-04-14","comment":""},"calibrated_with":[],"calibration_expiration_date":"2021-02-25"}}],"calibration_expiration_date":"2021-03-30"}}],"calibration_expiration_date":"2021-05-14"}}],"calibration_expiration_date":"2021-05-29"}'
             let testerFixed = JSON.parse(json_tester)
-            makePageRecursive(certificate, instrument, calibrationEvent, token, testerFixed)
+            let map = {}
+            let fakeCertificate = makeFakeCertificate()
+            map = makePageRecursive(fakeCertificate, instrument, calibrationEvent, token, testerFixed, "", IMAGE_HEIGHT, map)
+            console.log(map)
+            map = makePageRecursive(certificate, instrument, calibrationEvent, token, testerFixed, "", IMAGE_HEIGHT, map)
+            saveCertificate(certificate, instrument)
         })
         .catch((error) => {
             console.log(error)
@@ -79,15 +84,63 @@ async function getChainOfTruthTree(certificate, instrument, calibrationEvent, to
     //console.log(this.state.calibratedWithOptions)
 }
 
-function makePageRecursive(certificate, instrument, calibrationEvent, token, json) {
-    console.log(json.pk)
-    console.log(json)
+function makeFakeCertificate(){
+    let certificate = new jsPDF()
+    const pageWidth = certificate.internal.pageSize.getWidth();
+    certificate.line((pageWidth - DIVIDER_WIDTH) / 2, IMAGE_HEIGHT + 10, (pageWidth + DIVIDER_WIDTH) / 2, IMAGE_HEIGHT + 10)
+    certificate.setFont("helvetica")
+    certificate.setFontSize(30)
+    certificate.setTextColor(0, 100, 0);
+    certificate.text('CALIBRATION CERTIFICATE', pageWidth / 2, IMAGE_HEIGHT + 25, 'center');
+    return certificate
+}
+
+function makePageRecursive(certificate, instrument, calibrationEvent, token, json, dateUsed, space, map) { //need to put who they callibrated?
+    map[json.instrument.asset_tag_number] = certificate.internal.pages.length -1
+    let calibratedWithString = ''
     let calibratedWith = json.calibrated_with
+    let assetTagNumber = 0
     if (json.calibrated_with) {
-        calibratedWith.forEach(instrument => {
-            makePageRecursive(certificate, instrument, calibrationEvent, token, instrument)
+        calibratedWith.forEach(temp => {
+            assetTagNumber = temp.asset_tag_number
+            calibratedWithString = calibratedWithString + " " + assetTagNumber + " (Page " + map.[assetTagNumber] + ")"
         })
     }
+    certificate.autoTable({
+        head: [['Instrument Info', '']],
+        margin: { top: space + 35 },
+        body: [['Model Number', json.instrument.model.model_number],
+            ['Vendor', json.instrument.model.vendor],
+            ['Short Description', json.instrument.model.description],
+            ['Serial Number', json.instrument.serial_number],
+            ['Asset Number', json.instrument.asset_tag_number]]
+    })
+    certificate.autoTable({
+        head: [['Calibration Info', '']],
+        margin: { top: space + 35 },
+        body: [['Relevant Calibration Date', json.date],
+            ['Use of Instrument Date', dateUsed],
+            ['Calibration Expiration Date', json.calibration_expiration_date],
+            ['Calibrated With', calibratedWithString]]
+    })
+    certificate.autoTable({
+        head: [['Calibration Approver Info', '']],
+        margin: { top: space + 35 },
+        body: [['Name', json.approval_data.approver.name],
+            [' Username', json.approval_data.approver.username],
+            ['Email', json.approval_data.approver.email],
+            ['Date', json.approval_data.date],
+            ['Comment', json.approval_data.comment]]
+    })
+    certificate.addPage()
+    console.log(json)
+    calibratedWith = json.calibrated_with
+    if (json.calibrated_with) {
+        calibratedWith.forEach(instrument => {
+            map = makePageRecursive(certificate, instrument, calibrationEvent, token, instrument.calibration_event, json.date, 0, map)
+        })
+    }
+    return map
 }
 
 function makePageWithoutChain(certificate, instrument, calibrationEvent, token){
@@ -131,16 +184,28 @@ function convertImgToBase64URL(url, callback, mimetype){
 
 function writeInstrumentDetails (pdf, user, instrument, calibrationEvent, pageWidth) {
     pdf.autoTable({
-        head: [['Calibration Info', '']],
+        head: [['Instrument Info', '']],
         margin: { top: IMAGE_HEIGHT + 35 },
         body: [['Model Number', instrument.model.model_number],
             ['Vendor', instrument.model.vendor],
             ['Short Description', instrument.model.description],
-            ['Serial Number', instrument[ModelFields.InstrumentFields.SERIAL_NUMBER]],
-            ['Asset Number', instrument[ModelFields.InstrumentFields.ASSET_TAG]],
-            ['Most Recent Calibration', calibrationEvent[ModelFields.CalibrationFields.Date]],
-            ['Calibration Expiration Date', instrument[Instrument.FIELDS.EXPIRATION_DATE]],
-            ['Engineer', user.name]]
+            ['Serial Number', instrument.serial_number],
+            ['Asset Number', instrument.asset_tag_number]]
+    })
+    pdf.autoTable({
+        head: [['Calibration Info', '']],
+        margin: { top: IMAGE_HEIGHT + 35 },
+        body: [['Relevant Calibration Date', instrument.calibration_history[0].date],
+            ['Calibration Expiration Date', instrument.calibration_expiration_date]]
+    })
+    pdf.autoTable({
+        head: [['Calibration Approver Info', '']],
+        margin: { top: IMAGE_HEIGHT + 35 },
+        body: [['Name', instrument.calibration_history[0].approval_data.approver.name],
+            [' Username', instrument.calibration_history[0].approval_data.approver.username],
+            ['Email', instrument.calibration_history[0].approval_data.approver.email],
+            ['Date', instrument.calibration_history[0].approval_data.date],
+            ['Comment', instrument.calibration_history[0].approval_data.comment]]
     })
 }
 
