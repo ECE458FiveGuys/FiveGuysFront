@@ -161,10 +161,12 @@ class SortableComponent extends Component {
         let {items,entries} = this.state
         let finalForm = [];
         let errors = [];
+        let inputExists = false
 
         items.forEach((item) => {
             let entry = {}
 
+            if(item.type === "input") {inputExists = true}
             if(!entries || !entries[item.id] ||
                 (item.type === "input"
                     && ( !JSON.parse(entries[item.id]).prompt
@@ -193,12 +195,9 @@ class SortableComponent extends Component {
             console.log(errors)
         }
         else {
-            console.log("submitting")
-
-            let stringToSubmit = {'form': finalForm}
+            let stringToSubmit = {'form': finalForm,'input':(inputExists)?"true":""}
             let finalFormString = JSON.stringify(stringToSubmit)
 
-            // console.log(JSON.parse(finalFormString))
             let successCallback = (response) => {
                 this.props.setExistingFields(finalFormString)
                 this.cancelSubmission()
@@ -212,6 +211,7 @@ class SortableComponent extends Component {
                 vendor: model.vendor,
                 model_number: model.model_number,
                 description: model.description,
+                calibration_frequency: model.calibration_frequency,
                 custom_form: finalFormString
             }
             ModelRequests.editModelWithFields(
@@ -267,6 +267,7 @@ class SortableComponent extends Component {
                             onHide={() => this.setSubmitModalShow(false)}
                             onSubmission={this.submitForm}
                             message={'Are you sure you\'re ready to submit?'}
+                            // hasInput={true}
                         />
                         <CancelModal
                             show={this.state.cancelModalShow}
