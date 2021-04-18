@@ -106,8 +106,8 @@ export default class ModelFields {
 export class MiscellaneousEnums {
 
     static KNOWN_CATEGORIES = {
-        KLUFE : "Klufe K5700-compatible calibrators",
+        KLUFE : "Klufe-K5700-compatible-calibrators",
         VOLTMETER : "voltmeter",
-        SHUNT_METER : "shunt meter"
+        SHUNT_METER : "shunt-meter"
     }
 }
