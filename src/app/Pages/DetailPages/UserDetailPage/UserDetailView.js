@@ -183,7 +183,7 @@ export default class UserDetailView extends Component {
                                           title={"User Permission Descriptions"}
                                           message={this.getDisplayMessage()}/>
                                     <div>
-                                        {this.renderPermissions()}
+                                        {loadedUser.username != "admin" ? this.renderPermissions() : <text>Permanent Admin</text>}
                                     </div>
                                 {loadedUser.username != "admin" &&
                                 <div style={{marginTop : 30}}>
