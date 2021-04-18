@@ -3,7 +3,7 @@ import { MDBNavbar, MDBNavbarBrand, MDBNavbarNav, MDBNavItem, MDBNavLink, MDBNav
     MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem, MDBIcon } from "mdbreact";
 import PropTypes from "prop-types";
 import {User} from "../../utils/dtos";
-import {SHORTEN_LABELS} from "../../app/Pages/CreateFunctions/CreateUser";
+import {SHORTEN_LABELS} from "../Pages/CreateFunctions/CreateUser";
 import {getToken, Logout} from "../../auth/auth_utils";
 import MiscellaneousRequests from "../../controller/requests/miscellaneous_requests";
 
