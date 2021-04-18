@@ -78,10 +78,6 @@ export default class CalibrationSection extends React.Component {
         })
     }
 
-    // tempSetCustomFormShow(boolean) {
-    //     this.setState({tempSetCustomFormShow : boolean})
-    // }
-
     setCustomCalibrationModalShow(boolean) {
         this.setState({customCalibrationModalShow : boolean})
     }
@@ -121,7 +117,8 @@ export default class CalibrationSection extends React.Component {
                         onSubmit={() => {
                             handleNavClick("/instruments/" + instrument.pk + "/klufe-wizard/", history)
                         }}/> : <></>}
-                {instrumentCalibratable(instrument) && this.supportsCustomFormCalibration(instrument) ?
+                {instrumentCalibratable(instrument) && this.supportsCustomFormCalibration(instrument) &&
+                    instrument.model.custom_form ?
                     <HTPButton
                         label={"Custom Form Calibration"}
                         onSubmit={() => {
@@ -174,7 +171,7 @@ export default class CalibrationSection extends React.Component {
                         show={customCalibrationModalShow}
                         onHide={() => this.setCustomCalibrationModalShow(false)}
                         token = {this.props.token}
-                        fields = {instrument.custom_form}
+                        fields = {instrument.model.custom_form}
                         preview={false}
                     />
                     <DataTable columns={this.approvalRequired(instrument) ? TableColumns.CALIBRATION_COLUMNS_APPROVAL : TableColumns.CALIBRATION_COLUMNS}

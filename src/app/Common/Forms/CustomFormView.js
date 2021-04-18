@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import {Button, Modal} from "react-bootstrap";
 import {MDBCol, MDBContainer, MDBRow} from "mdbreact";
-import FormEntry from "./FormEntry";
 import HTPMultiLineInput from "../Inputs/HTPMultiLineInput";
 import SubmitModal from "./ConfirmationModals/SubmitModal";
 import CancelModal from "./ConfirmationModals/CancelModal";
@@ -16,10 +15,16 @@ class CustomFormView extends Component {
 
     makeRefreshState () {
         let fields = {}
+        // let inputsExist=false
+        if(this.props.fields){
+            fields = JSON.parse(this.props.fields).form
+            if (JSON.parse(this.props.fields).input){this.setState({inputsExist:true})}
+        }
         return {
             fields: fields,
             cancelModalShow: false,
-            submitModalShow: false
+            submitModalShow: false,
+            inputId: 0
         }
     }
 
@@ -31,7 +36,10 @@ class CustomFormView extends Component {
         this.setState({submitModalShow:boolean})
     }
 
-    parseFields(field) {
+    parseFields(field,id){
+        // console.log("parsing fields",field,id)
+        // this.setState({inputId:this.state.inputId+1})
+
         if(field.type === "header") {
             return(
                 <h1 className="mb-3">
@@ -41,11 +49,17 @@ class CustomFormView extends Component {
         }
         else if(field.type === "input") {
             let {type,prompt} = JSON.parse(field.value)
+            // this.setState({inputsExist:true})
             return(
                 <div>
-                    <HTPMultiLineInput size={1} label={prompt} placeholder={"Enter "+type} name={prompt} type = {'type'} onChange={(event) => this.onChange(type)(event)}/>
-                    {/*{this.props.fieldErrors[fieldName] &&*/}
-                    {/*<text style={{fontSize: 13}} className="text-danger">{this.props.fieldErrors[fieldName]}</text>}*/}
+                    <HTPMultiLineInput size={1} label={prompt}
+                                       placeholder={(this.props.preview)?("Input Preview"):("Enter "+type)}
+                                       name={prompt} type = {'type'}
+                                       onChange={(event) => this.onChange(type)(event)}
+                                       readOnly={this.props.preview}
+                                       id = {id}
+                                       error={field.error}
+                    />
                 </div>
             )
 
@@ -59,31 +73,38 @@ class CustomFormView extends Component {
         }
     }
 
+    renderFooter(inputExists){
+        return (!inputExists || this.props.preview) ?
+            (<Modal.Footer>
+                {this.props.preview ? "":"This form has no inputs, unable to submit"}
+                <Button onClick={() => this.props.onHide()} variant={"red"}>Close</Button>
+            </Modal.Footer>)
+            :
+            (<Modal.Footer>
+                <Button onClick={() => this.setCancelModalShow(true)} variant={"red"}>Close</Button>
+                <Button onClick={() => this.setSubmitModalShow(true)}>Submit</Button>
+            </Modal.Footer>)
+    }
+
     errorOnChange(type,value) {
         // Return true if error exists in input
+        // if(type === "full") return (value == "") ? "Need to enter input here":"";
         if(type === "text") return (value.length > 200) ? "Value longer than 200 characters":"";
         if(type === "number") return !(Number(value) == value) ? "Not a floating point integer":"";
     }
 
     onChange = (type) => (event) => {
-        let fields = (this.state.fields) ? this.state.fields : {}
+        let fields = {...this.state.fields}
+
         let value = event.target.value
         let name = event.target.name
+        let id = event.target.id
 
-        let error = (this.errorOnChange(type,value))
-
-        fields[name] = {value: value, error:error}
-
-        // this.setState(context.state, callBack)
-        // console.log(name,value,error)
-        // if(error) {
-        //     console.log("hhhhh")
-        // } else {
-        //     console.log("ttttt")
-        // }
+        fields[id].error = (this.errorOnChange(type,value))
+        fields[id].key = name
+        fields[id].inputValue = value
 
         this.setState({fields:fields})
-
     }
 
     cancelSubmission = () => {
@@ -92,15 +113,40 @@ class CustomFormView extends Component {
     }
 
     handleSubmit = () => {
-        console.log(this.state.fields)
+        // let fields = [...this.state.fields]
+        let fields = {...this.state.fields}
+        let valid = true
+        // console.log(fields)
+        Object.keys(fields).map((id) => {
+            if(fields[id].error && !fields[id].error === "" ) valid = false
+            if(fields[id].type === "input" && !fields[id].inputValue) {
+                valid = false
+                fields[id].error = "Can't leave this empty"
+            }
+        })
+        if(!valid) {
+            this.setState({fields:fields})
+            this.setSubmitModalShow(false)
+        }else {
+            let successCallBack = (response) => {
+                console.log("Success")
+                this.cancelSubmission()
+            }
+            let errorCallBack = (response) => {
+
+            }
+
+
+        }
     }
 
     render() {
-        let parsedFields = []
+        let {fields,inputsExist} = this.state
         if(this.props.fields){
-            parsedFields = JSON.parse(this.props.fields).form
+            if (JSON.parse(this.props.fields).input){inputsExist = true}
         }
         return (
+
             <div>
                 <Modal
                     {... this.props}
@@ -119,23 +165,21 @@ class CustomFormView extends Component {
                         <MDBContainer>
                             <MDBRow style={{justifyContent: 'center', alignItems: 'center'}}>
                                 <MDBCol md="10">
-                                        {parsedFields.map((field) =>
-                                            this.parseFields(field)
-                                        )}
+                                        {Object.keys(fields).map((id) => this.parseFields(fields[id],id))}
                                 </MDBCol>
                             </MDBRow>
                         </MDBContainer>
                     </Modal.Body>
-                    <Modal.Footer>
-                        <Button onClick={() => this.setCancelModalShow(true)} variant={"red"}>Close</Button>
-                        {(this.props.preview) ? <div/>:<Button onClick={() => this.setSubmitModalShow(true)}>Submit</Button>}
-                    </Modal.Footer>
+                    {
+                        this.renderFooter(inputsExist)
+                    }
                 </Modal>
                 <SubmitModal
                     show={this.state.submitModalShow}
                     onHide={() => this.setSubmitModalShow(false)}
                     onSubmission={this.handleSubmit}
                     message={'Are you sure you\'re ready to submit?'}
+                    noInput={!inputsExist}
                 />
                 <CancelModal
                     show={this.state.cancelModalShow}
