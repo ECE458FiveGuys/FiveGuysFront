@@ -12,15 +12,17 @@ import {forEach} from "react-bootstrap/ElementChildren";
 
 const DragHandle = SortableHandle(() => <MDBIcon className={'drag-handle'} icon={'grip-lines'} size={'2x'}/>);
 
-const SortableItem = SortableElement(({value,onRemove, onChange, onInputFieldChange}) => (
+const SortableItem = SortableElement(({value,onRemove, onChange, onInputFieldChange, onRangeInputFieldChange}) => (
     <div className="SortableItem">
         {<CustomFormField type={value.type} id={value.id} dragHandle={<DragHandle/>} onRemove={() => onRemove(value.id)}
-                          onChange={onChange} onInputFieldChange={onInputFieldChange} content={value.content} error={value.error}
+                          onChange={onChange} onInputFieldChange={onInputFieldChange} onRangeInputFieldChange={onRangeInputFieldChange}
+                          content={value.content} error={value.error}
+                          rangeSection={value.range}
         />}
     </div>
 ));
 
-const SortableList = SortableContainer(({items,onRemove,onChange,onInputFieldChange}) => {
+const SortableList = SortableContainer(({items,onRemove,onChange,onInputFieldChange,onRangeInputFieldChange}) => {
     return(
         <ul className="SortableList">
             {items.map((value, index) => {
@@ -33,6 +35,7 @@ const SortableList = SortableContainer(({items,onRemove,onChange,onInputFieldCha
                       onRemove={onRemove}
                       onChange={onChange}
                       onInputFieldChange={onInputFieldChange}
+                      onRangeInputFieldChange={onRangeInputFieldChange}
                 />
                 )
             })}
@@ -104,8 +107,28 @@ class SortableComponent extends Component {
 
     onInputFieldChange = (id) => (event) => {
         let newInputData = (this.state.entries[id]) ? JSON.parse(this.state.entries[id]):{}
+        let items = [...this.state.items]
         if(event.target.type === 'select-one') {
             newInputData['type'] = event.target.value
+            if(event.target.value === "number") {
+                items.forEach((item) => {
+                    if (item.id === id) {
+                        item["max"] = ""
+                        item["min"] = ""
+                        item["range"] = true
+                    }
+                })
+            } else {
+                items.forEach((item) => {
+                    if (item.id === id) {
+                        // item["max"] = ""
+                        // item["min"] = ""
+                        item["range"] = false
+                    }
+                })
+            }
+            this.setState({items:items})
+            console.log(this.state.items)
         }
         else if(event.target.type === 'textarea') {
             newInputData['prompt'] = event.target.value
@@ -123,6 +146,26 @@ class SortableComponent extends Component {
         let newEntries = Object.assign({},this.state.entries)
         newEntries[id] = event.target.value
         this.setState({entries:newEntries})
+    }
+
+    onRangeInputFieldChange = (id) => (event) => {
+        let items = [...this.state.items]
+
+        let name = event.target.name
+        let value = event.target.value
+
+        let content = JSON.parse(items[id].content)
+        content[name] = value
+        // this.checkMaxMin()
+        items[id].content = JSON.stringify(content)
+        // items[id].content[name] = value
+        // items[id].content[name] = value
+        this.setState({items:items})
+        let newEntries = Object.assign({},this.state.entries)
+        newEntries[id] = items[id].content
+        this.setState({entries:newEntries})
+        // console.log(this.state.entries)
+        // TODO change entries so that input fields always present if number, not just on change
     }
 
 
@@ -171,16 +214,22 @@ class SortableComponent extends Component {
                 (item.type === "input"
                     && ( !JSON.parse(entries[item.id]).prompt
                         || !JSON.parse(entries[item.id]).type
-                        || JSON.parse(entries[item.id]).prompt === "")
+                        || JSON.parse(entries[item.id]).prompt === ""
+                        || !JSON.parse(entries[item.id]).max
+                        || !JSON.parse(entries[item.id]).min
+                        || JSON.parse(entries[item.id]).max === ""
+                        || JSON.parse(entries[item.id]).min === ""
+                        || JSON.parse(entries[item.id]).max <= JSON.parse(entries[item.id]).min
+                    )
                 )){
                 errors.push(item.id)
-                console.log("EMPTY FIELD"+item.id)
+                // console.log("EMPTY FIELD"+item.id)
                 // console.log(entries[item.id])
             } else {
                 if(item.error) {
                     this.removeError(item.id)
                 }
-                console.log(entries[item.id])
+                // console.log(entries[item.id])
                 entry['type'] = item.type
                 entry['value'] = entries[item.id]
 
@@ -188,7 +237,6 @@ class SortableComponent extends Component {
             }
 
         })
-
         if(errors.length > 0){
             this.declareErrors(errors)
             this.setSubmitModalShow(false)
@@ -197,6 +245,7 @@ class SortableComponent extends Component {
         else {
             let stringToSubmit = {'form': finalForm,'input':(inputExists)?"true":""}
             let finalFormString = JSON.stringify(stringToSubmit)
+            console.log(stringToSubmit)
 
             let successCallback = (response) => {
                 this.props.setExistingFields(finalFormString)
@@ -253,6 +302,8 @@ class SortableComponent extends Component {
                                                 onRemove={this.remove}
                                                 onChange={this.onChange}
                                                 onInputFieldChange={this.onInputFieldChange}
+                                                onRangeInputFieldChange={this.onRangeInputFieldChange}
+
                                             >
                                             </SortableList>
                                     </div>

@@ -22,6 +22,7 @@ class CustomFormView extends Component {
             fields = JSON.parse(this.props.fields).form
             if (JSON.parse(this.props.fields).input){this.setState({inputsExist:true})}
         }
+        console.log(fields)
         return {
             fields: fields,
             cancelModalShow: false,
@@ -50,14 +51,15 @@ class CustomFormView extends Component {
             )
         }
         else if(field.type === "input") {
-            let {type,prompt} = JSON.parse(field.value)
+            let {type,prompt,max,min} = JSON.parse(field.value)
+            console.log(max,min)
             // this.setState({inputsExist:true})
             return(
                 <div>
                     <HTPMultiLineInput size={1} label={prompt}
                                        placeholder={(this.props.preview)?("Input Preview"):("Enter "+type)}
                                        name={prompt} type = {'type'}
-                                       onChange={(event) => this.onChange(type)(event)}
+                                       onChange={(event) => this.onChange(type)(max)(min)(event)}
                                        readOnly={this.props.preview}
                                        id = {id}
                                        error={field.error}
@@ -104,14 +106,18 @@ class CustomFormView extends Component {
             </Modal.Footer>)
     }
 
-    errorOnChange(type,value) {
+    errorOnChange(type,value,max,min) {
         // Return true if error exists in input
         // if(type === "full") return (value == "") ? "Need to enter input here":"";
         if(type === "text") return (value.length > 200) ? "Value longer than 200 characters":"";
-        if(type === "number") return !(Number(value) == value) ? "Not a floating point integer":"";
+        if(type === "number") return (
+
+            !(Number(value) == value) ? "Not a floating point integer":
+                (value <= max && value >= min) ? "":"Value outside of range ["+min+","+max+"]"
+        );
     }
 
-    onChange = (type) => (event) => {
+    onChange = (type) => (max=0) => (min=0) =>(event) => {
         if(type === "comment") {
             let comment = {...this.state.comment}
             // let value = event.target.value
@@ -126,11 +132,16 @@ class CustomFormView extends Component {
         let value = event.target.value
         let name = event.target.name
         let id = event.target.id
+        // let max = (type === "input") ? ():0
+        // if(type === comment)JSON.parse(fields[id].value)
 
-        fields[id].error = (this.errorOnChange(type,value))
-        if(type == 'number'){
 
-        }
+        fields[id].error = (this.errorOnChange(type,value,max,min))
+
+        // if(type === "number"){
+        //
+        // }
+
         fields[id].key = name
         fields[id].inputValue = value
 

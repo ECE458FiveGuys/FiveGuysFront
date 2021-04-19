@@ -31,8 +31,7 @@ class CustomFormField extends Component {
                 <HTPMultiLineInput size={1} label={"Header Text"} placeholder={"Enter Text"} name={"Header Text"}
                                    onChange={(event) => this.props.onChange(this.props.id)(event)}
                                    defaultValue={content}
-                                   error={(error)?"ERROR":undefined}
-                                   // TODO ERROR BOOLEAN IS PROPS.ERROR
+                                   error={(error)?"Fill in this information before submitting":undefined}
                 />
             </div>
         )
@@ -45,7 +44,7 @@ class CustomFormField extends Component {
                 <HTPMultiLineInput size={2} label={"Body Text"} placeholder={"Enter Text"} name={"Body Text"}
                                    onChange={(event) => onChange(id)(event)}
                                    defaultValue={content}
-                                   error={(error)?"ERROR":undefined}
+                                   error={(error)?"Fill in this information before submitting":undefined}
                 />
             </div>
         )
@@ -78,14 +77,32 @@ class CustomFormField extends Component {
                     <option value={'text'}>Text</option>
                     <option value={'number'}>Numeric</option>
                 </select>
-
+                {this.props.rangeSection ? this.rangeSection(id):<div/>}
                 <HTPMultiLineInput size={1} label={"Prompt"} placeholder={"Enter Text"} name={"Input"}
                                    onChange={(event) => onInputFieldChange(id)(event)}
                                    defaultValue={content.prompt}
-                                   error={(error)?"ERROR":undefined}
+                                   error={(error)?"Fill in this information before submitting":undefined}
 
                 />
             </div>
+        )
+    }
+
+    rangeSection(id) {
+        return (<div>
+                    <HTPMultiLineInput size={1} label={"Max"} placeholder={"Enter Value"} name={"max"}
+                                           onChange={(event) => this.props.onRangeInputFieldChange(id)(event)}
+                                           // defaultValue={"defaultValue"}
+                                           error={(this.props.error)?"Fill in this information before submitting":undefined}
+                                           width={2}
+                    />
+                    <HTPMultiLineInput size={1} label={"Min"} placeholder={"Enter Value"} name={"min"}
+                                       onChange={(event) => this.props.onRangeInputFieldChange(id)(event)}
+                                       // defaultValue={"defaultValue"}
+                                       error={(this.props.error)?"Fill in this information before submitting":undefined}
+                                       width={2}
+                    />
+        </div>
         )
     }
 

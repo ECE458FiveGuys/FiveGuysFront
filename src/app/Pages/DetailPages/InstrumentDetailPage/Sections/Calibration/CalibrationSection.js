@@ -168,8 +168,8 @@ export default class CalibrationSection extends React.Component {
                         setError={(e) => this.setState({generalError : e})}
                     />
                     <CustomFormView
-                        show={customCalibrationModalShow}
-                        onHide={() => this.setCustomCalibrationModalShow(false)}
+                        show= {customCalibrationModalShow}
+                        onHide= {() => this.setCustomCalibrationModalShow(false)}
                         token = {this.props.token}
                         fields = {instrument.model.custom_form}
                         instrument = {instrument}

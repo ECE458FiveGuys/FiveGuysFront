@@ -19,7 +19,7 @@ export default class HTPMultiLineInput extends Component {
 
 
     render() {
-        let {onChange, placeholder, name, type, defaultValue, style, label, error,size,readOnly,id}= this.props
+        let {onChange, placeholder, name, type, defaultValue, style, label, error,size,readOnly,id,width}= this.props
         return(
             <div>
                 <label
@@ -40,6 +40,7 @@ export default class HTPMultiLineInput extends Component {
                     id={id}
                     // id="exampleFormControlTextarea1"
                     rows={size}
+                    cols={width}
                     style={style}
                     readOnly={readOnly}
                     name={name}
