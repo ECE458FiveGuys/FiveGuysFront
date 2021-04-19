@@ -75,11 +75,11 @@ async function getChainOfTruthTree(certificate, instrument, calibrationEvent, to
             let fakeCertificate = makeFakeCertificate()
             let tree = {}
 
-            map = makePageRecursive(fakeCertificate, instrument, calibrationEvent, token, json_tester, "", IMAGE_HEIGHT, map)
-            tree = generateTree(json_tester, tree, map);
+            map = makePageRecursive(fakeCertificate, instrument, calibrationEvent, token, realJson, "", IMAGE_HEIGHT, map)
+            tree = generateTree(realJson, tree, map);
             console.log(tree)
             tree_to_pdf(certificate, tree)
-            map = makePageRecursive(certificate, instrument, calibrationEvent, token, json_tester, "", IMAGE_HEIGHT, map)
+            map = makePageRecursive(certificate, instrument, calibrationEvent, token, realJson, "", IMAGE_HEIGHT, map)
             saveCertificate(certificate, instrument, newTab)
         })
         .catch((error) => {
