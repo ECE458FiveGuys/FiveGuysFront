@@ -31,6 +31,7 @@
     "react-sortablejs": "^6.0.0",
     "semantic-ui-react": "^2.0.3",
     "sortablejs": "^1.13.0",
+    "traverse": "^0.6.6",
     "web-vitals": "^1.1.0",
     "xlsx": "^0.16.9",
     "xlsx-style": "^0.8.13"

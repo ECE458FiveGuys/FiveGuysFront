@@ -6,6 +6,7 @@ import {IdealCurrents} from "../../../../LoadBankPage/Steps/LoadBankStepSteps/st
 import FileUtils from "../../../../../../utils/file_utils";
 import MiscellaneousRequests from "../../../../../../controller/requests/miscellaneous_requests";
 // import XLSX from "xlsx";
+import traverse from 'traverse'
 
 import * as XLSX from 'xlsx';
 import {
@@ -69,10 +70,15 @@ async function getChainOfTruthTree(certificate, instrument, calibrationEvent, to
             let realJson = JSON.parse(json)
             let json_tester = '{"pk":233,"instrument":{"pk":248,"serial_number":null,"asset_tag_number":100217,"model":{"pk":52,"model_number":"8508A","vendor":"Fluke","description":"8.5 Digit Reference Multimeter"}},"date":"2021-03-02","user":{"pk":1,"username":"admin"},"comment":"Emergency re-calibration","additional_evidence":null,"load_bank_data":"","guided_hardware_data":"","custom_data":"","approval_data":{"pk":206,"calibration_event":233,"approved":true,"approver":{"pk":1,"name":"Admin","username":"admin","email":"admin@localhost"},"date":"2021-04-07","comment":""},"calibrated_with":[{"pk":2,"serial_number":null,"asset_tag_number":884723,"calibration_event":{"pk":2,"instrument":{"pk":2,"serial_number":null,"asset_tag_number":884723,"model":{"pk":2,"model_number":"99V","vendor":"Fluke","description":"voltmeter"}},"date":"2021-03-01","user":{"pk":1,"username":"admin"},"comment":"Monthly load bank related instruments calibration - Mar21","additional_evidence":null,"load_bank_data":"","guided_hardware_data":"","custom_data":"","approval_data":{"pk":2,"calibration_event":2,"approved":true,"approver":{"pk":1,"name":"Admin","username":"admin","email":"admin@localhost"},"date":"2021-04-07","comment":""},"calibrated_with":[{"pk":128,"serial_number":null,"asset_tag_number":100114,"calibration_event":{"pk":123,"instrument":{"pk":128,"serial_number":null,"asset_tag_number":100114,"model":{"pk":28,"model_number":"8808A","vendor":"Fluke","description":"Digital Multimeter"}},"date":"2021-02-03","user":{"pk":1,"username":"admin"},"comment":"Calibrated all instruments markeds during January random tests on Feb 3rd","additional_evidence":null,"load_bank_data":"","guided_hardware_data":"","custom_data":"","approval_data":{"pk":96,"calibration_event":123,"approved":true,"approver":{"pk":1,"name":"Admin","username":"admin","email":"admin@localhost"},"date":"2021-04-07","comment":""},"calibrated_with":[],"calibration_expiration_date":"2021-04-18"}}],"calibration_expiration_date":"2021-04-30"}},{"pk":26,"serial_number":null,"asset_tag_number":100016,"calibration_event":{"pk":26,"instrument":{"pk":26,"serial_number":null,"asset_tag_number":100016,"model":{"pk":8,"model_number":"8558A","vendor":"Fluke","description":"Digit Multimeter"}},"date":"2021-02-03","user":{"pk":1,"username":"admin"},"comment":"Calibrated all instruments markeds during January random tests on Feb 3rd","additional_evidence":null,"load_bank_data":"","guided_hardware_data":"","custom_data":"","approval_data":{"pk":24,"calibration_event":26,"approved":true,"approver":{"pk":1,"name":"Admin","username":"admin","email":"admin@localhost"},"date":"2021-04-07","comment":""},"calibrated_with":[{"pk":250,"serial_number":null,"asset_tag_number":100219,"calibration_event":{"pk":235,"instrument":{"pk":250,"serial_number":null,"asset_tag_number":100219,"model":{"pk":52,"model_number":"8508A","vendor":"Fluke","description":"8.5 Digit Reference Multimeter"}},"date":"2021-01-01","user":{"pk":1,"username":"admin"},"comment":"Calibrated preemptively as a part of routine annual eval","additional_evidence":null,"load_bank_data":"","guided_hardware_data":"","custom_data":"","approval_data":{"pk":208,"calibration_event":235,"approved":true,"approver":{"pk":1,"name":"Admin","username":"admin","email":"admin@localhost"},"date":"2021-04-07","comment":""},"calibrated_with":[{"pk":326,"serial_number":null,"asset_tag_number":100083,"calibration_event":{"pk":312,"instrument":{"pk":326,"serial_number":null,"asset_tag_number":100083,"model":{"pk":22,"model_number":"AS0104","vendor":"AMETEK","description":"solid-state power amplifiers"}},"date":"2020-12-15","user":{"pk":1,"username":"admin"},"comment":"","additional_evidence":null,"load_bank_data":"","guided_hardware_data":"","custom_data":"","approval_data":{"pk":285,"calibration_event":312,"approved":true,"approver":{"pk":1,"name":"Admin","username":"admin","email":"admin@localhost"},"date":"2021-04-14","comment":""},"calibrated_with":[],"calibration_expiration_date":"2021-02-25"}}],"calibration_expiration_date":"2021-03-30"}}],"calibration_expiration_date":"2021-05-14"}}],"calibration_expiration_date":"2021-05-29"}'
             let testerFixed = JSON.parse(json_tester)
+            json_tester = JSON.parse(json_tester)
             let map = {}
             let fakeCertificate = makeFakeCertificate()
+            let tree = {}
+
             map = makePageRecursive(fakeCertificate, instrument, calibrationEvent, token, realJson, "", IMAGE_HEIGHT, map)
-            console.log(map)
+            tree = generateTree(realJson, tree, map);
+            console.log(tree)
+            tree_to_pdf(certificate, tree)
             map = makePageRecursive(certificate, instrument, calibrationEvent, token, realJson, "", IMAGE_HEIGHT, map)
             saveCertificate(certificate, instrument, newTab)
         })
@@ -85,6 +91,20 @@ async function getChainOfTruthTree(certificate, instrument, calibrationEvent, to
     //let header = RequestUtils.buildTokenHeader(token)
     //RequestUtils.assistedFetch(URLS.CALIBRATION_CERTIFICATE(instrument.pk), METHODS.GET, (json) => this.setState({calibratedWithOptions : json}), e => alert(e), header)
     //console.log(this.state.calibratedWithOptions)
+}
+
+function generateTree(json, tree, map){
+    tree = {}
+    let calibratedWith = json.calibrated_with
+    tree["name"] = "Instrument " + json.instrument.asset_tag_number + " (Page: "+map[json.instrument.asset_tag_number]+")";
+    let children = []
+    if (calibratedWith) {
+        calibratedWith.forEach(instrument => {
+            children.push(generateTree(instrument.calibration_event, tree, map))
+        })
+    }
+    tree["children"] = children;
+    return tree;
 }
 
 function makeFakeCertificate(){
@@ -109,6 +129,9 @@ function makePageRecursive(certificate, instrument, calibrationEvent, token, jso
             calibratedWithString = calibratedWithString + assetTagNumber + " (Page " + map[assetTagNumber] + ")" + " "
         })
     }
+    certificate.setFontSize(20)
+    certificate.setTextColor(0, 100, 0);
+    certificate.text('Instrument: '+json.instrument.asset_tag_number, 45, space + 32, 'center');
     certificate.autoTable({
         head: [['Instrument Info', '']],
         margin: { top: space + 35 },
@@ -139,7 +162,6 @@ function makePageRecursive(certificate, instrument, calibrationEvent, token, jso
     }
     makePageWithoutChain(certificate, json.instrument, json, token)//here instrument.calibration_event or json
     certificate.addPage()
-    console.log(json)
     calibratedWith = json.calibrated_with
     if (json.calibrated_with) {
         calibratedWith.forEach(instrument => {
@@ -423,4 +445,27 @@ function xlsxToTable(file) {
     return data
     // };
     // reader.readAsBinaryString(file);
+}
+
+function tree_to_pdf(certificate, instrument_tree) {
+    let res = ["\tCalibration Chain of Truth:\n\n"]
+    certificate.addPage()
+    certificate.setFontSize(10)
+    const pageWidth = certificate.internal.pageSize.getWidth();
+    const pageHeight = certificate.internal.pageSize.getHeight()
+    res = traverse(instrument_tree).reduce(function (res, x) {
+        if (x.toString().includes("[object Object]")) {
+            return res
+        }
+        if (this.level === 0) {
+            res = res + x.toString() + "\n\n"
+        }
+        if (x === undefined || this.key === undefined) {
+            return res
+        } else {
+            res = res + "\t".repeat(this.level) + x.toString() + "\n\n"
+        }
+        return res
+    }, res);
+    certificate.text(res.toString(), pageWidth / 14, pageHeight / 12, 'left')
 }
