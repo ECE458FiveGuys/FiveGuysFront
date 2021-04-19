@@ -57,8 +57,16 @@ class SortableComponent extends Component {
 
         if(this.props.existingFields) {
             let fields = JSON.parse(this.props.existingFields).form
+            let range
             fields.forEach((field) => {
-                    items.push({id: nextFieldId, type: field.type, content: field.value})
+                    if(field.type === "input"){
+                        let value = JSON.parse(field.value)
+                        if(value.type === "number" && value.max){range = true}
+                        else{range=false}
+                        // console.log(range)
+                        // field.value = JSON.stringify(value)
+                    }
+                    items.push({id: nextFieldId, type: field.type, content: field.value, range:range})
                     entries[nextFieldId] = field.value
                     nextFieldId++
                 }
@@ -67,12 +75,14 @@ class SortableComponent extends Component {
             items = [{id:0, type:'header', error: false},{id:1, type:'input', error:false}]
             nextFieldId = 2;
         }
+        // console.log(items)
         return {
             entries: entries,
             items: items,
             nextFieldId: nextFieldId,
             cancelModalShow: false,
-            submitModalShow: false
+            submitModalShow: false,
+
         }
     }
 
@@ -111,6 +121,7 @@ class SortableComponent extends Component {
         if(event.target.type === 'select-one') {
             newInputData['type'] = event.target.value
             if(event.target.value === "number") {
+                console.log("NUMBER")
                 items.forEach((item) => {
                     if (item.id === id) {
                         item["max"] = ""
@@ -128,7 +139,7 @@ class SortableComponent extends Component {
                 })
             }
             this.setState({items:items})
-            console.log(this.state.items)
+            // console.log(this.state.items)
         }
         else if(event.target.type === 'textarea') {
             newInputData['prompt'] = event.target.value
@@ -137,13 +148,16 @@ class SortableComponent extends Component {
             console.log("Unprocessed change")
         }
 
-        let newEntries = Object.assign({},this.state.entries)
+        // let newEntries = Object.assign({},this.state.entries)
+        let newEntries = {...this.state.entries}
         newEntries[id] = JSON.stringify(newInputData)
-        this.setState({entries:newEntries})
+        this.setState({entries:newEntries},()=>(console.log(this.state.entries,newEntries)))
+        // console.log(this.state.entries,newEntries)
     }
 
     onChange = (id) => (event) => {
         let newEntries = Object.assign({},this.state.entries)
+        // console.log('THIS EXECUTED')
         newEntries[id] = event.target.value
         this.setState({entries:newEntries})
     }
@@ -158,11 +172,16 @@ class SortableComponent extends Component {
         content[name] = value
         // this.checkMaxMin()
         items[id].content = JSON.stringify(content)
-        // items[id].content[name] = value
-        // items[id].content[name] = value
-        this.setState({items:items})
-        let newEntries = Object.assign({},this.state.entries)
-        newEntries[id] = items[id].content
+
+        // this.setState({items:items}) //TODO
+        // let newEntries = Object.assign({},this.state.entries)
+        let newEntries = {...this.state.entries}
+        // newEntries[id] = items[id].content
+        console.log("HERE")
+        let entry = JSON.parse(newEntries[id])
+        entry[name] = value
+        newEntries[id] = JSON.stringify(entry)
+        console.log(newEntries)
         this.setState({entries:newEntries})
         // console.log(this.state.entries)
         // TODO change entries so that input fields always present if number, not just on change
@@ -205,23 +224,28 @@ class SortableComponent extends Component {
         let finalForm = [];
         let errors = [];
         let inputExists = false
-
+        console.log(entries)
         items.forEach((item) => {
             let entry = {}
 
             if(item.type === "input") {inputExists = true}
+
             if(!entries || !entries[item.id] ||
                 (item.type === "input"
                     && ( !JSON.parse(entries[item.id]).prompt
                         || !JSON.parse(entries[item.id]).type
                         || JSON.parse(entries[item.id]).prompt === ""
-                        || !JSON.parse(entries[item.id]).max
-                        || !JSON.parse(entries[item.id]).min
-                        || JSON.parse(entries[item.id]).max === ""
-                        || JSON.parse(entries[item.id]).min === ""
-                        || JSON.parse(entries[item.id]).max <= JSON.parse(entries[item.id]).min
+                        || (JSON.parse(entries[item.id]).type === "number" && (
+                                !JSON.parse(entries[item.id]).max
+                                || !JSON.parse(entries[item.id]).min
+                                || JSON.parse(entries[item.id]).max === ""
+                                || JSON.parse(entries[item.id]).min === ""
+                                || Number(JSON.parse(entries[item.id]).max) <= Number(JSON.parse(entries[item.id]).min)
+                            )
+                        )
                     )
                 )){
+                // console.log(entries,item.id,JSON.parse(entries[item.id]).max <= JSON.parse(entries[item.id]).min)
                 errors.push(item.id)
                 // console.log("EMPTY FIELD"+item.id)
                 // console.log(entries[item.id])
@@ -232,7 +256,7 @@ class SortableComponent extends Component {
                 // console.log(entries[item.id])
                 entry['type'] = item.type
                 entry['value'] = entries[item.id]
-
+                // console.log(entry)
                 finalForm.push(entry)
             }
 

@@ -22,7 +22,7 @@ class CustomFormView extends Component {
             fields = JSON.parse(this.props.fields).form
             if (JSON.parse(this.props.fields).input){this.setState({inputsExist:true})}
         }
-        console.log(fields)
+        // console.log(fields)
         return {
             fields: fields,
             cancelModalShow: false,
@@ -52,7 +52,7 @@ class CustomFormView extends Component {
         }
         else if(field.type === "input") {
             let {type,prompt,max,min} = JSON.parse(field.value)
-            console.log(max,min)
+            // console.log(max,min)
             // this.setState({inputsExist:true})
             return(
                 <div>
@@ -84,7 +84,7 @@ class CustomFormView extends Component {
                 <HTPMultiLineInput size={1} label={"Comment"}
                                    placeholder={(this.props.preview)?("Input Preview"):("Enter comment")}
                                    name={prompt} type = {'type'}
-                                   onChange={(event) => this.onChange("comment")(event)}
+                                   onChange={(event) => this.onChange("comment")(0)(0)(event)}
                                    readOnly={this.props.preview}
                                    // id = {id}
                                    error={(comment)?comment.error:undefined}
@@ -113,7 +113,7 @@ class CustomFormView extends Component {
         if(type === "number") return (
 
             !(Number(value) == value) ? "Not a floating point integer":
-                (value <= max && value >= min) ? "":"Value outside of range ["+min+","+max+"]"
+                (Number(value) <= Number(max) && Number(value) >= Number(min)) ? "":"Value outside of range ["+min+","+max+"]"
         );
     }
 
