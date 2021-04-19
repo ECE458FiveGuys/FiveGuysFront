@@ -25,7 +25,8 @@ const SUBHEADING_FONT_SIZE = 20
 
 const INLINE_IMAGE_EXTENSIONS = ["jpeg", "jpg", "gif", "png"]
 
-export async function createCertificate (instrument, user, calibrationEvent, token, isChainEnabled) {
+export async function createCertificate (instrument, user, calibrationEvent, token, isChainEnabled, newTab) {
+    newTab = true;
     let certificate = new jsPDF()
     const pageWidth = certificate.internal.pageSize.getWidth();
     await addImage(certificate, Logo, 'png', 10)
@@ -37,20 +38,23 @@ export async function createCertificate (instrument, user, calibrationEvent, tok
     //everything above here is only done once
 
     if (isChainEnabled){
-        await getChainOfTruthTree(certificate, instrument, calibrationEvent, token)
+        await getChainOfTruthTree(certificate, instrument, calibrationEvent, token, newTab)
     }
     else {
         writeInstrumentDetails(certificate, user, instrument, calibrationEvent, pageWidth)
         makePageWithoutChain(certificate, instrument, calibrationEvent, token)
-        saveCertificate(certificate, instrument)
+        saveCertificate(certificate, instrument, newTab)
     }
 }
 
-let saveCertificate = (certificate, instrument) => {
+let saveCertificate = (certificate, instrument, newTab) => {
     certificate.save(`calibration_certificate_inst_${instrument[Instrument.FIELDS.ASSET_TAG]}.pdf`)
+    if (newTab) {
+        certificate.output('dataurlnewwindow');
+    }
 }
 
-async function getChainOfTruthTree(certificate, instrument, calibrationEvent, token){
+async function getChainOfTruthTree(certificate, instrument, calibrationEvent, token, newTab){
     let fullToken = 'Token ' + token
     const requestOptions = {
         method: 'GET',
@@ -70,7 +74,7 @@ async function getChainOfTruthTree(certificate, instrument, calibrationEvent, to
             map = makePageRecursive(fakeCertificate, instrument, calibrationEvent, token, realJson, "", IMAGE_HEIGHT, map)
             console.log(map)
             map = makePageRecursive(certificate, instrument, calibrationEvent, token, realJson, "", IMAGE_HEIGHT, map)
-            saveCertificate(certificate, instrument)
+            saveCertificate(certificate, instrument, newTab)
         })
         .catch((error) => {
             console.log(error)
@@ -122,15 +126,17 @@ function makePageRecursive(certificate, instrument, calibrationEvent, token, jso
             ['Calibration Expiration Date', json.calibration_expiration_date],
             ['Calibrated With', calibratedWithString]]
     })
-    certificate.autoTable({
-        head: [['Calibration Approver Info', '']],
-        margin: { top: space + 35 },
-        body: [['Name', json.approval_data.approver.name],
-            [' Username', json.approval_data.approver.username],
-            ['Email', json.approval_data.approver.email],
-            ['Date', json.approval_data.date],
-            ['Comment', json.approval_data.comment]]
-    })
+    if (json.approval_data!=null) {
+        certificate.autoTable({
+            head: [['Calibration Approver Info', '']],
+            margin: {top: space + 35},
+            body: [['Name', json.approval_data.approver.name],
+                [' Username', json.approval_data.approver.username],
+                ['Email', json.approval_data.approver.email],
+                ['Date', json.approval_data.date],
+                ['Comment', json.approval_data.comment]]
+        })
+    }
     makePageWithoutChain(certificate, json.instrument, json, token)//here instrument.calibration_event or json
     certificate.addPage()
     console.log(json)
@@ -198,15 +204,17 @@ function writeInstrumentDetails (pdf, user, instrument, calibrationEvent, pageWi
         body: [['Relevant Calibration Date', instrument.calibration_history[0].date],
             ['Calibration Expiration Date', instrument.calibration_expiration_date]]
     })
-    pdf.autoTable({
-        head: [['Calibration Approver Info', '']],
-        margin: { top: IMAGE_HEIGHT + 35 },
-        body: [['Name', instrument.calibration_history[0].approval_data.approver.name],
-            [' Username', instrument.calibration_history[0].approval_data.approver.username],
-            ['Email', instrument.calibration_history[0].approval_data.approver.email],
-            ['Date', instrument.calibration_history[0].approval_data.date],
-            ['Comment', instrument.calibration_history[0].approval_data.comment]]
-    })
+    if (instrument.calibration_history[0].approval_data!=null) {
+        pdf.autoTable({
+            head: [['Calibration Approver Info', '']],
+            margin: {top: IMAGE_HEIGHT + 35},
+            body: [['Name', instrument.calibration_history[0].approval_data.approver.name],
+                [' Username', instrument.calibration_history[0].approval_data.approver.username],
+                ['Email', instrument.calibration_history[0].approval_data.approver.email],
+                ['Date', instrument.calibration_history[0].approval_data.date],
+                ['Comment', instrument.calibration_history[0].approval_data.comment]]
+        })
+    }
 }
 
 function writeAdditionalEvidence (certificate, additionalEvidence, instrument, token) {
