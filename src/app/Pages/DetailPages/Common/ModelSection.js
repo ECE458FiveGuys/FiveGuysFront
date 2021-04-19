@@ -32,7 +32,6 @@ export default function ModelSection(model, subheading, history=undefined, displ
                                     model[ModelFields.EquipmentModelFields.CALIBRATION_MODE] == ModelFields.CalibrationModes.GUIDED_HARDWARE ?
                                         "Guided Hardware" :
                                             "Simple"),
-                                model[ModelFields.EquipmentModelFields.CALIBRATION_APPROVAL_REQUIRED] =
                                     model[ModelFields.EquipmentModelFields.CALIBRATION_APPROVAL_REQUIRED] ? "required" : "not required",
                             ])}
                     </a>

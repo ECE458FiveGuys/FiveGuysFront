@@ -27,7 +27,7 @@ FormEnums {
         [ModelFields.EquipmentModelFields.MODEL_CATEGORIES] : FormEnums.FieldRequirementTypes.OPTIONAL,
         [ModelFields.EquipmentModelFields.CALIBRATION_FREQUENCY] : FormEnums.FieldRequirementTypes.OPTIONAL,
         [ModelFields.EquipmentModelFields.CALIBRATION_MODE] : FormEnums.FieldRequirementTypes.OPTIONAL,
-        [ModelFields.EquipmentModelFields.CALIBRATION_APPROVAL_REQUIRED] : FormEnums.FieldRequirementTypes.REQUIRED,
+        [ModelFields.EquipmentModelFields.CALIBRATION_APPROVAL_REQUIRED] : FormEnums.FieldRequirementTypes.OPTIONAL,
         [ModelFields.EquipmentModelFields.CALIBRATOR_CATEGORIES] : FormEnums.FieldRequirementTypes.OPTIONAL
     }
 

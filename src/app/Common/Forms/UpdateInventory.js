@@ -107,6 +107,7 @@ export default class UpdateInventory extends React.Component {
     validateRequiredFields(fields) {
         let fieldErrors = {}
         Object.keys(fields).forEach(fieldKey => {
+            let allFieldReq = FormEnums.AllFieldRequirementTypes[fieldKey]
             if (FormEnums.AllFieldRequirementTypes[fieldKey] === FormEnums.FieldRequirementTypes.REQUIRED && (!fields[fieldKey] || fields[fieldKey] == "")) {
                 fieldErrors[fieldKey] = "Nice try! This is a required field"
             }
