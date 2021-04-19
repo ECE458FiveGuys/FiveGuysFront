@@ -25,8 +25,7 @@ const SUBHEADING_FONT_SIZE = 20
 
 const INLINE_IMAGE_EXTENSIONS = ["jpeg", "jpg", "gif", "png"]
 
-export async function createCertificate (instrument, user, calibrationEvent, token, isChainEnabled, newTab) {
-    newTab = true;
+export async function createCertificate (instrument, user, calibrationEvent, token, isChainEnabled, newTab=false) {
     let certificate = new jsPDF()
     const pageWidth = certificate.internal.pageSize.getWidth();
     await addImage(certificate, Logo, 'png', 10)
@@ -48,9 +47,10 @@ export async function createCertificate (instrument, user, calibrationEvent, tok
 }
 
 let saveCertificate = (certificate, instrument, newTab) => {
-    certificate.save(`calibration_certificate_inst_${instrument[Instrument.FIELDS.ASSET_TAG]}.pdf`)
     if (newTab) {
         certificate.output('dataurlnewwindow');
+    } else {
+        certificate.save(`calibration_certificate_inst_${instrument[Instrument.FIELDS.ASSET_TAG]}.pdf`)
     }
 }
 

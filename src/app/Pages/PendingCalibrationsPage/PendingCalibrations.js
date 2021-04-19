@@ -8,6 +8,8 @@ import HTPMultiLineInput from "../../Common/Inputs/HTPMultiLineInput";
 import HTPPopup from "../../Common/HTPPopup";
 import CalibrationRequests from "../../../controller/requests/calibration_requests";
 import HTPNavBar from "../../Common/HTPNavBar";
+import {createCertificate} from "../DetailPages/InstrumentDetailPage/Sections/Calibration/certificate_writer";
+import InstrumentRequests from "../../../controller/requests/instrument_requests";
 
 const APPROVED = "approved"
 const REJECTED = "rejected"
@@ -23,12 +25,19 @@ export default class PendingCalibrations extends React.Component {
         this.getPendingApproval()
     }
 
+    onViewData = (calibration, pk) => {
+        let callBack = (inst) => createCertificate(inst, this.props.user,
+            calibration, this.props.token, false, true)
+        InstrumentRequests.retrieveInstrument(this.props.token, pk, callBack, (e) => alert(e))
+    }
+
     parseColumns(pendingApproval) {
         return pendingApproval.map(calibration => {
+                let instPk = calibration.instrument.pk
+                calibration["options"] = this.renderApprovalOptions(calibration.pk)
+                calibration["view_data"] = <a onClick={() => this.onViewData(calibration, instPk)}>{"View Data"}</a>
                 delete calibration.instrument.pk
                 Object.assign(calibration, calibration.instrument)
-                calibration["options"] = this.renderApprovalOptions(calibration.pk)
-                calibration["view_data"] = <a>View Data</a>
                 return calibration
             })
     }
