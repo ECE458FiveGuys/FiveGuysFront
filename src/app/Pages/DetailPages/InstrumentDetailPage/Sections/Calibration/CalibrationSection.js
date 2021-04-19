@@ -19,21 +19,42 @@ export default class CalibrationSection extends React.Component {
 
     constructor(props) {
         super(props);
+        let calibrations = props.instrument["calibration_history"]
         this.state = {
-            calibrationTableRows : this.buildCalibrationTableRows(props.instrument["calibration_history"]),
-            chainOfTruth : false
+            chainOfTruth : false,
+            calibrationTableRows : this.buildCalibrationTableRows(calibrations),
+            mostRecentValidCalibration : this.getMostRecentCalibration(calibrations)
         }
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         let {instrument} = this.props
         if (prevProps.instrument != instrument) {
-            this.setState({calibrationTableRows : this.buildCalibrationTableRows(instrument["calibration_history"])})
+            this.setState({calibrationTableRows : this.buildCalibrationTableRows(instrument["calibration_history"]),
+                                mostRecentValidCalibration : this.getMostRecentCalibration(instrument["calibration_history"])
+            })
         }
+    }
+
+    getMostRecentCalibration = (calibrations) => {
+        let {instrument} = this.props
+        let mostRecentValidCalibration = undefined
+        calibrations.forEach(calibration => {
+            if (this.approvalRequired(instrument)) {
+                let approvalData = calibration[ModelFields.CalibrationFields.ApprovalData]
+                const approvalStatus = approvalData ? (approvalData[ModelFields.ApprovalDataFields.IS_APPROVED] ? "approved" : "rejected") : "pending approval"
+                if (approvalStatus != "approved" && !mostRecentValidCalibration) {
+                    mostRecentValidCalibration = calibration
+                }
+            } else if (!mostRecentValidCalibration) {
+                mostRecentValidCalibration = calibration
+            }})
+        return mostRecentValidCalibration
     }
 
     buildCalibrationTableRows = (calibrations) => {
         let {instrument} = this.props
+        let mostRecentValidCalibration = undefined
         return calibrations.map(calibration => {
             let calibrationCopy = {...calibration}
             calibrationCopy[ModelFields.CalibrationFields.AdditionalFile] = buildEvidenceElement(calibrationCopy)
@@ -46,7 +67,14 @@ export default class CalibrationSection extends React.Component {
                         let element = calibrationCopy[key]
                         calibrationCopy[key] = this.highlightCell(element)
                     })
+                    if (!mostRecentValidCalibration) {
+                        mostRecentValidCalibration = calibration
+                        this.setState({mostRecentValidCalibration : calibration})
+                    }
                 }
+            } else if (!mostRecentValidCalibration) {
+                mostRecentValidCalibration = calibration
+                this.setState({mostRecentValidCalibration : calibration})
             }
             calibrationCopy.clickEvent = () => handleNavClick(instrument.pk + "/calibration-events/" + calibration.pk, this.props.history)
             return calibrationCopy
@@ -141,7 +169,8 @@ export default class CalibrationSection extends React.Component {
                 <Button
                     disabled={!calibrations || calibrations.length == 0}
                     onClick={() => {
-                            createCertificate(instrument, calibrations[0].user, calibrations[0], token, this.state.chainOfTruth)
+                        let {mostRecentValidCalibration} = this.state
+                            createCertificate(instrument, mostRecentValidCalibration.user, mostRecentValidCalibration, token, this.state.chainOfTruth)
                     }}>
                     Download Certificate
                 </Button>
