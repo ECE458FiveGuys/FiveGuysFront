@@ -128,6 +128,9 @@ class CustomFormView extends Component {
         let id = event.target.id
 
         fields[id].error = (this.errorOnChange(type,value))
+        if(type == 'number'){
+
+        }
         fields[id].key = name
         fields[id].inputValue = value
 

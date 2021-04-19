@@ -147,10 +147,14 @@ function makePageWithoutChain(certificate, instrument, calibrationEvent, token){
     let additionalEvidence = calibrationEvent[ModelFields.CalibrationFields.AdditionalFile]
     let loadBankData = calibrationEvent[ModelFields.CalibrationFields.LoadBankFile] ? JSON.parse(calibrationEvent[ModelFields.CalibrationFields.LoadBankFile]) : undefined
     let flukeData = calibrationEvent[ModelFields.CalibrationFields.HardwareCalibrationFile] ? JSON.parse(calibrationEvent[ModelFields.CalibrationFields.HardwareCalibrationFile]) : undefined
+    let customData = calibrationEvent[ModelFields.CalibrationFields.CustomForm] ? JSON.parse(calibrationEvent[ModelFields.CalibrationFields.CustomForm]) : undefined
+
     additionalEvidence ? writeAdditionalEvidence(certificate, additionalEvidence, instrument, token) :
         loadBankData ? writeLoadBankSection(certificate, loadBankData) :
             flukeData ? writeHardwareCalibrationSection(certificate, flukeData) :
-                void(0)
+                customData ? writeCustomFormSection(certificate, customData) :
+
+                    void(0)
     //if (!additionalEvidence) saveCertificate(certificate, instrument)
 }
 
@@ -355,6 +359,19 @@ export function writeLoadBankSection (certificate, loadBankData) {
                 ['Cell voltage disconnect alarm', 'y'],
                 ['Recorded data ok', 'y'],
                 ['Printer ok', 'y']]
+        }
+    )
+}
+
+function writeCustomFormSection(certificate, customData) {
+    let data = JSON.parse(customData)
+    certificate.autoTable(
+        {
+            head: [['Custom Form Prompt', 'Value']],
+            body: Object.keys(data).map((prompt) => {
+                let value = data[prompt]
+                return [prompt,value]
+            })
         }
     )
 }
