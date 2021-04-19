@@ -36,7 +36,10 @@ export default class LoadBankMain extends React.Component {
                                                     undefined,
                                                     loadBankTableData,
                                                     successCallback,
-                                                    errorCallBack
+                                                    errorCallBack,
+                                                    undefined,
+                                    [stepperState.meters.voltmeter.asset_tag_number,
+                                                    stepperState.meters.shuntMeter.asset_tag_number]
                                                     )
     }
 

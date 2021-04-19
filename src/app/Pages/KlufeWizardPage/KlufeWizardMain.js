@@ -14,6 +14,7 @@ import CommentStep from "../../Common/Stepper/FunctionalCheckSteps/CommentStep";
 import HTPButton from "../../Common/HTPButton";
 import KlufeRequests from "../../../controller/requests/klufe_requests";
 import {getToken} from "../../../auth/auth_utils";
+import InstrumentRequests from "../../../controller/requests/instrument_requests";
 
 export default class KlufeWizardMain extends React.Component {
 
@@ -35,7 +36,8 @@ export default class KlufeWizardMain extends React.Component {
             undefined,
             successCallback,
             errorCallBack,
-            stepperState
+            stepperState,
+            [stepperState.klufe.asset_tag_number]
         )
     }
 
@@ -67,7 +69,7 @@ export default class KlufeWizardMain extends React.Component {
         ]
 
         let onStepSubmitFunctions = [
-            (stepperState, successCallBack) => {successCallBack()},   // step cannot fail, so successCallback called by default
+            (stepperState, successCallBack, errorCallBack) => {SetupStep.onSubmit(stepperState, token, successCallBack, errorCallBack)},   // step cannot fail, so successCallback called by default
             (stepperState, successCallBack) => {successCallBack()},   // step cannot fail, so successCallback called by default
             (stepperState, successCallBack) => {successCallBack()},   // step cannot fail, so successCallback called by default
             (stepperState, successCallBack, errorCallBack) => this.onCalibrationSuccess(stepperState, errorCallBack)

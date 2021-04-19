@@ -6,11 +6,13 @@ import ModelFields, {MiscellaneousEnums} from "../../../../utils/enums";
 import InstrumentRequests from "../../../../controller/requests/instrument_requests";
 import Loading from "../../../Common/Images/Loading";
 import ModelDisplay from "../../../Common/Displays/HTPModelDisplay";
-import {parseDate} from "../../../utils";
+import {dateColors, parseDate} from "../../../utils";
 import InstrumentDisplay from "../../../Common/Displays/HTPInstrumentDisplay";
-import {Instrument, Models} from "../../../../utils/ModelEnums";
+import {EquipmentModel, Instrument, Models} from "../../../../utils/ModelEnums";
 import {PaginatedResponseFields} from "../../../Common/Tables/TableUtils/pagination_utils";
 import HTPAutoCompleteInput from "../../../Common/Inputs/HTPAutoCompleteInput";
+import {isNumeric} from "../../LoadBankPage/utils";
+import {UserError} from "../../../../controller/exceptions";
 
 export default class SetupStep extends React.Component {
 
@@ -23,6 +25,10 @@ export default class SetupStep extends React.Component {
 
     componentDidMount() {
         let {token, instrumentId} = this.props
+        InstrumentRequests.getInstrumentsByCategory(this.props.token, {name : MiscellaneousEnums.KNOWN_CATEGORIES.KLUFE},
+            (json) => this.setState({klufeOptions : this.makeAssetTagArray(json)}),
+            (error) => alert(error),
+            Models.EQUIPMENT_MODEL.TYPE)
         InstrumentRequests.retrieveInstrument(token,
             instrumentId,
             (json) => {
@@ -31,11 +37,54 @@ export default class SetupStep extends React.Component {
         )
     }
 
-    componentDidMount() {
-        InstrumentRequests.getInstrumentsByCategory(this.props.token, {name : MiscellaneousEnums.KNOWN_CATEGORIES.KLUFE},
-            (json) => this.setState({klufeOptions : this.makeAssetTagArray(json)}),
-            (error) => alert(error),
-            Models.EQUIPMENT_MODEL.TYPE)
+    static getInstrument = (token, assetTag, successCallBack, errorCallBack) => {
+        if (!isNumeric(assetTag)) {
+            errorCallBack(`Klufe 5700 asset tag number must be numeric.`)
+            return
+        }
+        InstrumentRequests.getInstruments(token,
+            (json) => {
+                json = json[PaginatedResponseFields.RESULTS]
+                if (!json[0]) {
+                    throw new UserError(`No such Klufe 5700 exists.`)
+                }
+                let mostRecentCalibration = json[0][ModelFields.InstrumentFields.EXPIRATION_DATE]
+                if (mostRecentCalibration === "Not Calibratable") {
+                    throw new UserError(`This Klufe 5700 is marked as not calibratable.`)
+                }
+                if (!mostRecentCalibration || mostRecentCalibration == null || parseDate(mostRecentCalibration) == dateColors.RED) {
+                    throw new UserError(`The calibration for this Klufe 5700 has expired or is not valid.`)
+                }
+                successCallBack(json[0])
+            },
+            (errorMessage) => errorCallBack(errorMessage),
+            undefined,
+            parseInt(assetTag))
+    }
+
+    static onSubmit = (stepperState, token, successCallBack, errorCallBack) => {
+        let errorMessages = []
+        let multiErrorCallBack = (errorMessage) => {
+            errorMessages.push(<li>{errorMessage}</li>)
+            callBackLogic()
+        }
+        let instruments = []
+        let multiSuccessCallBack = (instrument) => {
+            instruments.push(instrument)
+            stepperState.klufe.fullInstrument = instrument
+            callBackLogic()
+        }
+
+        let callBackLogic = () => {
+            if (errorMessages.length > 0) {
+                errorCallBack(errorMessages)
+            } else {
+                successCallBack()
+            }
+        }
+
+        this.getInstrument(token, stepperState.klufe.asset_tag_number,
+            multiSuccessCallBack, multiErrorCallBack)
     }
 
     makeAssetTagArray(json) {
@@ -44,7 +93,7 @@ export default class SetupStep extends React.Component {
 
     handleChange = (value) => {
         let {updateStepperState} = this.props
-        updateStepperState({klufe : value}, this.shouldEnableSubmit)
+        updateStepperState({klufe : {asset_tag_number : value}}, this.shouldEnableSubmit)
     }
 
     shouldEnableSubmit = () => {
@@ -71,7 +120,7 @@ export default class SetupStep extends React.Component {
                     Now, Identify the Klufe K5700 you will be using:
                 </p>
                 <HTPAutoCompleteInput label={"Shunt Meter Asset Tag"}
-                                      options={this.props.klufeOptions}
+                                      options={this.state.klufeOptions}
                                       wrapped={false}
                                       onChange={(value) => this.handleChange(value)}
                                       placeholder={"Asset Tag"}/>

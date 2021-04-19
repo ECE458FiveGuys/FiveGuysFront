@@ -48,7 +48,7 @@ export async function createCertificate (instrument, user, calibrationEvent, tok
 
 let saveCertificate = (certificate, instrument, newTab) => {
     if (newTab) {
-        certificate.output('dataurlnewwindow');
+        certificate.output('dataurlnewwindow', 'calibration_data');
     } else {
         certificate.save(`calibration_certificate_inst_${instrument[Instrument.FIELDS.ASSET_TAG]}.pdf`)
     }
@@ -106,7 +106,7 @@ function makePageRecursive(certificate, instrument, calibrationEvent, token, jso
     if (json.calibrated_with) {
         calibratedWith.forEach(temp => {
             assetTagNumber = temp.asset_tag_number
-            calibratedWithString = calibratedWithString + assetTagNumber + " (Page " + map.[assetTagNumber] + ")" + " "
+            calibratedWithString = calibratedWithString + assetTagNumber + " (Page " + map[assetTagNumber] + ")" + " "
         })
     }
     certificate.autoTable({
