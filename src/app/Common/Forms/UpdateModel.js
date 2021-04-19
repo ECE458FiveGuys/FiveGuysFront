@@ -25,6 +25,8 @@ export default class UpdateModel extends React.Component {
             comment: mode == UpdateModel.EDIT_MODE ? model.comment : undefined,
             calibration_mode :  mode == UpdateModel.EDIT_MODE ? model.calibration_mode : undefined,
             calibration_frequency :  mode == UpdateModel.EDIT_MODE ? model.calibration_frequency : undefined,
+            calibrator_categories : mode == UpdateModel.EDIT_MODE ? model.calibrator_categories : undefined,
+            approval_required : mode == UpdateModel.EDIT_MODE ? model.approval_required : undefined,
             error: undefined,
             createdModel: undefined
         }
