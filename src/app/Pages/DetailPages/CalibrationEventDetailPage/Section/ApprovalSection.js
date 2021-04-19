@@ -41,7 +41,7 @@ export default class ApprovalSection extends React.Component {
             this.toggleModal()
                 this.props.reloadCalibration()
                 this.props.barRef.current.getPendingApproval()
-        }, (e) => alert(e), mode == "rejected" && currentData)
+        }, (e) => console.log(e), currentData, currentData ? currentData.pk : undefined)
     }
 
     toggleModal = (mode) => {
@@ -80,6 +80,7 @@ export default class ApprovalSection extends React.Component {
                               title={mode == APPROVED ? "Approve Calibration" : "Reject Calibration"}
                               isOpen={modal}
                               additionalButtons={<HTPButton label={mode == APPROVED ? "Approve" : "Reject"}
+                                                            color={mode == APPROVED ? "green" : "red"}
                                                             onSubmit={() => this.handleCalibration(mode, approvalData)}
                                                 />}/>
                 </div>

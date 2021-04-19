@@ -45,13 +45,13 @@ export default class CalibrationRequests {
         return data
     }
 
-    static handleCalibration(token, mode, eventPk, userId, comment, callBack, errorCallBack, isEdit) {
+    static handleCalibration(token, mode, eventPk, userId, comment, callBack, errorCallBack, isEdit, approvalDataPk) {
         let formData = new FormData()
         if (userId) formData.append(ModelFields.ApprovalDataFields.APPROVER, userId)
         if (comment) formData.append(ModelFields.ApprovalDataFields.COMMENT, comment)
         if (eventPk) formData.append("calibration_event", eventPk)
         formData.append(ModelFields.ApprovalDataFields.IS_APPROVED, mode == "approved" ? "True" : "False")
-        isEdit ? RequestUtils.assistedFetch(URLS.APPROVAL_DATA, METHODS.PUT, callBack, errorCallBack, RequestUtils.buildTokenHeader(token), undefined, formData) :
+        isEdit ? RequestUtils.assistedFetch(URLS.APPROVAL_DATA + approvalDataPk + "/", METHODS.PUT, callBack, errorCallBack, RequestUtils.buildTokenHeader(token), undefined, formData) :
             RequestUtils.assistedFetch(URLS.APPROVAL_DATA, METHODS.POST, callBack, errorCallBack, RequestUtils.buildTokenHeader(token), undefined, formData)
     }
 }
