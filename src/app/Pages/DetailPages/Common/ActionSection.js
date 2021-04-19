@@ -74,7 +74,7 @@ export default class ActionSection extends React.Component {
                         Delete
                     </Button>
                 </div>
-                {type == ModelFields.ModelTypes.EQUIPMENT_MODEL &&
+                {type == ModelFields.ModelTypes.EQUIPMENT_MODEL && subject.calibration_mode == ModelFields.CalibrationModes.CUSTOM_FORM &&
                     <CustomFormSection
                         token={token}
                         model={subject}/>}
