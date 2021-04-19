@@ -96,7 +96,7 @@ async function getChainOfTruthTree(certificate, instrument, calibrationEvent, to
 function generateTree(json, tree, map){
     tree = {}
     let calibratedWith = json.calibrated_with
-    tree["name"] = json.instrument.asset_tag_number + " Page: "+map[json.instrument.asset_tag_number];
+    tree["name"] = "Instrument " + json.instrument.asset_tag_number + " (Page: "+map[json.instrument.asset_tag_number]+")";
     let children = []
     if (calibratedWith) {
         calibratedWith.forEach(instrument => {
@@ -447,7 +447,7 @@ function xlsxToTable(file) {
 function tree_to_pdf(certificate, instrument_tree) {
     let res = ["\tCalibration Chain of Truth:\n\n"]
     certificate.addPage()
-    certificate.setFontSize(14)
+    certificate.setFontSize(10)
     const pageWidth = certificate.internal.pageSize.getWidth();
     const pageHeight = certificate.internal.pageSize.getHeight()
     res = traverse(instrument_tree).reduce(function (res, x) {
@@ -455,12 +455,12 @@ function tree_to_pdf(certificate, instrument_tree) {
             return res
         }
         if (this.level === 0) {
-            res = res + x.toString() + "\n"
+            res = res + x.toString() + "\n\n"
         }
         if (x === undefined || this.key === undefined) {
             return res
         } else {
-            res = res + "\t".repeat(this.level) + x.toString() + "\n"
+            res = res + "\t".repeat(this.level) + x.toString() + "\n\n"
         }
         return res
     }, res);
