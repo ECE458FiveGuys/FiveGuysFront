@@ -1,12 +1,7 @@
 import React, { Component } from "react";
 import CalibrationRequests from "../../../../controller/requests/calibration_requests";
 import HTPNavBar from "../../../Common/HTPNavBar";
-import {SHORTEN_LABELS} from "../../CreateFunctions/CreateUser";
-import ActionSection from "../Common/ActionSection";
-import {EquipmentModel, Instrument} from "../../../../utils/ModelEnums";
 import InstrumentRequests from "../../../../controller/requests/instrument_requests";
-import {handleNavClick} from "../../../utils";
-import HTPButton from "../../../Common/HTPButton";
 import {Divider} from "@material-ui/core";
 import * as PropTypes from "prop-types";
 import {User} from "../../../../utils/dtos";
@@ -28,6 +23,7 @@ export default class CalibrationEventDetailView extends Component {
     constructor(props) {
         super(props);
         this.state = {}
+        this.barRef = React.createRef()
     }
 
     componentDidMount() {
@@ -47,7 +43,7 @@ export default class CalibrationEventDetailView extends Component {
         }
         let retrieveEventCallback = (event) => {
             this.setState({calibrationEvent : event, calibratedWith: event[ModelFields.CalibrationFields.CalibratedWith]}, () => {
-                InstrumentRequests.retrieveInstrument(token, event.instrument, retrieveInstrumentCallback, (e) => alert(e));
+                InstrumentRequests.retrieveInstrument(token, event.instrument.pk, retrieveInstrumentCallback, (e) => alert(e));
             });
         }
         CalibrationRequests.retreiveCalibrationEvent(token, id, retrieveEventCallback, (e) => alert(e));
@@ -72,6 +68,7 @@ export default class CalibrationEventDetailView extends Component {
             return (
                 <div style={{height : "100%"}}>
                     <HTPNavBar user={user}
+                               ref={this.barRef}
                                location={location}/>
                     {this.approvalRequired() && approvalStatus != APPROVED && <div style={{backgroundColor : approvalStatus == REJECTED ? "red" : "orange", opacity : .8, display : "flex", height : 50, alignItems : "center"}}>
                         <text style={{color : "white", marginLeft : 20}}>{approvalStatus == REJECTED ? "This calibration has been rejected" : "This calibration requires approval"}</text>
@@ -98,6 +95,7 @@ export default class CalibrationEventDetailView extends Component {
                                     <ApprovalSection calibrationEvent = {calibrationEvent}
                                                      reloadCalibration = {this.loadCalibration}
                                                     user={user}
+                                                     barRef={this.barRef}
                                                     token={token}/>}
                             </div>
                             <Divider style={{marginRight: DIVIDER_MARGINS, marginLeft: DIVIDER_MARGINS, height : 400, marginTop : 100}}

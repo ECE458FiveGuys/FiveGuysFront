@@ -79,7 +79,8 @@ class NavbarPage extends Component {
                                     <MDBIcon icon="bell"/>
                                 </MDBNavLink>
                                 <div style={{backgroundColor : "orange", color : "white", marginLeft : -15, borderRadius : "20%", height : 20, display : "flex", justifyContent : 'center', alignItems : "center"}}>
-                                    <text style={{marginLeft : 5, marginRight : 5}}>{this.state.pendingApproval ? this.state.pendingApproval.length : 0}</text>
+                                    <text style={{marginLeft : 5, marginRight : 5}}>{this.props.pendingApprovalNum ? this.props.pendingApprovalNum :
+                                                                                    this.state.pendingApproval ? this.state.pendingApproval.length : 0}</text>
                                 </div>
                             </MDBNavItem>}
                             <MDBNavItem style={{marginRight: 100}}>

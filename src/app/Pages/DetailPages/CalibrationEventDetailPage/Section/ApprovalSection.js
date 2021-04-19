@@ -34,13 +34,14 @@ export default class ApprovalSection extends React.Component {
                 </div>
     }
 
-    handleCalibration(mode) {
+    handleCalibration(mode, currentData) {
         let {token, user, calibrationEvent} = this.props
         let {comment} = this.state
         CalibrationRequests.handleCalibration(token, mode, calibrationEvent.pk, user.id, comment, () => {
             this.toggleModal()
                 this.props.reloadCalibration()
-        }, (e) => alert(e))
+                this.props.barRef.current.getPendingApproval()
+        }, (e) => alert(e), mode == "rejected" && currentData)
     }
 
     toggleModal = (mode) => {
@@ -61,10 +62,12 @@ export default class ApprovalSection extends React.Component {
                         Approval Status
                     </text>
                     {ModelDisplay(
-                        ["Approved?", "Approver", "Approval Date", "Approval Comment", "Options"],
+                        ["Approved?", "Approver Name", "Approver Username", "Approver Email", "Approval Date", "Approval Comment", "Options"],
                         [
                             approvalData ? approvalData[ModelFields.ApprovalDataFields.IS_APPROVED] ? "approved" : "rejected" : "pending approval",
-                            approvalData ? approvalData[ModelFields.ApprovalDataFields.APPROVER] : undefined,
+                            approvalData ? approvalData[ModelFields.ApprovalDataFields.APPROVER][ModelFields.UserFields.NAME] : undefined,
+                            approvalData ? approvalData[ModelFields.ApprovalDataFields.APPROVER][ModelFields.UserFields.USERNAME] : undefined,
+                            approvalData ? approvalData[ModelFields.ApprovalDataFields.APPROVER][ModelFields.UserFields.EMAIL] : undefined,
                             approvalData ? approvalData[ModelFields.ApprovalDataFields.DATE] : undefined,
                             approvalData ? approvalData[ModelFields.ApprovalDataFields.COMMENT] : undefined,
                             user.groups.includes(SHORTEN_LABELS.ADMINISTRATOR) || user.groups.includes(SHORTEN_LABELS.CALIBRATION_APPROVER) ?
@@ -77,7 +80,7 @@ export default class ApprovalSection extends React.Component {
                               title={mode == APPROVED ? "Approve Calibration" : "Reject Calibration"}
                               isOpen={modal}
                               additionalButtons={<HTPButton label={mode == APPROVED ? "Approve" : "Reject"}
-                                                            onSubmit={() => this.handleCalibration(mode)}
+                                                            onSubmit={() => this.handleCalibration(mode, approvalData)}
                                                 />}/>
                 </div>
     }

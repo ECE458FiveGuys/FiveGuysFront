@@ -82,7 +82,10 @@ export default class PendingCalibrations extends React.Component {
     render() {
         let {modal, calibrationEvent, pendingApprovalCols, mode} = this.state
         return  <div>
-                    <HTPNavBar user={this.props.user} location={this.props.location}/>
+                    <HTPNavBar user={this.props.user}
+                               location={this.props.location}
+                               pendingApprovalNum={pendingApprovalCols ? pendingApprovalCols.length : undefined}
+                    />
                     <div style={{marginTop : 20, marginRight : 100, marginLeft : 100}}>
                         <div style={{marginLeft : -15}}>
                             <header className={"h2-responsive"} style={{marginLeft : 15, marginBottom: 10}}>
