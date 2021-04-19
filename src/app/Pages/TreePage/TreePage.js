@@ -58,6 +58,7 @@ class TreePage extends Component{
 
     async tree_to_pdf(){
         let certificate = new jsPDF()
+
         if (this.state.enable){
             this.setState({enable: false})
             let html = document.getElementById("Tree")

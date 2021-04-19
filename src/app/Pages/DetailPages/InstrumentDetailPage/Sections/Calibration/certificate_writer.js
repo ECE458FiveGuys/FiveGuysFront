@@ -5,10 +5,10 @@ import Logo from "../../../../../../assets/hpt_logo.png"
 import {IdealCurrents} from "../../../../LoadBankPage/Steps/LoadBankStepSteps/step_utils";
 import FileUtils from "../../../../../../utils/file_utils";
 import Tree from 'react-tree-graph';
-import ReactDOMServer from "react-dom/server";
+import ReactDOMServer, {renderToString} from "react-dom/server";
 import React, {Component, PropTypes} from 'react';
 // import XLSX from "xlsx";
-
+import traverse from 'traverse'
 
 import * as XLSX from 'xlsx';
 import {
@@ -17,6 +17,8 @@ import {
     VoltageTestInputVoltages
 } from "../../../../KlufeWizardPage/step_utils";
 import html2canvas from "html2canvas";
+import HTPButton from "../../../../../Common/HTPButton";
+import {func} from "prop-types";
 
 const LOGO_ASPECT_RATIO = 1.26
 const IMAGE_HEIGHT = 80 + 10
@@ -32,6 +34,34 @@ export async function createCertificate (instrument, user, calibrationEvent, tok
     await addImage(certificate, Logo, 'png', 10)
     certificate.line((pageWidth - DIVIDER_WIDTH) / 2, IMAGE_HEIGHT + 10, (pageWidth + DIVIDER_WIDTH) / 2, IMAGE_HEIGHT + 10)
     writeInstrumentDetails(certificate, user, instrument, calibrationEvent, pageWidth)
+
+    let instrument_tree = {
+        "name": "Eve",
+            "children": [
+            {"name": "Cain"},
+            {"name": "Seth",
+                "children": [
+                    {"name": "Enos"},
+                    {"name": "Noam"}
+                ]
+            },
+            {"name": "Awan", "children": [
+                    {"name": "Enos"},
+                    {"name": "Noam"}
+                ]
+
+            },
+            {"name": "Azura", "children": [
+                    {"name": "Enos"},
+                    {"name": "Noam"},
+                    {"name": "Cain"}
+
+                ]
+            },
+        ]
+    }
+
+    tree_to_pdf(certificate, instrument_tree)
 
     let additionalEvidence = calibrationEvent[ModelFields.CalibrationFields.AdditionalFile]
     let loadBankData = calibrationEvent[ModelFields.CalibrationFields.LoadBankFile] ? JSON.parse(calibrationEvent[ModelFields.CalibrationFields.LoadBankFile]) : undefined
@@ -307,15 +337,87 @@ function xlsxToTable(file) {
     // reader.readAsBinaryString(file);
 }
 
-function tree_generator(instrument_tree){
-    return(
-        <div>
-            <Tree
-                data={instrument_tree}
-                height={500}
-                width={500}
-                />
-        </div>
-    )
+// function tree_to_string(key, value, res, level) {
+//     if (level === 0){
+//         res = res + value+"\n"
+//     }
+//     if (value === undefined || key === undefined){
+//         return res
+//     }
+//     if (key.toString() === "children"){
+//         return res
+//     }
+//     if (value.toString().includes("[object Object]")){
+//         return res
+//     }
+//     else {
+//         res = res + "\t".repeat(level)+value.toString()+"\n"
+//     }
+//     return res
+// }
+//
+//
+// function process(key, value, res, level) {
+//     res = tree_to_string(key, value, res, level);
+//     return res
+// }
+
+// function traverse(o,func, res) {
+//     for (let i in o) {
+//         func.apply(this, [i, o[i], res]);
+//         if (o[i] !== null && typeof (o[i]) == "object") {
+//             //going one step down in the object tree!!
+//             // console.log(i + " " + typeof i)
+//             // res[2] = i
+//             res = traverse(o[i], func, res);
+//
+//             // if(isNaN(i) && !isNaN(res[2])){
+//             //     res[2] = i
+//             //     res[1] -= 1
+//             //     res = traverse(o[i], func, res);
+//             // }
+//             // else{
+//             //     res[2] = i
+//             //     res = traverse(o[i], func, res);
+//             // }
+//         }
+//     }
+//     return res
+// }
+
+function tree_to_pdf(certificate, instrument_tree) {
+    let res = ["\tCalibration Chain of Truth:\n\n"]
+    certificate.addPage()
+    certificate.setFontSize(14)
+    const pageWidth = certificate.internal.pageSize.getWidth();
+    const pageHeight = certificate.internal.pageSize.getHeight()
+    res = traverse(instrument_tree).reduce(function (res, x) {
+        console.log(this.key + " " + this.node['name'] + " " + this.level)
+        if (x.toString().includes("[object Object]")) {
+            return res
+        }
+        if (this.level === 0) {
+            res = res + x.toString() + "\n"
+        }
+        if (x === undefined || this.key === undefined) {
+            return res
+        } else {
+            res = res + "\t".repeat(this.level) + x.toString() + "\n"
+        }
+        return res
+    }, res);
+    certificate.text(res.toString(), pageWidth / 14, pageHeight / 12, 'left')
 }
 
+
+// function tree_html(instrument_tree) {
+//     return (
+//         <div id="Tree" update>
+//             <Tree
+//                 data={instrument_tree}
+//                 height={500}
+//                 width={500}
+//             />
+//         </div>
+//     )
+// }
