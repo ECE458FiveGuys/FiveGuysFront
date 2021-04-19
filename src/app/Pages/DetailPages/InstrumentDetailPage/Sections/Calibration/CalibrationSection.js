@@ -159,7 +159,7 @@ export default class CalibrationSection extends React.Component {
         return (instrumentCalibratable(instrument)) ?
             <div style={{flexDirection : "column", display : "flex"}}>
                 <Button
-                    disabled={!calibrations || calibrations.length == 0}
+                    disabled={!calibrations || calibrations.length == 0 || !this.state.mostRecentValidCalibration}
                     onClick={() => {
                         let {mostRecentValidCalibration} = this.state
                             createCertificate(instrument, mostRecentValidCalibration.user, mostRecentValidCalibration, token, this.state.chainOfTruth)

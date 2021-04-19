@@ -49,7 +49,7 @@ export async function createCertificate (instrument, user, calibrationEvent, tok
 
 let saveCertificate = (certificate, instrument, newTab) => {
     if (newTab) {
-        certificate.output('dataurlnewwindow');
+        certificate.output('dataurlnewwindow', 'calibration_data');
     } else {
         certificate.save(`calibration_certificate_inst_${instrument[Instrument.FIELDS.ASSET_TAG]}.pdf`)
     }

@@ -26,8 +26,13 @@ export default class PendingCalibrations extends React.Component {
     }
 
     onViewData = (calibration, pk) => {
-        let callBack = (inst) => createCertificate(inst, this.props.user,
-            calibration, this.props.token, false, true)
+        let finalCallBack = (inst) => (calib) => {
+            createCertificate(inst, this.props.user,
+                calib, this.props.token, false, true)
+        }
+        let callBack = (inst) => {
+            CalibrationRequests.retreiveCalibrationEvent(this.props.token, calibration.pk, finalCallBack(inst), (e) => alert(e))
+        }
         InstrumentRequests.retrieveInstrument(this.props.token, pk, callBack, (e) => alert(e))
     }
 
@@ -35,7 +40,8 @@ export default class PendingCalibrations extends React.Component {
         return pendingApproval.map(calibration => {
                 let instPk = calibration.instrument.pk
                 calibration["options"] = this.renderApprovalOptions(calibration.pk)
-                calibration["view_data"] = <a onClick={() => this.onViewData(calibration, instPk)}>{"View Data"}</a>
+                calibration["view_data"] = <a style={{color : "blue"}}
+                                                onClick={() => this.onViewData(calibration, instPk)}>{"View Data"}</a>
                 delete calibration.instrument.pk
                 Object.assign(calibration, calibration.instrument)
                 return calibration
