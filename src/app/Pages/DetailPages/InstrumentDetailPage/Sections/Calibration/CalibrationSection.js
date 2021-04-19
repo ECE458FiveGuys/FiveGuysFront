@@ -43,7 +43,7 @@ export default class CalibrationSection extends React.Component {
             if (this.approvalRequired(instrument)) {
                 let approvalData = calibration[ModelFields.CalibrationFields.ApprovalData]
                 const approvalStatus = approvalData ? (approvalData[ModelFields.ApprovalDataFields.IS_APPROVED] ? "approved" : "rejected") : "pending approval"
-                if (approvalStatus != "approved" && !mostRecentValidCalibration) {
+                if (approvalStatus == "approved" && !mostRecentValidCalibration) {
                     mostRecentValidCalibration = calibration
                 }
             } else if (!mostRecentValidCalibration) {
@@ -54,7 +54,6 @@ export default class CalibrationSection extends React.Component {
 
     buildCalibrationTableRows = (calibrations) => {
         let {instrument} = this.props
-        let mostRecentValidCalibration = undefined
         return calibrations.map(calibration => {
             let calibrationCopy = {...calibration}
             calibrationCopy[ModelFields.CalibrationFields.AdditionalFile] = buildEvidenceElement(calibrationCopy)
@@ -67,14 +66,7 @@ export default class CalibrationSection extends React.Component {
                         let element = calibrationCopy[key]
                         calibrationCopy[key] = this.highlightCell(element)
                     })
-                    if (!mostRecentValidCalibration) {
-                        mostRecentValidCalibration = calibration
-                        this.setState({mostRecentValidCalibration : calibration})
-                    }
                 }
-            } else if (!mostRecentValidCalibration) {
-                mostRecentValidCalibration = calibration
-                this.setState({mostRecentValidCalibration : calibration})
             }
             calibrationCopy.clickEvent = () => handleNavClick(instrument.pk + "/calibration-events/" + calibration.pk, this.props.history)
             return calibrationCopy
