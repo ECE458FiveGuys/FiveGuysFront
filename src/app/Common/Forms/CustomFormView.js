@@ -4,6 +4,8 @@ import {MDBCol, MDBContainer, MDBRow} from "mdbreact";
 import HTPMultiLineInput from "../Inputs/HTPMultiLineInput";
 import SubmitModal from "./ConfirmationModals/SubmitModal";
 import CancelModal from "./ConfirmationModals/CancelModal";
+import CalibrationRequests from "../../../controller/requests/calibration_requests";
+import {getCurrentDate} from "../../utils";
 
 
 class CustomFormView extends Component {
@@ -73,6 +75,22 @@ class CustomFormView extends Component {
         }
     }
 
+    renderComment() {
+        let {comment} = this.state
+        return (
+            <div>
+                <HTPMultiLineInput size={1} label={"Comment"}
+                                   placeholder={(this.props.preview)?("Input Preview"):("Enter comment")}
+                                   name={prompt} type = {'type'}
+                                   onChange={(event) => this.onChange("comment")(event)}
+                                   readOnly={this.props.preview}
+                                   // id = {id}
+                                   error={(comment)?comment.error:undefined}
+                />
+            </div>
+        )
+    }
+
     renderFooter(inputExists){
         return (!inputExists || this.props.preview) ?
             (<Modal.Footer>
@@ -94,6 +112,15 @@ class CustomFormView extends Component {
     }
 
     onChange = (type) => (event) => {
+        if(type === "comment") {
+            let comment = {...this.state.comment}
+            // let value = event.target.value
+
+            comment.value = event.target.value
+            this.setState({comment:comment})
+            return
+        }
+
         let fields = {...this.state.fields}
 
         let value = event.target.value
@@ -113,9 +140,10 @@ class CustomFormView extends Component {
     }
 
     handleSubmit = () => {
-        // let fields = [...this.state.fields]
         let fields = {...this.state.fields}
         let valid = true
+        let submitObj = {}
+        // console.log(fields)
         // console.log(fields)
         Object.keys(fields).map((id) => {
             if(fields[id].error && !fields[id].error === "" ) valid = false
@@ -123,19 +151,38 @@ class CustomFormView extends Component {
                 valid = false
                 fields[id].error = "Can't leave this empty"
             }
+            if(fields[id].type === "input") {
+                submitObj[fields[id].key] = fields[id].inputValue
+            }
         })
+        if(!this.state.comment || !this.state.comment.value) {
+            valid = false
+            let comment = {error:"Can't leave this empty"}
+            this.setState({comment:comment})
+        }
         if(!valid) {
+            // console.log(fields)
+
             this.setState({fields:fields})
             this.setSubmitModalShow(false)
         }else {
+            let comment = this.state.comment.value
+
+            let submitString = JSON.stringify(submitObj)
+
+            console.log(submitString)
+
             let successCallBack = (response) => {
                 console.log("Success")
                 this.cancelSubmission()
             }
             let errorCallBack = (response) => {
-
+                alert(response)
             }
 
+            CalibrationRequests.recordCalibration(this.props.token,this.props.instrument.pk,getCurrentDate(),
+                this.props.user.id,comment,undefined,undefined,successCallBack,errorCallBack,
+                undefined,undefined,submitString)
 
         }
     }
@@ -166,6 +213,7 @@ class CustomFormView extends Component {
                             <MDBRow style={{justifyContent: 'center', alignItems: 'center'}}>
                                 <MDBCol md="10">
                                         {Object.keys(fields).map((id) => this.parseFields(fields[id],id))}
+                                    {this.renderComment()}
                                 </MDBCol>
                             </MDBRow>
                         </MDBContainer>

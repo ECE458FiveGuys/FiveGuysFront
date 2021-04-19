@@ -172,6 +172,8 @@ export default class CalibrationSection extends React.Component {
                         onHide={() => this.setCustomCalibrationModalShow(false)}
                         token = {this.props.token}
                         fields = {instrument.model.custom_form}
+                        instrument = {instrument}
+                        user = {user}
                         preview={false}
                     />
                     <DataTable columns={this.approvalRequired(instrument) ? TableColumns.CALIBRATION_COLUMNS_APPROVAL : TableColumns.CALIBRATION_COLUMNS}

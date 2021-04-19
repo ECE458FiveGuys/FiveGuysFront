@@ -77,7 +77,8 @@ export default class ModelFields {
         "AdditionalFile" : "additional_evidence",
         "HardwareCalibrationFile" : "guided_hardware_data",
         ApprovalData : "approval_data",
-        CalibratedWith : "calibrated_with"
+        CalibratedWith : "calibrated_with",
+        "CustomForm" : "custom_data"
     }
 
     static CalibrationFormFields = {
