@@ -139,7 +139,7 @@ class SortableComponent extends Component {
                 })
             }
             this.setState({items:items})
-            // console.log(this.state.items)
+            console.log(this.state.items)
         }
         else if(event.target.type === 'textarea') {
             newInputData['prompt'] = event.target.value
@@ -151,13 +151,13 @@ class SortableComponent extends Component {
         // let newEntries = Object.assign({},this.state.entries)
         let newEntries = {...this.state.entries}
         newEntries[id] = JSON.stringify(newInputData)
-        this.setState({entries:newEntries},()=>(console.log(this.state.entries,newEntries)))
-        // console.log(this.state.entries,newEntries)
+        this.setState({entries:newEntries})
+        console.log("RTCIceGathererEven")
     }
 
     onChange = (id) => (event) => {
         let newEntries = Object.assign({},this.state.entries)
-        // console.log('THIS EXECUTED')
+        console.log('THIS EXECUTED')
         newEntries[id] = event.target.value
         this.setState({entries:newEntries})
     }
@@ -168,6 +168,7 @@ class SortableComponent extends Component {
         let name = event.target.name
         let value = event.target.value
 
+        console.log(items[id])
         let content = JSON.parse(items[id].content)
         content[name] = value
         // this.checkMaxMin()
@@ -177,11 +178,11 @@ class SortableComponent extends Component {
         // let newEntries = Object.assign({},this.state.entries)
         let newEntries = {...this.state.entries}
         // newEntries[id] = items[id].content
-        console.log("HERE")
+        // console.log("HERE")
         let entry = JSON.parse(newEntries[id])
         entry[name] = value
         newEntries[id] = JSON.stringify(entry)
-        console.log(newEntries)
+        // console.log(newEntries)
         this.setState({entries:newEntries})
         // console.log(this.state.entries)
         // TODO change entries so that input fields always present if number, not just on change
@@ -206,7 +207,7 @@ class SortableComponent extends Component {
 
     add(inputType) {
         const {items,nextFieldId} = this.state;
-        let new_item = {id:nextFieldId, type:inputType, error:false};
+        let new_item = {id:nextFieldId, type:inputType, content:'{}',error:false}; //TODO
         let newFieldId = nextFieldId + 1;
         items.push(new_item);
 
