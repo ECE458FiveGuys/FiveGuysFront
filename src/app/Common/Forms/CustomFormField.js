@@ -94,13 +94,13 @@ class CustomFormField extends Component {
                     <HTPMultiLineInput size={1} label={"Max"} placeholder={"Enter Value"} name={"max"}
                                            onChange={(event) => this.props.onRangeInputFieldChange(id)(event)}
                                            defaultValue={max}
-                                           error={(this.props.error)?"Fill in this information before submitting":undefined}
+                                           error={(this.props.error)?"Field cannot be empty and must contain appropriate range value":undefined} //TODO
                                            width={2}
                     />
                     <HTPMultiLineInput size={1} label={"Min"} placeholder={"Enter Value"} name={"min"}
                                        onChange={(event) => this.props.onRangeInputFieldChange(id)(event)}
                                        defaultValue={min}
-                                       error={(this.props.error)?"Fill in this information before submitting":undefined}
+                                       error={(this.props.error)?"Field cannot be empty and must contain appropriate range value":undefined}
                                        width={2}
                     />
         </div>
