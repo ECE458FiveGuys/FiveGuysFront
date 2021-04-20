@@ -75,11 +75,11 @@ async function getChainOfTruthTree(certificate, instrument, calibrationEvent, to
             let fakeCertificate = makeFakeCertificate()
             let tree = {}
 
-            map = makePageRecursive(fakeCertificate, instrument, calibrationEvent, token, realJson, "", IMAGE_HEIGHT, map)
-            tree = generateTree(realJson, tree, map);
+            map = makePageRecursive(fakeCertificate, instrument, calibrationEvent, token, json_tester, "", IMAGE_HEIGHT, map)
+            tree = generateTree(json_tester, tree, map);
             console.log(tree)
             tree_to_pdf(certificate, tree)
-            map = makePageRecursive(certificate, instrument, calibrationEvent, token, realJson, "", IMAGE_HEIGHT, map)
+            map = makePageRecursive(certificate, instrument, calibrationEvent, token, json_tester, "", IMAGE_HEIGHT, map)
             let pageCount = certificate.internal.getNumberOfPages();
             certificate.deletePage(pageCount)
             saveCertificate(certificate, instrument, newTab)
@@ -121,7 +121,7 @@ function makeFakeCertificate(){
 }
 
 function makePageRecursive(certificate, instrument, calibrationEvent, token, json, dateUsed, space, map) { //need to put who they callibrated?
-    map[json.instrument.asset_tag_number] = certificate.internal.pages.length -1
+    map[json.instrument.asset_tag_number] = certificate.internal.pages.length
     let calibratedWithString = ''
     let calibratedWith = json.calibrated_with
     let assetTagNumber = 0
