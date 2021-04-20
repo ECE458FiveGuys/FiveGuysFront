@@ -7,19 +7,22 @@ import './CreateCusotmForm.css';
 import SubmitModal from "./ConfirmationModals/SubmitModal";
 import CancelModal from "./ConfirmationModals/CancelModal";
 import ModelRequests from "../../../controller/requests/model_requests";
+import {forEach} from "react-bootstrap/ElementChildren";
 
 
 const DragHandle = SortableHandle(() => <MDBIcon className={'drag-handle'} icon={'grip-lines'} size={'2x'}/>);
 
-const SortableItem = SortableElement(({value,onRemove, onChange, onInputFieldChange}) => (
+const SortableItem = SortableElement(({value,onRemove, onChange, onInputFieldChange, onRangeInputFieldChange}) => (
     <div className="SortableItem">
         {<CustomFormField type={value.type} id={value.id} dragHandle={<DragHandle/>} onRemove={() => onRemove(value.id)}
-                          onChange={onChange} onInputFieldChange={onInputFieldChange} content={value.content}
+                          onChange={onChange} onInputFieldChange={onInputFieldChange} onRangeInputFieldChange={onRangeInputFieldChange}
+                          content={value.content} error={value.error}
+                          rangeSection={value.range}
         />}
     </div>
 ));
 
-const SortableList = SortableContainer(({items,onRemove,onChange,onInputFieldChange}) => {
+const SortableList = SortableContainer(({items,onRemove,onChange,onInputFieldChange,onRangeInputFieldChange}) => {
     return(
         <ul className="SortableList">
             {items.map((value, index) => {
@@ -32,6 +35,7 @@ const SortableList = SortableContainer(({items,onRemove,onChange,onInputFieldCha
                       onRemove={onRemove}
                       onChange={onChange}
                       onInputFieldChange={onInputFieldChange}
+                      onRangeInputFieldChange={onRangeInputFieldChange}
                 />
                 )
             })}
@@ -53,22 +57,32 @@ class SortableComponent extends Component {
 
         if(this.props.existingFields) {
             let fields = JSON.parse(this.props.existingFields).form
+            let range
             fields.forEach((field) => {
-                    items.push({id: nextFieldId, type: field.type, content: field.value})
+                    if(field.type === "input"){
+                        let value = JSON.parse(field.value)
+                        if(value.type === "number" && value.max){range = true}
+                        else{range=false}
+                        // console.log(range)
+                        // field.value = JSON.stringify(value)
+                    }
+                    items.push({id: nextFieldId, type: field.type, content: field.value, range:range})
                     entries[nextFieldId] = field.value
                     nextFieldId++
                 }
             )
         } else {
-            items = [{id:0, type:'header'},{id:1, type:'input'}]
+            items = [{id:0, type:'header', error: false},{id:1, type:'input', error:false}]
             nextFieldId = 2;
         }
+        // console.log(items)
         return {
             entries: entries,
             items: items,
             nextFieldId: nextFieldId,
             cancelModalShow: false,
-            submitModalShow: false
+            submitModalShow: false,
+
         }
     }
 
@@ -76,6 +90,22 @@ class SortableComponent extends Component {
     //     let el = document.getElementsByClassName('sortable-list')
     //     el.scrollTop = el.scrollHeight
     // }
+
+    declareErrors(errors) {
+        errors.forEach((error)=>{
+            let items = [...this.state.items]
+            items[error].error = true
+            this.setState({items:items})
+            console.log(error)
+        })
+    }
+
+    removeError(errorId) {
+        let items = [...this.state.items]
+        items[errorId].error = false
+        this.setState({items:items})
+        // console.log(error)
+    }
 
     setCancelModalShow(boolean){
         this.setState({cancelModalShow:boolean})
@@ -87,8 +117,29 @@ class SortableComponent extends Component {
 
     onInputFieldChange = (id) => (event) => {
         let newInputData = (this.state.entries[id]) ? JSON.parse(this.state.entries[id]):{}
+        let items = [...this.state.items]
         if(event.target.type === 'select-one') {
             newInputData['type'] = event.target.value
+            if(event.target.value === "number") {
+                console.log("NUMBER")
+                items.forEach((item) => {
+                    if (item.id === id) {
+                        item["max"] = ""
+                        item["min"] = ""
+                        item["range"] = true
+                    }
+                })
+            } else {
+                items.forEach((item) => {
+                    if (item.id === id) {
+                        // item["max"] = ""
+                        // item["min"] = ""
+                        item["range"] = false
+                    }
+                })
+            }
+            this.setState({items:items})
+            // console.log(this.state.items)
         }
         else if(event.target.type === 'textarea') {
             newInputData['prompt'] = event.target.value
@@ -97,15 +148,43 @@ class SortableComponent extends Component {
             console.log("Unprocessed change")
         }
 
-        let newEntries = Object.assign({},this.state.entries)
+        // let newEntries = Object.assign({},this.state.entries)
+        let newEntries = {...this.state.entries}
         newEntries[id] = JSON.stringify(newInputData)
-        this.setState({entries:newEntries})
+        this.setState({entries:newEntries},()=>(console.log(this.state.entries,newEntries)))
+        // console.log(this.state.entries,newEntries)
     }
 
     onChange = (id) => (event) => {
         let newEntries = Object.assign({},this.state.entries)
+        // console.log('THIS EXECUTED')
         newEntries[id] = event.target.value
         this.setState({entries:newEntries})
+    }
+
+    onRangeInputFieldChange = (id) => (event) => {
+        let items = [...this.state.items]
+
+        let name = event.target.name
+        let value = event.target.value
+
+        let content = JSON.parse(items[id].content)
+        content[name] = value
+        // this.checkMaxMin()
+        items[id].content = JSON.stringify(content)
+
+        // this.setState({items:items}) //TODO
+        // let newEntries = Object.assign({},this.state.entries)
+        let newEntries = {...this.state.entries}
+        // newEntries[id] = items[id].content
+        console.log("HERE")
+        let entry = JSON.parse(newEntries[id])
+        entry[name] = value
+        newEntries[id] = JSON.stringify(entry)
+        console.log(newEntries)
+        this.setState({entries:newEntries})
+        // console.log(this.state.entries)
+        // TODO change entries so that input fields always present if number, not just on change
     }
 
 
@@ -127,7 +206,7 @@ class SortableComponent extends Component {
 
     add(inputType) {
         const {items,nextFieldId} = this.state;
-        let new_item = {id:nextFieldId, type:inputType};
+        let new_item = {id:nextFieldId, type:inputType, error:false};
         let newFieldId = nextFieldId + 1;
         items.push(new_item);
 
@@ -143,31 +222,75 @@ class SortableComponent extends Component {
     submitForm = () => {
         let {items,entries} = this.state
         let finalForm = [];
-
+        let errors = [];
+        let inputExists = false
+        console.log(entries)
         items.forEach((item) => {
             let entry = {}
-            entry['type'] = item.type
-            entry['value'] = entries[item.id]
-            finalForm.push(entry)
+
+            if(item.type === "input") {inputExists = true}
+
+            if(!entries || !entries[item.id] ||
+                (item.type === "input"
+                    && ( !JSON.parse(entries[item.id]).prompt
+                        || !JSON.parse(entries[item.id]).type
+                        || JSON.parse(entries[item.id]).prompt === ""
+                        || (JSON.parse(entries[item.id]).type === "number" && (
+                                !JSON.parse(entries[item.id]).max
+                                || !JSON.parse(entries[item.id]).min
+                                || JSON.parse(entries[item.id]).max === ""
+                                || JSON.parse(entries[item.id]).min === ""
+                                || Number(JSON.parse(entries[item.id]).max) <= Number(JSON.parse(entries[item.id]).min)
+                            )
+                        )
+                    )
+                )){
+                // console.log(entries,item.id,JSON.parse(entries[item.id]).max <= JSON.parse(entries[item.id]).min)
+                errors.push(item.id)
+                // console.log("EMPTY FIELD"+item.id)
+                // console.log(entries[item.id])
+            } else {
+                if(item.error) {
+                    this.removeError(item.id)
+                }
+                // console.log(entries[item.id])
+                entry['type'] = item.type
+                entry['value'] = entries[item.id]
+                // console.log(entry)
+                finalForm.push(entry)
+            }
+
         })
-        let stringToSubmit = {'form':finalForm}
-        let finalFormString = JSON.stringify(stringToSubmit)
-
-        // console.log(JSON.parse(finalFormString))
-        let successCallback = (response) => {
-            this.props.setExistingFields(finalFormString)
-            this.cancelSubmission()
+        if(errors.length > 0){
+            this.declareErrors(errors)
+            this.setSubmitModalShow(false)
+            console.log(errors)
         }
+        else {
+            let stringToSubmit = {'form': finalForm,'input':(inputExists)?"true":""}
+            let finalFormString = JSON.stringify(stringToSubmit)
+            console.log(stringToSubmit)
 
-        let errorCallback = (response) => {
-            alert(response)
+            let successCallback = (response) => {
+                this.props.setExistingFields(finalFormString)
+                this.cancelSubmission()
+            }
+
+            let errorCallback = (response) => {
+                alert(response)
+            }
+            let {model} = this.props
+            let fields = {
+                vendor: model.vendor,
+                model_number: model.model_number,
+                description: model.description,
+                calibration_frequency: model.calibration_frequency,
+                custom_form: finalFormString
+            }
+            ModelRequests.editModelWithFields(
+                this.props.token, model.pk, fields, successCallback, errorCallback
+            )
         }
-        // this.props.model.custom_form = finalFormString
-        let {model} = this.props
-        let fields = {vendor:model.vendor,model_number:model.model_number,description:model.description,custom_form:finalFormString}
-        ModelRequests.editModelWithFields(
-            this.props.token,model.pk, fields,successCallback,errorCallback
-        )
     }
 
     render() {
@@ -203,6 +326,8 @@ class SortableComponent extends Component {
                                                 onRemove={this.remove}
                                                 onChange={this.onChange}
                                                 onInputFieldChange={this.onInputFieldChange}
+                                                onRangeInputFieldChange={this.onRangeInputFieldChange}
+
                                             >
                                             </SortableList>
                                     </div>
@@ -217,6 +342,7 @@ class SortableComponent extends Component {
                             onHide={() => this.setSubmitModalShow(false)}
                             onSubmission={this.submitForm}
                             message={'Are you sure you\'re ready to submit?'}
+                            // hasInput={true}
                         />
                         <CancelModal
                             show={this.state.cancelModalShow}
