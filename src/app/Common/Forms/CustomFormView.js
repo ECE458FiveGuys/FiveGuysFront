@@ -160,7 +160,7 @@ class CustomFormView extends Component {
         // console.log(fields)
         // console.log(fields)
         Object.keys(fields).map((id) => {
-            if(fields[id].error && !fields[id].error === "" ) valid = false
+            if(fields[id].error && !(fields[id].error === "") ) valid = false
             if(fields[id].type === "input" && !fields[id].inputValue) {
                 valid = false
                 fields[id].error = "Can't leave this empty"

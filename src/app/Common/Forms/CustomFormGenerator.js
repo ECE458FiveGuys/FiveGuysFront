@@ -63,8 +63,6 @@ class SortableComponent extends Component {
                         let value = JSON.parse(field.value)
                         if(value.type === "number" && value.max){range = true}
                         else{range=false}
-                        // console.log(range)
-                        // field.value = JSON.stringify(value)
                     }
                     items.push({id: nextFieldId, type: field.type, content: field.value, range:range})
                     entries[nextFieldId] = field.value
@@ -72,10 +70,9 @@ class SortableComponent extends Component {
                 }
             )
         } else {
-            items = [{id:0, type:'header', error: false},{id:1, type:'input', error:false}]
+            items = [{id:0, type:'header', content:"{}", error: false},{id:1, type:'input', content:"{}", error:false}]
             nextFieldId = 2;
         }
-        // console.log(items)
         return {
             entries: entries,
             items: items,
@@ -86,17 +83,15 @@ class SortableComponent extends Component {
         }
     }
 
-    // scrollToBottom() {
-    //     let el = document.getElementsByClassName('sortable-list')
-    //     el.scrollTop = el.scrollHeight
-    // }
-
     declareErrors(errors) {
         errors.forEach((error)=>{
             let items = [...this.state.items]
-            items[error].error = true
+            items.forEach((item)=>{
+                if(item.id === error) {
+                    item.error = true
+                }
+            })
             this.setState({items:items})
-            console.log(error)
         })
     }
 
@@ -104,7 +99,6 @@ class SortableComponent extends Component {
         let items = [...this.state.items]
         items[errorId].error = false
         this.setState({items:items})
-        // console.log(error)
     }
 
     setCancelModalShow(boolean){
@@ -132,14 +126,11 @@ class SortableComponent extends Component {
             } else {
                 items.forEach((item) => {
                     if (item.id === id) {
-                        // item["max"] = ""
-                        // item["min"] = ""
                         item["range"] = false
                     }
                 })
             }
             this.setState({items:items})
-            // console.log(this.state.items)
         }
         else if(event.target.type === 'textarea') {
             newInputData['prompt'] = event.target.value
@@ -148,16 +139,13 @@ class SortableComponent extends Component {
             console.log("Unprocessed change")
         }
 
-        // let newEntries = Object.assign({},this.state.entries)
         let newEntries = {...this.state.entries}
         newEntries[id] = JSON.stringify(newInputData)
-        this.setState({entries:newEntries},()=>(console.log(this.state.entries,newEntries)))
-        // console.log(this.state.entries,newEntries)
+        this.setState({entries:newEntries})
     }
 
     onChange = (id) => (event) => {
         let newEntries = Object.assign({},this.state.entries)
-        // console.log('THIS EXECUTED')
         newEntries[id] = event.target.value
         this.setState({entries:newEntries})
     }
@@ -168,23 +156,20 @@ class SortableComponent extends Component {
         let name = event.target.name
         let value = event.target.value
 
-        let content = JSON.parse(items[id].content)
-        content[name] = value
-        // this.checkMaxMin()
-        items[id].content = JSON.stringify(content)
+        items.forEach((item)=>{
+            if(item.id === id) {
+                let content = JSON.parse(item.content)
+                content[name] = value
+                item.content = JSON.stringify(content)
+            }
+        })
 
-        // this.setState({items:items}) //TODO
-        // let newEntries = Object.assign({},this.state.entries)
         let newEntries = {...this.state.entries}
-        // newEntries[id] = items[id].content
-        console.log("HERE")
+
         let entry = JSON.parse(newEntries[id])
         entry[name] = value
         newEntries[id] = JSON.stringify(entry)
-        console.log(newEntries)
         this.setState({entries:newEntries})
-        // console.log(this.state.entries)
-        // TODO change entries so that input fields always present if number, not just on change
     }
 
 
@@ -197,21 +182,24 @@ class SortableComponent extends Component {
     remove = (id) => {
         let items = this.state.items;
         let entries = Object.assign({},this.state.entries);
+        // let entries = {...this.state.entries}
 
         const newList = items.filter((item) => item.id !== id);
         delete entries[id]
+        console.log(newList)
+        this.setState({items: newList, entries:entries},()=>console.log(this.state.items))
 
-        this.setState({items: newList, entries:entries})
     }
 
     add(inputType) {
         const {items,nextFieldId} = this.state;
-        let new_item = {id:nextFieldId, type:inputType, error:false};
+        let content
+        if(inputType === "input") {content = "{}"} else {content = ""}
+        let new_item = {id:nextFieldId, type:inputType, content:content,error:false}; //TODO
         let newFieldId = nextFieldId + 1;
         items.push(new_item);
 
         this.setState({items : items, nextFieldId:newFieldId})
-        // this.scrollToBottom()
     }
 
     cancelSubmission = () => {
@@ -224,7 +212,6 @@ class SortableComponent extends Component {
         let finalForm = [];
         let errors = [];
         let inputExists = false
-        console.log(entries)
         items.forEach((item) => {
             let entry = {}
 
@@ -264,12 +251,10 @@ class SortableComponent extends Component {
         if(errors.length > 0){
             this.declareErrors(errors)
             this.setSubmitModalShow(false)
-            console.log(errors)
         }
         else {
             let stringToSubmit = {'form': finalForm,'input':(inputExists)?"true":""}
             let finalFormString = JSON.stringify(stringToSubmit)
-            console.log(stringToSubmit)
 
             let successCallback = (response) => {
                 this.props.setExistingFields(finalFormString)
