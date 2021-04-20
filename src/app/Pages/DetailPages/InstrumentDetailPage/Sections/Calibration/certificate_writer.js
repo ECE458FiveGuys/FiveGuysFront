@@ -80,6 +80,8 @@ async function getChainOfTruthTree(certificate, instrument, calibrationEvent, to
             console.log(tree)
             tree_to_pdf(certificate, tree)
             map = makePageRecursive(certificate, instrument, calibrationEvent, token, realJson, "", IMAGE_HEIGHT, map)
+            let pageCount = certificate.internal.getNumberOfPages();
+            certificate.deletePage(pageCount)
             saveCertificate(certificate, instrument, newTab)
         })
         .catch((error) => {
