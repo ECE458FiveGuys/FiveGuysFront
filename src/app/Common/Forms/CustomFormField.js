@@ -25,32 +25,34 @@ class CustomFormField extends Component {
         }
     }
     headerField() {
-        let {content} = this.props
+        let {content,error} = this.props
         return(
             <div>
                 <HTPMultiLineInput size={1} label={"Header Text"} placeholder={"Enter Text"} name={"Header Text"}
                                    onChange={(event) => this.props.onChange(this.props.id)(event)}
                                    defaultValue={content}
+                                   error={(error)?"Fill in this information before submitting":undefined}
                 />
             </div>
         )
     }
 
     textField() {
-        let {id,content,onChange} = this.props
+        let {id,content,onChange,error} = this.props
         return(
             <div>
                 <HTPMultiLineInput size={2} label={"Body Text"} placeholder={"Enter Text"} name={"Body Text"}
                                    onChange={(event) => onChange(id)(event)}
                                    defaultValue={content}
+                                   error={(error)?"Fill in this information before submitting":undefined}
                 />
             </div>
         )
     }
 
     inputField() {
-        let {id, onInputFieldChange} = this.props
-        console.log(this.props.content)
+        let {id, onInputFieldChange,error} = this.props
+        // console.log(this.props.content)
         let content = {}
         if(this.props.content) {
         //
@@ -60,6 +62,7 @@ class CustomFormField extends Component {
             content["prompt"] = ""
         }
 
+        // console.log(content)
 
         return(
             <div>
@@ -75,12 +78,32 @@ class CustomFormField extends Component {
                     <option value={'text'}>Text</option>
                     <option value={'number'}>Numeric</option>
                 </select>
-
+                {(this.props.rangeSection) ? this.rangeSection(id,content.max,content.min):<div/>}
                 <HTPMultiLineInput size={1} label={"Prompt"} placeholder={"Enter Text"} name={"Input"}
                                    onChange={(event) => onInputFieldChange(id)(event)}
                                    defaultValue={content.prompt}
+                                   error={(error)?"Fill in this information before submitting":undefined}
+
                 />
             </div>
+        )
+    }
+
+    rangeSection(id,max,min) {
+        return (<div>
+                    <HTPMultiLineInput size={1} label={"Max"} placeholder={"Enter Value"} name={"max"}
+                                           onChange={(event) => this.props.onRangeInputFieldChange(id)(event)}
+                                           defaultValue={max}
+                                           error={(this.props.error)?"Fill in this information before submitting":undefined}
+                                           width={2}
+                    />
+                    <HTPMultiLineInput size={1} label={"Min"} placeholder={"Enter Value"} name={"min"}
+                                       onChange={(event) => this.props.onRangeInputFieldChange(id)(event)}
+                                       defaultValue={min}
+                                       error={(this.props.error)?"Fill in this information before submitting":undefined}
+                                       width={2}
+                    />
+        </div>
         )
     }
 
